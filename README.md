@@ -34,3 +34,6 @@ https://www.geeksforgeeks.org/dda-line-generation-algorithm-computer-graphics/
 Saving math to arrays
 Rendering image at 90 degrees
 Other performance hacks (powers of two), no floats
+
+Ray Casting Game Tutorial – Part 1 – Building The Engine
+https://hotsource.dev/2019/05/03/raycasting-game-tutorial-part-1-building-the-engine/
