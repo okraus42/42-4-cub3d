@@ -27,3 +27,10 @@ https://lodev.org/cgtutor/raycasting4.html
 F. Permadi
 Ray-Casting Tutorial For Game Development And Other Purposes
 https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/
+
+Stuff to check:
+https://www.youtube.com/watch?v=NbSee-XM7WA
+https://www.geeksforgeeks.org/dda-line-generation-algorithm-computer-graphics/
+Saving math to arrays
+Rendering image at 90 degrees
+Other performance hacks (powers of two), no floats
