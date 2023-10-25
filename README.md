@@ -37,3 +37,8 @@ Other performance hacks (powers of two), no floats
 
 Ray Casting Game Tutorial – Part 1 – Building The Engine
 https://hotsource.dev/2019/05/03/raycasting-game-tutorial-part-1-building-the-engine/
+
+Maze Generation:
+https://en.wikipedia.org/wiki/Maze_generation_algorithm
+https://www.jamisbuck.org/presentations/rubyconf2011/index.html
+
