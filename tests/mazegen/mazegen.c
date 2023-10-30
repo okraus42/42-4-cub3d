@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/10/29 17:38:57 by okraus           ###   ########.fr       */
+/*   Updated: 2023/10/30 17:54:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,200 +14,212 @@
 #include <math.h>
 #include <time.h>
 
-// compile with libft.h
-// pass number for width and height like 15 15
-
-void	map_print(unsigned char map[16641], int w, int h)
+// compile with libft.a
+// pass number for width and height like 52 26
+typedef	struct s_map
 {
-	int	i;
+	int				width;		//input weight
+	int				height;		//input height
+	int				w;			//actual map width
+	int				h;			//actual map height
+	int				i;			//iterating
+	int				d;			//temp value
+	int				p;			//actual position?
+	t_list			*lst;		//stack of visited positions (with neighbours?)
+	t_list			*ltemp;		//temporaty list
+	int				*temp;		//temporary value of position in the map
+	unsigned char	map[16641];	//map up to 64*64
+} t_map;
 
-	i = 0;
-	while (i < w * h)
+
+void	map_print(t_map *m)
+{
+	m->i = 0;
+	while (m->i < m->w * m->h)
 	{
-		if (map[i] == 0)
+		if (m->map[m->i] == 0)
 			ft_printf("%^*C  %0C", 0x000000);
-		else if (map[i] == 1)
+		else if (m->map[m->i] == 1)
 			ft_printf("%^*C  %0C", 0x333333);
-		else if (map[i] == 2)
+		else if (m->map[m->i] == 2)
 			ft_printf("%^*C  %0C", 0x777777);
-		else if (map[i] == 4)
+		else if (m->map[m->i] == 4)
 			ft_printf("%^*C  %0C", 0xffffff);
-		else if (map[i] == 8)
+		else if (m->map[m->i] == 8)
 			ft_printf("%^*C  %0C", 0x555555);
-		else if (map[i] == 16)
+		else if (m->map[m->i] == 16)
 			ft_printf("%^*C  %0C", 0x775555);
-		else if (map[i] == 32)
+		else if (m->map[m->i] == 32)
 			ft_printf("%^*C  %0C", 0x557755);
-		else if (map[i] == 64)
+		else if (m->map[m->i] == 64)
 			ft_printf("%^*C  %0C", 0x557777);
-		else if (map[i] == 128)
+		else if (m->map[m->i] == 128)
 			ft_printf("%^*C  %0C", 0x775577);
-		++i;
-		if (i % w == 0)
+		++(m->i);
+		if (m->i % m->w == 0)
 			ft_printf("\n");
 	}
 }
 
-void	map_prefill(unsigned char map[16641], int w, int h)
+void	map_prefill(t_map *m)
 {
-	int	i;
-
-	i = 0;
-	while (i < w * h)
+	m->i = 0;
+	while (m->i < m->w * m->h)
 	{
-		if ((i / w) & 1 && !(i & 1))
-			map[i] = 2;
-		else if (i > w && i < (h - 1) * w && i % w && i % w < (w - 1))
-			map[i] = 1;
+		if ((m->i / m->w) & 1 && !(m->i & 1))
+			m->map[m->i] = 2;
+		else if (m->i > m->w && m->i < (m->h - 1) * m->w
+			&& m->i % m->w && m->i % m->w < (m->w - 1))
+			m->map[m->i] = 1;
 		else
-			map[i] = 0;
-		++i;
+			m->map[m->i] = 0;
+		++(m->i);
 	}
 }
 
-int	mg_north(unsigned char map[16641], int w,  int p)
+int	mg_north(t_map *m)
 {
-	if (map[p - w] == 0 )	//	do not care about walls
+	if (m->map[m->i - m->w] == 0 )	//	do not care about walls
 		return (0);
-	if (map[p - (w * 2)] == 2)
+	if (m->map[m->i - (m->w * 2)] == 2)
 	{
-		map[p - (w * 2)] = 16;
-		map[p - (w)] = 8;
-		return (p - (w * 2));
+		m->map[m->i - (m->w * 2)] = 16;
+		m->map[m->i - (m->w)] = 8;
+		return (m->i - (m->w * 2));
 	}
-	else					//	do not care about previously visited location
-		return (0);
-	return (p);
+	return (0);
 }
 
-int	mg_south(unsigned char map[16641], int w, int p)
+int	mg_south(t_map *m)
 {
-	if (map[p + w] == 0)
+	if (m->map[m->i + m->w] == 0)
 		return (0);
-	if (map[p + (w * 2)] == 2)
+	if (m->map[m->i + (m->w * 2)] == 2)
 	{
-		map[p + (w * 2)] = 32;
-		map[p + (w)] = 8;
-		return (p + (w * 2));
+		m->map[m->i + (m->w * 2)] = 32;
+		m->map[m->i + (m->w)] = 8;
+		return (m->i + (m->w * 2));
 	}
-	return (p);
+	return (0);
 }
 
-int	mg_east(unsigned char map[16641], int p)
+int	mg_east(t_map *m)
 {
-	if (map[p + 1] == 0)
+	if (m->map[m->i + 1] == 0)
 		return (0);
-	if (map[p + 2] == 2)
+	if (m->map[m->i + 2] == 2)
 	{
-		map[p + 2] = 64;
-		map[p + 1] = 8;
-		return (p + 2);
+		m->map[m->i + 2] = 64;
+		m->map[m->i + 1] = 8;
+		return (m->i + 2);
 	}
-	return (p);
+	return (0);
 }
 
-int	mg_west(unsigned char map[16641], int p)
+int	mg_west(t_map *m)
 {
-	if (map[p - 1] == 0)
+	if (m->map[m->i - 1] == 0)
 		return (0);
-	if (map[p - 2] == 2)
+	if (m->map[m->i - 2] == 2)
 	{
-		map[p - 2] = 128;
-		map[p - 1] = 8;
-		return (p - 2);
+		m->map[m->i - 2] = 128;
+		m->map[m->i - 1] = 8;
+		return (m->i - 2);
 	}
-	return (p);
+	return (0);
 }
 
-int	check_unvisited_neighbours(unsigned char map[16641], int w, int p)
+int	check_unvisited_neighbours(t_map *m)
 {
-	if (map[p - 1] != 0 && map[p - 2] == 2)
+	if (m->map[m->p - 1] != 0 && m->map[m->p - 2] == 2)
 		return (0);
-	if (map[p + 1] != 0 && map[p + 2] == 2)
+	if (m->map[m->p + 1] != 0 && m->map[m->p + 2] == 2)
 		return (0);
-	if (map[p - w] != 0 && map[p - (w * 2)] == 2)
+	if (m->map[m->p - m->w] != 0 && m->map[m->p - (m->w * 2)] == 2)
 		return (0);
-	if (map[p + w] != 0 && map[p + (w * 2)] == 2)
+	if (m->map[m->p + m->w] != 0 && m->map[m->p + (m->w * 2)] == 2)
 		return (0);
 	return (1);
 }
 
-int	maze_gen(unsigned char map[16641], int w, int h)
+int	maze_gen(t_map *m)
 {
-	int		i;
-	int		d;
-	t_list	*lst;
-	t_list	*ltemp;
-	int		*temp;
-
-	i = 0;
+	m->i = 0;
 	srand(time(0));
-	while (!((i / w) & 1 && !(i & 1)))
-		i = rand() % (w * h);
-	map[i] = 4;
-	temp = malloc(sizeof(int));
-	if (!temp)
+	//init starting position for the alghoritm, make sure it is a valid position
+	while (!((m->i / m->w) & 1 && !(m->i & 1)))
+		m->i = rand() % (m->w * m->h);
+	m->map[m->i] = 4;
+	m->temp = malloc(sizeof(int));
+	if (!m->temp)
 		return (1);
-	*temp = i;
-	lst = ft_lstnew(temp);
-	if (!lst)
+	*m->temp = m->i;
+	m->lst = ft_lstnew(m->temp);
+	if (!m->lst)
 		return (1);
-	while (lst)
+	while (m->lst)
 	{
 		//ft_printf("i = %i\n", i);
 		//map_print(map, w, h);
 		//ft_printf("\n");
-		d = rand() % 4;
-		if (d == 0)			// maze North
-			d = mg_north(map, w, i);
-		else if (d == 1)	// maze East
-			d = mg_east(map, i);
-		else if (d == 2)	// maze South
-			d = mg_south(map, w, i);
-		else if (d == 3)	// maze West
-			d = mg_west(map, i);
-		if (d)
+		m->d = rand() % 4;
+		if (m->d == 0)		// maze North path expansion
+			m->d = mg_north(m);
+		else if (m->d == 1)	// maze East path expansion
+			m->d = mg_east(m);
+		else if (m->d == 2)	// maze South path expansion
+			m->d = mg_south(m);
+		else if (m->d == 3)	// maze West path expansion
+			m->d = mg_west(m);
+		if (m->d)
 		{
 			//add new location to the list of active locations
-			temp = malloc(sizeof(int));
-			if (!temp)
+			m->temp = malloc(sizeof(int));
+			if (!m->temp)
 				return (1);
-			ltemp = ft_lstnew(temp);
-			if (!ltemp)
+			m->ltemp = ft_lstnew(m->temp);
+			if (!m->ltemp)
 				return (1);
-			*temp = d;
-			ft_lstadd_front(&lst, ltemp);
+			*m->temp = m->d;
+			ft_lstadd_front(&m->lst, m->ltemp);
 		}
 		// check if newest list has neigbours if not remove from the list
-		while (lst && check_unvisited_neighbours(map, w, *(int *)lst->content))
+		if (m->lst)
+			m->p = *(int *)m->lst->content;
+		while (m->lst && check_unvisited_neighbours(m))
 		{
-			ltemp = lst->next;
-			ft_lstdelone(lst, free);
-			lst = ltemp;
+			m->ltemp = m->lst->next;
+			ft_lstdelone(m->lst, free);
+			m->lst = m->ltemp;
+			if (m->lst)
+				m->p = *(int *)m->lst->content;
 		}
-		if (lst)
-			i = *(int *)lst->content;
+		if (m->lst)
+			m->i = *(int *)m->lst->content;
 	}
 	return (0);
 }
 
 int	main(int ac, char *av[])
 {
-	int				width;
+	/*int				width;
 	int				height;
-	unsigned char	map[16641];
+	unsigned char	map[16641];*/
+	t_map			m;
 
 	if (ac != 3)
 		return (2);
-	width = ft_atoi(av[1]);
-	height = ft_atoi(av[2]);
-	if (width < 3 || height < 3 || width > 64 || height > 64)
+	m.width = ft_atoi(av[1]);
+	m.height = ft_atoi(av[2]);
+	m.w = m.width * 2 + 1;
+	m.h = m.height * 2 + 1;
+	if (m.width < 3 || m.height < 3 || m.width > 64 || m.height > 64)
 		return (1);
-	map_prefill(map, (width * 2 + 1), (height * 2 + 1));
+	map_prefill(&m);
 	//prefill map
 	//create maze
-	maze_gen(map, (width * 2 + 1), (height * 2 + 1));
+	maze_gen(&m);
 	//print maze
-	map_print(map, (width * 2 + 1), (height * 2 + 1));
+	map_print(&m);
 	return (0);
 }
