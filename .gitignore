@@ -51,3 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 tests/mazegen/libft/.vscode/settings.json
+tests/mazegen/.nfs00000000014231da0000000e
+.gitignore
+tests/mazegen/.nfs00000000014216310000000b
+tests/mazegen/.nfs00000000014231550000000c
+tests/mazegen/.nfs000000000142341c0000000f
