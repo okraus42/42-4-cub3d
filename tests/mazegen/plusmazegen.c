@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/01 19:10:32 by okraus           ###   ########.fr       */
+/*   Updated: 2023/11/02 18:06:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,35 @@ typedef	struct s_map
 	int				tt;	
 	int				x;			//how many x intersections from dead end
 	int				xx;
+	int				ro;			//how many attempts to build an overlapping room
+	int				rn;			//how many attempts to build not an overlapping room
+	int				rw;			//room width
+	int				rh;			//room height
+	int				dr;			//dead end removal (0 - keep dead ends, 1 - remove dead ends, n - remove n corridors from dead ends)
 	int				loops;		//how many dead ends were changed int loops
 	t_list			*lst;		//stack of visited positions (with neighbours?)
 	t_list			*ltemp;		//temporaty list
 	int				*temp;		//temporary value of position in the map
-	unsigned char	map[16641];	//map up to 64*64
+	unsigned int	map[16641];	//map up to 64*64
 } t_map;
 
+typedef enum e_map_block
+{
+	EDGE = 0x0,
+	WALL_A = 0x1,		//WALL COLUMN, permanent wall except for 
+	WALL_B = 0x2,		//WALL between columns
+	WALL_C = 0x3,		//WALL between columns between two different areas
+	DEADEND = 0x4,
+	CORRIDOR_A = 0x5,	// corridor at junction place
+	T_JUNCTION = 0x6,
+	X_JUNCTION = 0x7,
+	CORRIDOR_B = 0x8,	// corridor between two permawalls
+	ROOM = 0x10,
+	ROOM_A = 0x14,		//room 4
+	DOOR_NS = 0x20,  // corridor at 
+	DOOR_WE = 0x40,
+		
+}	t_map_block;
 
 void	map_print(t_map *m)
 {
@@ -51,30 +73,34 @@ void	map_print(t_map *m)
 	{
 		/*if (m->i == m->p)
 			ft_printf("XX", 0xffffff);*/
-		if (m->map[m->i] == 0)
+		if (m->map[m->i] == EDGE)
 			ft_printf("%^*C  %0C", 0x000000);
-		else if (m->map[m->i] == 1)
-			ft_printf("%^*C  %0C", 0x555555);
-		else if (m->map[m->i] == 2)
-			ft_printf("%^*C  %0C", 0xcccccc);
-		else if (m->map[m->i] == 4)
+		else if (m->map[m->i] == WALL_A)
+			ft_printf("%^*C  %0C", 0x002222);
+		else if (m->map[m->i] == WALL_B)
+			ft_printf("%^*C  %0C", 0x444400);
+		else if (m->map[m->i] == WALL_C)
+			ft_printf("%^*C  %0C", 0x660066);
+		else if (m->map[m->i] == DEADEND)
+			ft_printf("%^*C  %0C", 0xff8888);
+		else if (m->map[m->i] == CORRIDOR_A)
+			ft_printf("%^*C  %0C", 0x999999);
+		else if (m->map[m->i] == T_JUNCTION)
+			ft_printf("%^*C  %0C", 0xaaffaa);
+		else if (m->map[m->i] == X_JUNCTION)
+			ft_printf("%^*C  %0C", 0xbbbbff);
+		else if (m->map[m->i] == CORRIDOR_B)
+			ft_printf("%^*C  %0C", 0xdddddd);
+		else if (m->map[m->i] == ROOM)
 			ft_printf("%^*C  %0C", 0xffffff);
-		else if (m->map[m->i] == 5)
-			ft_printf("%^*C  %0C", 0x00ffff);
-		else if (m->map[m->i] == 6)
-			ft_printf("%^*C  %0C", 0xff00ff);
-		else if (m->map[m->i] == 7)
-			ft_printf("%^*C  %0C", 0xffff00);
-		else if (m->map[m->i] == 8)
-			ft_printf("%^*C  %0C", 0xaaaaaa);
-		else if (m->map[m->i] == 16)
-			ft_printf("%^*C  %0C", 0xccaaaa);
-		else if (m->map[m->i] == 32)
-			ft_printf("%^*C  %0C", 0xaaccaa);
-		else if (m->map[m->i] == 64)
-			ft_printf("%^*C  %0C", 0xaacccc);
+		else if (m->map[m->i] == ROOM_A)
+			ft_printf("%^*C  %0C", 0xffeeff);
+		else if (m->map[m->i] == DOOR_NS)
+			ft_printf("%^*C  %0C", 0xcc9966);
+		else if (m->map[m->i] == DOOR_WE)
+			ft_printf("%^*C  %0C", 0xcccc33);
 		else if (m->map[m->i] == 128)
-			ft_printf("%^*C  %0C", 0xccaacc);
+			ft_printf("%^*C  %0C", 0xff0000);
 		++(m->i);
 		if (m->i % m->w == 0)
 			ft_printf("\n");
@@ -300,25 +326,25 @@ void	breakonewall(t_map *m)
 		{
 			m->map[m->i - 1] = 8;
 			counter = 0;
-			ft_printf("West wall  removed\n");
+			//ft_printf("West wall  removed\n");
 		}
 		else if (m->d == 1 && m->map[m->i + 1] == 1)
 		{
 			m->map[m->i + 1] = 8;
 			counter = 0;
-			ft_printf("East wall removed\n");
+			//ft_printf("East wall removed\n");
 		}
 		else if (m->d == 2 && m->map[m->i - m->w] == 1)
 		{
 			m->map[m->i - m->w] = 8;
 			counter = 0;
-			ft_printf("North wall removed\n");
+			//ft_printf("North wall removed\n");
 		}
 		else if (m->d == 3 && m->map[m->i + m->w] == 1)
 		{
 			m->map[m->i + m->w] = 8;
 			counter = 0;
-			ft_printf("South wall removed\n");
+			//ft_printf("South wall removed\n");
 		}
 		//if there are no walls because of the adjacend dead end was resolved,
 		// skip breaking stage
@@ -326,7 +352,7 @@ void	breakonewall(t_map *m)
 			&& m->map[m->i - m->w] != 1 && m->map[m->i + m->w] != 1) 
 			counter = 0;
 	}
-	ft_printf("wall removed\n");
+	//ft_printf("wall removed\n");
 }
 
 void	wallbreaker(t_map *m)
@@ -340,28 +366,28 @@ void	wallbreaker(t_map *m)
 		// 	m->map[m->i + 1], m->map[m->i - m->w], m->map[m->i + m->w]);
 		if (m->ll < m->l && (m->d & 4) && (m->d & 2) && (m->d & 1))
 		{
-			ft_printf("making ll\n");
+			//ft_printf("making ll\n");
 			breakonewall(m);
-			ft_printf("made ll\n");
+			//ft_printf("made ll\n");
 			m->ll++;
 			m->map[m->i] = 5;
 		}
 		else if (m->tt < m->t && (m->d & 2) && (m->d & 1))
 		{
-			ft_printf("making tt\n");
+			//ft_printf("making tt\n");
 			breakonewall(m);
 			breakonewall(m);
-			ft_printf("made tt\n");
+			//ft_printf("made tt\n");
 			m->tt++;
 			m->map[m->i] = 6;
 		}
 		else if (m->xx < m->x && (m->d & 1))
 		{
-			ft_printf("making xx\n");
+			//ft_printf("making xx\n");
 			breakonewall(m);
 			breakonewall(m);
 			breakonewall(m);
-			ft_printf("made xx\n");
+			//ft_printf("made xx\n");
 			m->xx++;
 			m->map[m->i] = 7;
 		}
@@ -387,7 +413,7 @@ void	map_loops(t_map *m)
 		{
 			wallbreaker(m);
 			++(m->i);
-			ft_printf("%i\n", m->i);
+			//ft_printf("%i\n", m->i);
 		}
 		
 	}
@@ -399,6 +425,197 @@ void	maze_mod(t_map *m)
 	if (map_calculate(m))
 		return ;
 	map_loops(m);
+}
+
+void	map_refill2_temp(t_map *m)
+{
+	m->walls = 0;
+	if (m->map[m->i + 1] == WALL_A || m->map[m->i + 1] == WALL_B || m->map[m->i + 1] == EDGE)
+		m->walls++;
+	if (m->map[m->i - 1] == WALL_A ||  m->map[m->i - 1] == WALL_B ||m->map[m->i - 1] == EDGE)
+		m->walls++;
+	if (m->map[m->i - m->w] == WALL_A || m->map[m->i - m->w] == WALL_B || m->map[m->i - m->w] == EDGE)
+		m->walls++;
+	if (m->map[m->i + m->w] == WALL_A || m->map[m->i + m->w] == WALL_B || m->map[m->i + m->w] == EDGE)
+		m->walls++;
+	if (!m->walls)
+		m->map[m->i] = X_JUNCTION;
+	else if (m->walls == 1)
+		m->map[m->i] = T_JUNCTION;
+	else if (m->walls == 2)
+		m->map[m->i] = CORRIDOR_A;
+	else if (m->walls == 3)
+		m->map[m->i] = DEADEND;
+	else if (m->walls == 4)
+		m->map[m->i] = ROOM;
+	else
+		m->map[m->i] = WALL_C;
+	//ft_printf("%i - %i - %i\n", m->i, m->walls, m->map[m->i]);
+}
+
+void	map_refill2_temp2(t_map *m)
+{
+	if (m->map[m->i] == WALL_A)
+		m->map[m->i] = WALL_B;
+}
+
+void	map_refill2(t_map *m)
+{
+	m->i = 0;
+	while (m->i < m->w * m->h)
+	{
+		//ft_printf("%i\n", m->i);
+		if ((m->i < m->w) || (m->i > (m->w * (m->h - 1)))
+			|| !(m->i % m->w) || (m->i % m->w) == (m->w - 1))
+			m->map[m->i] = EDGE;
+		else if ((m->i / m->w) & 1 && !(m->i & 1))
+			map_refill2_temp(m);
+		else if (!((m->i / m->w) & 1) && !(m->i & 1))
+			m->map[m->i] = WALL_A;
+		else if (m->i > m->w && m->i < (m->h - 1) * m->w
+			&& m->i % m->w && m->i % m->w < (m->w - 1))
+			map_refill2_temp2(m);	//check status;
+		else
+			m->map[m->i] = m->map[m->i];
+		//ft_printf("%i\n", m->i);
+		++(m->i);
+	}
+	m->i = 0;
+	/*
+	while (m->i < m->w * m->h)
+	{
+		if ((m->i < m->w) || (m->i > (m->w * (m->h - 1)))
+			|| !(m->i % m->w) || (m->i % m->w) == (m->w - 1))
+			m->map[m->i] = m->map[m->i];
+		else if ((m->i / m->w) & 1 && !(m->i & 1))
+			map_refill2_temp2(m);
+		else if (!((m->i / m->w) & 1) && !(m->i & 1))
+			m->map[m->i] = m->map[m->i];
+		else if (m->i > m->w && m->i < (m->h - 1) * m->w
+			&& m->i % m->w && m->i % m->w < (m->w - 1))
+			map_refill2_temp(m);	//check status;
+		else
+			m->map[m->i] = ROOM;
+		++(m->i);
+	}*/
+}
+
+int	check_room_overlap(t_map *m, int x, int y)
+{
+	while (y < m->rh)	
+	{
+		x = 0;
+		while (x < m->rw)
+		{
+			if (m->map[m->i + (y * m->w) + x] == 0)
+				return (0);				
+			++x;
+		}
+		++y;
+	}
+	return (1);
+}
+
+int	check_room_nooverlap(t_map *m, int x, int y)
+{
+	while (y < m->rh)	
+	{
+		x = 0;
+		while (x < m->rw)
+		{
+			if (m->map[m->i + (y * m->w) + x] == 0
+				|| m->map[m->i + (y * m->w) + x] == ROOM
+				|| m->map[m->i + (y * m->w) + x] == ROOM_A)
+				return (0);				
+			++x;
+		}
+		++y;
+	}
+	return (1);
+}
+
+void	add_room(t_map *m, int x, int y)
+{
+	y = 0;
+	while (y < m->rh)	
+	{
+		x = 0;
+		while (x < m->rw)
+		{
+			if (m->map[m->i + (y * m->w) + x] & 4)
+				m->map[m->i + (y * m->w) + x] =	ROOM_A;
+			else
+				m->map[m->i + (y * m->w) + x] =	ROOM;
+			++x;
+		}
+		++y;
+	}
+}
+
+void	add_rooms_overlap(t_map *m)
+{
+	int	i;
+	int	x;
+	int	y;
+
+	i = 0;
+
+	while (i < 5)
+	{
+		x = 0;
+		y = 0;
+		m->i = rand() % (m->w * m->h);
+		while (1)
+		{
+			m->i = rand() % (m->w * m->h);
+			if ((m->map[m->i] & 4) || (m->map[m->i] == ROOM_A))
+				break;
+		}
+		m->rw = (rand() % 4) * 2 + 3;
+		m->rh = (rand() % 4) * 2 + 3;
+		if (check_room_overlap(m, x, y))
+			add_room(m, x, y);
+		++i;
+	}
+}
+
+void	add_rooms_nooverlap(t_map *m)
+{
+	int	i;
+	int	x;
+	int	y;
+
+	i = 0;
+
+	while (i < 500)
+	{
+		x = 0;
+		y = 0;
+		m->i = rand() % (m->w * m->h);
+		while (1)
+		{
+			m->i = rand() % (m->w * m->h);
+			if ((m->map[m->i] & 4) || (m->map[m->i] == ROOM_A))
+				break;
+		}
+		m->rw = (rand() % 4) * 2 + 3;
+		m->rh = (rand() % 4) * 2 + 3;
+		if (check_room_nooverlap(m, x, y))
+			add_room(m, x, y);
+		++i;
+	}
+}
+
+void	add_rooms(t_map *m)
+{
+	map_refill2(m);
+	//try to add non overlaping rooms and overlapping
+	add_rooms_nooverlap(m);
+	add_rooms_overlap(m);
+	//put walls around rooms
+
+	//connect rooms
+	
 }
 
 int	main(int ac, char *av[])
@@ -426,7 +643,12 @@ int	main(int ac, char *av[])
 	//prefill map
 	//create maze
 	maze_gen(&m);
+	//add loops and intersections
 	maze_mod(&m);
+	//add rooms (attempts & overlaps)
+	add_rooms(&m);
+	//trim deadends (0 no, 1 yes, n specific number of corritdors is removed )
+	
 	//print maze
 	map_print(&m);
 	return (0);
