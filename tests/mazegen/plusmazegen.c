@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/02 18:06:56 by okraus           ###   ########.fr       */
+/*   Updated: 2023/11/03 10:43:05 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,15 @@
 // compile with libft.a
 // pass number for
 // width, height, ratio of dead ends, loops, T-intersections, X-intersections
-// like 52 26 4 5 3 2
+// notoverlapping room placement attempts, overlapping rooms placement attempts
+// like 52 26 4 5 3 2 20 10
 typedef	struct s_map
 {
 	int				width;		//input weight
 	int				height;		//input height
 	int				w;			//actual map width
 	int				h;			//actual map height
+	int				s;			//size, stop w*h
 	int				i;			//iterating
 	int				d;			//temp value
 	int				p;			//actual position?
@@ -36,12 +38,17 @@ typedef	struct s_map
 	int				tt;	
 	int				x;			//how many x intersections from dead end
 	int				xx;
-	int				ro;			//how many attempts to build an overlapping room
 	int				rn;			//how many attempts to build not an overlapping room
+	int				ro;			//how many attempts to build an overlapping room
 	int				rw;			//room width
 	int				rh;			//room height
+	int				ed;			//extra door probability
 	int				dr;			//dead end removal (0 - keep dead ends, 1 - remove dead ends, n - remove n corridors from dead ends)
 	int				loops;		//how many dead ends were changed int loops
+	unsigned int	red;
+	unsigned int	green;
+	unsigned int	blue;
+	unsigned int	colour;
 	t_list			*lst;		//stack of visited positions (with neighbours?)
 	t_list			*ltemp;		//temporaty list
 	int				*temp;		//temporary value of position in the map
@@ -61,16 +68,50 @@ typedef enum e_map_block
 	CORRIDOR_B = 0x8,	// corridor between two permawalls
 	ROOM = 0x10,
 	ROOM_A = 0x14,		//room 4
-	DOOR_NS = 0x20,  // corridor at 
+	DOOR_NS = 0x20,		// corridor at 
 	DOOR_WE = 0x40,
+	FLOOD = 0x1000,
+	FLOOD_B = 0x2000
 		
 }	t_map_block;
+
+
+// BETTER SOLUTION
+// Do EDGES 2 walls thick
+// typedef enum e_map_block
+// {
+// 	EDGE = 0x0,
+// 	WALL_A = 0x10,		//WALL COLUMN, permanent wall except for 
+// 	WALL_B = 0x20,		//WALL between columns
+// 	WALL_C = 0x40,		//WALL between columns between two different areas
+
+// 	DOOR_NS = 0x100,		// corridor at 
+// 	DOOR_WE = 0x200,
+
+// 	DEADEND = 0x1000,
+// 	CORRIDOR_A = 0x2000,	// corridor at junction place
+// 	T_JUNCTION = 0x4000,
+// 	X_JUNCTION = 0x8000,
+// 	CORRIDOR_B = 0x10000,	// corridor between two permawalls
+// 	ROOM = 0x100000,
+// 	ROOM_A = 0x200000,		//room 4
+//	ROOM_B = 0x400000,
+
+// 	FLOOD = 0x1000000,		//flood to index different areas
+// 	FLOOD_B = 0x2000000		//flood to connect different areas
+		
+// }	t_map_block;
 
 void	map_print(t_map *m)
 {
 	m->i = 0;
-	while (m->i < m->w * m->h)
+
+	while (m->i < m->s)
 	{
+		m->red = ((m->map[m->i] / 4) + 12 * m->map[m->i]) % 64 + 192;
+		m->green = (32 + (m->map[m->i] / 4) + 34 * m->map[m->i]) % 64 + 192;
+		m->blue = ((m->map[m->i] / 4) + m->map[m->i] * 16) % 64 + 192;
+		m->colour = m->red << 16 | m->green << 8 | m->blue;
 		/*if (m->i == m->p)
 			ft_printf("XX", 0xffffff);*/
 		if (m->map[m->i] == EDGE)
@@ -99,7 +140,9 @@ void	map_print(t_map *m)
 			ft_printf("%^*C  %0C", 0xcc9966);
 		else if (m->map[m->i] == DOOR_WE)
 			ft_printf("%^*C  %0C", 0xcccc33);
-		else if (m->map[m->i] == 128)
+		else if (m->map[m->i] & FLOOD)
+			ft_printf("%^*C  %0C", m->colour);
+		else if (m->map[m->i] & FLOOD_B)
 			ft_printf("%^*C  %0C", 0xff0000);
 		++(m->i);
 		if (m->i % m->w == 0)
@@ -110,7 +153,7 @@ void	map_print(t_map *m)
 void	map_prefill(t_map *m)
 {
 	m->i = 0;
-	while (m->i < m->w * m->h)
+	while (m->i < m->s)
 	{
 		if ((m->i / m->w) & 1 && !(m->i & 1))
 			m->map[m->i] = 2;
@@ -122,7 +165,7 @@ void	map_prefill(t_map *m)
 		++(m->i);
 	}
 	m->i = 0;
-	while (m->i < m->w * m->h)
+	while (m->i < m->s)
 	{
 		if (!((m->i / m->w) & 1) && !(m->i & 1))
 			m->map[m->i] = 0;
@@ -201,7 +244,7 @@ int	maze_gen(t_map *m)
 	srand(time(0));
 	//init starting position for the alghoritm, make sure it is a valid position
 	while (!((m->i / m->w) & 1 && !(m->i & 1)))
-		m->i = rand() % (m->w * m->h);
+		m->i = rand() % (m->s);
 	m->map[m->i] = 64;
 	m->temp = malloc(sizeof(int));
 	if (!m->temp)
@@ -257,7 +300,7 @@ void	map_refill(t_map *m)
 {
 	m->i = 0;
 	m->ends = 0;
-	while (m->i < m->w * m->h)
+	while (m->i < m->s)
 	{
 		m->walls = 0;
 		if (m->map[m->i] & 0xF0)
@@ -319,7 +362,7 @@ void	breakonewall(t_map *m)
 	int	counter;
 	
 	counter = 1;
-	while (counter && m->i < m->w * m->h)
+	while (counter && m->i < m->s)
 	{
 		m->d = rand() % 4;
 		if (m->d == 0 && m->map[m->i - 1] == 1)
@@ -409,7 +452,7 @@ void	map_loops(t_map *m)
 	while (m->ll + m->tt + m->xx != m->l + m->t + m->x)
 	{
 		m->i = 0;
-		while (m->i < m->w * m->h - 3)
+		while (m->i < m->s - 3)
 		{
 			wallbreaker(m);
 			++(m->i);
@@ -462,7 +505,7 @@ void	map_refill2_temp2(t_map *m)
 void	map_refill2(t_map *m)
 {
 	m->i = 0;
-	while (m->i < m->w * m->h)
+	while (m->i < m->s)
 	{
 		//ft_printf("%i\n", m->i);
 		if ((m->i < m->w) || (m->i > (m->w * (m->h - 1)))
@@ -482,7 +525,7 @@ void	map_refill2(t_map *m)
 	}
 	m->i = 0;
 	/*
-	while (m->i < m->w * m->h)
+	while (m->i < m->s)
 	{
 		if ((m->i < m->w) || (m->i > (m->w * (m->h - 1)))
 			|| !(m->i % m->w) || (m->i % m->w) == (m->w - 1))
@@ -560,14 +603,14 @@ void	add_rooms_overlap(t_map *m)
 
 	i = 0;
 
-	while (i < 5)
+	while (i < m->ro)
 	{
 		x = 0;
 		y = 0;
-		m->i = rand() % (m->w * m->h);
+		m->i = rand() % (m->s);
 		while (1)
 		{
-			m->i = rand() % (m->w * m->h);
+			m->i = rand() % (m->s);
 			if ((m->map[m->i] & 4) || (m->map[m->i] == ROOM_A))
 				break;
 		}
@@ -586,15 +629,14 @@ void	add_rooms_nooverlap(t_map *m)
 	int	y;
 
 	i = 0;
-
-	while (i < 500)
+	while (i < m->rn)
 	{
 		x = 0;
 		y = 0;
-		m->i = rand() % (m->w * m->h);
+		m->i = rand() % (m->s);
 		while (1)
 		{
-			m->i = rand() % (m->w * m->h);
+			m->i = rand() % (m->s);
 			if ((m->map[m->i] & 4) || (m->map[m->i] == ROOM_A))
 				break;
 		}
@@ -606,6 +648,105 @@ void	add_rooms_nooverlap(t_map *m)
 	}
 }
 
+void	add_room_walls(t_map *m)
+{
+	m->i = 0;
+	while (m->i < m->s)
+	{
+		if (m->map[m->i] == CORRIDOR_B)
+		{
+			if (m->map[m->i + 1] == ROOM_A || m->map[m->i - 1] == ROOM_A
+				|| m->map[m->i - m->w] == ROOM_A
+				|| m->map[m->i + m->w] == ROOM_A)
+				m->map[m->i] = WALL_B;
+		}
+
+		++(m->i);
+	}
+}
+
+void	keep_flooding(t_map *m, int i, unsigned int flood_value)
+{
+	if (m->map[i] > 3 && m->map[i] < 0x20)
+		m->map[i] = flood_value;
+	if (m->map[i - 1] > 3 && m->map[i - 1] < 0x20)
+	{
+		keep_flooding(m, i - 1, flood_value);
+	}
+	if (m->map[i + 1] > 3 && m->map[i + 1] < 0x20)
+	{
+		keep_flooding(m, i + 1, flood_value);
+	}
+	if (m->map[i - m->w] > 3 && m->map[i - m->w] < 0x20)
+	{
+		keep_flooding(m, i - m->w, flood_value);
+	}
+	if (m->map[i + m->w] > 3 && m->map[i + m->w] < 0x20)
+	{
+		keep_flooding(m, i + m->w, flood_value);
+	}	
+}
+
+void	start_flooding(t_map *m)
+{
+	m->i = rand() % (3 * m->s / 4) + m->s / 8;
+	while (m->map[m->i] < 4)
+		++(m->i);
+}
+
+void	keep_flooding_2(t_map *m, int i, unsigned int flood_value)
+{
+	if (m->map[i] & FLOOD)
+		m->map[i] = flood_value;
+	if (m->map[i - 1] & FLOOD)
+	{
+		keep_flooding_2(m, i - 1, flood_value);
+	}
+	if (m->map[i + 1] & FLOOD)
+	{
+		keep_flooding_2(m, i + 1, flood_value);
+	}
+	if (m->map[i - m->w] & FLOOD)
+	{
+		keep_flooding_2(m, i - m->w, flood_value);
+	}
+	if (m->map[i + m->w] & FLOOD)
+	{
+		keep_flooding_2(m, i + m->w, flood_value);
+	}	
+}
+
+int	flood_check(t_map *m)
+{
+	(void)m;
+	return (0);
+}
+
+void	connect_rooms(t_map *m)
+{
+	map_print(m);
+	//start flooding
+	//
+	//while (flood_check)
+	m->i = 0;
+	m->d = -1;
+	while (m->i < m->s)
+	{
+		if (m->map[m->i] > 3 && m->map[m->i] < 0x20)
+		{
+			++(m->d);
+			keep_flooding(m, m->i, FLOOD + m->d);
+		}
+		++m->i;
+	}
+	start_flooding(m);
+	keep_flooding_2(m , m->i, FLOOD_B);
+	//create openings
+	//open doors at random
+	//close openings
+	//keep flooding
+}
+
 void	add_rooms(t_map *m)
 {
 	map_refill2(m);
@@ -613,9 +754,9 @@ void	add_rooms(t_map *m)
 	add_rooms_nooverlap(m);
 	add_rooms_overlap(m);
 	//put walls around rooms
-
+	add_room_walls(m);
 	//connect rooms
-	
+	connect_rooms(m);	
 }
 
 int	main(int ac, char *av[])
@@ -625,7 +766,7 @@ int	main(int ac, char *av[])
 	unsigned char	map[16641];*/
 	t_map			m;
 
-	if (ac != 7)
+	if (ac != 9)
 		return (2);
 	m.width = ft_atoi(av[1]);
 	m.height = ft_atoi(av[2]);
@@ -633,8 +774,11 @@ int	main(int ac, char *av[])
 	m.l = ft_atoi(av[4]);
 	m.t = ft_atoi(av[5]);
 	m.x = ft_atoi(av[6]);
+	m.rn = ft_atoi(av[7]);
+	m.ro = ft_atoi(av[8]);
 	m.w = m.width * 2 + 1;
 	m.h = m.height * 2 + 1;
+	m.s = m.w * m.h;
 	if (m.width < 3 || m.height < 3 || m.width > 64 || m.height > 64)
 		return (1);
 	if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0)
