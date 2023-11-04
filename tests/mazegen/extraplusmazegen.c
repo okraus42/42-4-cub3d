@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/03 18:17:25 by okraus           ###   ########.fr       */
+/*   Updated: 2023/11/04 09:45:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ void	map_print(t_map *m)
 			ft_printf("%^*C  %0C", m->colour);
 		else if (m->map[m->i] & FLOOD_B)
 			ft_printf("%^*C  %0C", 0xff0000);
+		else
+			ft_printf("%^*C  %0C", 0x222277);
 		++(m->i);
 		if (m->i % m->w == 0)
 			ft_printf("\n");
@@ -422,7 +424,7 @@ void	breakonewall(t_map *m)
 
 void	wallbreaker(t_map *m)
 {
-	if (m->map[m->i] == 4)
+	if (m->map[m->i] == DEADEND)
 	{
 		m->d = rand() % 8;
 		// ft_printf("%d\n", m->d);
@@ -435,7 +437,7 @@ void	wallbreaker(t_map *m)
 			breakonewall(m);
 			//ft_printf("made ll\n");
 			m->ll++;
-			m->map[m->i] = 5;
+			m->map[m->i] = CORRIDOR_A;
 		}
 		else if (m->tt < m->t && (m->d & 2) && (m->d & 1))
 		{
@@ -444,7 +446,7 @@ void	wallbreaker(t_map *m)
 			breakonewall(m);
 			//ft_printf("made tt\n");
 			m->tt++;
-			m->map[m->i] = 6;
+			m->map[m->i] = T_JUNCTION;
 		}
 		else if (m->xx < m->x && (m->d & 1))
 		{
@@ -454,7 +456,7 @@ void	wallbreaker(t_map *m)
 			breakonewall(m);
 			//ft_printf("made xx\n");
 			m->xx++;
-			m->map[m->i] = 7;
+			m->map[m->i] = X_JUNCTION;
 		}
 		// ft_printf("aaaa\n");
 		// ft_printf("ends: %i e: %i, l: %i, t: %i, x: %i \n",
@@ -787,7 +789,7 @@ int	mg_north2(t_map *m)
 	if (m->map[m->i - (m->w * 2)] == FLOOD)
 	{
 		m->map[m->i - (m->w * 2)] = FLOOD_B;
-		m->map[m->i - (m->w)] = CORRIDOR_B;;
+		m->map[m->i - (m->w)] = CORRIDOR_B;
 		return (m->i - (m->w * 2));
 	}
 	return (0);
@@ -809,7 +811,7 @@ int	mg_east2(t_map *m)
 	if (m->map[m->i + 2] == FLOOD)
 	{
 		m->map[m->i + 2] = FLOOD_B;
-		m->map[m->i + 1] = CORRIDOR_B;;
+		m->map[m->i + 1] = CORRIDOR_B;
 		return (m->i + 2);
 	}
 	return (0);
@@ -820,7 +822,7 @@ int	mg_west2(t_map *m)
 	if (m->map[m->i - 2] == FLOOD)
 	{
 		m->map[m->i - 2] = FLOOD_B;
-		m->map[m->i - 1] = CORRIDOR_B;;
+		m->map[m->i - 1] = CORRIDOR_B;
 		return (m->i - 2);
 	}
 	return (0);
@@ -897,6 +899,240 @@ int	maze_gen2(t_map *m)
 	return (0);
 }
 
+
+void	map_refill4(t_map *m)
+{
+	m->i = 0;
+	m->ends = 0;
+	while (m->i < m->s)
+	{
+		m->walls = 0;
+		if (m->map[m->i] & FLOOD_B)
+		{
+			if (m->map[m->i - 1] == WALL_B)
+				m->walls++;
+			if (m->map[m->i + 1] == WALL_B)
+				m->walls++;
+			if (m->map[m->i - m->w] == WALL_B)
+				m->walls++;
+			if (m->map[m->i + m->w] == WALL_B)
+				m->walls++;	
+		}
+		if (m->walls == 3)
+		{
+			m->map[m->i] = DEADEND;
+			m->ends++;
+		}
+		++(m->i);
+	}
+}
+
+int	map_calculate4(t_map *m)
+{
+	int	e;
+	int	l;
+	int	t;
+	int	x;
+
+	if (!m->ends || (!m->e && !m->l && !m->x && !m->t)) //avoid working with zero's
+		return (1);
+	m->d = m->ends << 8;  //shifted by 8 to lower division error
+	e = m->e << 8;
+	l = m->l << 8;
+	t = m->t << 8;
+	x = m->x << 8;
+	m->e = ((m->d * e) / (e + l + t + x)) >> 8; //shifted back by 8 
+	m->l = ((m->d * l) / (e + l + t + x)) >> 8;
+	m->t = ((m->d * t) / (e + l + t + x)) >> 8;
+	m->x = ((m->d * x) / (e + l + t + x)) >> 8;
+	while ((m->e + m->l + m->t + m->x) < m->ends)	//increase the biggest 
+	{												// number to match the	
+		if (e >= l && e >= t && e >= x)				// number of ends
+			m->e++;
+		else if (l >= e && l >= t && l >= x)
+			m->l++;
+		else if (t >= e && t >= l && t >= x)
+			m->t++;
+		else
+			m->x++;
+	}
+	return (0);
+}
+
+void	breakonewall4(t_map *m)
+{
+	int	counter;
+	
+	counter = 1;
+	while (counter && m->i < m->s) //second condition makes no sense, added because of bug in code while debugging
+	{
+		m->d = rand() % 4;
+		if (m->d == 0 && m->map[m->i - 1] == WALL_B)
+		{
+			m->map[m->i - 1] = CORRIDOR_B;
+			counter = 0;
+			//ft_printf("West wall  removed\n");
+		}
+		else if (m->d == 1 && m->map[m->i + 1] == WALL_B)
+		{
+			m->map[m->i + 1] = CORRIDOR_B;
+			counter = 0;
+			//ft_printf("East wall removed\n");
+		}
+		else if (m->d == 2 && m->map[m->i - m->w] == WALL_B)
+		{
+			m->map[m->i - m->w] = CORRIDOR_B;
+			counter = 0;
+			//ft_printf("North wall removed\n");
+		}
+		else if (m->d == 3 && m->map[m->i + m->w] == WALL_B)
+		{
+			m->map[m->i + m->w] = CORRIDOR_B;
+			counter = 0;
+			//ft_printf("South wall removed\n");
+		}
+		//if there are no walls because of the adjacend dead end was resolved,
+		// skip breaking stage
+		else if (m->map[m->i - 1] != WALL_B && m->map[m->i + 1] != WALL_B
+			&& m->map[m->i - m->w] != WALL_B && m->map[m->i + m->w] != WALL_B) 
+			counter = 0;
+	}
+	//ft_printf("wall removed\n");
+}
+
+void	wallbreaker4(t_map *m)
+{
+	if (m->map[m->i] == DEADEND)
+	{
+		m->d = rand() % 8;
+		// ft_printf("%d\n", m->d);
+		// ft_printf("%i\n", m->i);
+		// ft_printf("%i || 0 %i | 1 %i | 2 %i | 3 %i \n",  m->map[m->i], m->map[m->i - 1],
+		// 	m->map[m->i + 1], m->map[m->i - m->w], m->map[m->i + m->w]);
+		if (m->ll < m->l && (m->d & 4) && (m->d & 2) && (m->d & 1))
+		{
+			//ft_printf("making ll\n");
+			breakonewall4(m);
+			//ft_printf("made ll\n");
+			m->ll++;
+			m->map[m->i] = CORRIDOR_A;
+		}
+		else if (m->tt < m->t && (m->d & 2) && (m->d & 1))
+		{
+			//ft_printf("making tt\n");
+			breakonewall4(m);
+			breakonewall4(m);
+			//ft_printf("made tt\n");
+			m->tt++;
+			m->map[m->i] = T_JUNCTION;
+		}
+		else if (m->xx < m->x && (m->d & 1))
+		{
+			//ft_printf("making xx\n");
+			breakonewall4(m);
+			breakonewall4(m);
+			breakonewall4(m);
+			//ft_printf("made xx\n");
+			m->xx++;
+			m->map[m->i] = X_JUNCTION;
+		}
+		// ft_printf("aaaa\n");
+		// ft_printf("ends: %i e: %i, l: %i, t: %i, x: %i \n",
+		// 	m->ends, m->e, m->l, m->t, m->x);
+		// ft_printf("ends: %i e: %i, ll: %i, tt: %i, xx: %i \n",
+		// 	m->ends, m->e, m->ll, m->tt, m->xx);
+		// m->p = m->i;
+		// map_print(m);
+	}
+}
+
+void	map_loops4(t_map *m)
+{
+	m->ll = 0;
+	m->tt = 0;
+	m->xx = 0;
+	while (m->ll + m->tt + m->xx != m->l + m->t + m->x)
+	{
+		m->i = 0;
+		while (m->i < m->s - 3)
+		{
+			wallbreaker4(m);
+			++(m->i);
+			//ft_printf("%i\n", m->i);
+		}
+		
+	}
+}
+
+void	map_refill5(t_map *m)
+{
+	m->i = 0;
+	while (m->i < m->s)
+	{
+		if (m->map[m->i] & CORRIDOR_B)
+		{
+			if (!(m->map[m->i - 1]) || !(m->map[m->i + 1])
+				|| !(m->map[m->i + m->w])
+				|| !(m->map[m->i - m->w]))
+				m->map[m->i] = WALL_B;
+		}
+		++(m->i);
+	}
+	m->i = 0;
+	m->ends = 0;
+	while (m->i < m->s)
+	{
+		m->walls = 0;
+		//edit this condition later
+		if (m->map[m->i] == FLOOD_B || m->map[m->i] == CORRIDOR_A
+			|| m->map[m->i] == DEADEND || m->map[m->i] == T_JUNCTION
+			|| m->map[m->i] == X_JUNCTION)
+		{
+			if (m->map[m->i - 1] == WALL_B)
+				m->walls++;
+			if (m->map[m->i + 1] == WALL_B)
+				m->walls++;
+			if (m->map[m->i - m->w] == WALL_B)
+				m->walls++;
+			if (m->map[m->i + m->w] == WALL_B)
+				m->walls++;	
+			if (m->walls == 3)
+			{
+				m->map[m->i] = DEADEND;
+				m->ends++;
+			}
+			if (m->walls == 2)
+			{
+				m->map[m->i] = CORRIDOR_A;
+				m->ends++;
+			}
+			if (m->walls == 1)
+			{
+				m->map[m->i] = T_JUNCTION;
+				m->ends++;
+			}
+			if (m->walls == 0)
+			{
+				m->map[m->i] = X_JUNCTION;
+				m->ends++;
+			}
+		}
+		++(m->i);
+	}
+}
+
+void	maze_mod4(t_map *m)
+{
+	map_refill4(m);
+	map_print(m);
+	if (map_calculate4(m))
+		return ;
+	map_print(m);
+	map_loops4(m);
+	map_print(m);
+	map_refill5(m);
+}
+
 int	main(int ac, char *av[])
 {
 	/*int				width;
@@ -922,18 +1158,25 @@ int	main(int ac, char *av[])
 	if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0)
 		return (4);
 	map_prefill(&m);
+	map_print(&m);
 	//prefill map
 	//create maze
 	maze_gen(&m);
+	map_print(&m);
 	//add loops and intersections
 	maze_mod(&m);
+	map_print(&m);
 	//add rooms (attempts & overlaps)
 	add_rooms(&m);
+	map_print(&m);
 	//trim deadends (0 no, 1 yes, n specific number of corritdors is removed )
 	
 
 	map_prefill2(&m);
+	map_print(&m);
 	maze_gen2(&m);
+	maze_mod4(&m);
+	map_print(&m);
 	//print maze
 	map_print(&m);
 	return (0);
