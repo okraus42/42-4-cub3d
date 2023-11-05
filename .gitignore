@@ -56,3 +56,5 @@ tests/mazegen/.nfs00000000014231da0000000e
 tests/mazegen/.nfs00000000014216310000000b
 tests/mazegen/.nfs00000000014231550000000c
 tests/mazegen/.nfs000000000142341c0000000f
+tests/mazegen/extraplusmazegen.c
+.vscode/settings.json
