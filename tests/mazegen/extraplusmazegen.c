@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/05 16:21:06 by okraus           ###   ########.fr       */
+/*   Updated: 2023/11/05 16:48:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ void	map_print(char *str, t_map *m)
 		else if (m->map[i] == ROOM_B)
 			ft_printf("%^*C  %0C", 0xffeeff);
 		else if (m->map[i] == DOOR_NS)
-			ft_printf("%^*C  %0C", 0xcc9966);
+			ft_printf("%.*^*C--%0C", 0, 0xcc9966);
 		else if (m->map[i] == DOOR_WE)
-			ft_printf("%^*C  %0C", 0xcccc33);
+			ft_printf("%.*^*C||%0C", 0, 0xcc9966);
 		else if (m->map[i] & FLOOD_A)
 			ft_printf("%^*C  %0C", m->colour);
 		else if (m->map[i] & FLOOD_B)
@@ -999,7 +999,7 @@ void	rd_south(t_map *m)
 	}
 	else if (m->map[m->d + (m->w * 2)] & ROOM)
 	{
-		m->map[m->d - (m->w)] = WALL_B;
+		m->map[m->d + (m->w)] = WALL_B;
 		m->map[m->d] = WALL_D;
 	}
 }
@@ -1028,7 +1028,7 @@ void	rd_west(t_map *m)
 	}
 	else if (m->map[m->d - 2] & ROOM)
 	{
-		m->map[m->d - (m->w)] = WALL_B;
+		m->map[m->d - 1] = WALL_B;
 		m->map[m->d] = WALL_D;
 	}
 }
@@ -1058,7 +1058,7 @@ void	rd_east(t_map *m)
 	else if (m->map[m->d + 2] & ROOM)
 	{
 		ft_printf("hello\n");
-		m->map[m->d - (m->w)] = WALL_B;
+		m->map[m->d + 1] = WALL_B;
 		m->map[m->d] = WALL_D;
 	}
 }
