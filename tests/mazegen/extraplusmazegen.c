@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/05 18:01:52 by okraus           ###   ########.fr       */
+/*   Updated: 2023/11/06 17:26:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 // width, height, ratio of dead ends, loops, T-intersections, X-intersections
 // notoverlapping room placement attempts, overlapping rooms placement attempts
 // chance to create extra doors (higher is better, 4096 is max)
-// like 52 26 4 5 3 2 20 10 25
+// chance to remove deadends 0 keeps deadends, 1 removes dead ends,
+// 2 - 1024 chance to remove percentage of deadends
+// like 52 26 4 5 3 2 20 10 25 512
 
 typedef struct s_map
 {
@@ -1078,11 +1080,15 @@ void	remove_deadend(t_map *m)
 
 void	process_deadends(t_map	*m)
 {
+	int	r;
+
 	while (m->lst)
 	{
+		r = rand() % 1024;
 		m->ltemp = m->lst->next;
 		m->d = *(int *)m->lst->content;
-		remove_deadend(m);
+		if (m->dr == 1 || (m->dr > r))
+			remove_deadend(m);
 		ft_lstdelone(m->lst, free);
 		m->lst = m->ltemp;
 	}
@@ -1122,6 +1128,7 @@ void	map_init(t_map *m, char *av[])
 	m->rn = ft_atoi(av[7]);
 	m->ro = ft_atoi(av[8]);
 	m->cw = ft_atoi(av[9]);
+	m->dr = ft_atoi(av[10]);
 	m->w = m->width * 2 + 5;
 	m->h = m->height * 2 + 5;
 	m->s = m->w * m->h;
@@ -1131,13 +1138,13 @@ int	main(int ac, char *av[])
 {
 	t_map	m;
 
-	if (ac != 10)
+	if (ac != 11)
 		return (2);
 	map_init(&m, av);
 	if (m.width < 3 || m.height < 3 || m.width > 64 || m.height > 64)
 		return (1);
 	if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0
-		|| m.cw < 0)
+		|| m.cw < 0 || m.dr < 0)
 		return (4);
 	map_prefill2(&m);
 	map_print("prefilled map", &m);
