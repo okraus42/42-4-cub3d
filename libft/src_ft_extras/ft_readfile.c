@@ -1,18 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_readfile.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 17:39:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 12:46:23 by okraus           ###   ########.fr       */
+/*   Created: 2023/12/09 14:16:00 by okraus            #+#    #+#             */
+/*   Updated: 2023/12/09 14:39:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/libft.h"
 
-void	ft_putchar_fd(char c, int fd)
+char	**ft_readfile(char *path, int size)
 {
-	write(fd, &c, 1);
+	int		fd;
+	char	**file;
+	char	*buff;
+	int		r;
+
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (NULL);
+	buff = ft_calloc(size + 1, sizeof(char));
+	if (!buff)
+		return (NULL);
+	r = read(fd, buff, size);
+	if (r <= 0 || r == size)
+		return (NULL);
+	close(fd);
+	file = ft_split(buff, '\n');
+	free(buff);
+	return (file);
 }

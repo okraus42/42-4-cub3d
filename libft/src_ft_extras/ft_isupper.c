@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isprint.c                                       :+:      :+:    :+:   */
+/*   ft_isupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/10 15:55:07 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 12:46:23 by okraus           ###   ########.fr       */
+/*   Created: 2023/01/10 15:29:52 by okraus            #+#    #+#             */
+/*   Updated: 2023/12/29 13:03:23 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/libft.h"
 
-int	ft_isprint(int c)
+int	ft_isupper(int c)
 {
 	static int	index[256] = {0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3,
 		0x2003, 0x2003, 0x2003, 0x2003, 0x2003, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3,
@@ -36,5 +36,5 @@ int	ft_isprint(int c)
 
 	if (c & 0xFFFFFF00)
 		return (0);
-	return (index[c] & 0x4000);
+	return (index[c] & 0x100);
 }

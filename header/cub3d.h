@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/10/23 15:24:50 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/29 13:08:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ typedef struct s_control
 
 typedef struct s_math
 {
-	int		sin[];
-	int		cos[];
-	int		sqr[];
+	int		sin[65536];
+	int		cos[65536];
+	int		sqr[65536];
 	int		clr1[65536];
 	int		clr2[65536];
 }	t_math;

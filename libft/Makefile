@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/14 13:43:18 by okraus            #+#    #+#              #
-#    Updated: 2023/10/15 16:27:10 by okraus           ###   ########.fr        #
+#    Updated: 2023/12/29 13:04:34 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,6 +101,8 @@ SRC_EX		=	ft_abs.c \
 				ft_evil_calloc.c \
 				ft_evil_malloc.c \
 				ft_free_split.c \
+				ft_islower.c \
+				ft_isupper.c \
 				ft_latoi.c \
 				ft_litoa.c \
 				ft_max.c \
@@ -109,6 +111,7 @@ SRC_EX		=	ft_abs.c \
 				ft_print_memory_plus.c \
 				ft_put_split.c \
 				ft_put_strarray.c \
+				ft_readfile.c \
 				ft_split_add.c \
 				ft_split_rm.c \
 				ft_splitlen.c \

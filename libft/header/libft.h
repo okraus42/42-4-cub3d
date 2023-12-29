@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2023/10/15 13:41:40 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/29 13:04:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,17 @@
 # include <stdint.h>
 # include <stdarg.h>
 # include <limits.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 // DEFINITIONS
+
+//	Useful Macros
+# define ABS(a) ((a > 0) * a + (a < 0) * a)
+# define PN(a) ((a > 0) - (a < 0))
+# define MAX(a, b) ((a > b) * a + (a <= b) * b)
+# define MIN(a, b) ((a < b) * a + (a >= b) * b)
+
 // GET_NEXT_LINE definitions
 
 # ifndef BUFFER_SIZE
@@ -399,6 +408,10 @@ void			*ft_evil_malloc_plus(size_t size, size_t padding);
 void			*ft_evil_calloc(size_t nmemb, size_t size);
 void			*ft_evil_calloc_plus(size_t nmemb, size_t size, size_t padding);
 
+//ctype
+int				ft_islower(int c);
+int				ft_isupper(int c);
+
 // math stuff
 int				ft_abs(int n);
 int				ft_max(int a, int b);
@@ -425,6 +438,9 @@ int				ft_splitlen(char **split);
 // memory
 void			*ft_print_memory(void *addr, int fd, unsigned int size);
 void			*ft_print_memory_plus(void *addr, int fd, unsigned int size);
+
+// reading file
+char			**ft_readfile(char *path, int size);
 
 // printing array of strings
 void			ft_put_strarray(char **arr);
