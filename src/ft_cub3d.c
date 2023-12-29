@@ -6,30 +6,22 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 13:14:29 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/29 16:42:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
-int	ft_process_file(char *file, unsigned int map[65536])
-{
-	//check file extension
-	//count new lines
-	//get max line size
-	//get map width and height
-	//fill map
-	//check edges
-	//check exit
-}
+
 
 void	ft_cub3d(char *file)
 {
-	unsigned int	map[65536];
+	t_map	map;
 
 	if (file)
 	{
-		if (ft_process_file(file, map))
+		map.file = file;
+		if (ft_process_file(&map))
 		{
 			
 		}

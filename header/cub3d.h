@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 13:08:44 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/29 15:52:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,56 +35,65 @@
 
 //	ENUMS
 
+// map elements, maybe add teleport? keys? sprites? items?
+typedef enum e_emap
+{
+	EMPTINESS = 0x0,
+	FLOOR1 = 0x1,
+	WALL1 = 0x10,
+	PLAYERNORTH = 0x100,
+	PLAYEREAST = 0x200,
+	PLAYERSOUTH = 0x400,
+	PLAYERWEST = 0x800,
+	EXIT = 0x1000,
+	DOOR1 = 0x10000,
+}	t_emap;
+
 //	STRUCTURES
 
-// typedef struct map_s
-// {
-// 	char	**m;		//map saved in array
-// 	int		w;			//width of map
-// 	int		h;			//height of map
-// 	int		p;			//player status 1-alive, 0 dead
-// 	int		px;			//player position on map the x axis
-// 	int		py;			//player position on map the y axis
-//						//add player direction?
-// 	int		ct;			//total number of collectibles
-//	int		cr;			//number of remaining collectibles
-// 	int		*c;			//collectible status 
-// 	int		*cx;		//collectible position on the x axis
-// 	int		*cy;		//collectible position on the y axis
-// 	int		et;			//total number of enemies
-//						//add enemy remaining?
-// 	int		*e;			//array of enemies 0 dead, 1 alive
-// 	int		*ex;		//enemy position on map the x axis
-// 	int		*ey;		//enemy position on map the y axis
-//						//add enemy direction?
-//	int		x;			// exit status 0 closed, 1 open
-//	int		xx;			// exit X
-//	int		xy;			// exit Y
-//	int		steps;		// number of steps player did
-// } map_t;
+union u_clr
+{
+	unsigned int	rgba;
+	struct
+	{
+		unsigned char	r;
+		unsigned char	g;
+		unsigned char	b;
+		unsigned char	a;
+	};
+};
 
+typedef struct s_door
+{
+	int	type;	//different types require different keys
+	int	pos;	//position on map
+	int status; //256 open, 0 closed
+}	t_door;
+
+typedef struct s_player
+{
+	int	pos;	//position on map & 0xFFFF | 0xFFFF0000 & position in the square
+	int orientation; //0 facing north 16384 angles for start 16384 is 0 again
+}	t_door;
+
+
+//add door textures and stuff later
 typedef struct s_map
 {
-	char	**m;
-	char	*s;
-	int		w;
-	int		h;
-	int		p;
-	int		px;
-	int		py;
-	int		ct;
-	int		cr;
-	int		*c;
-	int		*cx;
-	int		*cy;
-	int		et;
-	int		*e;
-	int		*ex;
-	int		*ey;
-	int		x;
-	int		xx;
-	int		xy;
-	int		steps;
+	unsigned int	m[65536];		//1d array of map representation
+	char			*file;			//original mapfile string
+	char			*mapstr;		//actual content of the file
+	char			*northtexture;	//path to the north texture
+	char			*southtexture;
+	char			*westtexture;
+	char			*easttexture;
+	u_clr			f;			//floor colour
+	u_clr			c;			//ceiling colour
+	int				w;			//width of map
+	int				h;			//height of map
+	t_player		p;			//player struct with pos and orientation
+	int				e;			//position of exit on map
+	t_door			**d;-			//doors for bonus, NULL terminated array
 }	t_map;
 
 typedef struct s_highscore
@@ -145,6 +154,7 @@ typedef struct s_max
 
 // PROTOTYPES
 
-
+//parser.c
+int	ft_process_file(t_map *map);
 
 #endif
