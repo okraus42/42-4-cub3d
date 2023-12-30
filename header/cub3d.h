@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 15:52:39 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/30 13:50:40 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,32 +36,37 @@
 //	ENUMS
 
 // map elements, maybe add teleport? keys? sprites? items?
+//floor near wall to check for collisions.
 typedef enum e_emap
 {
 	EMPTINESS = 0x0,
 	FLOOR1 = 0x1,
-	WALL1 = 0x10,
-	PLAYERNORTH = 0x100,
-	PLAYEREAST = 0x200,
-	PLAYERSOUTH = 0x400,
-	PLAYERWEST = 0x800,
-	EXIT = 0x1000,
-	DOOR1 = 0x10000,
+	FLOOR = 0xFF,
+	FLOORWN = 0x10,
+	FLOORWE = 0x20,
+	FLOORWS = 0x40,
+	FLOORWW = 0x80,
+	WALL1 = 0x100,
+	WALL = 0xF00,
+	FLOOD1 = 0x1000,
+	FLOOD2 = 0x2000,
+	EXIT = 0x10000,
+	DOOR1 = 0x100000,
 }	t_emap;
 
 //	STRUCTURES
 
-union u_clr
+typedef union u_clr
 {
 	unsigned int	rgba;
 	struct
 	{
-		unsigned char	r;
-		unsigned char	g;
-		unsigned char	b;
 		unsigned char	a;
+		unsigned char	b;
+		unsigned char	g;
+		unsigned char	r;
 	};
-};
+} t_clr;
 
 typedef struct s_door
 {
@@ -70,11 +75,16 @@ typedef struct s_door
 	int status; //256 open, 0 closed
 }	t_door;
 
+# define NORTH 0
+# define EAST 4096
+# define SOUTH 8192
+# define WEST 12288
+
 typedef struct s_player
 {
 	int	pos;	//position on map & 0xFFFF | 0xFFFF0000 & position in the square
 	int orientation; //0 facing north 16384 angles for start 16384 is 0 again
-}	t_door;
+}	t_player;
 
 
 //add door textures and stuff later
@@ -87,13 +97,14 @@ typedef struct s_map
 	char			*southtexture;
 	char			*westtexture;
 	char			*easttexture;
-	u_clr			f;			//floor colour
-	u_clr			c;			//ceiling colour
+	t_clr			f;			//floor colour
+	t_clr			c;			//ceiling colour
+	int				valid;		//1 if valid map
 	int				w;			//width of map
 	int				h;			//height of map
-	t_player		p;			//player struct with pos and orientation
-	int				e;			//position of exit on map
-	t_door			**d;-			//doors for bonus, NULL terminated array
+	t_player		p;			//player pos and orientation
+	unsigned int	e;			//position of exit on map, future stuff
+	t_door			**d;		//doors for bonus, NULL terminated array
 }	t_map;
 
 typedef struct s_highscore
@@ -155,6 +166,6 @@ typedef struct s_max
 // PROTOTYPES
 
 //parser.c
-int	ft_process_file(t_map *map);
+int	ft_process_file(t_max *max);
 
 #endif

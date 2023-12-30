@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 16:43:56 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/30 14:02:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,68 +26,438 @@
 //add two timing functions to libft
 //add other is functions to libft
 
-int	ft_process_file(t_map *map)
+void	ft_map_init(t_map *map)
 {
 	int	i;
-	int fd;
-	int	r;
 
 	map->mapstr = NULL;
 	map->northtexture = NULL;
 	map->southtexture = NULL;
 	map->westtexture = NULL;
 	map->easttexture = NULL;
+	map->d = NULL;
+	map->valid = 1;
 	map->e = -1;
-	map->p = -1;
+	map->p.orientation = -1;
+	map->p.pos = -1;
 	map->h = 0;
 	map->w = 0;
-	map->f.a = 0xff;
-	map->c.a = 0xff;
+	map->f.rgba = 0;
+	map->c.rgba = 0;
 	i = 0;
 	while (i < 65536)
 	{
 		map->m[i] = 0;
 		++i;
 	}
+}
+
+int	ft_puterror(char *err, int r)
+{
+	ft_dprintf(2, "Error\n");
+	if (err)
+		ft_dprintf(2, "%s\n", err);
+	return (r);
+}
+
+void	ft_freemap(t_map *map)
+{
+	if (map->mapstr)
+		free(map->mapstr);
+	map->mapstr = NULL;
+	if (map->northtexture)
+		free(map->northtexture);
+	map->northtexture = NULL;
+	if (map->southtexture)
+		free(map->southtexture);
+	map->southtexture = NULL;
+	if (map->westtexture)
+		free(map->westtexture);
+	map->westtexture = NULL;
+	if (map->easttexture)
+		free(map->easttexture);
+	map->easttexture = NULL;
+	if (map->d)
+		free(map->d); //door need better freeing
+	map->d = NULL;
+}
+
+void	ft_exit(t_max *max, int exitcode)
+{
+	//free map; and all
+	ft_freemap(max->map);
+	exit(exitcode);
+}
+
+int	ft_checkfileextension(char *s)
+{
+	int	l;
+
+	if (!s)
+		return (0);
+	l = ft_strlen(s);
+	if (l < 5)
+		return (0);
+	--l;
+	if (s[l] != 'b' || s[l - 1] != 'u' || s[l - 2] != 'c' || s[l - 3] != '.')
+		return (0);
+	return (1);
+}
+
+int	ft_read_map(t_map *map)
+{
+	int	fd;
+	int	r;
+
+	if (!ft_checkfileextension(map->file))
+		return (ft_puterror("Invalid file name", 0));
 	fd = open(map->file, O_RDONLY);
 	if (fd < 0)
-	{
-		ft_dprintf(2, "Error\n");
-		ft_dprintf(2, "Could not open the file\n");
-		return (0);
-	}
+		return (ft_puterror("Could not open the file", 0));
 	map->mapstr = ft_calloc(69632 + 1, sizeof(char));
 	if (!map->mapstr)
-	{
-		ft_dprintf(2, "Error\n");
-		ft_dprintf(2, "Malloc failure\n");
-		return (0);
-	}
+		return (ft_puterror("Malloc failure", 0));
 	r = read(fd, map->mapstr, 69632);
 	if (r <= 0)
-	{
-		free(map->mapstr);
-		map->mapstr = NULL;
-		ft_dprintf(2, "Error\n");
-		ft_dprintf(2, "Reading error\n");
-		return (0);
-	}
+		return (ft_puterror("Reading error", 0));
 	if (r == 69632)
-	{
-		free(map->mapstr);
-		map->mapstr = NULL;
-		ft_dprintf(2, "Error\n");
-		ft_dprintf(2, "File too big\n");
-		return (0);
-	}
+		return (ft_puterror("File too big", 0));
 	r = close(fd);
 	if (r < 0)
+		return (ft_puterror("Unexpected error closing the file", 0));
+	return (1);
+}
+
+// need to check for invalid texture paths as well
+int	ft_fill_textures(t_map *map)
+{
+	char	**split;
+	int		j;
+
+	split = ft_split(map->mapstr, '\n');
+	if (!split)
+		return(ft_puterror("Malloc error", 0));
+	j = 0;
+	while (split[j])
 	{
-		free(map->mapstr);
-		map->mapstr = NULL;
-		ft_dprintf(2, "Error\n");
-		ft_dprintf(2, "Unexpected error closing the file\n");
+		if (!ft_strncmp(split[j], "NO ", 3))
+			map->northtexture = ft_strdup(&split[j][3]);
+		if (!ft_strncmp(split[j], "SO ", 3))
+			map->southtexture = ft_strdup(&split[j][3]);
+		if (!ft_strncmp(split[j], "WE ", 3))
+			map->westtexture = ft_strdup(&split[j][3]);
+		if (!ft_strncmp(split[j], "EA ", 3))
+			map->easttexture = ft_strdup(&split[j][3]);
+		++j;
+	}
+	ft_free_split(&split);
+	if (!map->northtexture || !map->southtexture || !map->westtexture
+		|| !map->easttexture)
+		return(ft_puterror("Missing texture path", 0));
+	return (1);
+}
+
+int	ft_fill_colour2(char **split, int c, t_map *map)
+{
+	if (c == 'F')
+	{
+		map->f.r = ft_atoi(split[0]);
+		map->f.g = ft_atoi(split[1]);
+		map->f.b = ft_atoi(split[2]);
+		map->f.a = 0xFF;
+	}
+	if (c == 'C')
+	{
+		map->c.r = ft_atoi(split[0]);
+		map->c.g = ft_atoi(split[1]);
+		map->c.b = ft_atoi(split[2]);
+		map->c.a = 0xFF;
+	}
+	ft_free_split(&split);
+	return (1);
+}
+
+int	ft_fill_colour(int c, char *s, t_map *map, int j)
+{
+	char	**split;
+	int		i;
+
+	split = ft_split(s, ',');
+	if (!split)
+		return(ft_puterror("Malloc error", 0));
+	while (j < 3)
+	{
+		i = 0;
+		while (split[j][i])
+		{
+			if (!ft_isdigit(split[j][i]))
+			{
+				ft_free_split(&split);
+				return(ft_puterror("Invalid character in colour", 0));
+			}
+			++i;
+		}
+		if (i > 3 || j > 2 || ft_atoi(split[j]) > 255)
+		{
+			ft_free_split(&split);
+			return(ft_puterror("Colour format is not right", 0));
+		}
+		++j;
+	}
+	return (ft_fill_colour2(split, c, map));
+}
+
+int	ft_fill_colours(t_map *map)
+{
+	char	**split;
+	int		j;
+
+	split = ft_split(map->mapstr, '\n');
+	if (!split)
+		return(ft_puterror("Malloc error", 0));
+	j = 0;
+	while (split[j])
+	{
+		if (!ft_strncmp(split[j], "F ", 2) || !ft_strncmp(split[j], "C ", 2))
+			if (!ft_fill_colour(split[j][0], &split[j][2], map, 0))
+			{
+				ft_free_split(&split);
+				return (0);
+			}
+		++j;
+	}
+	ft_free_split(&split);
+	if (!map->c.rgba || !map->f.rgba)
+		return(ft_puterror("Missing floor or ceiling colour, aborting...", 0));
+	return (1);
+}
+
+int	ft_check_map(t_map *map, char **split, int j, int a)
+{
+	int	p;
+	int	i;
+
+	p = 0;
+	while (split[j])
+	{
+		i = 0;
+		while (split[j][i])
+		{
+			if (!ft_strchr(" 01NSEW", split[j][i]))
+			{
+				ft_free_split(&split);
+				return(ft_puterror("Invalid character in map", 0));
+			}
+			if (ft_strchr("NSEW", split[j][i]))
+				++p;
+			++i;
+			map->w = MAX(map->w, i);
+		}
+		++j;
+	}
+	map->h = j - a;
+	if (p != 1)
+	{
+		ft_free_split(&split);
+		if (!p)
+			return(ft_puterror("No player location in the map", 0));
+		else
+			return(ft_puterror("Too many player locations in map", 0));
+	}
+	if (map->w < 3 || map->h <3 || map->w * map->h >= 65356)
+	{
+		ft_free_split(&split);
+		return(ft_puterror("Wrong map dimensions, minimum size is 3x3", 0));
+	}
+	return (1);
+}
+
+void	ft_fill_array3(t_map *map, char c, int y, int x)
+{
+	if (c == '0')
+		map->m[y * map->w + x] = FLOOR1;
+	else if (c == '1')
+		map->m[y * map->w + x] = WALL1;
+	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
+	{
+		map->m[y * map->w + x] = FLOOR1;
+		map->p.pos = y * map->w + x;
+		if (c == 'N')
+			map->p.orientation = NORTH;
+		else if (c == 'W')
+			map->p.orientation = WEST;
+		else if (c == 'S')
+			map->p.orientation = SOUTH;
+		else if (c == 'E')
+			map->p.orientation = EAST;
+	}
+}
+
+void	ft_flood_check(t_map *map, int pos)
+{
+	if (map->m[pos] & FLOOD1)
+		return ;
+	if ((map->m[pos] & WALL))
+		return ;
+	if (!(map->m[pos]))
+	{
+		map->valid = 0;
+		return ;
+	}
+	map->m[pos] |= FLOOD1;
+	if (pos < map->w || pos > (map->h - 1) * map->w || !(pos % map->w)
+		|| pos % map->w == map->w - 1)
+	{
+		map->valid = 0;
+		return ;
+	}
+	ft_flood_check(map, pos + 1);
+	ft_flood_check(map, pos - 1);
+	ft_flood_check(map, pos + map->w);
+	ft_flood_check(map, pos - map->w);
+}
+
+int	ft_fill_array2(t_map *map, char **split, int j, int a)
+{
+	int	i;
+
+	while (split[j])
+	{
+		i = 0;
+		while (split[j][i])
+		{
+			ft_fill_array3(map, split[j][i], j - a, i);
+			++i;
+		}
+		++j;
+	}
+	ft_flood_check(map, map->p.pos);
+	if (!map->valid)
+	{
+		ft_free_split(&split);
+		return(ft_puterror("Invalid map border or player position", 0));
+	}
+	return (1);
+}
+
+int	ft_fill_array(t_map *map)
+{
+	char	**split;
+	int		j;
+	int		a;
+
+	split = ft_split(map->mapstr, '\n');
+	if (!split)
+		return(ft_puterror("Malloc error", 0));
+	j = 0;
+	while (split[j])
+	{
+		if (ft_strchr(" 01", split[j][0]))
+			break;
+		++j;
+	}
+	if (!split[j])
+	{
+		ft_free_split(&split);
+		return(ft_puterror("Map not found", 0));
+	}
+	a = j;
+	if (!ft_check_map(map, split, j, a))
+		return (0);
+	if (!ft_fill_array2(map, split, j, a))
+		return (0);
+	ft_free_split(&split);
+	return (1);
+}
+
+int	ft_fill_map(t_map *map)
+{
+	//fill paths to textures
+	if (!ft_fill_textures(map))
+		return (0);
+	if (!ft_fill_colours(map))
+		return (0);
+	if (!ft_fill_array(map))
+		return (0);
+	//fill colours of floor and ceiling
+	//fill actual map (get width and height first)
+	return (1);
+}
+
+	// unsigned int	m[65536];		//1d array of map representation
+	// char			*file;			//original mapfile string
+	// char			*mapstr;		//actual content of the file
+	// char			*northtexture;	//path to the north texture
+	// char			*southtexture;
+	// char			*westtexture;
+	// char			*easttexture;
+	// t_clr			f;			//floor colour
+	// t_clr			c;			//ceiling colour
+	// int				valid;		//1 if valid map
+	// int				w;			//width of map
+	// int				h;			//height of map
+	// t_player		p;			//player pos and orientation
+	// unsigned int	e;			//position of exit on map, future stuff
+	// t_door			**d;		//doors for bonus, NULL terminated array
+
+void	ft_print_map(t_map *map)
+{
+	int	i;
+
+	ft_printf("FILE: %s\n", map->file);
+	ft_printf("%s\n", map->mapstr);
+	ft_printf("N: <%s>\n", map->northtexture);
+	ft_printf("S: <%s>\n", map->southtexture);
+	ft_printf("W: <%s>\n", map->westtexture);
+	ft_printf("E: <%s>\n", map->easttexture);
+	ft_printf("f: %#8x, c: %#8x\n", map->f.rgba, map->c.rgba);
+	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
+	i = 0;
+	while (i < map->h * map->w)
+	{
+		if (i == map->p.pos)
+		{
+			if (map->p.orientation == NORTH)
+				ft_printf("%^*C^^%C", map->c.rgba >> 8);
+			else if (map->p.orientation == WEST)
+				ft_printf("%^*C<<%C", map->c.rgba >> 8);
+			else if (map->p.orientation == SOUTH)
+				ft_printf("%^*Cvv%C", map->c.rgba >> 8);
+			else if (map->p.orientation == EAST)
+				ft_printf("%^*C>>%C", map->c.rgba >> 8);
+			else
+				ft_printf("%^*C??%C", map->c.rgba >> 8);
+		}
+		else if (map->m[i] & WALL)
+			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & FLOOR)
+			ft_printf("%^*C  %C", map->f.rgba >> 8);
+		else
+			ft_printf("  ");
+		++i;
+		if (!(i % map->w))
+			ft_printf("\n");
+	}
+}
+
+int	ft_process_file(t_max *max)
+{
+	t_map	*map;
+
+	map = max->map;
+	ft_map_init(map);
+	if (!ft_read_map(map))
+	{
+		ft_freemap(map);
 		return (0);
 	}
+	if (!ft_fill_map(map))
+	{
+		ft_freemap(map);
+		return (0);
+	}
+	//for debugging
+	ft_print_map(map);
+	ft_freemap(map);
 	return (1);
 }
