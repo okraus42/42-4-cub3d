@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/29 13:04:17 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/30 15:53:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <limits.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <sys/time.h>
 
 // DEFINITIONS
 
@@ -402,6 +403,10 @@ t_dlist			*ft_dlstnew(void *content);
 // string stuff
 char			*ft_stringcopy(char const *str);
 
+// time
+time_t			ft_get_time_in_ms(void);
+time_t			ft_get_time_in_mis(void);
+
 // evil malloc & calloc
 void			*ft_evil_malloc(size_t size);
 void			*ft_evil_malloc_plus(size_t size, size_t padding);
@@ -409,8 +414,14 @@ void			*ft_evil_calloc(size_t nmemb, size_t size);
 void			*ft_evil_calloc_plus(size_t nmemb, size_t size, size_t padding);
 
 //ctype
+int				ft_isblank(int c);
+int				ft_iscntrl(int c);
+int				ft_isgraph(int c);
 int				ft_islower(int c);
+int				ft_ispunct(int c);
+int				ft_isspace(int c);
 int				ft_isupper(int c);
+int				ft_isxdigit(int c);
 
 // math stuff
 int				ft_abs(int n);

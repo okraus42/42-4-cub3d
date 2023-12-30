@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/30 13:50:40 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/30 17:04:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@
 # include "../libft/header/libft.h"
 
 //	DEFINITIONS
+
+# define WIDTH 960
+# define HEIGHT 540
 
 //	ENUMS
 
@@ -151,6 +154,7 @@ typedef struct s_max
 	mlx_t		*mlx;
 	t_map		*map;
 	t_controls	*key;
+	mlx_image_t	*screen;
 	t_imgs		*img;
 	mlx_image_t	*str;
 	mlx_image_t	*tmp;
@@ -167,5 +171,11 @@ typedef struct s_max
 
 //parser.c
 int	ft_process_file(t_max *max);
+
+//ft_game.c
+void	ft_amaze_standard(t_max *max);
+
+//ft_hook.c
+void	ft_hook(void *param);
 
 #endif
