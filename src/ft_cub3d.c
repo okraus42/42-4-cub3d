@@ -6,17 +6,37 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/30 16:13:11 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/31 13:44:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
+void	ft_init_math(t_math *math)
+{
+	int		i;
+	double	step;
+
+	step = 6.28318531 / 65536;
+	i = 0;
+	while (i < 65536)
+	{
+		math->sin[i] = 65536 * sin(step * i);
+		math->cos[i] = 65536 * cos(step * i);
+	++i;
+	}
+	ft_printf("SIN 0 %i 90 %i  180 %i 270 %i\n", math->sin[NORTH], math->sin[EAST], math->sin[SOUTH], math->sin[WEST]);
+	ft_printf("COS 0 %i 90 %i  180 %i 270 %i\n", math->cos[NORTH], math->cos[EAST], math->cos[SOUTH], math->cos[WEST]);
+}
+
 void	ft_cub3d(char *file)
 {
 	t_map		map;
 	t_max		max;
+	t_math		math;
 
+	max.math = &math;
+	ft_init_math(max.math);
 	max.map = &map;
 	max.mlx = NULL;
 	if (file)

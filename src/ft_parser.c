@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/30 14:02:51 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/31 13:53:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ void	ft_map_init(t_map *map)
 	map->e = -1;
 	map->p.orientation = -1;
 	map->p.pos = -1;
+	map->p.speed = 16;
+	map->p.turnspeed = 512;
+	map->p.xspeed = 0;
+	map->p.yspeed = 0;
 	map->h = 0;
 	map->w = 0;
 	map->f.rgba = 0;
@@ -264,11 +268,15 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 		else
 			return(ft_puterror("Too many player locations in map", 0));
 	}
-	if (map->w < 3 || map->h <3 || map->w * map->h >= 65356)
+	if (map->w < 3 || map->h <3 || map->w > 256 || map->h > 256)
 	{
 		ft_free_split(&split);
 		return(ft_puterror("Wrong map dimensions, minimum size is 3x3", 0));
 	}
+	map->ww = map->w;
+	map->w = 256;
+	map->hh = map->h;
+	map->h = 256;
 	return (1);
 }
 
@@ -282,14 +290,27 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 	{
 		map->m[y * map->w + x] = FLOOR1;
 		map->p.pos = y * map->w + x;
+		map->p.pos |= 0x7f7f0000;
+		map->p.mx = map->p.mapx;
+		map->p.sx = map->p.sqrx;
+		map->p.my = map->p.mapy;
+		map->p.sy = map->p.sqry;
 		if (c == 'N')
+		{
 			map->p.orientation = NORTH;
+		}
 		else if (c == 'W')
+		{
 			map->p.orientation = WEST;
+		}
 		else if (c == 'S')
+		{
 			map->p.orientation = SOUTH;
+		}
 		else if (c == 'E')
+		{
 			map->p.orientation = EAST;
+		}
 	}
 }
 
@@ -331,7 +352,7 @@ int	ft_fill_array2(t_map *map, char **split, int j, int a)
 		}
 		++j;
 	}
-	ft_flood_check(map, map->p.pos);
+	ft_flood_check(map, map->p.pos & 0x0000FFFF);
 	if (!map->valid)
 	{
 		ft_free_split(&split);
@@ -412,10 +433,13 @@ void	ft_print_map(t_map *map)
 	ft_printf("E: <%s>\n", map->easttexture);
 	ft_printf("f: %#8x, c: %#8x\n", map->f.rgba, map->c.rgba);
 	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
+	ft_printf("Player pos %#8x, ori: %5i\n", map->p.pos, map->p.orientation);
+	ft_printf("Player py %4x, px %4x \n", map->p.y, map->p.x);
+	ft_printf("Player my %2x, sy %2x, mx %2x, sx %2x \n", map->p.my, map->p.sy, map->p.mx, map->p.sx);
 	i = 0;
 	while (i < map->h * map->w)
 	{
-		if (i == map->p.pos)
+		if (i == (map->p.mpos))
 		{
 			if (map->p.orientation == NORTH)
 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
@@ -432,10 +456,10 @@ void	ft_print_map(t_map *map)
 			ft_printf("%^*C  %C", 0x333333);
 		else if (map->m[i] & FLOOR)
 			ft_printf("%^*C  %C", map->f.rgba >> 8);
-		else
+		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
 			ft_printf("  ");
 		++i;
-		if (!(i % map->w))
+		if (!(i % map->w) && ((i & 0xff00) >> 8) < map->hh)
 			ft_printf("\n");
 	}
 }

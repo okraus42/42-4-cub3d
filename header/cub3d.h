@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/30 17:04:08 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/31 13:53:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,69 @@ typedef union u_clr
 typedef struct s_door
 {
 	int	type;	//different types require different keys
-	int	pos;	//position on map
+	union		//position on map
+	{
+		unsigned int	pos;
+		struct
+		{
+			unsigned char	mx;		//0x000000FF & pos; map x pos
+			unsigned char	my;		//0x0000FF00 & pos; map y pos
+			unsigned char	sx;		//0x00FF0000 & pos; square x pos
+			unsigned char	sy;		//0xFF000000 & pos; square y pos
+		};
+		struct
+		{
+			unsigned short	mpos;		//0x0000FFFF & pos; map pos
+			unsigned short	spos;		//0xFFFF0000 & pos; square pos
+		};
+	};
 	int status; //256 open, 0 closed
 }	t_door;
 
 # define NORTH 0
-# define EAST 4096
-# define SOUTH 8192
-# define WEST 12288
+# define EAST 16384
+# define SOUTH 32768
+# define WEST 49152
 
 typedef struct s_player
 {
-	int	pos;	//position on map & 0xFFFF | 0xFFFF0000 & position in the square
-	int orientation; //0 facing north 16384 angles for start 16384 is 0 again
+	union		//position on map
+	{
+		unsigned int	pos;
+		struct
+		{
+			unsigned char	mapx;		//0x000000FF & pos; map x pos
+			unsigned char	mapy;		//0x0000FF00 & pos; map y pos
+			unsigned char	sqrx;		//0x00FF0000 & pos; square x pos
+			unsigned char	sqry;		//0xFF000000 & pos; square y pos
+		};
+		struct
+		{
+			unsigned short	mpos;		//0x0000FFFF & pos; map pos
+			unsigned short	spos;		//0xFFFF0000 & pos; square pos
+		};
+	};
+		union		//position on map
+	{
+		unsigned int	pos2;
+		struct
+		{
+			unsigned char	sx;		//0x000000FF & pos2; square x pos
+			unsigned char	mx;		//0x0000FF00 & pos2; map x pos
+			unsigned char	sy;		//0x00FF0000 & pos2; square y pos
+			unsigned char	my;		//0xFF000000 & pos2; map y pos
+		};
+		struct
+		{
+			unsigned short	x;		//0x0000FFFF & pos2; x pos
+			unsigned short	y;		//0xFFFF0000 & pos2; y pos
+		};
+	};
+	int	speed;
+	int	turnspeed;
+	int	xspeed;
+	int	yspeed;
+	unsigned short orientation; //0 facing north 65536 angles for start 65536 is 0 again
 }	t_player;
 
 
@@ -103,8 +153,10 @@ typedef struct s_map
 	t_clr			f;			//floor colour
 	t_clr			c;			//ceiling colour
 	int				valid;		//1 if valid map
-	int				w;			//width of map
-	int				h;			//height of map
+	int				w;			//256
+	int				ww;			//width of actual map
+	int				h;			//256
+	int				hh;			//height of actual map
 	t_player		p;			//player pos and orientation
 	unsigned int	e;			//position of exit on map, future stuff
 	t_door			**d;		//doors for bonus, NULL terminated array
@@ -132,7 +184,7 @@ typedef struct s_control
 
 typedef struct s_math
 {
-	int		sin[65536];
+	int		sin[65536];	//done multiplied by 65536
 	int		cos[65536];
 	int		sqr[65536];
 	int		clr1[65536];
@@ -153,6 +205,7 @@ typedef struct s_max
 {
 	mlx_t		*mlx;
 	t_map		*map;
+	t_math		*math;
 	t_controls	*key;
 	mlx_image_t	*screen;
 	t_imgs		*img;
