@@ -213,6 +213,59 @@ void	map_print(char *str, t_map *m)
 	}
 }
 
+void	map_print2(char *str, t_map *m)
+{
+	int	i;
+
+	i = 0;
+	if (str)
+		ft_printf("%s\n", str);
+	while (i < m->s)
+	{
+		m->red = ((m->map[i] / 4) + 12 * m->map[i]) % 64 + 192;
+		m->green = (32 + (m->map[i] / 4) + 34 * m->map[i]) % 64 + 192;
+		m->blue = ((m->map[i] / 4) + m->map[i] * 16) % 64 + 192;
+		m->colour = m->red << 16 | m->green << 8 | m->blue;
+		if (m->map[i] == EDGE)
+			ft_printf(" ", 0x000000);
+		else if (m->map[i] == WALL_A)
+			ft_printf("1", 0x002222);
+		else if (m->map[i] == WALL_B)
+			ft_printf("1", 0x444400);
+		else if (m->map[i] == WALL_C)
+			ft_printf("1", 0x660066);
+		else if (m->map[i] == WALL_D)
+			ft_printf("1", 0x330033);
+		else if (m->map[i] == DEADEND)
+			ft_printf("0", 0xff8888);
+		else if (m->map[i] == CORRIDOR_A)
+			ft_printf("0", 0x999999);
+		else if (m->map[i] == T_JUNCTION)
+			ft_printf("0", 0xaaffaa);
+		else if (m->map[i] == X_JUNCTION)
+			ft_printf("0", 0xbbbbff);
+		else if (m->map[i] == CORRIDOR_B)
+			ft_printf("0", 0xdddddd);
+		else if (m->map[i] == ROOM_A)
+			ft_printf("0", 0xffffff);
+		else if (m->map[i] == ROOM_B)
+			ft_printf("0", 0xffeeff);
+		else if (m->map[i] == DOOR_NS)
+			ft_printf("0", 0, 0xcc9966);
+		else if (m->map[i] == DOOR_WE)
+			ft_printf("0", 0, 0xcc9966);
+		else if (m->map[i] & FLOOD_A)
+			ft_printf("0", m->colour);
+		else if (m->map[i] & FLOOD_B)
+			ft_printf("0", 0xff0000);
+		else
+			ft_printf("0", 0x222277);
+		++(i);
+		if (i % m->w == 0)
+			ft_printf("\n");
+	}
+}
+
 void	map_prefill2(t_map *m)
 {
 	m->i = 0;
@@ -1157,5 +1210,6 @@ int	main(int ac, char *av[])
 	map_print("???trimmed deadeneds???", &m);
 	map_refill42(&m);
 	map_print("FINAL MAP", &m);
+	map_print2("copy map", &m);
 	return (0);
 }

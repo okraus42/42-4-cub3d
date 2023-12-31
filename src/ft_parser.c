@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/31 13:53:59 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/31 15:22:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,11 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 	}
 }
 
+// FLOORWN = 0x10,
+// FLOORWE = 0x20,
+// FLOORWS = 0x40,
+// FLOORWW = 0x80,
+
 void	ft_flood_check(t_map *map, int pos)
 {
 	if (map->m[pos] & FLOOD1)
@@ -326,6 +331,22 @@ void	ft_flood_check(t_map *map, int pos)
 		return ;
 	}
 	map->m[pos] |= FLOOD1;
+	if (map->m[pos + 1] & WALL)
+		map->m[pos] |= FLOORWE;
+	if (map->m[pos - 1] & WALL)
+		map->m[pos] |= FLOORWW;
+	if (map->m[pos + map->w] & WALL)
+		map->m[pos] |= FLOORWS;
+	if (map->m[pos - map->w] & WALL)
+		map->m[pos] |= FLOORWN;
+	if (map->m[pos + map->w + 1] & WALL)
+		map->m[pos] |= FLOORWSE;
+	if (map->m[pos + map->w - 1] & WALL)
+		map->m[pos] |= FLOORWSW;
+	if (map->m[pos - map->w + 1] & WALL)
+		map->m[pos] |= FLOORWNE;
+	if (map->m[pos - map->w - 1] & WALL)
+		map->m[pos] |= FLOORWNW;
 	if (pos < map->w || pos > (map->h - 1) * map->w || !(pos % map->w)
 		|| pos % map->w == map->w - 1)
 	{
@@ -424,7 +445,7 @@ int	ft_fill_map(t_map *map)
 void	ft_print_map(t_map *map)
 {
 	int	i;
-
+	int	c;
 	ft_printf("FILE: %s\n", map->file);
 	ft_printf("%s\n", map->mapstr);
 	ft_printf("N: <%s>\n", map->northtexture);
@@ -454,6 +475,44 @@ void	ft_print_map(t_map *map)
 		}
 		else if (map->m[i] & WALL)
 			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & FLOOR)
+			ft_printf("%^*C  %C", map->f.rgba >> 8);
+		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
+			ft_printf("  ");
+		++i;
+		if (!(i % map->w) && ((i & 0xff00) >> 8) < map->hh)
+			ft_printf("\n");
+	}
+	ft_printf("Indexing floor near walls\n");
+	i = 0;
+	while (i < map->h * map->w)
+	{
+		c = 0xffffff;
+		if (map->m[i] & FLOORWN)
+			c &= 0xFF80FF;
+		if (map->m[i] & FLOORWS)
+			c &= 0x80FFFF;
+		if (map->m[i] & FLOORWW)
+			c &= 0xFFFF80;
+		if (map->m[i] & FLOORWE)
+			c &= 0x404040;
+		if (i == (map->p.mpos))
+		{
+			if (map->p.orientation == NORTH)
+				ft_printf("%^*C^^%C", map->c.rgba >> 8);
+			else if (map->p.orientation == WEST)
+				ft_printf("%^*C<<%C", map->c.rgba >> 8);
+			else if (map->p.orientation == SOUTH)
+				ft_printf("%^*Cvv%C", map->c.rgba >> 8);
+			else if (map->p.orientation == EAST)
+				ft_printf("%^*C>>%C", map->c.rgba >> 8);
+			else
+				ft_printf("%^*C??%C", map->c.rgba >> 8);
+		}
+		else if (map->m[i] & WALL)
+			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & FLOORW)
+			ft_printf("%^*C  %C", c);
 		else if (map->m[i] & FLOOR)
 			ft_printf("%^*C  %C", map->f.rgba >> 8);
 		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)

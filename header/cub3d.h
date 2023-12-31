@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/31 13:53:41 by okraus           ###   ########.fr       */
+/*   Updated: 2023/12/31 17:20:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 
 # define WIDTH 960
 # define HEIGHT 540
+# define TMASK 0xFFFFFFFF
 
 //	ENUMS
 
@@ -49,12 +50,17 @@ typedef enum e_emap
 	FLOORWE = 0x20,
 	FLOORWS = 0x40,
 	FLOORWW = 0x80,
-	WALL1 = 0x100,
-	WALL = 0xF00,
-	FLOOD1 = 0x1000,
-	FLOOD2 = 0x2000,
-	EXIT = 0x10000,
-	DOOR1 = 0x100000,
+	FLOORWNW = 0x100,
+	FLOORWNE = 0x200,
+	FLOORWSW = 0x400,
+	FLOORWSE = 0x800,
+	FLOORW = 0xFF0,
+	WALL1 = 0x1000,
+	WALL = 0xF000,
+	FLOOD1 = 0x10000,
+	FLOOD2 = 0x20000,
+	EXIT = 0x100000,
+	DOOR1 = 0x1000000,
 }	t_emap;
 
 //	STRUCTURES
@@ -97,6 +103,9 @@ typedef struct s_door
 # define EAST 16384
 # define SOUTH 32768
 # define WEST 49152
+
+# define WALLDISTANCE 64 //it is important it is bigger than actual speed 
+//or with low framerate players could go through walls
 
 typedef struct s_player
 {
@@ -203,21 +212,25 @@ typedef struct s_imgs
 
 typedef struct s_max
 {
-	mlx_t		*mlx;
-	t_map		*map;
-	t_math		*math;
-	t_controls	*key;
-	mlx_image_t	*screen;
-	t_imgs		*img;
-	mlx_image_t	*str;
-	mlx_image_t	*tmp;
-	char		*player_name;
-	char		*player_coalition;
-	int			death;
-	int			lives;
-	int			score;
-	int			exit;
-	int			time;
+	mlx_t			*mlx;
+	t_map			*map;
+	t_math			*math;
+	t_controls		*key;
+	mlx_image_t		*screen;
+	t_imgs			*img;
+	mlx_image_t		*str;
+	mlx_image_t		*tmp;
+	char			*player_name;
+	char			*player_coalition;
+	int				death;
+	int				lives;
+	int				score;
+	int				exit;
+	int				time;
+	time_t			oldms;
+	time_t			newms;
+	unsigned int	framems;
+	long			frame;
 }	t_max;
 
 // PROTOTYPES
