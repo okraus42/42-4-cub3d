@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/31 15:22:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/01 16:44:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	ft_map_init(t_map *map)
 	map->p.turnspeed = 512;
 	map->p.xspeed = 0;
 	map->p.yspeed = 0;
+	map->p.fov = 60;
+	map->p.fov2 = map->p.fov * 65536 / 720;
 	map->h = 0;
 	map->w = 0;
 	map->f.rgba = 0;

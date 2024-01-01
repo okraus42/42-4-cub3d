@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/12/31 17:20:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/01 16:41:35 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,14 @@ typedef struct s_player
 			unsigned short	y;		//0xFFFF0000 & pos2; y pos
 		};
 	};
+	int	xx[2];	//x screen position and point ahead
+	int	yy[2];	//y screen position and point ahaed
+	int fov;
+	int	fov2;
+	int	xl[2]; //left ray
+	int	yl[2];
+	int	xr[2]; //right ray
+	int	yr[2];
 	int	speed;
 	int	turnspeed;
 	int	xspeed;
@@ -190,6 +198,20 @@ typedef struct s_control
 	int		time;
 	int		t;
 }	t_controls;
+
+typedef struct s_line
+{
+	int				x[3];
+	int				y[3];
+	int				dx;
+	int				dy;
+	union
+	{
+		int			xi;
+		int			yi;
+	};
+	int				d;
+}	t_line;
 
 typedef struct s_math
 {
