@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2023/11/06 17:26:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/02 15:52:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_map
 	t_list			*lst;
 	t_list			*ltemp;
 	int				*temp;
-	unsigned int	map[17689];
+	unsigned int	map[65536];
 }	t_map;
 
 // typedef struct s_map
@@ -97,7 +97,7 @@ typedef struct s_map
 // 	t_list			*lst;		//stack of visited positions (with neighbours?)
 // 	t_list			*ltemp;		//temporaty list
 // 	int				*temp;		//temporary value of position in the map
-// 	unsigned int	map[17689];	//map up to 64*64
+// 	unsigned int	map[65536];	//map up to 256*256
 // } t_map;
 
 // BETTER SOLUTION
@@ -1194,7 +1194,7 @@ int	main(int ac, char *av[])
 	if (ac != 11)
 		return (2);
 	map_init(&m, av);
-	if (m.width < 3 || m.height < 3 || m.width > 64 || m.height > 64)
+	if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
 		return (1);
 	if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0
 		|| m.cw < 0 || m.dr < 0)

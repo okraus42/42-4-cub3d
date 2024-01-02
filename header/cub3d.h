@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/01 16:41:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/02 15:14:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,12 @@
 
 //	DEFINITIONS
 
-# define WIDTH 960
-# define HEIGHT 540
+# define WIDTH 1920
+# define HEIGHT 1080
+# define MAPWIDTH 1024
+# define MAPHEIGHT 1024
+# define MINIWIDTH 256
+# define MINIHEIGHT 256
 # define TMASK 0xFFFFFFFF
 
 //	ENUMS
@@ -239,16 +243,19 @@ typedef struct s_max
 	t_math			*math;
 	t_controls		*key;
 	mlx_image_t		*screen;
-	t_imgs			*img;
-	mlx_image_t		*str;
-	mlx_image_t		*tmp;
-	char			*player_name;
-	char			*player_coalition;
-	int				death;
-	int				lives;
-	int				score;
-	int				exit;
-	int				time;
+	mlx_image_t		*maximap;
+	mlx_image_t		*minimap;
+	// t_imgs			*img;
+	// mlx_image_t		*str;
+	// mlx_image_t		*tmp;
+	// char			*player_name;
+	// char			*player_coalition;
+	// int				death;
+	// int				lives;
+	// int				score;
+	// int				exit;
+	// int				time;
+	unsigned char	mode;
 	time_t			oldms;
 	time_t			newms;
 	unsigned int	framems;

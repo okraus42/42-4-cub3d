@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/01 16:49:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/02 16:27:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_big_swap(int a[3], int b[3])
 	ft_swap(&b[0], &b[1]);
 }
 
-void	ft_plot_line_low(t_max *max, t_line l, unsigned int c)
+void	ft_plot_line_low(mlx_image_t *img, t_line l, unsigned int c)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
@@ -33,8 +33,8 @@ void	ft_plot_line_low(t_max *max, t_line l, unsigned int c)
 	l.y[2] = l.y[0];
 	while (l.x[2] <= l.x[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < 1600 && l.y[2] > 0 && l.y[2] < 900)
-			mlx_put_pixel(max->screen, l.x[2], l.y[2], c);
+		if (l.x[2] > 0 && l.x[2] < MAPWIDTH && l.y[2] > 0 && l.y[2] < MAPHEIGHT)
+			mlx_put_pixel(img, l.x[2], l.y[2], c);
 		if (l.d > 0)
 		{
 			l.y[2] = l.y[2] + l.yi;
@@ -46,7 +46,7 @@ void	ft_plot_line_low(t_max *max, t_line l, unsigned int c)
 	}
 }
 
-void	ft_plot_line_high(t_max *max, t_line l, unsigned int c)
+void	ft_plot_line_high(mlx_image_t *img, t_line l, unsigned int c)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
@@ -61,8 +61,8 @@ void	ft_plot_line_high(t_max *max, t_line l, unsigned int c)
 	l.y[2] = l.y[0];
 	while (l.y[2] <= l.y[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < 1600 && l.y[2] > 0 && l.y[2] < 900)
-			mlx_put_pixel(max->screen, l.x[2], l.y[2], c);
+		if (l.x[2] > 0 && l.x[2] < MAPWIDTH && l.y[2] > 0 && l.y[2] < MAPHEIGHT)
+			mlx_put_pixel(img, l.x[2], l.y[2], c);
 		if (l.d > 0)
 		{
 			l.x[2] = l.x[2] + l.xi;
@@ -74,7 +74,7 @@ void	ft_plot_line_high(t_max *max, t_line l, unsigned int c)
 	}
 }
 
-void	ft_place_line(t_max *max, int x[2], int y[2], unsigned int c)
+void	ft_place_line(mlx_image_t *img, int x[2], int y[2], unsigned int c)
 {
 	t_line	l;
 
@@ -86,25 +86,29 @@ void	ft_place_line(t_max *max, int x[2], int y[2], unsigned int c)
 	{
 		if (l.x[0] > l.x[1])
 			ft_big_swap(l.x, l.y);
-		ft_plot_line_low(max, l, c);
+		ft_plot_line_low(img, l, c);
 	}
 	else
 	{
 		if (l.y[0] > l.y[1])
 			ft_big_swap(l.x, l.y);
-		ft_plot_line_high(max, l, c);
+		ft_plot_line_high(img, l, c);
 	}
 }
 
-int	ft_is_inside(t_map *map, unsigned int rad2, int y, int x)
+int	ft_is_inside(t_map *map, unsigned long rad2, int y, int x)
 {
-	unsigned int	cx;
-	unsigned int	cy;
+	unsigned long	cx;
+	unsigned long	cy;
 
 	cx = x - (int)map->p.x;
 	cy = y - (int)map->p.y;
 	if (cx * cx + cy * cy <= rad2)
+	{
+		// if (y > 100 && x > 200)
+		// 	ft_printf("y %i x %i cx %i cy %i\n", y, x, cx, cy);
 		return (1);
+	}
 	return (0);
 }
 
@@ -126,28 +130,33 @@ void	ft_draw_map(t_max *max)
 	int	x;
 	int	s; //scaling factor
 
-	s = 16;
+	s = MIN(1024 / max->map->ww, 1024 / max->map->hh);
 	y = 0;
-	while (y < HEIGHT)
+	while (y < MAPHEIGHT)
 	{
 		x = 0;
-		while (x < WIDTH)
+		while (x < MAPWIDTH)
 		{
 			if (y < max->map->h * s && x < max->map->w * s)
 			{
 				if (ft_is_inside(max->map, 4096, (y << 8) / s, (x << 8) / s))
 				{
-					mlx_put_pixel(max->screen, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					//ft_printf("y= %i, x= %i\n", y, x);
+					mlx_put_pixel(max->maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}
 				// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
 				// {
-				// 	mlx_put_pixel(max->screen, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
+				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
 				// }
 				else if (max->map->m[(y / s) * max->map->w + (x / s)] & WALL)
-					mlx_put_pixel(max->screen, x, y, 0x80); //walls are black for now
+					mlx_put_pixel(max->maximap, x, y, 0x000000FF & TMASK); //walls are black for now
 				else if (max->map->m[(y / s) * max->map->w + (x / s)] & FLOOR)
-					mlx_put_pixel(max->screen, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+					mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				else
+					mlx_put_pixel(max->maximap, x, y, 0x404040FF & TMASK);
 			}
+			else
+				mlx_put_pixel(max->maximap, x, y, 0x808080FF & TMASK);
 			++x;
 		}
 		++y;
@@ -164,9 +173,67 @@ void	ft_draw_map(t_max *max)
 	max->map->p.yr[0] = ((int)max->map->p.y * s) >> 8;
 	max->map->p.xr[1] = (((int)max->map->p.x - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
 	max->map->p.yr[1] = (((int)max->map->p.y - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
-	ft_place_line(max, max->map->p.xx, max->map->p.yy, 0xff0000ff);
-	ft_place_line(max, max->map->p.xl, max->map->p.yl, 0xffff00ff);
-	ft_place_line(max, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+	ft_place_line(max->maximap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
+	ft_place_line(max->maximap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
+	ft_place_line(max->maximap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+}
+
+void	ft_draw_minimap(t_max *max)
+{
+	int	y;
+	int	x;
+	int	ny;
+	int	nx;
+	int	s; //scaling factor
+
+	s = 8;
+	y = 0;
+	while (y < MINIHEIGHT)
+	{
+		x = 0;
+		while (x < MINIWIDTH)
+		{
+			ny = y + ((int)max->map->p.y * s / 256) - MINIHEIGHT / 2;
+			nx = x + ((int)max->map->p.x * s / 256) - MINIWIDTH / 2;
+			if (ny > 0 && nx > 0 && ny < max->map->h * s && nx < max->map->w * s)
+			{
+				if (ft_is_inside(max->map, 4096, (ny << 8) / s, (nx << 8) / s))
+				{
+					//ft_printf("y= %i, x= %i\n", y, x);
+					mlx_put_pixel(max->minimap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+				}
+				// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
+				// {
+				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
+				// }
+				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
+					mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
+				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
+					mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				else
+					mlx_put_pixel(max->minimap, x, y, 0x404040FF & TMASK);
+			}
+			else
+				mlx_put_pixel(max->minimap, x, y, 0x808080FF & TMASK);
+			++x;
+		}
+		++y;
+	}
+	max->map->p.xx[0] = MINIWIDTH / 2;
+	max->map->p.yy[0] = MINIHEIGHT / 2;
+	max->map->p.xx[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.orientation]) * s) / 32768);
+	max->map->p.yy[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.orientation]) * s) / 32768);
+	max->map->p.xl[0] = MINIWIDTH / 2;
+	max->map->p.yl[0] = MINIHEIGHT / 2;
+	max->map->p.xl[1] = MINIWIDTH / 2 - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
+	max->map->p.yl[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
+	max->map->p.xr[0] = MINIWIDTH / 2;
+	max->map->p.yr[0] = MINIHEIGHT / 2;
+	max->map->p.xr[1] = MINIWIDTH / 2  - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
+	max->map->p.yr[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
+	ft_place_line(max->minimap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
+	ft_place_line(max->minimap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
+	ft_place_line(max->minimap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
 }
 
 void	ft_move_player(t_map *map, int y, int x)
@@ -260,7 +327,6 @@ void	ft_hook(void *param)
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	{
 		ft_printf("You have quit the game by pressing ESC.\n");
-		max->exit = 1;
 		mlx_close_window(max->mlx);
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_SPACE))	//sprinting, faster but slower turns LIMIT STAMINA
@@ -310,4 +376,5 @@ void	ft_hook(void *param)
 		max->map->p.orientation -= max->map->p.turnspeed;
 	}
 	ft_draw_map(max);
+	ft_draw_minimap(max);
 }
