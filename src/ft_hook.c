@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/02 16:27:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/02 17:42:29 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,23 @@ int	ft_is_inside(t_map *map, unsigned long rad2, int y, int x)
 // 		return (1);
 // 	return (0);
 // }
+void	ft_erase_map(t_max *max)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (y < MAPHEIGHT)
+	{
+		x = 0;
+		while (x < MAPWIDTH)
+		{
+			mlx_put_pixel(max->maximap, x, y, 0x0);
+			++x;
+		}
+		++y;
+	}
+}
 
 void	ft_draw_map(t_max *max)
 {
@@ -375,6 +392,22 @@ void	ft_hook(void *param)
 		//ft_printf("You have pressed right arrow.\n");
 		max->map->p.orientation -= max->map->p.turnspeed;
 	}
-	ft_draw_map(max);
+	if (mlx_is_key_down(max->mlx, MLX_KEY_M))
+	{
+		if (max->mmode < -32)
+			max->mmode = 1;
+		if (max->mmode > 32)
+			max->mmode = 0;
+	}
+	if (max->mmode > 0)
+	{
+		++max->mmode;
+		ft_draw_map(max);
+	}
+	else
+	{
+		--max->mmode;
+		ft_erase_map(max);
+	}
 	ft_draw_minimap(max);
 }

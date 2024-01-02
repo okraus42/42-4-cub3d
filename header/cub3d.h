@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/02 15:14:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/02 17:40:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ typedef struct s_max
 	// int				score;
 	// int				exit;
 	// int				time;
-	unsigned char	mode;
+	int				mmode;
 	time_t			oldms;
 	time_t			newms;
 	unsigned int	framems;
