@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/04 10:11:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/04 12:40:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	ft_big_swap(int a[3], int b[3])
 	ft_swap(&b[0], &b[1]);
 }
 
+//different max values for different imgs, maybe structure with colour;
 void	ft_plot_line_low(mlx_image_t *img, t_line l, unsigned int c)
 {
 	l.dx = l.x[1] - l.x[0];
@@ -193,6 +194,21 @@ void	ft_draw_map(t_max *max)
 	ft_place_line(max->maximap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
 	ft_place_line(max->maximap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
 	ft_place_line(max->maximap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+	max->map->p.xd[0] = ((int)max->map->p.x * s) >> 8;
+	max->map->p.yd[0] = ((int)max->map->p.y * s) >> 8;
+	max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
+	max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
+	ft_place_line(max->maximap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
+	max->map->p.xc[0] = max->map->p.xd[1];
+	max->map->p.yc[0] = max->map->p.yd[1];
+	max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
+	max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
+	ft_place_line(max->maximap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
+	max->map->p.xn[0] = max->map->p.xd[1];
+	max->map->p.yn[0] = max->map->p.yd[1];
+	max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
+	max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
+	ft_place_line(max->maximap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
 }
 
 void	ft_draw_minimap(t_max *max)
@@ -251,6 +267,21 @@ void	ft_draw_minimap(t_max *max)
 	ft_place_line(max->minimap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
 	ft_place_line(max->minimap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
 	ft_place_line(max->minimap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+	max->map->p.xd[0] = MINIWIDTH / 2;;
+	max->map->p.yd[0] = MINIHEIGHT / 2;
+	max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
+	max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
+	ft_place_line(max->minimap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
+	max->map->p.xc[0] = max->map->p.xd[1];
+	max->map->p.yc[0] = max->map->p.yd[1];
+	max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
+	max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
+	ft_place_line(max->minimap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
+	max->map->p.xn[0] = max->map->p.xd[1];
+	max->map->p.yn[0] = max->map->p.yd[1];
+	max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
+	max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
+	ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
 }
 
 void	ft_move_player(t_map *map, int y, int x)
@@ -350,6 +381,11 @@ void	ft_hook(void *param)
 	max->map->p.yspeed = (max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
 	++max->frame;
 	max->oldms = max->newms;
+	max->map->p.dx = -max->math->sin[max->map->p.orientation];
+	max->map->p.dy = -max->math->cos[max->map->p.orientation];
+	// size based on fov... maybe tangens?
+	max->map->p.cx = max->math->cos[max->map->p.orientation];
+	max->map->p.cy = -max->math->sin[max->map->p.orientation];
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	{
 		ft_printf("You have quit the game by pressing ESC.\n");

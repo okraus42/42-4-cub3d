@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/02 17:40:26 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/04 12:02:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,16 @@ typedef struct s_player
 	int	turnspeed;
 	int	xspeed;
 	int	yspeed;
+	int	dx;	//direction vector x
+	int	dy;
+	int	xd[2];
+	int	yd[2];
+	int	cx;	//camera vector
+	int	cy;
+	int	xc[2];
+	int	yc[2];
+	int	xn[2];
+	int	yn[2];
 	unsigned short orientation; //0 facing north 65536 angles for start 65536 is 0 again
 }	t_player;
 
