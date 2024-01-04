@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/03 16:17:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/04 10:11:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,71 +255,80 @@ void	ft_draw_minimap(t_max *max)
 
 void	ft_move_player(t_map *map, int y, int x)
 {
-	map->p.y = y;
-	map->p.x = x;
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+	//ft_printf ("%x %x %x %x %x\n",y >> 8, x >> 8, map->m[((y >> 8) * map->w + (x >> 8))], WALL);
+	if (map->m[((y >> 8) * map->w + (x >> 8))] & WALL)
 	{
-		if (y < ((map->p.my << 8) | WALLDISTANCE))
-			map->p.sy = WALLDISTANCE;
+		//ft_printf("You are in a wall\n");
+		return ;
 	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+	else
 	{
-		if (y < ((map->p.my << 8) | WALLDISTANCE)
-			&& x < ((map->p.mx << 8) | WALLDISTANCE))
+		map->p.y = y;
+		map->p.x = x;
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
 		{
-			map->p.sy = WALLDISTANCE;
-			map->p.sx = WALLDISTANCE;
+			if (y < ((map->p.my << 8) | WALLDISTANCE))
+				map->p.sy = WALLDISTANCE;
 		}
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-	{
-		if (y < ((map->p.my << 8) | WALLDISTANCE)
-			&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
 		{
-			map->p.sy = WALLDISTANCE;
-			map->p.sx = 256 - WALLDISTANCE;
+			if (y < ((map->p.my << 8) | WALLDISTANCE)
+				&& x < ((map->p.mx << 8) | WALLDISTANCE))
+			{
+				map->p.sy = WALLDISTANCE;
+				map->p.sx = WALLDISTANCE;
+			}
 		}
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-	{
-		if (y > ((map->p.my << 8) | (256 - WALLDISTANCE)))
-			map->p.sy = 256 - WALLDISTANCE;
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
-	{
-		if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
-			&& x < ((map->p.mx << 8) | WALLDISTANCE))
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
 		{
-			map->p.sy = 256 - WALLDISTANCE;
-			map->p.sx = WALLDISTANCE;
+			if (y < ((map->p.my << 8) | WALLDISTANCE)
+				&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
+			{
+				map->p.sy = WALLDISTANCE;
+				map->p.sx = 256 - WALLDISTANCE;
+			}
 		}
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-	{
-		if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
-			&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
 		{
-			map->p.sy = 256 - WALLDISTANCE;
-			map->p.sx = 256 - WALLDISTANCE;
+			if (y > ((map->p.my << 8) | (256 - WALLDISTANCE)))
+				map->p.sy = 256 - WALLDISTANCE;
 		}
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
-	{
-		if (x < ((map->p.mx << 8) | WALLDISTANCE))
-			map->p.sx = WALLDISTANCE;
-	}
-	if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
-	{
-		if (x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
-			map->p.sx = 256 - WALLDISTANCE;
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+		{
+			if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
+				&& x < ((map->p.mx << 8) | WALLDISTANCE))
+			{
+				map->p.sy = 256 - WALLDISTANCE;
+				map->p.sx = WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
+		{
+			if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
+				&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
+			{
+				map->p.sy = 256 - WALLDISTANCE;
+				map->p.sx = 256 - WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
+		{
+			if (x < ((map->p.mx << 8) | WALLDISTANCE))
+				map->p.sx = WALLDISTANCE;
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
+		{
+			if (x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
+				map->p.sx = 256 - WALLDISTANCE;
+		}
 	}
 }
 
