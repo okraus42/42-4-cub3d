@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/04 12:40:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/04 12:43:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,7 @@ void	ft_hook(void *param)
 	max->oldms = max->newms;
 	max->map->p.dx = -max->math->sin[max->map->p.orientation];
 	max->map->p.dy = -max->math->cos[max->map->p.orientation];
-	// size based on fov... maybe tangens?
+	// size based on fov... maybe tangens? fov cannot be more than 180
 	max->map->p.cx = max->math->cos[max->map->p.orientation];
 	max->map->p.cy = -max->math->sin[max->map->p.orientation];
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
