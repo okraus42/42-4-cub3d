@@ -6,20 +6,61 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/04 12:43:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/05 18:54:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
-void	ft_big_swap(int a[3], int b[3])
+void	ft_big_swap(int a[3], int b[3], unsigned int c[2])
 {
 	ft_swap(&a[0], &a[1]);
 	ft_swap(&b[0], &b[1]);
+	ft_uswap(&c[0], &c[1]);
+}
+
+static unsigned int	ft_mix_colour2(unsigned int d[2], unsigned int rgb[4],
+	unsigned int c[2])
+{
+	unsigned int	r[4];
+
+	if ((c[0] & 0xFF000000) < (c[1] & 0xFF000000))
+		r[0] = ((rgb[0] * d[0]) / d[1] + ((c[0] & 0xFF000000) >> 24)) << 24;
+	else
+		r[0] = (((c[0] & 0xFF000000) >> 24) - ((rgb[0] * d[0]) / d[1])) << 24;
+	if ((c[0] & 0xFF0000) < (c[1] & 0xFF0000))
+		r[1] = (rgb[1] * d[0] / d[1] + ((c[0] & 0xFF0000) >> 16)) << 16;
+	else
+		r[1] = (((c[0] & 0xFF0000) >> 16) - (rgb[1] * d[0] / d[1])) << 16;
+	if ((c[0] & 0xFF00) < (c[1] & 0xFF00))
+		r[2] = (rgb[2] * d[0] / d[1] + ((c[0] & 0xFF00) >> 8)) << 8;
+	else
+		r[2] = (((c[0] & 0xFF00) >> 8) - (rgb[2] * d[0] / d[1])) << 8;
+	if ((c[0] & 0xFF) < (c[1] & 0xFF))
+		r[3] = rgb[3] * d[0] / d[1] + (c[0] & 0xFF);
+	else
+		r[3] = (c[0] & 0xFF) - rgb[3] * d[0] / d[1];
+	return (r[0] | r[1] | r[2] | r[3]);
+}
+
+unsigned int	ft_mix_colour(int x[3], int y[3], unsigned int c[2])
+{
+	unsigned int	d[2];
+	unsigned int	rgb[4];
+
+	d[0] = ft_abs(x[2] - x[0]) + ft_abs(y[2] - y[0]);
+	d[1] = ft_abs(x[1] - x[0]) + ft_abs(y[1] - y[0]);
+	if (!d[1])
+		d[1] = 1;
+	rgb[0] = (ft_uabsdif(c[0] & 0xFF000000, c[1] & 0xFF000000)) >> 24;
+	rgb[1] = (ft_uabsdif(c[0] & 0xFF0000, c[1] & 0xFF0000)) >> 16;
+	rgb[2] = (ft_uabsdif(c[0] & 0xFF00, c[1] & 0xFF00)) >> 8;
+	rgb[3] = ft_uabsdif(c[0] & 0xFF, c[1] & 0xFF);
+	return (ft_mix_colour2(d, rgb, c));
 }
 
 //different max values for different imgs, maybe structure with colour;
-void	ft_plot_line_low(mlx_image_t *img, t_line l, unsigned int c)
+void	ft_plot_line_low(mlx_image_t *img, t_ray l)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
@@ -34,8 +75,8 @@ void	ft_plot_line_low(mlx_image_t *img, t_line l, unsigned int c)
 	l.y[2] = l.y[0];
 	while (l.x[2] <= l.x[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < MAPWIDTH && l.y[2] > 0 && l.y[2] < MAPHEIGHT)
-			mlx_put_pixel(img, l.x[2], l.y[2], c);
+		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
+			mlx_put_pixel(img, l.x[2], l.y[2], ft_mix_colour(l.x, l.y, l.c));
 		if (l.d > 0)
 		{
 			l.y[2] = l.y[2] + l.yi;
@@ -47,7 +88,7 @@ void	ft_plot_line_low(mlx_image_t *img, t_line l, unsigned int c)
 	}
 }
 
-void	ft_plot_line_high(mlx_image_t *img, t_line l, unsigned int c)
+void	ft_plot_line_high(mlx_image_t *img, t_ray l)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
@@ -62,8 +103,8 @@ void	ft_plot_line_high(mlx_image_t *img, t_line l, unsigned int c)
 	l.y[2] = l.y[0];
 	while (l.y[2] <= l.y[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < MAPWIDTH && l.y[2] > 0 && l.y[2] < MAPHEIGHT)
-			mlx_put_pixel(img, l.x[2], l.y[2], c);
+		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
+			mlx_put_pixel(img, l.x[2], l.y[2],ft_mix_colour(l.x, l.y, l.c));
 		if (l.d > 0)
 		{
 			l.x[2] = l.x[2] + l.xi;
@@ -75,25 +116,19 @@ void	ft_plot_line_high(mlx_image_t *img, t_line l, unsigned int c)
 	}
 }
 
-void	ft_place_line(mlx_image_t *img, int x[2], int y[2], unsigned int c)
+void	ft_place_line(mlx_image_t *img, t_ray l)
 {
-	t_line	l;
-
-	l.x[0] = x[0];
-	l.y[0] = y[0];
-	l.x[1] = x[1];
-	l.y[1] = y[1];
 	if (ft_abs(l.y[1] - l.y[0]) < ft_abs(l.x[1] - l.x[0]))
 	{
 		if (l.x[0] > l.x[1])
-			ft_big_swap(l.x, l.y);
-		ft_plot_line_low(img, l, c);
+			ft_big_swap(l.x, l.y, l.c);
+		ft_plot_line_low(img, l);
 	}
 	else
 	{
 		if (l.y[0] > l.y[1])
-			ft_big_swap(l.x, l.y);
-		ft_plot_line_high(img, l, c);
+			ft_big_swap(l.x, l.y, l.c);
+		ft_plot_line_high(img, l);
 	}
 }
 
@@ -146,7 +181,22 @@ void	ft_draw_map(t_max *max)
 {
 	int	y;
 	int	x;
+	long long	xs; //ray starting position 65536 is 1.000
+	long long	ys;
+	long long	hx;
+	long long	hy;
+	long long	vx;
+	long long	vy;
+	long long	rx;	//ray final position
+	long long	ry;
+	long long	xo;	//x and y offset
+	long long	yo;
 	int	s; //scaling factor
+	int	r;
+	int	dof;
+	int	mx;
+	int	my;
+	int	mp;
 
 	s = MIN(1024 / max->map->ww, 1024 / max->map->hh);
 	y = 0;
@@ -179,36 +229,153 @@ void	ft_draw_map(t_max *max)
 		}
 		++y;
 	}
-	max->map->p.xx[0] = ((int)max->map->p.x * s) >> 8;
-	max->map->p.yy[0] = ((int)max->map->p.y * s) >> 8;
-	max->map->p.xx[1] = (((int)max->map->p.x - max->math->sin[max->map->p.orientation] / 128) * s) >> 8;
-	max->map->p.yy[1] = (((int)max->map->p.y - max->math->cos[max->map->p.orientation] / 128) * s) >> 8;
-	max->map->p.xl[0] = ((int)max->map->p.x * s) >> 8;
-	max->map->p.yl[0] = ((int)max->map->p.y * s) >> 8;
-	max->map->p.xl[1] = (((int)max->map->p.x - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] / 64) * s) >> 8;
-	max->map->p.yl[1] = (((int)max->map->p.y - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] / 64) * s) >> 8;
-	max->map->p.xr[0] = ((int)max->map->p.x * s) >> 8;
-	max->map->p.yr[0] = ((int)max->map->p.y * s) >> 8;
-	max->map->p.xr[1] = (((int)max->map->p.x - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
-	max->map->p.yr[1] = (((int)max->map->p.y - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
-	ft_place_line(max->maximap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
-	ft_place_line(max->maximap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
-	ft_place_line(max->maximap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
-	max->map->p.xd[0] = ((int)max->map->p.x * s) >> 8;
-	max->map->p.yd[0] = ((int)max->map->p.y * s) >> 8;
-	max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
-	max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
-	ft_place_line(max->maximap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
-	max->map->p.xc[0] = max->map->p.xd[1];
-	max->map->p.yc[0] = max->map->p.yd[1];
-	max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
-	max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
-	ft_place_line(max->maximap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
-	max->map->p.xn[0] = max->map->p.xd[1];
-	max->map->p.yn[0] = max->map->p.yd[1];
-	max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
-	max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
-	ft_place_line(max->maximap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
+	
+	r = 0;
+	while (r < RAYS)
+	{	
+		xs = ((int)max->map->p.x) * 256;
+		ys = ((int)max->map->p.y) * 256;
+		xo = 65536;
+		yo = 65536;
+		max->map->p.mapray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+		//ft_printf("%i, %i, %u\n", r, max->map->p.mapray[r].ra, r * max->map->p.fov * 65536U);
+		// rx = (((int)max->map->p.x - max->math->sin[max->map->p.mapray[r].ra] / 16)) * 256;
+		// ry = (((int)max->map->p.y - max->math->cos[max->map->p.mapray[r].ra] / 16)) * 256;
+		dof = 0;
+		if (max->map->p.mapray[r].ra > WEST || max->map->p.mapray[r].ra < EAST)
+		{
+			hy = ((ys >> 16) << 16) - 1;
+			hx = (((ys - hy) * max->math->ntan[max->map->p.mapray[r].ra]) >> 16) + xs;
+			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
+			// ft_printf("if1 %Lx\n", max->math->ntan[max->map->p.mapray[r].ra]);
+			xo = (65536 * max->math->ntan[max->map->p.mapray[r].ra]) >> 16;
+			yo = -65536;
+		}
+		if (max->map->p.mapray[r].ra < WEST && max->map->p.mapray[r].ra > EAST)
+		{
+			hy = ((ys >> 16) << 16) + 65536;
+			hx = (((ys - hy) * max->math->ntan[max->map->p.mapray[r].ra]) >> 16) + xs;
+			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
+			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->ntan[max->map->p.mapray[r].ra]);
+			xo = -((65536 * max->math->ntan[max->map->p.mapray[r].ra]) >> 16); //check where to put minus and bitshifting
+			yo = 65536;
+		}
+		if (max->map->p.mapray[r].ra == WEST || max->map->p.mapray[r].ra == EAST)
+		{
+			hy = ys;
+			hx = xs;
+			dof = 8;
+		}
+		while (dof < 8)
+		{
+			mx = hx >> 16;
+			my = hy >> 16;
+			// ft_printf("%x %x\n", mx, my);
+			mp = (my << 8) + mx;
+			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
+				dof = 8;
+			hx += xo;
+			hy += yo;
+			++dof;
+		}
+		hx -= xo;
+		hy -= yo;
+		dof = 0;
+		if (max->map->p.mapray[r].ra && max->map->p.mapray[r].ra < SOUTH)
+		{
+			vx = ((xs >> 16) << 16) - 1;
+			vy = (((xs - vx) * max->math->atan[max->map->p.mapray[r].ra]) >> 16) + ys;
+			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
+			// ft_printf("if1 %Lx\n", max->math->atan[max->map->p.mapray[r].ra]);
+			xo = -65536;
+			yo = (65536 * max->math->atan[max->map->p.mapray[r].ra]) >> 16;
+		}
+		if (max->map->p.mapray[r].ra > SOUTH)
+		{
+			vx = ((xs >> 16) << 16) + 65536;
+			vy = (((xs - vx) * max->math->atan[max->map->p.mapray[r].ra]) >> 16) + ys;
+			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
+			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->atan[max->map->p.mapray[r].ra]);
+			xo = 65536;//check where to put minus and bitshifting
+			yo = -((65536 * max->math->atan[max->map->p.mapray[r].ra]) >> 16);
+		}
+		//looking up or down
+		if (max->map->p.mapray[r].ra == SOUTH || max->map->p.mapray[r].ra == NORTH)
+		{
+			vy = ys;
+			vx = xs;
+			dof = 8;
+		}
+		while (dof < 8)
+		{
+			mx = vx >> 16;
+			my = vy >> 16;
+			// ft_printf("%x %x\n", mx, my);
+			mp = (my << 8) + mx;
+			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
+				dof = 8;
+			vx += xo;
+			vy += yo;
+			++dof;
+		}
+		vx -= xo;
+		vy -= yo;
+		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
+		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
+		rx = vx;
+		ry = vy;
+		max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		max->map->p.mapray[r].c[0] = 0xffff00ff;
+		max->map->p.mapray[r].c[1] = 0xffff00ff;
+		max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		ft_place_line(max->maximap, max->map->p.mapray[r]);
+		rx = hx;
+		ry = hy;
+		max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		max->map->p.mapray[r].c[0] = 0xff0000ff;
+		max->map->p.mapray[r].c[1] = 0xff0000ff;
+		max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		ft_place_line(max->maximap, max->map->p.mapray[r]);
+		++r;
+	}
+	// max->map->p.xx[0] = ((int)max->map->p.x * s) >> 8;
+	// max->map->p.yy[0] = ((int)max->map->p.y * s) >> 8;
+	// max->map->p.xx[1] = (((int)max->map->p.x - max->math->sin[max->map->p.orientation] / 128) * s) >> 8;
+	// max->map->p.yy[1] = (((int)max->map->p.y - max->math->cos[max->map->p.orientation] / 128) * s) >> 8;
+	// max->map->p.xl[0] = ((int)max->map->p.x * s) >> 8;
+	// max->map->p.yl[0] = ((int)max->map->p.y * s) >> 8;
+	// max->map->p.xl[1] = (((int)max->map->p.x - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] / 64) * s) >> 8;
+	// max->map->p.yl[1] = (((int)max->map->p.y - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] / 64) * s) >> 8;
+	// max->map->p.xr[0] = ((int)max->map->p.x * s) >> 8;
+	// max->map->p.yr[0] = ((int)max->map->p.y * s) >> 8;
+	// max->map->p.xr[1] = (((int)max->map->p.x - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
+	// max->map->p.yr[1] = (((int)max->map->p.y - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] / 64) * s) >> 8;
+	// ft_place_line(max->maximap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
+	// ft_place_line(max->maximap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
+	// ft_place_line(max->maximap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+	// max->map->p.xd[0] = ((int)max->map->p.x * s) >> 8;
+	// max->map->p.yd[0] = ((int)max->map->p.y * s) >> 8;
+	// max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
+	// max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
+	// ft_place_line(max->maximap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
+	// max->map->p.xc[0] = max->map->p.xd[1];
+	// max->map->p.yc[0] = max->map->p.yd[1];
+	// max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
+	// max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
+	// ft_place_line(max->maximap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
+	// max->map->p.xn[0] = max->map->p.xd[1];
+	// max->map->p.yn[0] = max->map->p.yd[1];
+	// max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
+	// max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
+	// ft_place_line(max->maximap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
 }
 
 void	ft_draw_minimap(t_max *max)
@@ -218,6 +385,7 @@ void	ft_draw_minimap(t_max *max)
 	int	ny;
 	int	nx;
 	int	s; //scaling factor
+	int	r;
 
 	s = 8;
 	y = 0;
@@ -252,36 +420,48 @@ void	ft_draw_minimap(t_max *max)
 		}
 		++y;
 	}
-	max->map->p.xx[0] = MINIWIDTH / 2;
-	max->map->p.yy[0] = MINIHEIGHT / 2;
-	max->map->p.xx[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.orientation]) * s) / 32768);
-	max->map->p.yy[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.orientation]) * s) / 32768);
-	max->map->p.xl[0] = MINIWIDTH / 2;
-	max->map->p.yl[0] = MINIHEIGHT / 2;
-	max->map->p.xl[1] = MINIWIDTH / 2 - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
-	max->map->p.yl[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
-	max->map->p.xr[0] = MINIWIDTH / 2;
-	max->map->p.yr[0] = MINIHEIGHT / 2;
-	max->map->p.xr[1] = MINIWIDTH / 2  - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
-	max->map->p.yr[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
-	ft_place_line(max->minimap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
-	ft_place_line(max->minimap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
-	ft_place_line(max->minimap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
-	max->map->p.xd[0] = MINIWIDTH / 2;;
-	max->map->p.yd[0] = MINIHEIGHT / 2;
-	max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
-	max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
-	ft_place_line(max->minimap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
-	max->map->p.xc[0] = max->map->p.xd[1];
-	max->map->p.yc[0] = max->map->p.yd[1];
-	max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
-	max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
-	ft_place_line(max->minimap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
-	max->map->p.xn[0] = max->map->p.xd[1];
-	max->map->p.yn[0] = max->map->p.yd[1];
-	max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
-	max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
-	ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
+	r = 0;
+	
+	while (r < RAYS)
+	{	
+		max->map->p.miniray[r].x[0] = MINIWIDTH / 2;
+		max->map->p.miniray[r].y[0] = MINIHEIGHT / 2;
+		max->map->p.miniray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+		max->map->p.miniray[r].x[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.miniray[r].ra]) * s) / 8192);
+		max->map->p.miniray[r].y[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.miniray[r].ra]) * s) / 8192);
+		max->map->p.miniray[r].c[0] = 0xffff00ff;
+		max->map->p.miniray[r].c[1] = max->map->f.rgba;
+		max->map->p.miniray[r].maxheight = MINIHEIGHT;
+		max->map->p.miniray[r].maxwidth = MINIWIDTH;
+		ft_place_line(max->minimap, max->map->p.miniray[r]);
+		++r;
+	}
+	// max->map->p.xl[0] = MINIWIDTH / 2;
+	// max->map->p.yl[0] = MINIHEIGHT / 2;
+	// max->map->p.xl[1] = MINIWIDTH / 2 - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
+	// max->map->p.yl[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
+	// max->map->p.xr[0] = MINIWIDTH / 2;
+	// max->map->p.yr[0] = MINIHEIGHT / 2;
+	// max->map->p.xr[1] = MINIWIDTH / 2  - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
+	// max->map->p.yr[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
+	// ft_place_line(max->minimap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
+	// ft_place_line(max->minimap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
+	// ft_place_line(max->minimap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
+	// max->map->p.xd[0] = MINIWIDTH / 2;;
+	// max->map->p.yd[0] = MINIHEIGHT / 2;
+	// max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
+	// max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
+	// ft_place_line(max->minimap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
+	// max->map->p.xc[0] = max->map->p.xd[1];
+	// max->map->p.yc[0] = max->map->p.yd[1];
+	// max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
+	// max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
+	// ft_place_line(max->minimap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
+	// max->map->p.xn[0] = max->map->p.xd[1];
+	// max->map->p.yn[0] = max->map->p.yd[1];
+	// max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
+	// max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
+	// ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
 }
 
 void	ft_move_player(t_map *map, int y, int x)

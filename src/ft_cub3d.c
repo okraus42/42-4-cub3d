@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/02 17:35:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/05 18:52:13 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,18 @@ void	ft_init_math(t_math *math)
 	{
 		math->sin[i] = 65536 * sin(step * i);
 		math->cos[i] = 65536 * cos(step * i);
+		math->atan[i] = -65536 / tan(step * i);
+		math->ntan[i] = (-65536 * (tan(step * i)));
+		if (ABS(tan(step * i)) > 60000)
+			ft_printf("WARNING %i \n", i);
 	++i;
 	}
 	ft_printf("SIN 0 %i 90 %i  180 %i 270 %i\n", math->sin[NORTH], math->sin[EAST], math->sin[SOUTH], math->sin[WEST]);
 	ft_printf("COS 0 %i 90 %i  180 %i 270 %i\n", math->cos[NORTH], math->cos[EAST], math->cos[SOUTH], math->cos[WEST]);
+	ft_printf("ATAN 0 %i 90 %i  180 %i 270 %i\n", math->atan[NORTH], math->atan[EAST], math->atan[SOUTH], math->atan[WEST]);
+	ft_printf("NTAN 0 %Li 90 %Li  180 %Li 270 %Li\n", math->ntan[NORTH], math->ntan[EAST], math->ntan[SOUTH], math->ntan[WEST]);
+	ft_printf("NTAN 0 %Li 90 %Li  180 %Li 270 %Li\n", math->ntan[NORTH + 1], math->ntan[EAST + 1], math->ntan[SOUTH + 1], math->ntan[WEST + 1]);
+	ft_printf("NTAN 0 %Li 90 %Li  180 %Li 270 %Li\n", math->ntan[NORTH + 2], math->ntan[EAST - 2], math->ntan[SOUTH - 2], math->ntan[WEST - 2]);
 }
 
 void	ft_cub3d(char *file)

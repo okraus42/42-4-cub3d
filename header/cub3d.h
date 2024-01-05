@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/04 12:02:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/05 18:51:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
 # define TMASK 0xFFFFFFFF
+
+# define RAYS 15
+# define FOV 90
 
 //	ENUMS
 
@@ -111,6 +114,24 @@ typedef struct s_door
 # define WALLDISTANCE 64 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
 
+typedef struct s_ray
+{
+	int				x[3];
+	int				y[3];
+	unsigned short	ra;
+	unsigned int	c[2];
+	int				maxwidth;
+	int				maxheight;
+	int				dx;
+	int				dy;
+	union
+	{
+		int			xi;
+		int			yi;
+	};
+	int				d;
+}	t_ray;
+
 typedef struct s_player
 {
 	union		//position on map
@@ -167,6 +188,9 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
+	t_ray miniray[RAYS];
+	t_ray mapray[RAYS];
+	t_ray screenray[RAYS];
 	unsigned short orientation; //0 facing north 65536 angles for start 65536 is 0 again
 }	t_player;
 
@@ -213,27 +237,15 @@ typedef struct s_control
 	int		t;
 }	t_controls;
 
-typedef struct s_line
-{
-	int				x[3];
-	int				y[3];
-	int				dx;
-	int				dy;
-	union
-	{
-		int			xi;
-		int			yi;
-	};
-	int				d;
-}	t_line;
-
 typedef struct s_math
 {
-	int		sin[65536];	//done multiplied by 65536
-	int		cos[65536];
-	int		sqr[65536];
-	int		clr1[65536];
-	int		clr2[65536];
+	int			sin[65536];	//done multiplied by 65536
+	int			cos[65536];
+	long long	atan[65536];
+	long long	ntan[65536];
+	// int		sqr[65536];
+	// int		clr1[65536];
+	// int		clr2[65536];
 }	t_math;
 
 typedef struct s_imgs
