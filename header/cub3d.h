@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 18:51:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/05 19:10:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@
 # define MINIHEIGHT 256
 # define TMASK 0xFFFFFFFF
 
-# define RAYS 15
+# define RAYS 360
 # define FOV 90
+# define DOF 16
 
 //	ENUMS
 

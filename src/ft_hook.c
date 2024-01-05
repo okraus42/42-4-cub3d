@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 18:54:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/05 19:17:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,23 @@ void	ft_erase_map(t_max *max)
 	}
 }
 
+int	ft_test(long long hx, long long hy, long long vx, long long vy, long long xs, long long ys)
+{
+	long long	h;
+	long long	v;
+
+	h = (hx - xs) * (hx - xs) + (hy - ys) * (hy - ys);
+	v = (vx - xs) * (vx - xs) + (vy - ys) * (vy - ys);
+	if (!hx) // need to fix check for 90 degree rays
+		return (1);
+	if (!vx)
+		return (0);
+	if (h > v)
+		return (1);
+	else
+		return (0);
+}
+
 void	ft_draw_map(t_max *max)
 {
 	int	y;
@@ -262,23 +279,24 @@ void	ft_draw_map(t_max *max)
 		}
 		if (max->map->p.mapray[r].ra == WEST || max->map->p.mapray[r].ra == EAST)
 		{
-			hy = ys;
-			hx = xs;
-			dof = 8;
+			hy = 0;
+			hx = 0;
+			dof = DOF;
 		}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = hx >> 16;
 			my = hy >> 16;
 			// ft_printf("%x %x\n", mx, my);
 			mp = (my << 8) + mx;
 			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = 8;
+				dof = DOF;
 			hx += xo;
 			hy += yo;
 			++dof;
 		}
-		hx -= xo;
+		if (hx)
+			hx -= xo;
 		hy -= yo;
 		dof = 0;
 		if (max->map->p.mapray[r].ra && max->map->p.mapray[r].ra < SOUTH)
@@ -302,19 +320,20 @@ void	ft_draw_map(t_max *max)
 		//looking up or down
 		if (max->map->p.mapray[r].ra == SOUTH || max->map->p.mapray[r].ra == NORTH)
 		{
-			vy = ys;
-			vx = xs;
-			dof = 8;
+			vy = 0;
+			vx = 0;
+			dof = DOF;
 		}
-		while (dof < 8)
+		while (dof < DOF)
 		{
 			mx = vx >> 16;
 			my = vy >> 16;
 			// ft_printf("%x %x\n", mx, my);
 			mp = (my << 8) + mx;
 			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = 8;
-			vx += xo;
+				dof = DOF;
+			if (vx)
+				vx += xo;
 			vy += yo;
 			++dof;
 		}
@@ -322,8 +341,16 @@ void	ft_draw_map(t_max *max)
 		vy -= yo;
 		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
 		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
-		rx = vx;
-		ry = vy;
+		if (ft_test(hx, hy, vx, vy, xs, ys))
+		{
+			rx = vx;
+			ry = vy;
+		}
+		else
+		{
+			rx = hx;
+			ry = hy;
+		}
 		max->map->p.mapray[r].x[0] = (xs * s) >> 16;
 		max->map->p.mapray[r].y[0] = (ys * s) >> 16;
 		max->map->p.mapray[r].x[1] = (rx * s) >> 16;
@@ -333,17 +360,29 @@ void	ft_draw_map(t_max *max)
 		max->map->p.mapray[r].maxheight = MAPHEIGHT;
 		max->map->p.mapray[r].maxwidth = MAPWIDTH;
 		ft_place_line(max->maximap, max->map->p.mapray[r]);
-		rx = hx;
-		ry = hy;
-		max->map->p.mapray[r].x[0] = (xs * s) >> 16;
-		max->map->p.mapray[r].y[0] = (ys * s) >> 16;
-		max->map->p.mapray[r].x[1] = (rx * s) >> 16;
-		max->map->p.mapray[r].y[1] = (ry * s) >> 16;
-		max->map->p.mapray[r].c[0] = 0xff0000ff;
-		max->map->p.mapray[r].c[1] = 0xff0000ff;
-		max->map->p.mapray[r].maxheight = MAPHEIGHT;
-		max->map->p.mapray[r].maxwidth = MAPWIDTH;
-		ft_place_line(max->maximap, max->map->p.mapray[r]);
+		// rx = vx;
+		// ry = vy;
+		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		// max->map->p.mapray[r].c[0] = 0xff0000ff;
+		// max->map->p.mapray[r].c[1] = 0xff0000ff;
+		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		// ft_place_line(max->maximap, max->map->p.mapray[r]);
+		// ++r;
+		// rx = hx;
+		// ry = hy;
+		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		// max->map->p.mapray[r].c[0] = 0xff0000ff;
+		// max->map->p.mapray[r].c[1] = 0xff0000ff;
+		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		// ft_place_line(max->maximap, max->map->p.mapray[r]);
 		++r;
 	}
 	// max->map->p.xx[0] = ((int)max->map->p.x * s) >> 8;
