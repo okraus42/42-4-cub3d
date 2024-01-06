@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/06 15:08:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/06 21:51:34 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,7 @@ void	ft_init_rays(t_max *max)
 		// ft_printf("rx: %Lx ry: %Lx\n", ray->rx, ray->ry);
 		// ft_printf("hx: %Lx hy: %Lx\n", ray->hx, ray->hy);
 		// ft_printf("vx: %Lx vy: %Lx\n", ray->vx, ray->vy);
-		max->map->m[((max->map->p.ray[r].ry >> 16) << 8) | (max->map->p.ray[r].rx >> 16)] |= VISITED;
+		//max->map->m[((max->map->p.ray[r].ry >> 16) << 8) | (max->map->p.ray[r].rx >> 16)] |= VISITED;
 		// if (ray->hv)
 		// {
 		// 	while (ray->vdof)
@@ -352,7 +352,7 @@ void	ft_init_rays(t_max *max)
 		// 		--ray->vdof;
 		// 	}
 		// }
-		if (ray->hv)
+		if (!ray->hv)
 		{
 			while (ray->hdof && ray->hdof < DOF)
 			{
@@ -715,9 +715,9 @@ void	ft_revisit_map(t_map *map)
 	{
 		if (map->m[y] & VISITED)
 		{
-			ft_printf("old%Lx\n", map->m[y]);
+			//ft_printf("old%Lx\n", map->m[y]);
 			map->m[y] -= (VISIT);
-			ft_printf("new%Lx\n", map->m[y]);
+			//ft_printf("new%Lx\n", map->m[y]);
 		}
 		++y;
 	}
