@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 19:10:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/06 12:28:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 # define MINIHEIGHT 256
 # define TMASK 0xFFFFFFFF
 
-# define RAYS 360
+# define RAYS 920
 # define FOV 90
 # define DOF 16
 
@@ -120,7 +120,21 @@ typedef struct s_ray
 	int				x[3];
 	int				y[3];
 	unsigned short	ra;
-	unsigned int	c[2];
+	union
+	{
+		unsigned int	c[2];
+		struct
+		{
+			unsigned char c0a;
+			unsigned char c0b;
+			unsigned char c0g;
+			unsigned char c0r;
+			unsigned char c1a;
+			unsigned char c1b;
+			unsigned char c1g;
+			unsigned char c1r;
+		};
+	};
 	int				maxwidth;
 	int				maxheight;
 	int				dx;
@@ -131,6 +145,19 @@ typedef struct s_ray
 		int			yi;
 	};
 	int				d;
+	long long		length;
+	long long		vl;
+	long long		hl;
+	long long		xs; //ray starting position 65536 is 1.000
+	long long		ys;
+	long long		hx;
+	long long		hy;
+	long long		vx;
+	long long		vy;
+	long long		rx;	//ray final position
+	long long		ry;
+	long long		xo;	//x and y offset
+	long long		yo;
 }	t_ray;
 
 typedef struct s_player
@@ -189,6 +216,7 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
+	t_ray ray[RAYS];
 	t_ray miniray[RAYS];
 	t_ray mapray[RAYS];
 	t_ray screenray[RAYS];

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 19:17:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/06 12:44:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,43 +177,196 @@ void	ft_erase_map(t_max *max)
 	}
 }
 
-int	ft_test(long long hx, long long hy, long long vx, long long vy, long long xs, long long ys)
+int	ft_test(t_ray *ray)
 {
-	long long	h;
-	long long	v;
-
-	h = (hx - xs) * (hx - xs) + (hy - ys) * (hy - ys);
-	v = (vx - xs) * (vx - xs) + (vy - ys) * (vy - ys);
-	if (!hx) // need to fix check for 90 degree rays
-		return (1);
-	if (!vx)
-		return (0);
-	if (h > v)
+	ray->hl = (ray->hx - ray->xs) * (ray->hx - ray->xs) + (ray->hy - ray->ys) * (ray->hy - ray->ys);
+	ray->vl = (ray->vx - ray->xs) * (ray->vx - ray->xs) + (ray->vy - ray->ys) * (ray->vy - ray->ys);
+	ray->length = MIN(ray->hl, ray->vl);
+	if (ray->hl > ray->vl)
 		return (1);
 	else
 		return (0);
+}
+
+void	ft_init_rays(t_max *max)
+{
+	// long long	xs; //ray starting position 65536 is 1.000
+	// long long	ys;
+	// long long	hx;
+	// long long	hy;
+	// long long	vx;
+	// long long	vy;
+	// long long	rx;	//ray final position
+	// long long	ry;
+	// long long	xo;	//x and y offset
+	// long long	yo;
+	int	dof;
+	int	mx;
+	int	my;
+	int	mp;
+	int	r;
+	long long	maxdist;
+	t_ray	*ray;
+		
+	r = 0;
+	while (r < RAYS)
+	{	
+		ray = &max->map->p.ray[r];
+		ray->xs = ((int)max->map->p.x) * 256;
+		ray->ys = ((int)max->map->p.y) * 256;
+		ray->xo = 65536;
+		ray->yo = 65536;
+		ray->ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+		//ft_printf("%i, %i, %u\n", r, ray->ra, r * max->map->p.fov * 65536U);
+		// rx = (((int)max->map->p.x - max->math->sin[ray->ra] / 16)) * 256;
+		// ry = (((int)max->map->p.y - max->math->cos[ray->ra] / 16)) * 256;
+		dof = 0;
+		if (ray->ra > WEST + 4 || ray->ra < EAST - 4)
+		{
+			ray->hy = ((ray->ys >> 16) << 16) - 1;
+			ray->hx = (((ray->ys - ray->hy) * max->math->ntan[ray->ra]) >> 16) + ray->xs;
+			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
+			// ft_printf("if1 %Lx\n", max->math->ntan[ray->ra]);
+			ray->xo = (65536 * max->math->ntan[ray->ra]) >> 16;
+			ray->yo = -65536;
+		}
+		else if (ray->ra < WEST -4 && ray->ra > EAST + 4)
+		{
+			ray->hy = ((ray->ys >> 16) << 16) + 65536;
+			ray->hx = (((ray->ys - ray->hy) * max->math->ntan[ray->ra]) >> 16) + ray->xs;
+			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
+			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->ntan[ray->ra]);
+			ray->xo = -((65536 * max->math->ntan[ray->ra]) >> 16); //check where to put minus and bitshifting
+			ray->yo = 65536;
+		}
+		else
+		{
+			ray->hy = INT_MAX;
+			ray->hx = INT_MAX;
+			dof = DOF;
+		}
+		while (dof < DOF)
+		{
+			mx = ray->hx >> 16;
+			my = ray->hy >> 16;
+			// ft_printf("%x %x\n", mx, my);
+			mp = (my << 8) + mx;
+			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
+				dof = DOF;
+			ray->hx += ray->xo;
+			ray->hy += ray->yo;
+			++dof;
+		}
+		ray->hx -= ray->xo;
+		ray->hy -= ray->yo;
+		dof = 0;
+		if (ray->ra < SOUTH - 4 && ray->ra > NORTH + 4)
+		{
+			ray->vx = ((ray->xs >> 16) << 16) - 1;
+			ray->vy = (((ray->xs - ray->vx) * max->math->atan[ray->ra]) >> 16) + ray->ys;
+			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
+			// ft_printf("if1 %Lx\n", max->math->atan[ray->ra]);
+			ray->xo = -65536;
+			ray->yo = (65536 * max->math->atan[ray->ra]) >> 16;
+		}
+		else if (ray->ra > SOUTH + 4 && ray->ra < (unsigned short)(NORTH - 4))
+		{
+			ray->vx = ((ray->xs >> 16) << 16) + 65536;
+			ray->vy = (((ray->xs - ray->vx) * max->math->atan[ray->ra]) >> 16) + ray->ys;
+			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
+			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->atan[ray->ra]);
+			ray->xo = 65536;//check where to put minus and bitshifting
+			ray->yo = -((65536 * max->math->atan[ray->ra]) >> 16);
+		}
+		//looking up or down
+		else
+		{
+			ray->vy = INT_MAX;
+			ray->vx = INT_MAX;
+			dof = DOF;
+		}
+		while (dof < DOF)
+		{
+			mx = ray->vx >> 16;
+			my = ray->vy >> 16;
+			// ft_printf("%x %x\n", mx, my);
+			mp = (my << 8) + mx;
+			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
+				dof = DOF;
+			ray->vx += ray->xo;
+			ray->vy += ray->yo;
+			++dof;
+		}
+		ray->vx -= ray->xo;
+		ray->vy -= ray->yo;
+		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
+		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
+		if (ft_test(ray))
+		{
+			ray->rx = ray->vx;
+			ray->ry = ray->vy;
+		}
+		else
+		{
+			ray->rx = ray->hx;
+			ray->ry = ray->hy;
+		}
+		// ft_printf("length: %Lx\n", ray->length);
+		// ft_printf("ra: %hi\n", ray->ra);
+		// ft_printf("rx: %Lx ry: %Lx\n", ray->rx, ray->ry);
+		// ft_printf("hx: %Lx hy: %Lx\n", ray->hx, ray->hy);
+		// ft_printf("vx: %Lx vy: %Lx\n", ray->vx, ray->vy);
+		
+		ray->c[0] = 0xFFFF00FF;
+		maxdist = 2147483648 * DOF * DOF;
+		if (ray->length > maxdist)
+			ray->c[1] = 0x000000ff;
+		else
+		{
+			ray->c1a = 0xff;
+			ray->c1b = ray->c0b * (255 - (255 * ray->length / maxdist)) / 256;
+			ray->c1g = ray->c0g * (255 - (255 * ray->length / maxdist)) / 256;
+			ray->c1r = ray->c0r * (255 - (255 * ray->length / maxdist)) / 256;
+		}
+		// max->map->p.mapray[r].x[0] = ray->xs;
+		// max->map->p.mapray[r].y[0] = ray->ys;
+		// max->map->p.mapray[r].x[1] = ray->rx;
+		// max->map->p.mapray[r].y[1] = ray->ry;
+		// rx = vx;
+		// ry = vy;
+		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		// max->map->p.mapray[r].c[0] = 0xff0000ff;
+		// max->map->p.mapray[r].c[1] = 0xff0000ff;
+		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		// ft_place_line(max->maximap, max->map->p.mapray[r]);
+		// ++r;
+		// rx = hx;
+		// ry = hy;
+		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
+		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
+		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
+		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
+		// max->map->p.mapray[r].c[0] = 0xff0000ff;
+		// max->map->p.mapray[r].c[1] = 0xff0000ff;
+		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
+		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		// ft_place_line(max->maximap, max->map->p.mapray[r]);
+		++r;
+	}
 }
 
 void	ft_draw_map(t_max *max)
 {
 	int	y;
 	int	x;
-	long long	xs; //ray starting position 65536 is 1.000
-	long long	ys;
-	long long	hx;
-	long long	hy;
-	long long	vx;
-	long long	vy;
-	long long	rx;	//ray final position
-	long long	ry;
-	long long	xo;	//x and y offset
-	long long	yo;
+	
 	int	s; //scaling factor
 	int	r;
-	int	dof;
-	int	mx;
-	int	my;
-	int	mp;
+
 
 	s = MIN(1024 / max->map->ww, 1024 / max->map->hh);
 	y = 0;
@@ -246,143 +399,31 @@ void	ft_draw_map(t_max *max)
 		}
 		++y;
 	}
-	
 	r = 0;
+	
 	while (r < RAYS)
-	{	
-		xs = ((int)max->map->p.x) * 256;
-		ys = ((int)max->map->p.y) * 256;
-		xo = 65536;
-		yo = 65536;
-		max->map->p.mapray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
-		//ft_printf("%i, %i, %u\n", r, max->map->p.mapray[r].ra, r * max->map->p.fov * 65536U);
-		// rx = (((int)max->map->p.x - max->math->sin[max->map->p.mapray[r].ra] / 16)) * 256;
-		// ry = (((int)max->map->p.y - max->math->cos[max->map->p.mapray[r].ra] / 16)) * 256;
-		dof = 0;
-		if (max->map->p.mapray[r].ra > WEST || max->map->p.mapray[r].ra < EAST)
-		{
-			hy = ((ys >> 16) << 16) - 1;
-			hx = (((ys - hy) * max->math->ntan[max->map->p.mapray[r].ra]) >> 16) + xs;
-			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
-			// ft_printf("if1 %Lx\n", max->math->ntan[max->map->p.mapray[r].ra]);
-			xo = (65536 * max->math->ntan[max->map->p.mapray[r].ra]) >> 16;
-			yo = -65536;
-		}
-		if (max->map->p.mapray[r].ra < WEST && max->map->p.mapray[r].ra > EAST)
-		{
-			hy = ((ys >> 16) << 16) + 65536;
-			hx = (((ys - hy) * max->math->ntan[max->map->p.mapray[r].ra]) >> 16) + xs;
-			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
-			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->ntan[max->map->p.mapray[r].ra]);
-			xo = -((65536 * max->math->ntan[max->map->p.mapray[r].ra]) >> 16); //check where to put minus and bitshifting
-			yo = 65536;
-		}
-		if (max->map->p.mapray[r].ra == WEST || max->map->p.mapray[r].ra == EAST)
-		{
-			hy = 0;
-			hx = 0;
-			dof = DOF;
-		}
-		while (dof < DOF)
-		{
-			mx = hx >> 16;
-			my = hy >> 16;
-			// ft_printf("%x %x\n", mx, my);
-			mp = (my << 8) + mx;
-			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = DOF;
-			hx += xo;
-			hy += yo;
-			++dof;
-		}
-		if (hx)
-			hx -= xo;
-		hy -= yo;
-		dof = 0;
-		if (max->map->p.mapray[r].ra && max->map->p.mapray[r].ra < SOUTH)
-		{
-			vx = ((xs >> 16) << 16) - 1;
-			vy = (((xs - vx) * max->math->atan[max->map->p.mapray[r].ra]) >> 16) + ys;
-			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
-			// ft_printf("if1 %Lx\n", max->math->atan[max->map->p.mapray[r].ra]);
-			xo = -65536;
-			yo = (65536 * max->math->atan[max->map->p.mapray[r].ra]) >> 16;
-		}
-		if (max->map->p.mapray[r].ra > SOUTH)
-		{
-			vx = ((xs >> 16) << 16) + 65536;
-			vy = (((xs - vx) * max->math->atan[max->map->p.mapray[r].ra]) >> 16) + ys;
-			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
-			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->atan[max->map->p.mapray[r].ra]);
-			xo = 65536;//check where to put minus and bitshifting
-			yo = -((65536 * max->math->atan[max->map->p.mapray[r].ra]) >> 16);
-		}
-		//looking up or down
-		if (max->map->p.mapray[r].ra == SOUTH || max->map->p.mapray[r].ra == NORTH)
-		{
-			vy = 0;
-			vx = 0;
-			dof = DOF;
-		}
-		while (dof < DOF)
-		{
-			mx = vx >> 16;
-			my = vy >> 16;
-			// ft_printf("%x %x\n", mx, my);
-			mp = (my << 8) + mx;
-			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = DOF;
-			if (vx)
-				vx += xo;
-			vy += yo;
-			++dof;
-		}
-		vx -= xo;
-		vy -= yo;
-		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
-		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
-		if (ft_test(hx, hy, vx, vy, xs, ys))
-		{
-			rx = vx;
-			ry = vy;
-		}
-		else
-		{
-			rx = hx;
-			ry = hy;
-		}
-		max->map->p.mapray[r].x[0] = (xs * s) >> 16;
-		max->map->p.mapray[r].y[0] = (ys * s) >> 16;
-		max->map->p.mapray[r].x[1] = (rx * s) >> 16;
-		max->map->p.mapray[r].y[1] = (ry * s) >> 16;
-		max->map->p.mapray[r].c[0] = 0xffff00ff;
-		max->map->p.mapray[r].c[1] = 0xffff00ff;
+	{
+		// ft_printf("x0 %x %Lx\n", max->map->p.mapray[r].x[0], max->map->p.ray[r].xs);
+		// ft_printf("y0 %x %Lx\n", max->map->p.mapray[r].y[0], max->map->p.ray[r].ys);
+		// ft_printf("x1 %x %Lx\n", max->map->p.mapray[r].x[1], max->map->p.ray[r].rx);
+		// ft_printf("y1 %x %Lx\n", max->map->p.mapray[r].y[1], max->map->p.ray[r].ry);
+		// max->map->p.mapray[r].x[0] = (max->map->p.mapray[r].x[0] * s) >> 16;
+		// max->map->p.mapray[r].y[0] = (max->map->p.mapray[r].y[0] * s) >> 16;
+		// max->map->p.mapray[r].x[1] = (max->map->p.mapray[r].x[1] * s) >> 16;
+		// max->map->p.mapray[r].y[1] = (max->map->p.mapray[r].y[1] * s) >> 16;
+		max->map->p.mapray[r].x[0] = (max->map->p.ray[r].xs * s) >> 16;
+		max->map->p.mapray[r].y[0] = (max->map->p.ray[r].ys * s) >> 16;
+		max->map->p.mapray[r].x[1] = (max->map->p.ray[r].rx * s) >> 16;
+		max->map->p.mapray[r].y[1] = (max->map->p.ray[r].ry * s) >> 16;
+		// ft_printf("x0 %x %Lx\n", max->map->p.mapray[r].x[0], (max->map->p.ray[r].xs * s) >> 16);
+		// ft_printf("y0 %x %Lx\n", max->map->p.mapray[r].y[0], (max->map->p.ray[r].ys * s) >> 16);
+		// ft_printf("x1 %x %Lx\n", max->map->p.mapray[r].x[1], (max->map->p.ray[r].rx * s) >> 16);
+		// ft_printf("y1 %x %Lx\n", max->map->p.mapray[r].y[1], (max->map->p.ray[r].ry * s) >> 16);
 		max->map->p.mapray[r].maxheight = MAPHEIGHT;
 		max->map->p.mapray[r].maxwidth = MAPWIDTH;
+		max->map->p.mapray[r].c[0] = max->map->p.ray[r].c[0];
+		max->map->p.mapray[r].c[1] = max->map->p.ray[r].c[1];
 		ft_place_line(max->maximap, max->map->p.mapray[r]);
-		// rx = vx;
-		// ry = vy;
-		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
-		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
-		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
-		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
-		// max->map->p.mapray[r].c[0] = 0xff0000ff;
-		// max->map->p.mapray[r].c[1] = 0xff0000ff;
-		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
-		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
-		// ft_place_line(max->maximap, max->map->p.mapray[r]);
-		// ++r;
-		// rx = hx;
-		// ry = hy;
-		// max->map->p.mapray[r].x[0] = (xs * s) >> 16;
-		// max->map->p.mapray[r].y[0] = (ys * s) >> 16;
-		// max->map->p.mapray[r].x[1] = (rx * s) >> 16;
-		// max->map->p.mapray[r].y[1] = (ry * s) >> 16;
-		// max->map->p.mapray[r].c[0] = 0xff0000ff;
-		// max->map->p.mapray[r].c[1] = 0xff0000ff;
-		// max->map->p.mapray[r].maxheight = MAPHEIGHT;
-		// max->map->p.mapray[r].maxwidth = MAPWIDTH;
-		// ft_place_line(max->maximap, max->map->p.mapray[r]);
 		++r;
 	}
 	// max->map->p.xx[0] = ((int)max->map->p.x * s) >> 8;
@@ -459,22 +500,38 @@ void	ft_draw_minimap(t_max *max)
 		}
 		++y;
 	}
+
 	r = 0;
 	
 	while (r < RAYS)
-	{	
+	{
 		max->map->p.miniray[r].x[0] = MINIWIDTH / 2;
 		max->map->p.miniray[r].y[0] = MINIHEIGHT / 2;
-		max->map->p.miniray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
-		max->map->p.miniray[r].x[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.miniray[r].ra]) * s) / 8192);
-		max->map->p.miniray[r].y[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.miniray[r].ra]) * s) / 8192);
-		max->map->p.miniray[r].c[0] = 0xffff00ff;
-		max->map->p.miniray[r].c[1] = max->map->f.rgba;
+		max->map->p.miniray[r].x[1] = MINIWIDTH / 2 + ((((max->map->p.ray[r].rx - max->map->p.ray[r].xs)) * s) >> 16);
+		max->map->p.miniray[r].y[1] = MINIHEIGHT / 2 + ((((max->map->p.ray[r].ry - max->map->p.ray[r].ys)) * s) >> 16);
 		max->map->p.miniray[r].maxheight = MINIHEIGHT;
 		max->map->p.miniray[r].maxwidth = MINIWIDTH;
+		max->map->p.miniray[r].c[0] = max->map->p.ray[r].c[0];
+		max->map->p.miniray[r].c[1] = max->map->p.ray[r].c[1];
 		ft_place_line(max->minimap, max->map->p.miniray[r]);
 		++r;
 	}
+	r = 0;
+	
+	// while (r < RAYS)
+	// {	
+	// 	max->map->p.miniray[r].x[0] = MINIWIDTH / 2;
+	// 	max->map->p.miniray[r].y[0] = MINIHEIGHT / 2;
+	// 	max->map->p.miniray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+	// 	max->map->p.miniray[r].x[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.miniray[r].ra]) * s) / 8192);
+	// 	max->map->p.miniray[r].y[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.miniray[r].ra]) * s) / 8192);
+	// 	max->map->p.miniray[r].c[0] = 0xffff00ff;
+	// 	max->map->p.miniray[r].c[1] = max->map->f.rgba;
+	// 	max->map->p.miniray[r].maxheight = MINIHEIGHT;
+	// 	max->map->p.miniray[r].maxwidth = MINIWIDTH;
+	// 	ft_place_line(max->minimap, max->map->p.miniray[r]);
+	// 	++r;
+	// }
 	// max->map->p.xl[0] = MINIWIDTH / 2;
 	// max->map->p.yl[0] = MINIHEIGHT / 2;
 	// max->map->p.xl[1] = MINIWIDTH / 2 - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
@@ -663,6 +720,7 @@ void	ft_hook(void *param)
 		if (max->mmode > 32)
 			max->mmode = 0;
 	}
+	ft_init_rays(max);
 	if (max->mmode > 0)
 	{
 		++max->mmode;
