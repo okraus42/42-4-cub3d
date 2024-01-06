@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/06 12:44:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/06 15:08:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,9 +183,15 @@ int	ft_test(t_ray *ray)
 	ray->vl = (ray->vx - ray->xs) * (ray->vx - ray->xs) + (ray->vy - ray->ys) * (ray->vy - ray->ys);
 	ray->length = MIN(ray->hl, ray->vl);
 	if (ray->hl > ray->vl)
+	{
+		ray->hv = 1;
 		return (1);
+	}
 	else
+	{
+		ray->hv = 0;
 		return (0);
+	}
 }
 
 void	ft_init_rays(t_max *max)
@@ -200,35 +206,37 @@ void	ft_init_rays(t_max *max)
 	// long long	ry;
 	// long long	xo;	//x and y offset
 	// long long	yo;
-	int	dof;
 	int	mx;
 	int	my;
 	int	mp;
 	int	r;
 	long long	maxdist;
 	t_ray	*ray;
-		
+
+	maxdist = 2147483648 * DOF * DOF;
 	r = 0;
 	while (r < RAYS)
 	{	
 		ray = &max->map->p.ray[r];
 		ray->xs = ((int)max->map->p.x) * 256;
 		ray->ys = ((int)max->map->p.y) * 256;
-		ray->xo = 65536;
-		ray->yo = 65536;
+		ray->hxo = 65536;
+		ray->hyo = 65536;
+		ray->vxo = 65536;
+		ray->vyo = 65536;
 		ray->ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
 		//ft_printf("%i, %i, %u\n", r, ray->ra, r * max->map->p.fov * 65536U);
 		// rx = (((int)max->map->p.x - max->math->sin[ray->ra] / 16)) * 256;
 		// ry = (((int)max->map->p.y - max->math->cos[ray->ra] / 16)) * 256;
-		dof = 0;
+		ray->hdof = 0;
 		if (ray->ra > WEST + 4 || ray->ra < EAST - 4)
 		{
 			ray->hy = ((ray->ys >> 16) << 16) - 1;
 			ray->hx = (((ray->ys - ray->hy) * max->math->ntan[ray->ra]) >> 16) + ray->xs;
-			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
+			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", ray->xs, ray->ys, ray->hx, ray->hy);
 			// ft_printf("if1 %Lx\n", max->math->ntan[ray->ra]);
-			ray->xo = (65536 * max->math->ntan[ray->ra]) >> 16;
-			ray->yo = -65536;
+			ray->hxo = (65536 * max->math->ntan[ray->ra]) >> 16;
+			ray->hyo = -65536;
 		}
 		else if (ray->ra < WEST -4 && ray->ra > EAST + 4)
 		{
@@ -236,38 +244,46 @@ void	ft_init_rays(t_max *max)
 			ray->hx = (((ray->ys - ray->hy) * max->math->ntan[ray->ra]) >> 16) + ray->xs;
 			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, hx, hy);
 			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->ntan[ray->ra]);
-			ray->xo = -((65536 * max->math->ntan[ray->ra]) >> 16); //check where to put minus and bitshifting
-			ray->yo = 65536;
+			ray->hxo = -((65536 * max->math->ntan[ray->ra]) >> 16); //check where to put minus and bitshifting
+			ray->hyo = 65536;
 		}
 		else
 		{
 			ray->hy = INT_MAX;
 			ray->hx = INT_MAX;
-			dof = DOF;
+			ray->hdof = DOF;
 		}
-		while (dof < DOF)
+		while (ray->hdof < DOF)
 		{
 			mx = ray->hx >> 16;
 			my = ray->hy >> 16;
 			// ft_printf("%x %x\n", mx, my);
 			mp = (my << 8) + mx;
-			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = DOF;
-			ray->hx += ray->xo;
-			ray->hy += ray->yo;
-			++dof;
+			if (mp > 0 && mp < 65536)
+			{
+				//max->map->m[mp] |= VISITED;
+				if ((max->map->m[mp]) & WALL)
+				{
+					break ;
+				}
+			}
+			else
+				break ;
+			ray->hx += ray->hxo;
+			ray->hy += ray->hyo;
+			++ray->hdof;
 		}
-		ray->hx -= ray->xo;
-		ray->hy -= ray->yo;
-		dof = 0;
+		// ray->hx -= ray->xo;
+		// ray->hy -= ray->yo;
+		ray->vdof = 0;
 		if (ray->ra < SOUTH - 4 && ray->ra > NORTH + 4)
 		{
 			ray->vx = ((ray->xs >> 16) << 16) - 1;
 			ray->vy = (((ray->xs - ray->vx) * max->math->atan[ray->ra]) >> 16) + ray->ys;
 			// ft_printf("if1 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
 			// ft_printf("if1 %Lx\n", max->math->atan[ray->ra]);
-			ray->xo = -65536;
-			ray->yo = (65536 * max->math->atan[ray->ra]) >> 16;
+			ray->vxo = -65536;
+			ray->vyo = (65536 * max->math->atan[ray->ra]) >> 16;
 		}
 		else if (ray->ra > SOUTH + 4 && ray->ra < (unsigned short)(NORTH - 4))
 		{
@@ -275,30 +291,39 @@ void	ft_init_rays(t_max *max)
 			ray->vy = (((ray->xs - ray->vx) * max->math->atan[ray->ra]) >> 16) + ray->ys;
 			// ft_printf("if2 %Lx %Lx %Lx %Lx\n", xs, ys, vx, vy);
 			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->atan[ray->ra]);
-			ray->xo = 65536;//check where to put minus and bitshifting
-			ray->yo = -((65536 * max->math->atan[ray->ra]) >> 16);
+			ray->vxo = 65536;//check where to put minus and bitshifting
+			ray->vyo = -((65536 * max->math->atan[ray->ra]) >> 16);
 		}
 		//looking up or down
 		else
 		{
 			ray->vy = INT_MAX;
 			ray->vx = INT_MAX;
-			dof = DOF;
+			ray->vdof = DOF;
 		}
-		while (dof < DOF)
+		while (ray->vdof < DOF)
 		{
 			mx = ray->vx >> 16;
 			my = ray->vy >> 16;
 			// ft_printf("%x %x\n", mx, my);
 			mp = (my << 8) + mx;
-			if (mp > 0 && mp < 65536 && ((max->map->m[mp]) & WALL))
-				dof = DOF;
-			ray->vx += ray->xo;
-			ray->vy += ray->yo;
-			++dof;
+			mp = (my << 8) + mx;
+			if (mp > 0 && mp < 65536)
+			{
+				//max->map->m[mp] |= VISITED;
+				if ((max->map->m[mp]) & WALL)
+				{
+					break ;
+				}
+			}
+			else
+				break ;
+			ray->vx += ray->vxo;
+			ray->vy += ray->vyo;
+			++ray->vdof;
 		}
-		ray->vx -= ray->xo;
-		ray->vy -= ray->yo;
+		// ray->vx -= ray->xo;
+		// ray->vy -= ray->yo;
 		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
 		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
 		if (ft_test(ray))
@@ -316,9 +341,40 @@ void	ft_init_rays(t_max *max)
 		// ft_printf("rx: %Lx ry: %Lx\n", ray->rx, ray->ry);
 		// ft_printf("hx: %Lx hy: %Lx\n", ray->hx, ray->hy);
 		// ft_printf("vx: %Lx vy: %Lx\n", ray->vx, ray->vy);
-		
+		max->map->m[((max->map->p.ray[r].ry >> 16) << 8) | (max->map->p.ray[r].rx >> 16)] |= VISITED;
+		// if (ray->hv)
+		// {
+		// 	while (ray->vdof)
+		// 	{
+		// 		max->map->m[((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)] |= VISITED;
+		// 		ray->vx -= ray->vxo;
+		// 		ray->vy -= ray->vyo;
+		// 		--ray->vdof;
+		// 	}
+		// }
+		if (ray->hv)
+		{
+			while (ray->hdof && ray->hdof < DOF)
+			{
+				if (((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)) > 0) && ((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16) )< 65536))
+					max->map->m[((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)] |= VISITED;
+				ray->hx -= ray->hxo;
+				ray->hy -= ray->hyo;
+				--ray->hdof;
+			}
+		}
+		else
+		{
+			while (ray->vdof && ray->vdof < DOF)
+			{
+				if (((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) > 0) && ((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) < 65536))
+					max->map->m[((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)] |= VISITED;
+				ray->vx -= ray->vxo;
+				ray->vy -= ray->vyo;
+				--ray->vdof;
+			}
+		}
 		ray->c[0] = 0xFFFF00FF;
-		maxdist = 2147483648 * DOF * DOF;
 		if (ray->length > maxdist)
 			ray->c[1] = 0x000000ff;
 		else
@@ -387,9 +443,19 @@ void	ft_draw_map(t_max *max)
 				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
 				// }
 				else if (max->map->m[(y / s) * max->map->w + (x / s)] & WALL)
-					mlx_put_pixel(max->maximap, x, y, 0x000000FF & TMASK); //walls are black for now
+				{
+					if (max->map->m[(y / s) * max->map->w + (x / s)] & VISITED)
+						mlx_put_pixel(max->maximap, x, y, 0x000000ff & TMASK); //Visited wall shine white
+					else
+						mlx_put_pixel(max->maximap, x, y, 0x777777ff & TMASK); //black for unvisited area
+				}
 				else if (max->map->m[(y / s) * max->map->w + (x / s)] & FLOOR)
-					mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				{
+					if (max->map->m[(y / s) * max->map->w + (x / s)] & VISITED)
+						mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+					else
+						mlx_put_pixel(max->maximap, x, y, 0x888888ff & TMASK); //black for unvisited area
+				}
 				else
 					mlx_put_pixel(max->maximap, x, y, 0x404040FF & TMASK);
 			}
@@ -639,6 +705,23 @@ void	ft_move_player(t_map *map, int y, int x)
 	}
 }
 
+void	ft_revisit_map(t_map *map)
+{
+	int	y;
+
+	map->m[map->p.my << 8 | map->p.mx] |= VISITED;
+	y = 0;
+	while (y < map->hh * map->w)
+	{
+		if (map->m[y] & VISITED)
+		{
+			ft_printf("old%Lx\n", map->m[y]);
+			map->m[y] -= (VISIT);
+			ft_printf("new%Lx\n", map->m[y]);
+		}
+		++y;
+	}
+}
 
 //hook for moving player on the map
 //create hook for moving map instead of player
@@ -720,6 +803,8 @@ void	ft_hook(void *param)
 		if (max->mmode > 32)
 			max->mmode = 0;
 	}
+	if (!(max->frame % 16))
+		ft_revisit_map(max->map);
 	ft_init_rays(max);
 	if (max->mmode > 0)
 	{

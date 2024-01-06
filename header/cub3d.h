@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/06 12:28:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/06 14:52:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ typedef enum e_emap
 	FLOOD2 = 0x20000,
 	EXIT = 0x100000,
 	DOOR1 = 0x1000000,
+	VISIT = 0x100000000,
+	VISITED = 0xFF00000000
 }	t_emap;
 
 //	STRUCTURES
@@ -156,8 +158,15 @@ typedef struct s_ray
 	long long		vy;
 	long long		rx;	//ray final position
 	long long		ry;
-	long long		xo;	//x and y offset
-	long long		yo;
+	long long		hxo;	//x and y offset
+	long long		hyo;
+	long long		vxo;	//x and y offset
+	long long		vyo;
+	int				hdof;
+	int				vdof;
+	int				dof;
+	int				hv;		//which ray is shorter (for backtracking)
+	int				wall; //which wall was found (south north east west)
 }	t_ray;
 
 typedef struct s_player
@@ -227,7 +236,7 @@ typedef struct s_player
 //add door textures and stuff later
 typedef struct s_map
 {
-	unsigned int	m[65536];		//1d array of map representation
+	unsigned long long	m[65536];		//1d array of map representation
 	char			*file;			//original mapfile string
 	char			*mapstr;		//actual content of the file
 	char			*northtexture;	//path to the north texture
@@ -293,6 +302,8 @@ typedef struct s_max
 	t_map			*map;
 	t_math			*math;
 	t_controls		*key;
+	mlx_image_t		*background;
+	mlx_image_t		*hud;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
