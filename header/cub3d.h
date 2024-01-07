@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 16:54:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 17:41:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@
 # define TMASK 0xFFFFFF80
 # define NOFISHEYE 1
 
-# define RAYS 1920
+# define RAYS 960
 # define FOV 90
-# define DOF 16
-# define TICK 1
+# define DOF 8
+# define TICK 8
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
+# define UNDISCOVERDWALL 0x808080FF
+# define UNDISCOVERDFLOOR 0x808080FF
 //	ENUMS
 
 // map elements, maybe add teleport? keys? sprites? items?
@@ -130,7 +132,7 @@ typedef struct s_door
 # define EWALLCOLOUR 0xAA9900FF
 # define SWALLCOLOUR 0x887700FF
 # define WWALLCOLOUR 0x776600FF
-# define NOWALLCOLOUR 0xFF00FFFF
+# define NOWALLCOLOUR 0xFFFF00FF
 
 # define WALLDISTANCE 64 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 16:54:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 17:40:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -520,14 +520,14 @@ void	ft_draw_map(t_max *max)
 					if (max->map->m[(y / s) * max->map->w + (x / s)] & VISITED)
 						mlx_put_pixel(max->maximap, x, y, 0x000000ff & TMASK); //Visited wall shine white
 					else
-						mlx_put_pixel(max->maximap, x, y, 0x777777ff & TMASK); //black for unvisited area
+						mlx_put_pixel(max->maximap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
 				}
 				else if (max->map->m[(y / s) * max->map->w + (x / s)] & FLOOR)
 				{
 					if (max->map->m[(y / s) * max->map->w + (x / s)] & VISITED)
 						mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
 					else
-						mlx_put_pixel(max->maximap, x, y, 0x888888ff & TMASK); //black for unvisited area
+						mlx_put_pixel(max->maximap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
 				}
 				else
 					mlx_put_pixel(max->maximap, x, y, 0x404040FF & TMASK);
@@ -608,6 +608,47 @@ void	ft_draw_minimap(t_max *max)
 
 	s = 8;
 	y = 0;
+	// while (y < MINIHEIGHT)
+	// {
+	// 	x = 0;
+	// 	while (x < MINIWIDTH)
+	// 	{
+	// 		ny = y + ((int)max->map->p.y * s / 256) - MINIHEIGHT / 2;
+	// 		nx = x + ((int)max->map->p.x * s / 256) - MINIWIDTH / 2;
+	// 		if (ny > 0 && nx > 0 && ny < max->map->h * s && nx < max->map->w * s)
+	// 		{
+	// 			if (ft_is_inside(max->map, 4096, (ny << 8) / s, (nx << 8) / s))
+	// 			{
+	// 				//ft_printf("y= %i, x= %i\n", y, x);
+	// 				mlx_put_pixel(max->maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+	// 			}
+	// 			// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
+	// 			// {
+	// 			// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
+	// 			// }
+	// 			else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
+	// 			{
+	// 				if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+	// 					mlx_put_pixel(max->maximap, x, y, 0x000000ff & TMASK); //Visited wall shine white
+	// 				else
+	// 					mlx_put_pixel(max->maximap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
+	// 			}
+	// 			else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
+	// 			{
+	// 				if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+	// 					mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+	// 				else
+	// 					mlx_put_pixel(max->maximap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
+	// 			}
+	// 			else
+	// 				mlx_put_pixel(max->maximap, x, y, 0x404040FF & TMASK);
+	// 		}
+	// 		else
+	// 			mlx_put_pixel(max->maximap, x, y, 0x808080FF & TMASK);
+	// 		++x;
+	// 	}
+	// 	++y;
+	// }
 	while (y < MINIHEIGHT)
 	{
 		x = 0;
@@ -627,9 +668,21 @@ void	ft_draw_minimap(t_max *max)
 				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
 				// }
 				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
-					mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
+				{
+					//mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
+					if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+						mlx_put_pixel(max->minimap, x, y, 0x000000ff & TMASK); //Visited wall shine white
+					else
+						mlx_put_pixel(max->minimap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
+				}
 				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
-					mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				{
+					// mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+					if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+						mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+					else
+						mlx_put_pixel(max->minimap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
+				}
 				else
 					mlx_put_pixel(max->minimap, x, y, 0x404040FF & TMASK);
 			}
@@ -706,6 +759,7 @@ void	ft_draw_screen(t_max *max)
 	int	r;
 	int	wall_height;
 	int	offset;
+	long long	length;
 
 	x = 0;
 	while (x < SCREENWIDTH)
@@ -713,42 +767,53 @@ void	ft_draw_screen(t_max *max)
 		y = 0;
 		r = x * RAYS / SCREENWIDTH;
 		//ft_printf("%i %i\n", r, x);
+		length = max->map->p.ray[r].length;
 		if (NOFISHEYE)
 		{
 			//ft_printf("L1 %Lx\n", max->map->p.ray[r].length);
 			//ft_printf("ANGLE %i\n", (unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra));
-			max->map->p.ray[r].length *= max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra)];
+			length *= max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra)];
 			//ft_printf("L2 %Lx\n", max->map->p.ray[r].length);
-			max->map->p.ray[r].length /= 65536;
+			length /= 65536;
 			//ft_printf("L3 %Lx\n", max->map->p.ray[r].length);
 		}
 		//ft_printf("b\n");
-		wall_height = 65536 * SCREENHEIGHT / max->map->p.ray[r].length;
+		//ft_printf("%i\n", wall_height);
+		wall_height = 65536 * SCREENHEIGHT / length;
+		//ft_printf("%i\n", wall_height);
 		//ft_printf("c\n");
 		if (wall_height > SCREENHEIGHT)
 			wall_height = SCREENHEIGHT;
-		if (max->map->p.ray[r].length > MAXDIST || !max->map->p.ray[r].wall)
+		if (length > MAXDIST || !max->map->p.ray[r].wall)
 			wall_height = 0;
 		offset = SCREENHEIGHT / 2 - wall_height / 2;
+		//ft_printf("%i\n", offset);
 		while (y < SCREENHEIGHT)
 		{
 			if (y < offset)
-				mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+			{
+				mlx_put_pixel(max->screen, x, y, 0x000000FF);
+				//mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+			}
 			else if (y < wall_height + offset)
 			{
-				if (max->map->p.ray[r].wall & NWALL)
-					mlx_put_pixel(max->screen, x, y, NWALLCOLOUR);
-				else if (max->map->p.ray[r].wall & EWALL)
-					mlx_put_pixel(max->screen, x, y, EWALLCOLOUR);
-				else if (max->map->p.ray[r].wall & SWALL)
-					mlx_put_pixel(max->screen, x, y, SWALLCOLOUR);
-				else if (max->map->p.ray[r].wall & WWALL)
-					mlx_put_pixel(max->screen, x, y, WWALLCOLOUR);
-				else
-					mlx_put_pixel(max->screen, x, y, 0xFFFFFFFF);
+				mlx_put_pixel(max->screen, x, y, max->map->p.ray[r].c[1]);
+				// if (max->map->p.ray[r].wall & NWALL)
+				// 	mlx_put_pixel(max->screen, x, y, NWALLCOLOUR);
+				// else if (max->map->p.ray[r].wall & EWALL)
+				// 	mlx_put_pixel(max->screen, x, y, EWALLCOLOUR);
+				// else if (max->map->p.ray[r].wall & SWALL)
+				// 	mlx_put_pixel(max->screen, x, y, SWALLCOLOUR);
+				// else if (max->map->p.ray[r].wall & WWALL)
+				// 	mlx_put_pixel(max->screen, x, y, WWALLCOLOUR);
+				// else
+				// 	mlx_put_pixel(max->screen, x, y, 0xFFFFFFFF);
 			}
 			else
-				mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
+			{
+				mlx_put_pixel(max->screen, x, y, 0x000000FF);
+				//mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
+			}
 			++y;
 		}
 		++x;
