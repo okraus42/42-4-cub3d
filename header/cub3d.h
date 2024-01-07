@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/06 21:52:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 11:52:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,11 @@
 # define MAPHEIGHT 1024
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
+# define SCREENWIDTH 640
+# define SCREENHEIGHT 480
 # define TMASK 0xFFFFFFFF
 
-# define RAYS 320
+# define RAYS 640
 # define FOV 90
 # define DOF 16
 
@@ -113,6 +115,14 @@ typedef struct s_door
 # define EAST 16384
 # define SOUTH 32768
 # define WEST 49152
+
+# define NWALL 1
+# define EWALL 2
+# define SWALL 4
+# define WWALL 8
+# define EWWALL 10
+# define NSWALL 5
+# define NOWALL 0
 
 # define WALLDISTANCE 64 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/06 21:51:34 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 11:48:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void	ft_init_rays(t_max *max)
 		ray->hyo = 65536;
 		ray->vxo = 65536;
 		ray->vyo = 65536;
+		ray->wall = 0;
 		ray->ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
 		//ft_printf("%i, %i, %u\n", r, ray->ra, r * max->map->p.fov * 65536U);
 		// rx = (((int)max->map->p.x - max->math->sin[ray->ra] / 16)) * 256;
@@ -237,6 +238,7 @@ void	ft_init_rays(t_max *max)
 			// ft_printf("if1 %Lx\n", max->math->ntan[ray->ra]);
 			ray->hxo = (65536 * max->math->ntan[ray->ra]) >> 16;
 			ray->hyo = -65536;
+			ray->wall |= NWALL;
 		}
 		else if (ray->ra < WEST -4 && ray->ra > EAST + 4)
 		{
@@ -246,6 +248,7 @@ void	ft_init_rays(t_max *max)
 			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->ntan[ray->ra]);
 			ray->hxo = -((65536 * max->math->ntan[ray->ra]) >> 16); //check where to put minus and bitshifting
 			ray->hyo = 65536;
+			ray->wall |= SWALL;
 		}
 		else
 		{
@@ -268,7 +271,10 @@ void	ft_init_rays(t_max *max)
 				}
 			}
 			else
+			{
+				ray->hdof = DOF;
 				break ;
+			}
 			ray->hx += ray->hxo;
 			ray->hy += ray->hyo;
 			++ray->hdof;
@@ -284,6 +290,7 @@ void	ft_init_rays(t_max *max)
 			// ft_printf("if1 %Lx\n", max->math->atan[ray->ra]);
 			ray->vxo = -65536;
 			ray->vyo = (65536 * max->math->atan[ray->ra]) >> 16;
+			ray->wall |= WWALL;
 		}
 		else if (ray->ra > SOUTH + 4 && ray->ra < (unsigned short)(NORTH - 4))
 		{
@@ -293,6 +300,7 @@ void	ft_init_rays(t_max *max)
 			// ft_printf("if2 %x %Lx %Lx %Lx\n", max->math->atan[ray->ra]);
 			ray->vxo = 65536;//check where to put minus and bitshifting
 			ray->vyo = -((65536 * max->math->atan[ray->ra]) >> 16);
+			ray->wall |= EWALL;
 		}
 		//looking up or down
 		else
@@ -317,7 +325,10 @@ void	ft_init_rays(t_max *max)
 				}
 			}
 			else
+			{
+				ray->vdof = DOF;
 				break ;
+			}
 			ray->vx += ray->vxo;
 			ray->vy += ray->vyo;
 			++ray->vdof;
@@ -354,10 +365,23 @@ void	ft_init_rays(t_max *max)
 		// }
 		if (!ray->hv)
 		{
-			while (ray->hdof && ray->hdof < DOF)
+			ray->dof = ray->hdof;
+			ray->wall &= NSWALL;
+		}
+		else
+		{
+			ray->dof = ray->vdof;
+			ray->wall &= EWWALL;
+		}
+		if (ray->dof >= DOF)
+			ray->wall = NOWALL;
+		if (!ray->hv)
+		{
+			while (ray->hdof >= 0)
 			{
-				if (((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)) > 0) && ((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16) )< 65536))
-					max->map->m[((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)] |= VISITED;
+				mp = ((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16);
+				//if (((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)) > 0) && ((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16) )< 65536))
+					max->map->m[mp] |= VISITED;
 				ray->hx -= ray->hxo;
 				ray->hy -= ray->hyo;
 				--ray->hdof;
@@ -365,16 +389,28 @@ void	ft_init_rays(t_max *max)
 		}
 		else
 		{
-			while (ray->vdof && ray->vdof < DOF)
+			while (ray->vdof >= 0)
 			{
-				if (((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) > 0) && ((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) < 65536))
-					max->map->m[((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)] |= VISITED;
+				mp = ((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16);
+				//if (((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) > 0) && ((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) < 65536))
+				max->map->m[mp] |= VISITED;
 				ray->vx -= ray->vxo;
 				ray->vy -= ray->vyo;
 				--ray->vdof;
 			}
 		}
-		ray->c[0] = 0xFFFF00FF;
+		if (ray->wall == NOWALL)
+			ray->c[0] = 0xFF00FFFF;
+		else if (ray->wall == WWALL)
+			ray->c[0] = 0x008080FF;
+		else if (ray->wall == EWALL)
+			ray->c[0] = 0x00FF00FF;
+		else if (ray->wall == NWALL)
+			ray->c[0] = 0x0000FFFF;
+		else if (ray->wall == SWALL)
+			ray->c[0] = 0x00FFFFFF;
+		else
+			ray->c[0] = 0xFFFF00FF;
 		if (ray->length > maxdist)
 			ray->c[1] = 0x000000ff;
 		else
@@ -803,7 +839,7 @@ void	ft_hook(void *param)
 		if (max->mmode > 32)
 			max->mmode = 0;
 	}
-	if (!(max->frame % 16))
+	if (!(max->frame % 1))
 		ft_revisit_map(max->map);
 	ft_init_rays(max);
 	if (max->mmode > 0)
