@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 11:48:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 16:54:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,19 +177,48 @@ void	ft_erase_map(t_max *max)
 	}
 }
 
-int	ft_test(t_ray *ray)
+int	ft_test(t_ray *ray, t_max *max)
 {
+
 	ray->hl = (ray->hx - ray->xs) * (ray->hx - ray->xs) + (ray->hy - ray->ys) * (ray->hy - ray->ys);
 	ray->vl = (ray->vx - ray->xs) * (ray->vx - ray->xs) + (ray->vy - ray->ys) * (ray->vy - ray->ys);
-	ray->length = MIN(ray->hl, ray->vl);
+	//ft_printf("HL %Lx VL %Lx\n", ray->hl, ray->vl);
+	
 	if (ray->hl > ray->vl)
 	{
 		ray->hv = 1;
+		if (ABS(max->math->sin[ray->ra]) > 1024)
+		{
+			//ft_printf("vy %Lx, sin %i\n", ABS(ray->vy - ray->ys), max->math->sin[ray->ra]);
+			ray->length = ABS((ray->vx - ray->xs) * 65536 / max->math->sin[ray->ra]);
+			//ft_printf("vy %Lx, sin %i\n", ABS(ray->vy - ray->ys), max->math->sin[ray->ra]);
+		}
+		else
+		{
+			//ft_printf("vx %Lx, cos %i\n", ABS(ray->vx - ray->xs), max->math->cos[ray->ra]);
+			ray->length =  ABS((ray->vy - ray->ys) * 65536 / max->math->cos[ray->ra]);
+			//ft_printf("vx %Lx, cos %i\n", ABS(ray->vx - ray->xs), max->math->cos[ray->ra]);
+		}
+		//ft_printf("Lv %Lx\n", ray->length * ray->length);
 		return (1);
 	}
 	else
 	{
 		ray->hv = 0;
+		if (ABS(max->math->cos[ray->ra]) > 1024)
+		{
+			//ft_printf("hx %Lx cos %i\n", ABS(ray->hx - ray->xs), max->math->cos[ray->ra]);
+			ray->length  = ABS((ray->hy - ray->ys) * 65536 / max->math->cos[ray->ra]);
+			//ft_printf("hx %Lx cos %i\n", ABS(ray->hx - ray->xs), max->math->cos[ray->ra]);
+		}
+		else
+		{
+			//ft_printf("cos %i ra %i", max->math->cos[ray->ra], ray ->ra);
+			//ft_printf("hy %Lx sin %i\n", ABS(ray->hy - ray->ys), max->math->sin[ray->ra]);
+			ray->length  = ABS((ray->hx - ray->xs) * 65536 / max->math->sin[ray->ra]);
+			//ft_printf("hy %Lx sin %i\n", ABS(ray->hy - ray->ys), max->math->sin[ray->ra]);
+		}
+		//ft_printf("Lh %Lx\n", ray->length * ray->length);
 		return (0);
 	}
 }
@@ -213,7 +242,7 @@ void	ft_init_rays(t_max *max)
 	long long	maxdist;
 	t_ray	*ray;
 
-	maxdist = 2147483648 * DOF * DOF;
+	maxdist = MAXDIST;
 	r = 0;
 	while (r < RAYS)
 	{	
@@ -225,7 +254,7 @@ void	ft_init_rays(t_max *max)
 		ray->vxo = 65536;
 		ray->vyo = 65536;
 		ray->wall = 0;
-		ray->ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+		ray->ra = max->map->p.orientation + max->map->p.fov2 - r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
 		//ft_printf("%i, %i, %u\n", r, ray->ra, r * max->map->p.fov * 65536U);
 		// rx = (((int)max->map->p.x - max->math->sin[ray->ra] / 16)) * 256;
 		// ry = (((int)max->map->p.y - max->math->cos[ray->ra] / 16)) * 256;
@@ -267,6 +296,7 @@ void	ft_init_rays(t_max *max)
 				//max->map->m[mp] |= VISITED;
 				if ((max->map->m[mp]) & WALL)
 				{
+					ray->hm = max->map->m[mp];
 					break ;
 				}
 			}
@@ -321,6 +351,7 @@ void	ft_init_rays(t_max *max)
 				//max->map->m[mp] |= VISITED;
 				if ((max->map->m[mp]) & WALL)
 				{
+					ray->vm = max->map->m[mp];
 					break ;
 				}
 			}
@@ -337,15 +368,17 @@ void	ft_init_rays(t_max *max)
 		// ray->vy -= ray->yo;
 		// ft_printf("%x %x\n", max->map->p.x, max->map->p.y);
 		// ft_printf("%Lx %Lx %Lx %Lx\n", xs, ys, rx, ry);
-		if (ft_test(ray))
+		if (ft_test(ray, max))
 		{
 			ray->rx = ray->vx;
 			ray->ry = ray->vy;
+			ray->m = ray->vm;
 		}
 		else
 		{
 			ray->rx = ray->hx;
 			ray->ry = ray->hy;
+			ray->m = ray->hm;
 		}
 		// ft_printf("length: %Lx\n", ray->length);
 		// ft_printf("ra: %hi\n", ray->ra);
@@ -375,40 +408,43 @@ void	ft_init_rays(t_max *max)
 		}
 		if (ray->dof >= DOF)
 			ray->wall = NOWALL;
-		if (!ray->hv)
+		if (!(r % 32) || r == RAYS - 1)
 		{
-			while (ray->hdof >= 0)
+			if (!ray->hv)
 			{
-				mp = ((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16);
-				//if (((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)) > 0) && ((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16) )< 65536))
+				while (ray->hdof >= 0)
+				{
+					mp = ((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16);
+					//if (((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16)) > 0) && ((((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16) )< 65536))
 					max->map->m[mp] |= VISITED;
-				ray->hx -= ray->hxo;
-				ray->hy -= ray->hyo;
-				--ray->hdof;
+					ray->hx -= ray->hxo;
+					ray->hy -= ray->hyo;
+					--ray->hdof;
+				}
 			}
-		}
-		else
-		{
-			while (ray->vdof >= 0)
+			else
 			{
-				mp = ((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16);
-				//if (((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) > 0) && ((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) < 65536))
-				max->map->m[mp] |= VISITED;
-				ray->vx -= ray->vxo;
-				ray->vy -= ray->vyo;
-				--ray->vdof;
+				while (ray->vdof >= 0)
+				{
+					mp = ((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16);
+					//if (((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) > 0) && ((((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16)) < 65536))
+					max->map->m[mp] |= VISITED;
+					ray->vx -= ray->vxo;
+					ray->vy -= ray->vyo;
+					--ray->vdof;
+				}
 			}
 		}
 		if (ray->wall == NOWALL)
-			ray->c[0] = 0xFF00FFFF;
+			ray->c[0] = NOWALLCOLOUR;
 		else if (ray->wall == WWALL)
-			ray->c[0] = 0x008080FF;
+			ray->c[0] = WWALLCOLOUR;
 		else if (ray->wall == EWALL)
-			ray->c[0] = 0x00FF00FF;
+			ray->c[0] = EWALLCOLOUR;
 		else if (ray->wall == NWALL)
-			ray->c[0] = 0x0000FFFF;
+			ray->c[0] = NWALLCOLOUR;
 		else if (ray->wall == SWALL)
-			ray->c[0] = 0x00FFFFFF;
+			ray->c[0] = SWALLCOLOUR;
 		else
 			ray->c[0] = 0xFFFF00FF;
 		if (ray->length > maxdist)
@@ -420,6 +456,7 @@ void	ft_init_rays(t_max *max)
 			ray->c1g = ray->c0g * (255 - (255 * ray->length / maxdist)) / 256;
 			ray->c1r = ray->c0r * (255 - (255 * ray->length / maxdist)) / 256;
 		}
+		//ft_printf("%i %i %Lx %Lx\n", r, ray->ra, ray->length, maxdist);
 		// max->map->p.mapray[r].x[0] = ray->xs;
 		// max->map->p.mapray[r].y[0] = ray->ys;
 		// max->map->p.mapray[r].x[1] = ray->rx;
@@ -523,8 +560,8 @@ void	ft_draw_map(t_max *max)
 		// ft_printf("y1 %x %Lx\n", max->map->p.mapray[r].y[1], (max->map->p.ray[r].ry * s) >> 16);
 		max->map->p.mapray[r].maxheight = MAPHEIGHT;
 		max->map->p.mapray[r].maxwidth = MAPWIDTH;
-		max->map->p.mapray[r].c[0] = max->map->p.ray[r].c[0];
-		max->map->p.mapray[r].c[1] = max->map->p.ray[r].c[1];
+		max->map->p.mapray[r].c[0] = max->map->p.ray[r].c[0] & TMASK;
+		max->map->p.mapray[r].c[1] = max->map->p.ray[r].c[1] & TMASK;
 		ft_place_line(max->maximap, max->map->p.mapray[r]);
 		++r;
 	}
@@ -660,6 +697,62 @@ void	ft_draw_minimap(t_max *max)
 	// max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
 	// max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
 	// ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
+}
+
+void	ft_draw_screen(t_max *max)
+{
+	int	y;
+	int	x;
+	int	r;
+	int	wall_height;
+	int	offset;
+
+	x = 0;
+	while (x < SCREENWIDTH)
+	{
+		y = 0;
+		r = x * RAYS / SCREENWIDTH;
+		//ft_printf("%i %i\n", r, x);
+		if (NOFISHEYE)
+		{
+			//ft_printf("L1 %Lx\n", max->map->p.ray[r].length);
+			//ft_printf("ANGLE %i\n", (unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra));
+			max->map->p.ray[r].length *= max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra)];
+			//ft_printf("L2 %Lx\n", max->map->p.ray[r].length);
+			max->map->p.ray[r].length /= 65536;
+			//ft_printf("L3 %Lx\n", max->map->p.ray[r].length);
+		}
+		//ft_printf("b\n");
+		wall_height = 65536 * SCREENHEIGHT / max->map->p.ray[r].length;
+		//ft_printf("c\n");
+		if (wall_height > SCREENHEIGHT)
+			wall_height = SCREENHEIGHT;
+		if (max->map->p.ray[r].length > MAXDIST || !max->map->p.ray[r].wall)
+			wall_height = 0;
+		offset = SCREENHEIGHT / 2 - wall_height / 2;
+		while (y < SCREENHEIGHT)
+		{
+			if (y < offset)
+				mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+			else if (y < wall_height + offset)
+			{
+				if (max->map->p.ray[r].wall & NWALL)
+					mlx_put_pixel(max->screen, x, y, NWALLCOLOUR);
+				else if (max->map->p.ray[r].wall & EWALL)
+					mlx_put_pixel(max->screen, x, y, EWALLCOLOUR);
+				else if (max->map->p.ray[r].wall & SWALL)
+					mlx_put_pixel(max->screen, x, y, SWALLCOLOUR);
+				else if (max->map->p.ray[r].wall & WWALL)
+					mlx_put_pixel(max->screen, x, y, WWALLCOLOUR);
+				else
+					mlx_put_pixel(max->screen, x, y, 0xFFFFFFFF);
+			}
+			else
+				mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
+			++y;
+		}
+		++x;
+	}
 }
 
 void	ft_move_player(t_map *map, int y, int x)
@@ -839,9 +932,10 @@ void	ft_hook(void *param)
 		if (max->mmode > 32)
 			max->mmode = 0;
 	}
-	if (!(max->frame % 1))
+	if (!(max->frame % TICK))
 		ft_revisit_map(max->map);
 	ft_init_rays(max);
+	ft_draw_screen(max);
 	if (max->mmode > 0)
 	{
 		++max->mmode;

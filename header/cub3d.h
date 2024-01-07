@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 11:52:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/07 16:54:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,16 @@
 # define MAPHEIGHT 1024
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
-# define SCREENWIDTH 640
-# define SCREENHEIGHT 480
-# define TMASK 0xFFFFFFFF
+# define SCREENWIDTH 1920
+# define SCREENHEIGHT 1080
+# define TMASK 0xFFFFFF80
+# define NOFISHEYE 1
 
-# define RAYS 640
+# define RAYS 1920
 # define FOV 90
 # define DOF 16
+# define TICK 1
+# define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
 //	ENUMS
 
@@ -123,6 +126,11 @@ typedef struct s_door
 # define EWWALL 10
 # define NSWALL 5
 # define NOWALL 0
+# define NWALLCOLOUR 0x998800FF
+# define EWALLCOLOUR 0xAA9900FF
+# define SWALLCOLOUR 0x887700FF
+# define WWALLCOLOUR 0x776600FF
+# define NOWALLCOLOUR 0xFF00FFFF
 
 # define WALLDISTANCE 64 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
@@ -177,6 +185,9 @@ typedef struct s_ray
 	int				dof;
 	int				hv;		//which ray is shorter (for backtracking)
 	int				wall; //which wall was found (south north east west)
+	unsigned long long	vm;
+	unsigned long long	hm;
+	unsigned long long	m;
 }	t_ray;
 
 typedef struct s_player
