@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/08 17:48:57 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/09 17:56:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ void	ft_put_ewall1(t_max *max)
 {
 	mlx_texture_t	*ewall;
 
-	if (access(max->map->northtexture, R_OK) < 0)
+	if (access(max->map->easttexture, R_OK) < 0)
 	{
 		ft_dprintf(2, "Cannot open east texture\n");
 		exit(-3);
 	}
 	ewall = mlx_load_png(max->map->easttexture);
+	//ft_printf("East: bpp %i, width %i, height %i, pixels%p \n", ewall->bytes_per_pixel, ewall->width, ewall->height, ewall->pixels);
 	if (!ewall)
 		exit(-4);
 	max->t->ewall = ewall;
@@ -89,6 +90,9 @@ void	ft_put_wwall1(t_max *max)
 int	ft_init_textures(t_max *max)
 {
 	ft_put_nwall1(max);
+	ft_put_ewall1(max);
+	ft_put_swall1(max);
+	ft_put_wwall1(max);
 	return (1);
 }
 

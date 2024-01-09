@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/09 17:50:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/09 17:57:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -853,11 +853,11 @@ void	ft_draw_screen(t_max *max)
 					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->nwall));
 				}
 				else if (max->map->p.ray[r].wall & EWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->nwall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->ewall));
 				else if (max->map->p.ray[r].wall & SWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->nwall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->swall));
 				else if (max->map->p.ray[r].wall & WWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->nwall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->wwall));
 				else
 					mlx_put_pixel(max->screen, x, y, 0xFF00FFFF);
 			}
