@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 16:32:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/08 17:48:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,72 @@
 
 //add two timing functions to libft
 //add other is functions to libft
+
+void	ft_put_nwall1(t_max *max)
+{
+	mlx_texture_t	*nwall;
+
+	if (access(max->map->northtexture, R_OK) < 0)
+	{
+		ft_dprintf(2, "Cannot open north texture\n");
+		exit(-3);
+	}
+	nwall = mlx_load_png(max->map->northtexture);
+	if (!nwall)
+		exit(-4);
+	max->t->nwall = nwall;
+}
+
+void	ft_put_ewall1(t_max *max)
+{
+	mlx_texture_t	*ewall;
+
+	if (access(max->map->northtexture, R_OK) < 0)
+	{
+		ft_dprintf(2, "Cannot open east texture\n");
+		exit(-3);
+	}
+	ewall = mlx_load_png(max->map->easttexture);
+	if (!ewall)
+		exit(-4);
+	max->t->ewall = ewall;
+}
+
+void	ft_put_swall1(t_max *max)
+{
+	mlx_texture_t	*swall;
+
+	if (access(max->map->southtexture, R_OK) < 0)
+	{
+		ft_dprintf(2, "Cannot open south texture\n");
+		exit(-3);
+	}
+	swall = mlx_load_png(max->map->southtexture);
+	if (!swall)
+		exit(-4);
+	max->t->swall = swall;
+}
+
+void	ft_put_wwall1(t_max *max)
+{
+	mlx_texture_t	*wwall;
+
+	if (access(max->map->westtexture, R_OK) < 0)
+	{
+		ft_dprintf(2, "Cannot open west texture\n");
+		exit(-3);
+	}
+	wwall = mlx_load_png(max->map->westtexture);
+	if (!wwall)
+		exit(-4);
+	max->t->wwall = wwall;
+}
+
+int	ft_init_textures(t_max *max)
+{
+	ft_put_nwall1(max);
+	return (1);
+}
 
 void	ft_map_init(t_map *map)
 {
@@ -497,7 +563,7 @@ void	ft_print_map(t_map *map)
 		if (map->m[i] & FLOORWW)
 			c &= 0xFFFF80;
 		if (map->m[i] & FLOORWE)
-			c &= 0x404040;
+			c &= 0x40A040;
 		if (i == (map->p.mpos))
 		{
 			if (map->p.orientation == NORTH)
@@ -537,6 +603,11 @@ int	ft_process_file(t_max *max)
 		return (0);
 	}
 	if (!ft_fill_map(map))
+	{
+		ft_freemap(map);
+		return (0);
+	}
+	if (!ft_init_textures(max))
 	{
 		ft_freemap(map);
 		return (0);

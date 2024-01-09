@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 17:41:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/09 17:49:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@
 # define MAPHEIGHT 1024
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
-# define SCREENWIDTH 1920
-# define SCREENHEIGHT 1080
+# define SCREENWIDTH WIDTH
+# define SCREENHEIGHT HEIGHT //- HUD later
 # define TMASK 0xFFFFFF80
 # define NOFISHEYE 1
 
-# define RAYS 960
+# define RAYS SCREENWIDTH
 # define FOV 90
-# define DOF 8
+# define DOF 16
 # define TICK 8
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
@@ -309,15 +309,17 @@ typedef struct s_math
 	// int		clr2[65536];
 }	t_math;
 
-typedef struct s_imgs
+typedef struct s_textures
 {
-	mlx_instance_t	*pi;
-	mlx_instance_t	*ei;
-	mlx_instance_t	*ci;
-	mlx_instance_t	*c2i;
-	mlx_instance_t	*dci;
-	mlx_instance_t	*doi;
-}	t_imgs;
+	mlx_texture_t	*nwall;
+	mlx_texture_t	*ewall;
+	mlx_texture_t	*swall;
+	mlx_texture_t	*wwall;
+	mlx_texture_t	*ceiling;
+	mlx_texture_t	*floor;
+}	t_textures;
+
+
 
 typedef struct s_max
 {
@@ -330,6 +332,7 @@ typedef struct s_max
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
+	t_textures		*t;
 	// t_imgs			*img;
 	// mlx_image_t		*str;
 	// mlx_image_t		*tmp;

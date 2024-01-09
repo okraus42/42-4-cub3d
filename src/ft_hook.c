@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 17:40:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/09 17:50:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,11 +239,22 @@ void	ft_init_rays(t_max *max)
 	int	my;
 	int	mp;
 	int	r;
+	long long	pd;
+	long long	pl;
 	long long	maxdist;
 	t_ray	*ray;
 
+	pl = 65536 * WIDTH;
+	pd = (pl / 2) / tan((FOV / 2 * 0.01745329));
 	maxdist = MAXDIST;
 	r = 0;
+	// ft_printf("%Li %Li %Li\n", pl, pd, pl / pd);
+	// ft_printf("%Li\n", pl / RAYS * (RAYS / 2 - 1920));
+	// ft_printf("%Li\n", pl / RAYS *( RAYS / 2 - 960));
+	// ft_printf("%Li\n", pl / RAYS * (RAYS / 2 - 0));
+	// printf("atan %f\n", atan((double)pd / (double)(pl / RAYS * (RAYS / 2 - 1920)) ));
+	// printf("atan %f\n", atan((double)pd / (double)(pl / RAYS * (RAYS / 2 - 960)) ));
+	// printf("atan %f\n", atan((double)pd / (double)(pl / RAYS * (RAYS / 2 - 0)) ));
 	while (r < RAYS)
 	{	
 		ray = &max->map->p.ray[r];
@@ -254,7 +265,10 @@ void	ft_init_rays(t_max *max)
 		ray->vxo = 65536;
 		ray->vyo = 65536;
 		ray->wall = 0;
-		ray->ra = max->map->p.orientation + max->map->p.fov2 - r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
+		if (NOFISHEYE)
+			ray->ra = max->map->p.orientation + atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 65536LL / 6.28318530718;
+		else
+			ray->ra = max->map->p.orientation + max->map->p.fov2 - r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
 		//ft_printf("%i, %i, %u\n", r, ray->ra, r * max->map->p.fov * 65536U);
 		// rx = (((int)max->map->p.x - max->math->sin[ray->ra] / 16)) * 256;
 		// ry = (((int)max->map->p.y - max->math->cos[ray->ra] / 16)) * 256;
@@ -752,6 +766,38 @@ void	ft_draw_minimap(t_max *max)
 	// ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
 }
 
+// Weird psychadelich stuff
+// unsigned int	ft_get_colour(int x, int xw, int y, int wh, mlx_texture_t *img)
+// {
+// 	unsigned int	r;
+// 	int				h;
+// 	int				w;
+// 	int				p;
+
+// 	w = img->width;
+// 	h = img->height;
+// 	p = w * y / wh + 0 * h;
+// 	r = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
+// 	(void)x;
+// 	(void)xw;
+// 	return (r);
+// }
+
+unsigned int	ft_get_colour(int x, int xw, int y, int wh, mlx_texture_t *img)
+{
+	unsigned int	r;
+	int				h;
+	int				w;
+	int				p;
+
+	w = img->width;
+	h = img->height;
+	p = w * 4 * (h * y / wh) + (4 * (w * x / xw));
+	//ft_printf("%i %i\n",(h * y / wh), (w * x / xw));
+	r = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
+	return (r);
+}
+
 void	ft_draw_screen(t_max *max)
 {
 	int	y;
@@ -766,6 +812,7 @@ void	ft_draw_screen(t_max *max)
 	{
 		y = 0;
 		r = x * RAYS / SCREENWIDTH;
+		//ft_printf("new ray\n");
 		//ft_printf("%i %i\n", r, x);
 		length = max->map->p.ray[r].length;
 		if (NOFISHEYE)
@@ -782,8 +829,8 @@ void	ft_draw_screen(t_max *max)
 		wall_height = 65536 * SCREENHEIGHT / length;
 		//ft_printf("%i\n", wall_height);
 		//ft_printf("c\n");
-		if (wall_height > SCREENHEIGHT)
-			wall_height = SCREENHEIGHT;
+		// if (wall_height > SCREENHEIGHT)
+		// 	wall_height = SCREENHEIGHT;
 		if (length > MAXDIST || !max->map->p.ray[r].wall)
 			wall_height = 0;
 		offset = SCREENHEIGHT / 2 - wall_height / 2;
@@ -797,17 +844,22 @@ void	ft_draw_screen(t_max *max)
 			}
 			else if (y < wall_height + offset)
 			{
-				mlx_put_pixel(max->screen, x, y, max->map->p.ray[r].c[1]);
-				// if (max->map->p.ray[r].wall & NWALL)
-				// 	mlx_put_pixel(max->screen, x, y, NWALLCOLOUR);
-				// else if (max->map->p.ray[r].wall & EWALL)
-				// 	mlx_put_pixel(max->screen, x, y, EWALLCOLOUR);
-				// else if (max->map->p.ray[r].wall & SWALL)
-				// 	mlx_put_pixel(max->screen, x, y, SWALLCOLOUR);
-				// else if (max->map->p.ray[r].wall & WWALL)
-				// 	mlx_put_pixel(max->screen, x, y, WWALLCOLOUR);
-				// else
-				// 	mlx_put_pixel(max->screen, x, y, 0xFFFFFFFF);
+				//ft_printf("AAAAAA\n");
+				//mlx_put_pixel(max->screen, x, y, max->map->p.ray[r].c[1]);
+				if (max->map->p.ray[r].wall & NWALL)
+				{
+					//mlx_put_pixel(max->screen, x, y, ft_get_colour(x / 4, 1920 / 4, y - offset, wall_height, max->t->nwall));
+
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->nwall));
+				}
+				else if (max->map->p.ray[r].wall & EWALL)
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->nwall));
+				else if (max->map->p.ray[r].wall & SWALL)
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->nwall));
+				else if (max->map->p.ray[r].wall & WWALL)
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->nwall));
+				else
+					mlx_put_pixel(max->screen, x, y, 0xFF00FFFF);
 			}
 			else
 			{

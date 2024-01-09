@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/05 18:52:13 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/08 13:22:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,11 @@ void	ft_cub3d(char *file)
 	t_map		map;
 	t_max		max;
 	t_math		math;
+	t_textures	t;
 
 	max.math = &math;
 	ft_init_math(max.math);
+	max.t = &t;
 	max.map = &map;
 	max.mlx = NULL;
 	max.frame = 0;
