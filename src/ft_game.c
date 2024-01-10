@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/08 10:08:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 19:32:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	ft_amaze_standard(t_max *max)
 	mlx_image_t	*minimap;
 	mlx_image_t	*screen;
 
-	//mlx_set_setting(MLX_FULLSCREEN, true);
+	if (FULLSCREEN)
+		mlx_set_setting(MLX_FULLSCREEN, true);
 	mlx = mlx_init(WIDTH, HEIGHT, "cub3d", true);
 	if (!mlx)
 	{
@@ -54,5 +55,13 @@ void	ft_amaze_standard(t_max *max)
 	max->screen = screen;
 	mlx_loop_hook(mlx, ft_hook, max);
 	mlx_loop(mlx);
+	if (max->t->nwall)
+		mlx_delete_texture(max->t->nwall);
+	if (max->t->ewall)
+		mlx_delete_texture(max->t->ewall);
+	if (max->t->swall)
+		mlx_delete_texture(max->t->swall);
+	if (max->t->wwall)
+		mlx_delete_texture(max->t->wwall);
 	mlx_terminate(mlx);
 }

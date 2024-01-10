@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/09 17:57:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 19:18:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -783,19 +783,48 @@ void	ft_draw_minimap(t_max *max)
 // 	return (r);
 // }
 
-unsigned int	ft_get_colour(int x, int xw, int y, int wh, mlx_texture_t *img)
+unsigned int	ft_get_colour(t_max *max, int x, long long length, int y, int wh, mlx_texture_t *img)
 {
-	unsigned int	r;
+	t_clr			r;
 	int				h;
 	int				w;
 	int				p;
+	int				xw;
 
+	xw = 65536;
 	w = img->width;
 	h = img->height;
 	p = w * 4 * (h * y / wh) + (4 * (w * x / xw));
 	//ft_printf("%i %i\n",(h * y / wh), (w * x / xw));
-	r = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
-	return (r);
+	r.rgba = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
+	if (length > MAXDIST)
+		length = MAXDIST;
+	r.r = max->math->brumered[r.r][length * 255LL / MAXDIST];
+	r.g = max->math->brumegreen[r.g][length * 255LL / MAXDIST];
+	r.b = max->math->brumeblue[r.b][length * 255LL / MAXDIST];
+	return (r.rgba);
+}
+
+unsigned int	ft_get_colour2(t_max *max, unsigned int c, int y, int fake_offset)
+{
+	t_clr			r;
+	int				length;
+	int				start;
+	int				offset;
+
+	r.rgba = c;
+	offset = HEIGHT / 2 - fake_offset;
+	start = 2 * offset;
+	if (y < HEIGHT / 2)
+		length = PERCENTIL(0, 255, start + y, HEIGHT / 2 + offset);
+	else
+		length = PERCENTIL(0, 255, start + (HEIGHT - y), HEIGHT / 2 + offset);
+	// if (y < HEIGHT / 2 && length > 255)
+	// 	ft_printf("%i %i %i %i || %i %i\n", start, length, y, offset, start + y, HEIGHT / 2 + offset);
+	r.r = max->math->brumered[r.r][length];
+	r.g = max->math->brumegreen[r.g][length];
+	r.b = max->math->brumeblue[r.b][length];
+	return (r.rgba);
 }
 
 void	ft_draw_screen(t_max *max)
@@ -805,7 +834,10 @@ void	ft_draw_screen(t_max *max)
 	int	r;
 	int	wall_height;
 	int	offset;
+	int	fake_wall_height;
+	int	fake_offset;
 	long long	length;
+	long long	fake_length;
 
 	x = 0;
 	while (x < SCREENWIDTH)
@@ -815,34 +847,40 @@ void	ft_draw_screen(t_max *max)
 		//ft_printf("new ray\n");
 		//ft_printf("%i %i\n", r, x);
 		length = max->map->p.ray[r].length;
+		fake_length = MAXDIST;
 		if (NOFISHEYE)
 		{
 			//ft_printf("L1 %Lx\n", max->map->p.ray[r].length);
 			//ft_printf("ANGLE %i\n", (unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra));
 			length *= max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra)];
+			fake_length *= max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.ray[r].ra)];
 			//ft_printf("L2 %Lx\n", max->map->p.ray[r].length);
 			length /= 65536;
+			fake_length /= 65536;
 			//ft_printf("L3 %Lx\n", max->map->p.ray[r].length);
 		}
 		//ft_printf("b\n");
 		//ft_printf("%i\n", wall_height);
+		fake_wall_height = 65536 * SCREENHEIGHT / fake_length;
 		wall_height = 65536 * SCREENHEIGHT / length;
-		//ft_printf("%i\n", wall_height);
+		//ft_printf("wall: %i %i\n", wall_height, fake_wall_height);
 		//ft_printf("c\n");
 		// if (wall_height > SCREENHEIGHT)
 		// 	wall_height = SCREENHEIGHT;
 		if (length > MAXDIST || !max->map->p.ray[r].wall)
 			wall_height = 0;
 		offset = SCREENHEIGHT / 2 - wall_height / 2;
-		//ft_printf("%i\n", offset);
+		fake_offset = SCREENHEIGHT / 2 - fake_wall_height / 2;
+		//ft_printf("offset: %i %i\n", offset, fake_offset);
 		while (y < SCREENHEIGHT)
 		{
-			if (y < offset)
+			if (y < offset && y < fake_offset)
 			{
-				mlx_put_pixel(max->screen, x, y, 0x000000FF);
+				//mlx_put_pixel(max->screen, x, y, 0x000000FF);
 				//mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+				mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->c.rgba, y, fake_offset));
 			}
-			else if (y < wall_height + offset)
+			else if (y > offset && y < wall_height + offset)
 			{
 				//ft_printf("AAAAAA\n");
 				//mlx_put_pixel(max->screen, x, y, max->map->p.ray[r].c[1]);
@@ -850,21 +888,27 @@ void	ft_draw_screen(t_max *max)
 				{
 					//mlx_put_pixel(max->screen, x, y, ft_get_colour(x / 4, 1920 / 4, y - offset, wall_height, max->t->nwall));
 
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->nwall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max, max->map->p.ray[r].rx % 65536, max->map->p.ray[r].length, y - offset, wall_height, max->t->nwall));
 				}
 				else if (max->map->p.ray[r].wall & EWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->ewall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max, max->map->p.ray[r].ry % 65536, max->map->p.ray[r].length, y - offset, wall_height, max->t->ewall));
 				else if (max->map->p.ray[r].wall & SWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].rx % 65536, 65536, y - offset, wall_height, max->t->swall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max, max->map->p.ray[r].rx % 65536, max->map->p.ray[r].length, y - offset, wall_height, max->t->swall));
 				else if (max->map->p.ray[r].wall & WWALL)
-					mlx_put_pixel(max->screen, x, y, ft_get_colour(max->map->p.ray[r].ry % 65536, 65536, y - offset, wall_height, max->t->wwall));
+					mlx_put_pixel(max->screen, x, y, ft_get_colour(max, max->map->p.ray[r].ry % 65536, max->map->p.ray[r].length, y - offset, wall_height, max->t->wwall));
 				else
 					mlx_put_pixel(max->screen, x, y, 0xFF00FFFF);
 			}
+			else if (y < fake_wall_height + fake_offset)
+			{
+				mlx_put_pixel(max->screen, x, y, max->map->b.rgba);
+			}
 			else
 			{
-				mlx_put_pixel(max->screen, x, y, 0x000000FF);
+				//mlx_put_pixel(max->screen, x, y, 0x000000FF);
 				//mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
+				mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->f.rgba, y, fake_offset));
+
 			}
 			++y;
 		}

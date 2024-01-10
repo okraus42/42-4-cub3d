@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/07 14:19:51 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:25:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 # define PN(a) (((a) > 0) - ((a) < 0))
 # define MAX(a, b) (((a) > (b)) * (a) + ((a) <= (b)) * (b))
 # define MIN(a, b) (((a) < (b)) * (a) + ((a) >= (b)) * (b))
+//# define PERCENTIL(a, b, c, d) (MIN(a, b) + (MAX(a, b) - MIN(a, b)) * (c) / (d))
+# define PERCENTIL(a, b, c, d) ((a) + ((b) - (a)) * (c) / (d))
 
 // GET_NEXT_LINE definitions
 

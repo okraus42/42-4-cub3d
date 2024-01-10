@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/09 17:56:48 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 18:31:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,73 +26,24 @@
 //add two timing functions to libft
 //add other is functions to libft
 
-void	ft_put_nwall1(t_max *max)
+void	ft_load_texture(char *path, mlx_texture_t **texture)
 {
-	mlx_texture_t	*nwall;
-
-	if (access(max->map->northtexture, R_OK) < 0)
+	if (access(path, R_OK) < 0)
 	{
 		ft_dprintf(2, "Cannot open north texture\n");
 		exit(-3);
 	}
-	nwall = mlx_load_png(max->map->northtexture);
-	if (!nwall)
+	*texture = mlx_load_png(path);
+	if (!*texture)
 		exit(-4);
-	max->t->nwall = nwall;
-}
-
-void	ft_put_ewall1(t_max *max)
-{
-	mlx_texture_t	*ewall;
-
-	if (access(max->map->easttexture, R_OK) < 0)
-	{
-		ft_dprintf(2, "Cannot open east texture\n");
-		exit(-3);
-	}
-	ewall = mlx_load_png(max->map->easttexture);
-	//ft_printf("East: bpp %i, width %i, height %i, pixels%p \n", ewall->bytes_per_pixel, ewall->width, ewall->height, ewall->pixels);
-	if (!ewall)
-		exit(-4);
-	max->t->ewall = ewall;
-}
-
-void	ft_put_swall1(t_max *max)
-{
-	mlx_texture_t	*swall;
-
-	if (access(max->map->southtexture, R_OK) < 0)
-	{
-		ft_dprintf(2, "Cannot open south texture\n");
-		exit(-3);
-	}
-	swall = mlx_load_png(max->map->southtexture);
-	if (!swall)
-		exit(-4);
-	max->t->swall = swall;
-}
-
-void	ft_put_wwall1(t_max *max)
-{
-	mlx_texture_t	*wwall;
-
-	if (access(max->map->westtexture, R_OK) < 0)
-	{
-		ft_dprintf(2, "Cannot open west texture\n");
-		exit(-3);
-	}
-	wwall = mlx_load_png(max->map->westtexture);
-	if (!wwall)
-		exit(-4);
-	max->t->wwall = wwall;
 }
 
 int	ft_init_textures(t_max *max)
 {
-	ft_put_nwall1(max);
-	ft_put_ewall1(max);
-	ft_put_swall1(max);
-	ft_put_wwall1(max);
+	ft_load_texture(max->map->northtexture, &max->t->nwall);
+	ft_load_texture(max->map->westtexture, &max->t->wwall);
+	ft_load_texture(max->map->southtexture, &max->t->swall);
+	ft_load_texture(max->map->easttexture, &max->t->ewall);
 	return (1);
 }
 
@@ -120,6 +71,7 @@ void	ft_map_init(t_map *map)
 	map->w = 0;
 	map->f.rgba = 0;
 	map->c.rgba = 0;
+	map->b.rgba = 0xFF;
 	i = 0;
 	while (i < 65536)
 	{
@@ -249,6 +201,13 @@ int	ft_fill_colour2(char **split, int c, t_map *map)
 		map->c.b = ft_atoi(split[2]);
 		map->c.a = 0xFF;
 	}
+	if (c == 'B')
+	{
+		map->b.r = ft_atoi(split[0]);
+		map->b.g = ft_atoi(split[1]);
+		map->b.b = ft_atoi(split[2]);
+		map->b.a = 0xFF;
+	}
 	ft_free_split(&split);
 	return (1);
 }
@@ -294,7 +253,8 @@ int	ft_fill_colours(t_map *map)
 	j = 0;
 	while (split[j])
 	{
-		if (!ft_strncmp(split[j], "F ", 2) || !ft_strncmp(split[j], "C ", 2))
+		if (!ft_strncmp(split[j], "F ", 2) || !ft_strncmp(split[j], "C ", 2)
+			|| !ft_strncmp(split[j], "B ", 2))
 			if (!ft_fill_colour(split[j][0], &split[j][2], map, 0))
 			{
 				ft_free_split(&split);
@@ -524,7 +484,7 @@ void	ft_print_map(t_map *map)
 	ft_printf("S: <%s>\n", map->southtexture);
 	ft_printf("W: <%s>\n", map->westtexture);
 	ft_printf("E: <%s>\n", map->easttexture);
-	ft_printf("f: %#8x, c: %#8x\n", map->f.rgba, map->c.rgba);
+	ft_printf("f: %#8x, c: %#8x b: %#8x\n", map->f.rgba, map->c.rgba, map->b.rgba);
 	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
 	ft_printf("Player pos %#8x, ori: %5i\n", map->p.pos, map->p.orientation);
 	ft_printf("Player py %4x, px %4x \n", map->p.y, map->p.x);
@@ -595,6 +555,26 @@ void	ft_print_map(t_map *map)
 	}
 }
 
+void	ft_init_brume(t_max *max)
+{
+	int	c;
+	int	d;
+
+	c = 0;
+	while (c < 256)
+	{
+		d = 0;
+		while (d < 256)
+		{
+			max->math->brumered[c][d] = PERCENTIL(c, max->map->b.r, d, 255);
+			max->math->brumegreen[c][d] = PERCENTIL(c, max->map->b.g, d, 255);
+			max->math->brumeblue[c][d] = PERCENTIL(c, max->map->b.b, d, 255);
+			++d;
+		}
+		++c;
+	}
+}
+
 int	ft_process_file(t_max *max)
 {
 	t_map	*map;
@@ -615,6 +595,17 @@ int	ft_process_file(t_max *max)
 	{
 		ft_freemap(map);
 		return (0);
+	}
+	ft_init_brume(max);
+	int i;
+
+	i = 0;
+	while (i < 256)
+	{
+		ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
+		ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
+		ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
+		++i;
 	}
 	//for debugging
 	ft_print_map(map);

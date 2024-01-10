@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/09 17:49:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 19:36:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@
 # define SCREENHEIGHT HEIGHT //- HUD later
 # define TMASK 0xFFFFFF80
 # define NOFISHEYE 1
+# define FULLSCREEN 0
 
 # define RAYS SCREENWIDTH
-# define FOV 90
-# define DOF 16
+# define FOV 60
+# define DOF 8
 # define TICK 8
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
@@ -268,6 +269,7 @@ typedef struct s_map
 	char			*easttexture;
 	t_clr			f;			//floor colour
 	t_clr			c;			//ceiling colour
+	t_clr			b;			//optional brume colour
 	int				valid;		//1 if valid map
 	int				w;			//256
 	int				ww;			//width of actual map
@@ -304,9 +306,12 @@ typedef struct s_math
 	int			cos[65536];
 	long long	atan[65536];
 	long long	ntan[65536];
+	unsigned char	brumered[256][256];
+	unsigned char	brumegreen[256][256];
+	unsigned char	brumeblue[256][256];
 	// int		sqr[65536];
-	// int		clr1[65536];
-	// int		clr2[65536];
+	unsigned char	clog[65536];
+	unsigned char	clin[65536];
 }	t_math;
 
 typedef struct s_textures

@@ -6,11 +6,43 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/08 13:22:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:01:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
+
+static void	ft_fill_clog(unsigned char clog[65536])
+{
+	int	i;
+	int	a;
+	int	b;
+
+	i = 0;
+	while (i < 65536)
+	{
+		a = (i >> 8) & 0xFF;
+		b = i & 0xFF;
+		clog[i] = sqrt(((a * a) + (b * b)) / 2);
+		++i;
+	}
+}
+
+static void	ft_fill_clin(unsigned char clin[65536])
+{
+	int	i;
+	int	a;
+	int	b;
+
+	i = 0;
+	while (i < 65536)
+	{
+		a = (i >> 8) & 0xFF;
+		b = i & 0xFF;
+		clin[i] = (a + b) / 2;
+		++i;
+	}
+}
 
 void	ft_init_math(t_math *math)
 {
@@ -19,6 +51,8 @@ void	ft_init_math(t_math *math)
 
 	step = 6.28318531 / 65536;
 	i = 0;
+	ft_fill_clin(math->clin);
+	ft_fill_clog(math->clog);
 	while (i < 65536)
 	{
 		math->sin[i] = 65536 * sin(step * i);
