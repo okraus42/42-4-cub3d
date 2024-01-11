@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 19:36:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/11 10:15:34 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,61 @@
 
 //	DEFINITIONS
 
-# define WIDTH 1920
-# define HEIGHT 1080
-# define MAPWIDTH 1024
-# define MAPHEIGHT 1024
+# ifndef TESTMODE
+#  define TESTMODE 3
+# endif
+
+# if TESTMODE == 1
+#  define WIDTH 1920
+#  define HEIGHT 1080
+#  define MAPWIDTH 1024
+#  define MAPHEIGHT 1024
+#  define NOFISHEYE 1
+#  define FULLSCREEN 0
+#  define FOV 90
+#  define DOF 16
+#  define TICK 8
+# elif TESTMODE == 2
+#  define WIDTH 1920
+#  define HEIGHT 1080
+#  define MAPWIDTH 1024
+#  define MAPHEIGHT 1024
+#  define NOFISHEYE 0
+#  define FULLSCREEN 0
+#  define FOV 360
+#  define DOF 8
+#  define TICK 8
+# elif TESTMODE == 3
+#  define WIDTH 960
+#  define HEIGHT 540
+#  define MAPWIDTH 512
+#  define MAPHEIGHT 512
+#  define NOFISHEYE 1
+#  define FULLSCREEN 0
+#  define FOV 90
+#  define DOF 8
+#  define TICK 8
+# else
+#  define WIDTH 2560
+#  define HEIGHT 1600
+#  define MAPWIDTH 1024
+#  define MAPHEIGHT 1024
+#  define NOFISHEYE 1
+#  define FULLSCREEN 1
+#  define FOV 60
+#  define DOF 8
+#  define TICK 8
+# endif
+
+
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
 # define SCREENWIDTH WIDTH
 # define SCREENHEIGHT HEIGHT //- HUD later
 # define TMASK 0xFFFFFF80
-# define NOFISHEYE 1
-# define FULLSCREEN 0
+
 
 # define RAYS SCREENWIDTH
-# define FOV 60
-# define DOF 8
-# define TICK 8
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF

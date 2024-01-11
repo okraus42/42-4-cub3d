@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 19:18:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/11 10:18:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -511,7 +511,7 @@ void	ft_draw_map(t_max *max)
 	int	r;
 
 
-	s = MIN(1024 / max->map->ww, 1024 / max->map->hh);
+	s = MIN(MAPWIDTH / max->map->ww, MAPHEIGHT / max->map->hh);
 	y = 0;
 	while (y < MAPHEIGHT)
 	{
@@ -819,12 +819,37 @@ unsigned int	ft_get_colour2(t_max *max, unsigned int c, int y, int fake_offset)
 		length = PERCENTIL(0, 255, start + y, HEIGHT / 2 + offset);
 	else
 		length = PERCENTIL(0, 255, start + (HEIGHT - y), HEIGHT / 2 + offset);
-	// if (y < HEIGHT / 2 && length > 255)
-	// 	ft_printf("%i %i %i %i || %i %i\n", start, length, y, offset, start + y, HEIGHT / 2 + offset);
+	// if (y < HEIGHT / 2)
+	//  	ft_printf("%i %i %i %i || %i %i\n", start, length, y, offset, start + y, HEIGHT / 2 + offset);
+	//ft_printf("1 %3i %3i %3i %3i || ", r.r, r.g, r.b, length); 
 	r.r = max->math->brumered[r.r][length];
 	r.g = max->math->brumegreen[r.g][length];
 	r.b = max->math->brumeblue[r.b][length];
+	//ft_printf("2 %3i %3i %3i %3i\n", r.r, r.g, r.b, length); 
 	return (r.rgba);
+}
+
+void	ft_get_colour3(t_max *max, unsigned int c, int y, int fake_offset)
+{
+	t_clr			r;
+	int				length;
+	int				start;
+	int				offset;
+
+	r.rgba = c;
+	offset = HEIGHT / 2 - fake_offset;
+	start = 2 * offset;
+	if (y < HEIGHT / 2)
+		length = PERCENTIL(0, 255, start + y, HEIGHT / 2 + offset);
+	else
+		length = PERCENTIL(0, 255, start + (HEIGHT - y), HEIGHT / 2 + offset);
+	// if (y < HEIGHT / 2)
+	//  	ft_printf("%i %i %i %i || %i %i\n", start, length, y, offset, start + y, HEIGHT / 2 + offset);
+	ft_printf("1 %3i %3i %3i %3i || ", r.r, r.g, r.b, length); 
+	r.r = max->math->brumered[r.r][length];
+	r.g = max->math->brumegreen[r.g][length];
+	r.b = max->math->brumeblue[r.b][length];
+	ft_printf("2 %3i %3i %3i %3i\n", r.r, r.g, r.b, length); 
 }
 
 void	ft_draw_screen(t_max *max)
@@ -878,6 +903,8 @@ void	ft_draw_screen(t_max *max)
 			{
 				//mlx_put_pixel(max->screen, x, y, 0x000000FF);
 				//mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+				if (x == 512)
+					ft_get_colour3(max, max->map->c.rgba, y, fake_offset);
 				mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->c.rgba, y, fake_offset));
 			}
 			else if (y > offset && y < wall_height + offset)
