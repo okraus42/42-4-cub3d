@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/11 10:18:45 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/11 13:18:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -903,8 +903,8 @@ void	ft_draw_screen(t_max *max)
 			{
 				//mlx_put_pixel(max->screen, x, y, 0x000000FF);
 				//mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
-				if (x == 512)
-					ft_get_colour3(max, max->map->c.rgba, y, fake_offset);
+				// if (x == 512)
+				// 	ft_get_colour3(max, max->map->c.rgba, y, fake_offset);
 				mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->c.rgba, y, fake_offset));
 			}
 			else if (y > offset && y < wall_height + offset)
