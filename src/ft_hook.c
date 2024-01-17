@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/11 13:18:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/17 10:15:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1051,8 +1051,8 @@ void	ft_hook(void *param)
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
 	// Add some max speed to prevent running through walls.
-	max->map->p.turnspeed = max->framems * 64;
-	max->map->p.speed = MIN(31, max->framems);
+	max->map->p.turnspeed = max->framems * 16;
+	max->map->p.speed = MIN(15, max->framems);
 	max->map->p.xspeed = (max->map->p.speed * max->math->cos[max->map->p.orientation]) / 65536;
 	max->map->p.yspeed = (max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
 	++max->frame;

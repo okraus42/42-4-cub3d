@@ -19,11 +19,3 @@ time_t	ft_get_time_in_ms(void)
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
-
-time_t	ft_get_time_in_mis(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec << 10) | (tv.tv_usec >> 10));
-}

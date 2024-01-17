@@ -34,7 +34,7 @@
 //	DEFINITIONS
 
 # ifndef TESTMODE
-#  define TESTMODE 3
+#  define TESTMODE 0
 # endif
 
 # if TESTMODE == 1

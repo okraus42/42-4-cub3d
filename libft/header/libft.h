@@ -407,7 +407,6 @@ char			*ft_stringcopy(char const *str);
 
 // time
 time_t			ft_get_time_in_ms(void);
-time_t			ft_get_time_in_mis(void);
 
 // evil malloc & calloc
 void			*ft_evil_malloc(size_t size);
