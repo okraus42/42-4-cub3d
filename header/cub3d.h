@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/11 13:24:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/18 14:43:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 //	DEFINITIONS
 
 # ifndef TESTMODE
-#  define TESTMODE 0
+#  define TESTMODE 4
 # endif
 
 # if TESTMODE == 1
@@ -43,7 +43,7 @@
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
-#  define FULLSCREEN 0
+#  define FULLSCREEN 1
 #  define FOV 90
 #  define DOF 16
 #  define TICK 8
@@ -64,7 +64,17 @@
 #  define MAPHEIGHT 512
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define FOV 90
+#  define FOV 80
+#  define DOF 8
+#  define TICK 8
+# elif TESTMODE == 4
+#  define WIDTH 1920
+#  define HEIGHT 1080
+#  define MAPWIDTH 1024
+#  define MAPHEIGHT 1024
+#  define NOFISHEYE 1
+#  define FULLSCREEN 0
+#  define FOV 80
 #  define DOF 8
 #  define TICK 8
 # else
@@ -74,7 +84,7 @@
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
 #  define FULLSCREEN 1
-#  define FOV 60
+#  define FOV 90
 #  define DOF 8
 #  define TICK 8
 # endif
@@ -376,6 +386,8 @@ typedef struct s_max
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
+	mlx_image_t		*str;
+	char			s[256];
 	t_textures		*t;
 	// t_imgs			*img;
 	// mlx_image_t		*str;

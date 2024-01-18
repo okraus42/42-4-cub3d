@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/17 10:15:12 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/18 14:46:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -967,8 +967,10 @@ void	ft_move_player(t_map *map, int y, int x)
 			if (y < ((map->p.my << 8) | WALLDISTANCE)
 				&& x < ((map->p.mx << 8) | WALLDISTANCE))
 			{
-				map->p.sy = WALLDISTANCE;
-				map->p.sx = WALLDISTANCE;
+				if ((x & 0xFF) <= (y & 0xFF))
+					map->p.sy = WALLDISTANCE;
+				if ((y & 0xFF) <= (x & 0xFF))
+					map->p.sx = WALLDISTANCE;
 			}
 		}
 		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
@@ -978,8 +980,10 @@ void	ft_move_player(t_map *map, int y, int x)
 			if (y < ((map->p.my << 8) | WALLDISTANCE)
 				&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
 			{
-				map->p.sy = WALLDISTANCE;
-				map->p.sx = 256 - WALLDISTANCE;
+				if (((256 - x) & 0xFF) <= (y & 0xFF))
+					map->p.sy = WALLDISTANCE;
+				if ((y & 0xFF) <= ((256 - x) & 0xFF))
+					map->p.sx = 256 - WALLDISTANCE;
 			}
 		}
 		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
@@ -994,8 +998,10 @@ void	ft_move_player(t_map *map, int y, int x)
 			if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
 				&& x < ((map->p.mx << 8) | WALLDISTANCE))
 			{
-				map->p.sy = 256 - WALLDISTANCE;
-				map->p.sx = WALLDISTANCE;
+				if ((x & 0xFF) <= ((256 - y) & 0xFF))
+					map->p.sy = 256 - WALLDISTANCE;
+				if (((256 - y) & 0xFF) <= (x & 0xFF))
+					map->p.sx = WALLDISTANCE;
 			}
 		}
 		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
@@ -1005,8 +1011,10 @@ void	ft_move_player(t_map *map, int y, int x)
 			if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
 				&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
 			{
-				map->p.sy = 256 - WALLDISTANCE;
-				map->p.sx = 256 - WALLDISTANCE;
+				if (((256 - x) & 0xFF) <= ((256 - y) & 0xFF))
+					map->p.sy = 256 - WALLDISTANCE;
+				if (((256 - y) & 0xFF) <= ((256 - x) & 0xFF))
+					map->p.sx = 256 - WALLDISTANCE;
 			}
 		}
 		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
@@ -1052,7 +1060,7 @@ void	ft_hook(void *param)
 	//ft_printf("framems: %u\n", max->framems);
 	// Add some max speed to prevent running through walls.
 	max->map->p.turnspeed = max->framems * 16;
-	max->map->p.speed = MIN(15, max->framems);
+	max->map->p.speed = MIN(4, max->framems);
 	max->map->p.xspeed = (max->map->p.speed * max->math->cos[max->map->p.orientation]) / 65536;
 	max->map->p.yspeed = (max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
 	++max->frame;
@@ -1062,6 +1070,11 @@ void	ft_hook(void *param)
 	// size based on fov... maybe tangens? fov cannot be more than 180
 	max->map->p.cx = max->math->cos[max->map->p.orientation];
 	max->map->p.cy = -max->math->sin[max->map->p.orientation];
+	ft_snprintf(max->s, 255, "FPS: %3i   Pos [%4x] [%4x]   Orientation [%3i]",
+		1000 / max->framems, max->map->p.x, max->map->p.y,
+		max->map->p.orientation * 360 / 65536);
+	mlx_delete_image(max->mlx, max->str);
+	max->str = mlx_put_string(max->mlx, max->s, 10, 5);
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	{
 		ft_printf("You have quit the game by pressing ESC.\n");
