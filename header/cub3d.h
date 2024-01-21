@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/18 14:43:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:42:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 //	DEFINITIONS
 
 # ifndef TESTMODE
-#  define TESTMODE 4
+#  define TESTMODE 1
 # endif
 
 # if TESTMODE == 1
