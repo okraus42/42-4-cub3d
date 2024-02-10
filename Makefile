@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2023/12/31 13:34:07 by okraus           ###   ########.fr        #
+#    Updated: 2024/02/10 12:18:12 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,9 @@ SRC_DIR		=	src/
 SRC_S		=	ft_cub3d.c \
 				ft_game.c \
 				ft_hook.c \
-				ft_parser.c
+				ft_parser.c \
+				ft_map.c \
+				ft_rays.c
 
 # Formating
 

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 18:31:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/10 12:49:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ void	ft_map_init(t_map *map)
 	map->southtexture = NULL;
 	map->westtexture = NULL;
 	map->easttexture = NULL;
-	map->d = NULL;
+	//map->d = NULL;
 	map->valid = 1;
 	map->e = -1;
 	map->p.orientation = -1;
-	map->p.pos = -1;
+	map->p.x = 0;
+	map->p.y = 0;
 	map->p.speed = 16;
 	map->p.turnspeed = 512;
 	map->p.xspeed = 0;
@@ -105,9 +106,9 @@ void	ft_freemap(t_map *map)
 	if (map->easttexture)
 		free(map->easttexture);
 	map->easttexture = NULL;
-	if (map->d)
-		free(map->d); //door need better freeing
-	map->d = NULL;
+	// if (map->d)
+	// 	free(map->d); //door need better freeing
+	// map->d = NULL;
 }
 
 void	ft_exit(t_max *max, int exitcode)
@@ -321,12 +322,12 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
 		map->m[y * map->w + x] = FLOOR1;
-		map->p.pos = y * map->w + x;
-		map->p.pos |= 0x7f7f0000;
-		map->p.mx = map->p.mapx;
-		map->p.sx = map->p.sqrx;
-		map->p.my = map->p.mapy;
-		map->p.sy = map->p.sqry;
+		map->p.mx = x;
+		map->p.my = y;
+		map->p.sx = 0x7f7f;
+		map->p.sy = 0x7f7f;
+		map->p.unused_x = 0;
+		map->p.unused_y = 0;
 		if (c == 'N')
 		{
 			map->p.orientation = NORTH;
@@ -405,7 +406,7 @@ int	ft_fill_array2(t_map *map, char **split, int j, int a)
 		}
 		++j;
 	}
-	ft_flood_check(map, map->p.pos & 0x0000FFFF);
+	ft_flood_check(map, map->p.mx + map->p.my * map->w);
 	if (!map->valid)
 	{
 		ft_free_split(&split);
@@ -486,13 +487,13 @@ void	ft_print_map(t_map *map)
 	ft_printf("E: <%s>\n", map->easttexture);
 	ft_printf("f: %#8x, c: %#8x b: %#8x\n", map->f.rgba, map->c.rgba, map->b.rgba);
 	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
-	ft_printf("Player pos %#8x, ori: %5i\n", map->p.pos, map->p.orientation);
+	ft_printf("Player posx %#8x, posy %#8x, ori: %5i\n", map->p.x, map->p.y, map->p.orientation);
 	ft_printf("Player py %4x, px %4x \n", map->p.y, map->p.x);
 	ft_printf("Player my %2x, sy %2x, mx %2x, sx %2x \n", map->p.my, map->p.sy, map->p.mx, map->p.sx);
 	i = 0;
 	while (i < map->h * map->w)
 	{
-		if (i == (map->p.mpos))
+		if (i == (map->p.mx + map->p.my * map->w))
 		{
 			if (map->p.orientation == NORTH)
 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
@@ -528,7 +529,7 @@ void	ft_print_map(t_map *map)
 			c &= 0xFFFF80;
 		if (map->m[i] & FLOORWE)
 			c &= 0x40A040;
-		if (i == (map->p.mpos))
+		if (i == (map->p.mx + map->p.my * map->w))
 		{
 			if (map->p.orientation == NORTH)
 				ft_printf("%^*C^^%C", map->c.rgba >> 8);

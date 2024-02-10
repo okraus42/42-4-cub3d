@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/18 15:42:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/10 14:07:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 //	DEFINITIONS
 
 # ifndef TESTMODE
-#  define TESTMODE 1
+#  define TESTMODE 4
 # endif
 
 # if TESTMODE == 1
@@ -97,7 +97,7 @@
 # define TMASK 0xFFFFFF80
 
 
-# define RAYS SCREENWIDTH
+# define RAYS 3 //SCREENWIDTH
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF
@@ -106,6 +106,11 @@
 
 // map elements, maybe add teleport? keys? sprites? items?
 //floor near wall to check for collisions.
+
+//	00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+//	????     ????     VISITED  FLOOD....DOOR     WALLS    CEILING  FLOOR
+
+
 typedef enum e_emap
 {
 	EMPTINESS = 0x0,
@@ -144,27 +149,27 @@ typedef union u_clr
 	};
 } t_clr;
 
-typedef struct s_door
-{
-	int	type;	//different types require different keys
-	union		//position on map
-	{
-		unsigned int	pos;
-		struct
-		{
-			unsigned char	mx;		//0x000000FF & pos; map x pos
-			unsigned char	my;		//0x0000FF00 & pos; map y pos
-			unsigned char	sx;		//0x00FF0000 & pos; square x pos
-			unsigned char	sy;		//0xFF000000 & pos; square y pos
-		};
-		struct
-		{
-			unsigned short	mpos;		//0x0000FFFF & pos; map pos
-			unsigned short	spos;		//0xFFFF0000 & pos; square pos
-		};
-	};
-	int status; //256 open, 0 closed
-}	t_door;
+// typedef struct s_door
+// {
+// 	int	type;	//different types require different keys
+// 	union		//position on map
+// 	{
+// 		unsigned int	pos;
+// 		struct
+// 		{
+// 			unsigned char	mx;		//0x000000FF & pos; map x pos
+// 			unsigned char	my;		//0x0000FF00 & pos; map y pos
+// 			unsigned char	sx;		//0x00FF0000 & pos; square x pos
+// 			unsigned char	sy;		//0xFF000000 & pos; square y pos
+// 		};
+// 		struct
+// 		{
+// 			unsigned short	mpos;		//0x0000FFFF & pos; map pos
+// 			unsigned short	spos;		//0xFFFF0000 & pos; square pos
+// 		};
+// 	};
+// 	int status; //256 open, 0 closed
+// }	t_door;
 
 # define NORTH 0
 # define EAST 16384
@@ -242,38 +247,81 @@ typedef struct s_ray
 	unsigned long long	m;
 }	t_ray;
 
-typedef struct s_player
+typedef struct s_oray
 {
-	union		//position on map
+	int				x[3];
+	int				y[3];
+	unsigned short	ra;
+	union
 	{
-		unsigned int	pos;
+		unsigned int	c[2];
 		struct
 		{
-			unsigned char	mapx;		//0x000000FF & pos; map x pos
-			unsigned char	mapy;		//0x0000FF00 & pos; map y pos
-			unsigned char	sqrx;		//0x00FF0000 & pos; square x pos
-			unsigned char	sqry;		//0xFF000000 & pos; square y pos
-		};
-		struct
-		{
-			unsigned short	mpos;		//0x0000FFFF & pos; map pos
-			unsigned short	spos;		//0xFFFF0000 & pos; square pos
+			unsigned char c0a;
+			unsigned char c0b;
+			unsigned char c0g;
+			unsigned char c0r;
+			unsigned char c1a;
+			unsigned char c1b;
+			unsigned char c1g;
+			unsigned char c1r;
 		};
 	};
-		union		//position on map
+	int				maxwidth;
+	int				maxheight;
+	int				dx;
+	int				dy;
+	union
 	{
-		unsigned int	pos2;
+		int			xi;
+		int			yi;
+	};
+	int				d;
+	long long		length;
+	long long		vl;
+	long long		hl;
+	long long		xs; //ray starting position 65536 is 1.000
+	long long		ys;
+	long long		hx;
+	long long		hy;
+	long long		vx;
+	long long		vy;
+	long long		rx;	//ray final position
+	long long		ry;
+	long long		hxo;	//x and y offset
+	long long		hyo;
+	long long		vxo;	//x and y offset
+	long long		vyo;
+	int				hdof;
+	int				vdof;
+	int				dof;
+	int				hv;		//which ray is shorter (for backtracking)
+	int				wall; //which wall was found (south north east west)
+	unsigned long long	vm;
+	unsigned long long	hm;
+	unsigned long long	m;
+}	t_oray;
+
+typedef struct s_player
+{
+	union
+	{
+		unsigned int	x;
 		struct
 		{
-			unsigned char	sx;		//0x000000FF & pos2; square x pos
-			unsigned char	mx;		//0x0000FF00 & pos2; map x pos
-			unsigned char	sy;		//0x00FF0000 & pos2; square y pos
-			unsigned char	my;		//0xFF000000 & pos2; map y pos
+			unsigned short	sx;
+			unsigned char	mx;
+			unsigned char	unused_x;
 		};
+	};
+	union
+	{
+		unsigned int	y;
 		struct
 		{
-			unsigned short	x;		//0x0000FFFF & pos2; x pos
-			unsigned short	y;		//0xFFFF0000 & pos2; y pos
+			unsigned short	sy;
+			unsigned char	my;
+			unsigned char	unused_y;
 		};
 	};
 	int	xx[2];	//x screen position and point ahead
@@ -298,11 +346,12 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
-	t_ray ray[RAYS];
-	t_ray miniray[RAYS];
-	t_ray mapray[RAYS];
-	t_ray screenray[RAYS];
-	unsigned short orientation; //0 facing north 65536 angles for start 65536 is 0 again
+	t_ray			ray[RAYS];
+	t_oray			oray[RAYS];
+	t_ray			miniray[RAYS];
+	t_ray			mapray[RAYS];
+	t_ray			screenray[RAYS];
+	unsigned short	orientation; //0 facing north 65536 angles for start 65536 is 0 again
 }	t_player;
 
 
@@ -326,7 +375,7 @@ typedef struct s_map
 	int				hh;			//height of actual map
 	t_player		p;			//player pos and orientation
 	unsigned int	e;			//position of exit on map, future stuff
-	t_door			**d;		//doors for bonus, NULL terminated array
+	//t_door			**d;		//doors for bonus, NULL terminated array
 }	t_map;
 
 typedef struct s_highscore
@@ -351,10 +400,10 @@ typedef struct s_control
 
 typedef struct s_math
 {
-	int			sin[65536];	//done multiplied by 65536
-	int			cos[65536];
-	long long	atan[65536];
-	long long	ntan[65536];
+	int				sin[65536];	//done multiplied by 65536
+	int				cos[65536];
+	long long		atan[65536];
+	long long		ntan[65536];
 	unsigned char	brumered[256][256];
 	unsigned char	brumegreen[256][256];
 	unsigned char	brumeblue[256][256];
@@ -415,6 +464,14 @@ int	ft_process_file(t_max *max);
 void	ft_amaze_standard(t_max *max);
 
 //ft_hook.c
+void	ft_place_line(mlx_image_t *img, t_ray l);
 void	ft_hook(void *param);
+
+//ft_map.c
+void	ft_draw_map(t_max *max);
+
+//ft_rays.c
+void	ft_init_rays(t_max *max);
+void	ft_init_orays(t_max *max);
 
 #endif
