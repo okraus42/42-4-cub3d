@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 13:31:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/10 16:07:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -606,11 +606,13 @@ void	ft_revisit_map(t_map *map)
 
 //hook for moving player on the map
 //create hook for moving map instead of player
+int	magic_test = 1;
 void	ft_hook(void *param)
 {
 	t_max	*max;
 
 	max = param;
+	max->map->p.orientation += magic_test;
 	max->newms = ft_get_time_in_ms();
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
@@ -618,7 +620,7 @@ void	ft_hook(void *param)
 	max->map->p.turnspeed = max->framems * 32;
 	max->map->p.speed = MIN(4 * 8 * 128, 128 * 8 * max->framems);
 	max->map->p.xspeed = (max->map->p.speed * max->math->cos[max->map->p.orientation]) / 65536;
-	max->map->p.yspeed = (max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
+	max->map->p.yspeed = -(max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
 	++max->frame;
 	max->oldms = max->newms;
 	max->map->p.dx = -max->math->sin[max->map->p.orientation];

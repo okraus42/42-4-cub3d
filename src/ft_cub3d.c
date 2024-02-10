@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 16:01:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/10 15:57:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,10 @@ void	ft_init_math(t_math *math)
 	{
 		math->sin[i] = 65536 * sin(step * i);
 		math->cos[i] = 65536 * cos(step * i);
-		math->atan[i] = -65536 / tan(step * i);
+		math->atan[i] = 65536 / tan(step * i);
+		math->natan[i] = -65536 / tan(step * i);
 		math->ntan[i] = (-65536 * (tan(step * i)));
+		math->tan[i] = (65536 * (tan(step * i)));
 		if (ABS(tan(step * i)) > 60000)
 			ft_printf("WARNING %i \n", i);
 	++i;

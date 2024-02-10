@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 14:07:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/10 17:21:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@
 # define TMASK 0xFFFFFF80
 
 
-# define RAYS 3 //SCREENWIDTH
+# define RAYS (SCREENWIDTH / 4) //SCREENWIDTH
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF
@@ -403,7 +403,9 @@ typedef struct s_math
 	int				sin[65536];	//done multiplied by 65536
 	int				cos[65536];
 	long long		atan[65536];
+	long long		natan[65536];
 	long long		ntan[65536];
+	long long		tan[65536];
 	unsigned char	brumered[256][256];
 	unsigned char	brumegreen[256][256];
 	unsigned char	brumeblue[256][256];
