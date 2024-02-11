@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 10:18:27 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 16:42:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -456,6 +456,11 @@ void	ft_fill_colours_to_map(t_map *map)
 		{
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+		}
+		else if (map->m[i] & WALL)
+		{
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= 0x000000FFFFFFFFFF;
 		}
 		else
 			map->m[i] &= 0x00000000FFFFFFFF;

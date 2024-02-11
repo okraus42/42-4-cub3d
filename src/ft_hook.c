@@ -6,131 +6,13 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 10:49:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 16:22:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
-static void	ft_big_swap(int a[3], int b[3], unsigned int c[2])
-{
-	ft_swap(&a[0], &a[1]);
-	ft_swap(&b[0], &b[1]);
-	ft_uswap(&c[0], &c[1]);
-}
 
-static unsigned int	ft_mix_colour2(unsigned int d[2], unsigned int rgb[4],
-	unsigned int c[2])
-{
-	unsigned int	r[4];
-
-	if ((c[0] & 0xFF000000) < (c[1] & 0xFF000000))
-		r[0] = ((rgb[0] * d[0]) / d[1] + ((c[0] & 0xFF000000) >> 24)) << 24;
-	else
-		r[0] = (((c[0] & 0xFF000000) >> 24) - ((rgb[0] * d[0]) / d[1])) << 24;
-	if ((c[0] & 0xFF0000) < (c[1] & 0xFF0000))
-		r[1] = (rgb[1] * d[0] / d[1] + ((c[0] & 0xFF0000) >> 16)) << 16;
-	else
-		r[1] = (((c[0] & 0xFF0000) >> 16) - (rgb[1] * d[0] / d[1])) << 16;
-	if ((c[0] & 0xFF00) < (c[1] & 0xFF00))
-		r[2] = (rgb[2] * d[0] / d[1] + ((c[0] & 0xFF00) >> 8)) << 8;
-	else
-		r[2] = (((c[0] & 0xFF00) >> 8) - (rgb[2] * d[0] / d[1])) << 8;
-	if ((c[0] & 0xFF) < (c[1] & 0xFF))
-		r[3] = rgb[3] * d[0] / d[1] + (c[0] & 0xFF);
-	else
-		r[3] = (c[0] & 0xFF) - rgb[3] * d[0] / d[1];
-	return (r[0] | r[1] | r[2] | r[3]);
-}
-
-static unsigned int	ft_mix_colour(int x[3], int y[3], unsigned int c[2])
-{
-	unsigned int	d[2];
-	unsigned int	rgb[4];
-
-	d[0] = ft_abs(x[2] - x[0]) + ft_abs(y[2] - y[0]);
-	d[1] = ft_abs(x[1] - x[0]) + ft_abs(y[1] - y[0]);
-	if (!d[1])
-		d[1] = 1;
-	rgb[0] = (ft_uabsdif(c[0] & 0xFF000000, c[1] & 0xFF000000)) >> 24;
-	rgb[1] = (ft_uabsdif(c[0] & 0xFF0000, c[1] & 0xFF0000)) >> 16;
-	rgb[2] = (ft_uabsdif(c[0] & 0xFF00, c[1] & 0xFF00)) >> 8;
-	rgb[3] = ft_uabsdif(c[0] & 0xFF, c[1] & 0xFF);
-	return (ft_mix_colour2(d, rgb, c));
-}
-
-//different max values for different imgs, maybe structure with colour;
-static void	ft_plot_line_low(mlx_image_t *img, t_ray l)
-{
-	l.dx = l.x[1] - l.x[0];
-	l.dy = l.y[1] - l.y[0];
-	l.yi = 1;
-	if (l.dy < 0)
-	{
-		l.yi = -1;
-		l.dy *= -1;
-	}
-	l.d = (2 * l.dy) - l.dx;
-	l.x[2] = l.x[0];
-	l.y[2] = l.y[0];
-	while (l.x[2] <= l.x[1])
-	{
-		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
-			mlx_put_pixel(img, l.x[2], l.y[2], ft_mix_colour(l.x, l.y, l.c));
-		if (l.d > 0)
-		{
-			l.y[2] = l.y[2] + l.yi;
-			l.d += 2 * (l.dy - l.dx);
-		}
-		else
-			l.d = l.d + 2 * l.dy;
-		l.x[2]++;
-	}
-}
-
-static void	ft_plot_line_high(mlx_image_t *img, t_ray l)
-{
-	l.dx = l.x[1] - l.x[0];
-	l.dy = l.y[1] - l.y[0];
-	l.xi = 1;
-	if (l.dx < 0)
-	{
-		l.xi = -1;
-		l.dx *= -1;
-	}
-	l.d = (2 * l.dx) - l.dy;
-	l.x[2] = l.x[0];
-	l.y[2] = l.y[0];
-	while (l.y[2] <= l.y[1])
-	{
-		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
-			mlx_put_pixel(img, l.x[2], l.y[2],ft_mix_colour(l.x, l.y, l.c));
-		if (l.d > 0)
-		{
-			l.x[2] = l.x[2] + l.xi;
-			l.d = l.d + (2 * (l.dx - l.dy));
-		}
-		else
-			l.d = l.d + 2 * l.dx;
-		l.y[2]++;
-	}
-}
-
-void	ft_place_line(mlx_image_t *img, t_ray l)
-{
-	if (ft_abs(l.y[1] - l.y[0]) < ft_abs(l.x[1] - l.x[0]))
-	{
-		if (l.x[0] > l.x[1])
-			ft_big_swap(l.x, l.y, l.c);
-		ft_plot_line_low(img, l);
-	}
-	else
-	{
-		if (l.y[0] > l.y[1])
-			ft_big_swap(l.x, l.y, l.c);
-		ft_plot_line_high(img, l);
-	}
-}
 
 
 
@@ -510,79 +392,79 @@ void	ft_move_player(t_map *map, int y, int x)
 	{
 		map->p.y = y;
 		map->p.x = x;
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-		// {
-		// 	if (y < ((map->p.my << 8) | WALLDISTANCE))
-		// 		map->p.sy = WALLDISTANCE;
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
-		// {
-		// 	if (y < ((map->p.my << 8) | WALLDISTANCE)
-		// 		&& x < ((map->p.mx << 8) | WALLDISTANCE))
-		// 	{
-		// 		if ((x & 0xFF) <= (y & 0xFF))
-		// 			map->p.sy = WALLDISTANCE;
-		// 		if ((y & 0xFF) <= (x & 0xFF))
-		// 			map->p.sx = WALLDISTANCE;
-		// 	}
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-		// {
-		// 	if (y < ((map->p.my << 8) | WALLDISTANCE)
-		// 		&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
-		// 	{
-		// 		if (((256 - x) & 0xFF) <= (y & 0xFF))
-		// 			map->p.sy = WALLDISTANCE;
-		// 		if ((y & 0xFF) <= ((256 - x) & 0xFF))
-		// 			map->p.sx = 256 - WALLDISTANCE;
-		// 	}
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		// {
-		// 	if (y > ((map->p.my << 8) | (256 - WALLDISTANCE)))
-		// 		map->p.sy = 256 - WALLDISTANCE;
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
-		// {
-		// 	if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
-		// 		&& x < ((map->p.mx << 8) | WALLDISTANCE))
-		// 	{
-		// 		if ((x & 0xFF) <= ((256 - y) & 0xFF))
-		// 			map->p.sy = 256 - WALLDISTANCE;
-		// 		if (((256 - y) & 0xFF) <= (x & 0xFF))
-		// 			map->p.sx = WALLDISTANCE;
-		// 	}
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-		// {
-		// 	if (y > ((map->p.my << 8) | (256 - WALLDISTANCE))
-		// 		&& x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
-		// 	{
-		// 		if (((256 - x) & 0xFF) <= ((256 - y) & 0xFF))
-		// 			map->p.sy = 256 - WALLDISTANCE;
-		// 		if (((256 - y) & 0xFF) <= ((256 - x) & 0xFF))
-		// 			map->p.sx = 256 - WALLDISTANCE;
-		// 	}
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
-		// {
-		// 	if (x < ((map->p.mx << 8) | WALLDISTANCE))
-		// 		map->p.sx = WALLDISTANCE;
-		// }
-		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
-		// {
-		// 	if (x > ((map->p.mx << 8) | (256 - WALLDISTANCE)))
-		// 		map->p.sx = 256 - WALLDISTANCE;
-		// }
-		// ft_printf("moved player\n");
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+		{
+			if (y < ((map->p.my << 16) | WALLDISTANCE))
+				map->p.sy = WALLDISTANCE;
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+		{
+			if (y < ((map->p.my << 16) | WALLDISTANCE)
+				&& x < ((map->p.mx << 16) | WALLDISTANCE))
+			{
+				if ((x & 0xFFFF) <= (y & 0xFFFF))
+					map->p.sy = WALLDISTANCE;
+				if ((y & 0xFFFF) <= (x & 0xFFFF))
+					map->p.sx = WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
+		{
+			if (y < ((map->p.my << 16) | WALLDISTANCE)
+				&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+			{
+				if (((SQUARESIZE - x) & 0xFFFF) <= (y & 0xFFFF))
+					map->p.sy = WALLDISTANCE;
+				if ((y & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
+					map->p.sx = SQUARESIZE - WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+		{
+			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE)))
+				map->p.sy = SQUARESIZE - WALLDISTANCE;
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+		{
+			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
+				&& x < ((map->p.mx << 16) | WALLDISTANCE))
+			{
+				if ((x & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
+					map->p.sy = SQUARESIZE - WALLDISTANCE;
+				if (((SQUARESIZE - y) & 0xFFFF) <= (x & 0xFFFF))
+					map->p.sx = WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
+		{
+			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
+				&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+			{
+				if (((SQUARESIZE - x) & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
+					map->p.sy = SQUARESIZE - WALLDISTANCE;
+				if (((SQUARESIZE - y) & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
+					map->p.sx = SQUARESIZE - WALLDISTANCE;
+			}
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
+		{
+			if (x < ((map->p.mx << 16) | WALLDISTANCE))
+				map->p.sx = WALLDISTANCE;
+		}
+		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
+		{
+			if (x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+				map->p.sx = SQUARESIZE - WALLDISTANCE;
+		}
+		//ft_printf("moved player\n");
 	}
 }
 
@@ -606,18 +488,17 @@ void	ft_revisit_map(t_map *map)
 
 //hook for moving player on the map
 //create hook for moving map instead of player
-int	magic_test = 1;
+
 void	ft_hook(void *param)
 {
 	t_max	*max;
 
 	max = param;
-	max->map->p.orientation += magic_test;
 	max->newms = ft_get_time_in_ms();
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
 	// Add some max speed to prevent running through walls.
-	max->map->p.turnspeed = max->framems * 32;
+	max->map->p.turnspeed = max->framems * 8;
 	max->map->p.speed = MIN(4 * 8 * 128, 128 * 8 * max->framems);
 	max->map->p.xspeed = (max->map->p.speed * max->math->cos[max->map->p.orientation]) / 65536;
 	max->map->p.yspeed = -(max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
@@ -628,9 +509,9 @@ void	ft_hook(void *param)
 	// size based on fov... maybe tangens? fov cannot be more than 180
 	max->map->p.cx = max->math->cos[max->map->p.orientation];
 	max->map->p.cy = max->math->sin[max->map->p.orientation];
-	ft_snprintf(max->s, 255, "FPS: %3i   Pos [%4x] [%4x]   Orientation [%3i]",
+	ft_snprintf(max->s, 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
 		1000 / max->framems, max->map->p.x, max->map->p.y,
-		max->map->p.orientation * 360 / 65536);
+		max->map->p.orientation * 360 / MAXDEGREE);
 	mlx_delete_image(max->mlx, max->str);
 	max->str = mlx_put_string(max->mlx, max->s, 10, 5);
 	//ft_printf("test\n");
@@ -679,11 +560,15 @@ void	ft_hook(void *param)
 		//ft_printf("You have pressed left arrow.\n");
 		//ft_printf("xspeed %i | yspeed %i | orientation %i.\n", max->map->p.xspeed, max->map->p.yspeed, max->map->p.orientation);
 		max->map->p.orientation -= max->map->p.turnspeed;
+		if (max->map->p.orientation < 0)
+			max->map->p.orientation += MAXDEGREE;
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_RIGHT) || mlx_is_key_down(max->mlx, MLX_KEY_E))
 	{
 		//ft_printf("You have pressed right arrow.\n");
 		max->map->p.orientation += max->map->p.turnspeed;
+		if (max->map->p.orientation >= MAXDEGREE)
+			max->map->p.orientation -= MAXDEGREE;
 	}
 	// if (mlx_is_key_down(max->mlx, MLX_KEY_M))
 	// {

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 15:57:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 16:15:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	ft_init_math(t_math *math)
 	int		i;
 	double	step;
 
-	step = 6.28318531 / 65536;
+	step = 6.28318531 / MAXDEGREE;
 	i = 0;
 	ft_fill_clin(math->clin);
 	ft_fill_clog(math->clog);
-	while (i < 65536)
+	while (i < MAXDEGREE)
 	{
 		math->sin[i] = 65536 * sin(step * i);
 		math->cos[i] = 65536 * cos(step * i);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 11:01:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 16:31:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,9 +172,15 @@ typedef union u_clr
 // }	t_door;
 
 # define NORTH 0
-# define EAST 16384
-# define SOUTH 32768
-# define WEST 49152
+# define EAST 4096			// == 90
+# define SOUTH 8092			// == 180
+# define WEST 12288			// == 270
+# define MAXDEGREE 16384	// == 360
+
+#define NORTHEAST 1
+#define NORTHWEST 2
+#define SOUTHWEST 3
+#define SOUTHEAST 4
 
 # define NWALL 1
 # define EWALL 2
@@ -189,14 +195,14 @@ typedef union u_clr
 # define WWALLCOLOUR 0x776600FF
 # define NOWALLCOLOUR 0xFFFF00FF
 
-# define WALLDISTANCE 64 //it is important it is bigger than actual speed 
+# define SQUARESIZE 65536
+# define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
 
-typedef struct s_ray
+typedef struct s_line
 {
 	int				x[3];
 	int				y[3];
-	unsigned short	ra;
 	union
 	{
 		unsigned int	c[2];
@@ -222,36 +228,11 @@ typedef struct s_ray
 		int			yi;
 	};
 	int				d;
-	long long		length;
-	long long		vl;
-	long long		hl;
-	long long		xs; //ray starting position 65536 is 1.000
-	long long		ys;
-	long long		hx;
-	long long		hy;
-	long long		vx;
-	long long		vy;
-	long long		rx;	//ray final position
-	long long		ry;
-	long long		hxo;	//x and y offset
-	long long		hyo;
-	long long		vxo;	//x and y offset
-	long long		vyo;
-	int				hdof;
-	int				vdof;
-	int				dof;
-	int				hv;		//which ray is shorter (for backtracking)
-	int				wall; //which wall was found (south north east west)
-	unsigned long long	vm;
-	unsigned long long	hm;
-	unsigned long long	m;
-}	t_ray;
+}	t_line;
 
 typedef struct s_oray
 {
-	int				x[3];
-	int				y[3];
-	unsigned short	ra;
+	int				ra;
 	union
 	{
 		unsigned int	c[2];
@@ -267,16 +248,6 @@ typedef struct s_oray
 			unsigned char c1r;
 		};
 	};
-	int				maxwidth;
-	int				maxheight;
-	int				dx;
-	int				dy;
-	union
-	{
-		int			xi;
-		int			yi;
-	};
-	int				d;
 	long long		length;
 	long long		length2;
 	long long		ldof;
@@ -284,18 +255,23 @@ typedef struct s_oray
 	long long		hl;
 	long long		xs; //ray starting position 65536 is 1.000
 	long long		ys;
-	long long		hx;
-	long long		hy;
-	long long		vx;
-	long long		vy;
+	long long		hx[DOF];
+	long long		hy[DOF];
+	long long		vx[DOF];
+	long long		vy[DOF];
+	long long		tx; //test ray x position (for map discovery)
+	long long		ty; //test ray y position (for map discovery)
 	long long		rx;	//ray final position
 	long long		ry;
 	long long		hxo;	//x and y offset
 	long long		hyo;
 	long long		vxo;	//x and y offset
 	long long		vyo;
+	long long		txo;	//x and y offset
+	long long		tyo;
 	int				hdof;
 	int				vdof;
+	int				tdof;
 	int				dof;
 	int				hv;		//which ray is shorter (for backtracking)
 	int				wall; //which wall was found (south north east west)
@@ -348,12 +324,12 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
-	t_ray			ray[RAYS];
+	//t_oray			ray[RAYS];
 	t_oray			oray[RAYS];
-	t_ray			miniray[RAYS];
-	t_ray			mapray[RAYS];
-	t_ray			screenray[RAYS];
-	unsigned short	orientation; //0 facing north 65536 angles for start 65536 is 0 again
+	t_line			miniray[RAYS];
+	t_line			mapray[RAYS];
+	t_oray			screenray[RAYS];
+	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
 
 
@@ -402,12 +378,12 @@ typedef struct s_control
 
 typedef struct s_math
 {
-	int				sin[65536];	//done multiplied by 65536
-	int				cos[65536];
-	long long		atan[65536];
-	long long		natan[65536];
-	long long		ntan[65536];
-	long long		tan[65536];
+	int				sin[MAXDEGREE];	//done multiplied by MAXDEGREE
+	int				cos[MAXDEGREE];
+	long long		atan[MAXDEGREE];
+	long long		natan[MAXDEGREE];
+	long long		ntan[MAXDEGREE];
+	long long		tan[MAXDEGREE];
 	unsigned char	brumered[256][256];
 	unsigned char	brumegreen[256][256];
 	unsigned char	brumeblue[256][256];
@@ -468,7 +444,6 @@ int	ft_process_file(t_max *max);
 void	ft_amaze_standard(t_max *max);
 
 //ft_hook.c
-void	ft_place_line(mlx_image_t *img, t_ray l);
 void	ft_hook(void *param);
 
 //ft_map.c
@@ -477,5 +452,9 @@ void	ft_draw_map(t_max *max);
 //ft_rays.c
 void	ft_init_rays(t_max *max);
 void	ft_init_orays(t_max *max);
+
+//ft_line.c
+void	ft_place_line(mlx_image_t *img, t_line l);
+
 
 #endif
