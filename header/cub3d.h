@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 10:54:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 11:01:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@
 # define TMASK 0xFFFFFFFF //
 
 
-# define RAYS (SCREENWIDTH / 4) //SCREENWIDTH
+# define RAYS (SCREENWIDTH) //SCREENWIDTH
 # define MAXDIST (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF
