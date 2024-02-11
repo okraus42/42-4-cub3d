@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 17:36:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 09:54:35 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -474,7 +474,10 @@ void	ft_init_orays(t_max *max)
 			}
 		}
 		if (oray->length > MAXDIST)
+		{
 			oray->wall = NOWALL;
+			oray->length = MAXDIST;
+		}
 		if (oray->wall == NOWALL)
 		{
 			// x^2 + y^2 = RADIUS^2
@@ -509,9 +512,19 @@ void	ft_init_orays(t_max *max)
 		else
 		{
 			oray->c1a = 0xff;
-			oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256;
-			oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256;
-			oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256;
+			// oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256;
+			// oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256;
+			// oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256;
+			int	r = max->map->f.r;
+			int	g = max->map->f.g;
+			int	b = max->map->f.b;
+
+			oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256
+				+ r * ((255 * oray->length / maxdist)) / 256;
+			oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256
+				+ g * ((255 * oray->length / maxdist)) / 256;
+			oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256
+				+ b * ((255 * oray->length / maxdist)) / 256;
 		}
 		++r;
 	}

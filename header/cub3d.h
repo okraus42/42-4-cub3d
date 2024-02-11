@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 17:21:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 09:57:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
 #  define FOV 80
-#  define DOF 8
+#  define DOF 16
 #  define TICK 8
 # else
 #  define WIDTH 2560

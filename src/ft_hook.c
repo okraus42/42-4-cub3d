@@ -6,13 +6,13 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 16:07:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 09:48:29 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
-void	ft_big_swap(int a[3], int b[3], unsigned int c[2])
+static void	ft_big_swap(int a[3], int b[3], unsigned int c[2])
 {
 	ft_swap(&a[0], &a[1]);
 	ft_swap(&b[0], &b[1]);
@@ -43,7 +43,7 @@ static unsigned int	ft_mix_colour2(unsigned int d[2], unsigned int rgb[4],
 	return (r[0] | r[1] | r[2] | r[3]);
 }
 
-unsigned int	ft_mix_colour(int x[3], int y[3], unsigned int c[2])
+static unsigned int	ft_mix_colour(int x[3], int y[3], unsigned int c[2])
 {
 	unsigned int	d[2];
 	unsigned int	rgb[4];
@@ -60,7 +60,7 @@ unsigned int	ft_mix_colour(int x[3], int y[3], unsigned int c[2])
 }
 
 //different max values for different imgs, maybe structure with colour;
-void	ft_plot_line_low(mlx_image_t *img, t_ray l)
+static void	ft_plot_line_low(mlx_image_t *img, t_ray l)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
@@ -88,7 +88,7 @@ void	ft_plot_line_low(mlx_image_t *img, t_ray l)
 	}
 }
 
-void	ft_plot_line_high(mlx_image_t *img, t_ray l)
+static void	ft_plot_line_high(mlx_image_t *img, t_ray l)
 {
 	l.dx = l.x[1] - l.x[0];
 	l.dy = l.y[1] - l.y[0];
