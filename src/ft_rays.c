@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 09:54:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 10:56:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,31 +228,31 @@ void	ft_init_rays(t_max *max)
 		}
 		if (ray->dof >= DOF)
 			ray->wall = NOWALL;
-		if (!(r % 32) || r == RAYS - 1)
-		{
-			if (!ray->hv)
-			{
-				while (ray->hdof >= 0)
-				{
-					mp = ((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16);
-					max->map->m[mp] |= VISITED;
-					ray->hx -= ray->hxo;
-					ray->hy -= ray->hyo;
-					--ray->hdof;
-				}
-			}
-			else
-			{
-				while (ray->vdof >= 0)
-				{
-					mp = ((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16);
-					max->map->m[mp] |= VISITED;
-					ray->vx -= ray->vxo;
-					ray->vy -= ray->vyo;
-					--ray->vdof;
-				}
-			}
-		}
+		// if (!(r % 32) || r == RAYS - 1)
+		// {
+		// 	if (!ray->hv)
+		// 	{
+		// 		while (ray->hdof >= 0)
+		// 		{
+		// 			mp = ((max->map->p.ray[r].hy >> 16) << 8) | (max->map->p.ray[r].hx >> 16);
+		// 			max->map->m[mp] |= VISITED;
+		// 			ray->hx -= ray->hxo;
+		// 			ray->hy -= ray->hyo;
+		// 			--ray->hdof;
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		while (ray->vdof >= 0)
+		// 		{
+		// 			mp = ((max->map->p.ray[r].vy >> 16) << 8) | (max->map->p.ray[r].vx >> 16);
+		// 			max->map->m[mp] |= VISITED;
+		// 			ray->vx -= ray->vxo;
+		// 			ray->vy -= ray->vyo;
+		// 			--ray->vdof;
+		// 		}
+		// 	}
+		// }
 		if (ray->wall == NOWALL)
 			ray->c[0] = NOWALLCOLOUR;
 		else if (ray->wall == WWALL)
@@ -448,14 +448,21 @@ void	ft_init_orays(t_max *max)
 		}
 		if (oray->dof >= DOF)
 			oray->wall = NOWALL;
+		oray->length2 = oray->length;
 		if (1)
 		{
 			if (!oray->hv)
 			{
+				if (oray->hdof)
+					oray->ldof = oray->length / oray->hdof;
+				else
+					oray->ldof = 1;
 				while (oray->hdof >= 0)
 				{
 					mp = ((max->map->p.oray[r].hy >> 16) << 8) | (max->map->p.oray[r].hx >> 16);
-					max->map->m[mp] |= VISITED;
+					if (oray->length2 < MAXDIST)
+						max->map->m[mp] |= VISITED;
+					oray->length2 -= oray->ldof;
 					oray->hx -= oray->hxo;
 					oray->hy -= oray->hyo;
 					--oray->hdof;
@@ -463,10 +470,16 @@ void	ft_init_orays(t_max *max)
 			}
 			else
 			{
+				if (oray->vdof)
+					oray->ldof = oray->length / oray->vdof;
+				else
+					oray->ldof = 1;
 				while (oray->vdof >= 0)
 				{
 					mp = ((max->map->p.oray[r].vy >> 16) << 8) | (max->map->p.oray[r].vx >> 16);
-					max->map->m[mp] |= VISITED;
+					if (oray->length2 < MAXDIST)
+						max->map->m[mp] |= VISITED;
+					oray->length2 -= oray->ldof;
 					oray->vx -= oray->vxo;
 					oray->vy -= oray->vyo;
 					--oray->vdof;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 09:48:29 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 10:49:35 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -697,7 +697,7 @@ void	ft_hook(void *param)
 		ft_revisit_map(max->map);
 	
 	//ft_printf("test1\n");
-	ft_init_rays(max);
+	//ft_init_rays(max);
 	ft_init_orays(max);
 	//ft_draw_screen(max);
 	// if (max->mmode > 0)

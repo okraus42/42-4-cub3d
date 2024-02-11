@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/10 12:49:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 10:18:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,6 +445,24 @@ int	ft_fill_array(t_map *map)
 	return (1);
 }
 
+void	ft_fill_colours_to_map(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while (i < map->h * map->w)
+	{
+		if (map->m[i] & FLOOR)
+		{
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+		}
+		else
+			map->m[i] &= 0x00000000FFFFFFFF;
+		++i;
+	}
+}
+
 int	ft_fill_map(t_map *map)
 {
 	//fill paths to textures
@@ -454,7 +472,8 @@ int	ft_fill_map(t_map *map)
 		return (0);
 	if (!ft_fill_array(map))
 		return (0);
-	//fill colours of floor and ceiling
+	//fill colours in map
+	ft_fill_colours_to_map(map);
 	//fill actual map (get width and height first)
 	return (1);
 }

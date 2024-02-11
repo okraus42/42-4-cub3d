@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 09:57:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/11 10:54:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@
 # define MINIHEIGHT 256
 # define SCREENWIDTH WIDTH
 # define SCREENHEIGHT HEIGHT //- HUD later
-# define TMASK 0xFFFFFF80
+# define TMASK 0xFFFFFFFF //
 
 
 # define RAYS (SCREENWIDTH / 4) //SCREENWIDTH
@@ -108,8 +108,8 @@
 //floor near wall to check for collisions.
 
 //	00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-//	????     ????     VISITED  FLOOD....DOOR     WALLS    CEILING  FLOOR
-
+//	RED      GREEN    BLUE      VISITED  DOOR     WALLS    CEILING  FLOOR
+//  FLOOD???
 
 typedef enum e_emap
 {
@@ -278,6 +278,8 @@ typedef struct s_oray
 	};
 	int				d;
 	long long		length;
+	long long		length2;
+	long long		ldof;
 	long long		vl;
 	long long		hl;
 	long long		xs; //ray starting position 65536 is 1.000
