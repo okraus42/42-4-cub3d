@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 16:31:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/13 16:04:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
 #  define FOV 80
-#  define DOF 16
+#  define DOF 8
 #  define TICK 8
 # else
 #  define WIDTH 2560
@@ -449,8 +449,11 @@ void	ft_hook(void *param);
 //ft_map.c
 void	ft_draw_map(t_max *max);
 
+//ft_minimap.c
+void	ft_draw_minimap(t_max *max);
+
 //ft_rays.c
-void	ft_init_rays(t_max *max);
+//void	ft_init_rays(t_max *max);
 void	ft_init_orays(t_max *max);
 
 //ft_line.c
