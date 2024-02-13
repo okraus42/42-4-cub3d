@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/13 15:59:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/13 16:23:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static int	ft_is_inside(t_map *map, long long rad2, int y, int x)
 	return (0);
 }
 
-
 void	ft_draw_minimap(t_max *max)
 {
 	int	y;
@@ -38,83 +37,45 @@ void	ft_draw_minimap(t_max *max)
 
 	s = 8;
 	y = 0;
-	// while (y < MINIHEIGHT)
-	// {
-	// 	x = 0;
-	// 	while (x < MINIWIDTH)
-	// 	{
-	// 		ny = y + ((int)max->map->p.y * s / 256) - MINIHEIGHT / 2;
-	// 		nx = x + ((int)max->map->p.x * s / 256) - MINIWIDTH / 2;
-	// 		if (ny > 0 && nx > 0 && ny < max->map->h * s && nx < max->map->w * s)
-	// 		{
-	// 			if (ft_is_inside(max->map, 4096, (ny << 8) / s, (nx << 8) / s))
-	// 			{
-	// 				//ft_printf("y= %i, x= %i\n", y, x);
-	// 				mlx_put_pixel(max->maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
-	// 			}
-	// 			// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
-	// 			// {
-	// 			// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
-	// 			// }
-	// 			else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
-	// 			{
-	// 				if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-	// 					mlx_put_pixel(max->maximap, x, y, 0x000000ff & TMASK); //Visited wall shine white
-	// 				else
-	// 					mlx_put_pixel(max->maximap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
-	// 			}
-	// 			else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
-	// 			{
-	// 				if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-	// 					mlx_put_pixel(max->maximap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
-	// 				else
-	// 					mlx_put_pixel(max->maximap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
-	// 			}
-	// 			else
-	// 				mlx_put_pixel(max->maximap, x, y, 0x404040FF & TMASK);
-	// 		}
-	// 		else
-	// 			mlx_put_pixel(max->maximap, x, y, 0x808080FF & TMASK);
-	// 		++x;
-	// 	}
-	// 	++y;
-	// }
 	while (y < MINIHEIGHT)
 	{
 		x = 0;
 		while (x < MINIWIDTH)
 		{
-			ny = y + ((int)max->map->p.y * s / 256) - MINIHEIGHT / 2;
-			nx = x + ((int)max->map->p.x * s / 256) - MINIWIDTH / 2;
+			ny = y + ((int)max->map->p.y * s / 65536) - MINIHEIGHT / 2;
+			nx = x + ((int)max->map->p.x * s / 65536) - MINIWIDTH / 2;
 			if (ny > 0 && nx > 0 && ny < max->map->h * s && nx < max->map->w * s)
 			{
-				if (ft_is_inside(max->map, 4096, (ny << 8) / s, (nx << 8) / s))
+				if (ft_is_inside(max->map, 2147483648LL, (ny << 16) / s, (nx << 16) / s))
 				{
-					//ft_printf("y= %i, x= %i\n", y, x);
 					mlx_put_pixel(max->minimap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+				}
+				else
+				{
+					mlx_put_pixel(max->minimap, x, y, ((max->map->m[(ny / s) * max->map->w + (nx / s)]) >> 32) & TMASK);
 				}
 				// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
 				// {
 				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
 				// }
-				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
-				{
-					//mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
-					if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-						mlx_put_pixel(max->minimap, x, y, 0x000000ff & TMASK); //Visited wall shine white
-					else
-						mlx_put_pixel(max->minimap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
-				}
-				else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
-				{
-					// mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
-					if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-						mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
-					else
-						mlx_put_pixel(max->minimap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
-				}
-				else
-					mlx_put_pixel(max->minimap, x, y, 0x404040FF & TMASK);
+				// else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
+				// {
+				// 	//mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
+				// 	if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+				// 		mlx_put_pixel(max->minimap, x, y, 0x000000ff & TMASK); //Visited wall shine white
+				// 	else
+				// 		mlx_put_pixel(max->minimap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
+				// }
+				// else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
+				// {
+				// 	// mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				// 	if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
+				// 		mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
+				// 	else
+				// 		mlx_put_pixel(max->minimap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
+				// }
+				// else
+				// 	mlx_put_pixel(max->minimap, x, y, 0x404040FF & TMASK);
 			}
 			else
 				mlx_put_pixel(max->minimap, x, y, 0x808080FF & TMASK);

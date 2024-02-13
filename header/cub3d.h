@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/13 16:04:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/13 16:51:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,10 +255,10 @@ typedef struct s_oray
 	long long		hl;
 	long long		xs; //ray starting position 65536 is 1.000
 	long long		ys;
-	long long		hx[DOF];
-	long long		hy[DOF];
-	long long		vx[DOF];
-	long long		vy[DOF];
+	long long		hx[DOF + 1];
+	long long		hy[DOF + 1];
+	long long		vx[DOF + 1];
+	long long		vy[DOF + 1];
 	long long		tx; //test ray x position (for map discovery)
 	long long		ty; //test ray y position (for map discovery)
 	long long		rx;	//ray final position

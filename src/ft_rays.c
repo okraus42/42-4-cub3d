@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 16:51:45 by okraus           ###   ########.fr       */
+/*   Updated: 2024/02/13 16:55:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	ft_init_orays(t_max *max)
 
 			oray->hxo = ((65536 * max->math->tan[oray->ra]) >> 16);
 			oray->hyo = -65536;
-			oray->wall |= NWALL;
 		}
 		else if (oray->ra < WEST && oray->ra > EAST)
 		{
@@ -104,7 +103,6 @@ void	ft_init_orays(t_max *max)
 			oray->hx[0] = (((oray->ys - oray->hy[0]) * max->math->tan[oray->ra]) >> 16) + oray->xs;
 			oray->hxo = ((65536 * max->math->ntan[oray->ra]) >> 16); //check where to put minus and bitshifting
 			oray->hyo = 65536;
-			oray->wall |= SWALL;
 		}
 		else
 		{
@@ -112,7 +110,7 @@ void	ft_init_orays(t_max *max)
 			oray->hx[0] = INT_MAX;
 			oray->hdof = -1;
 		}
-		while (oray->hdof > 0 && oray->hdof < DOF)
+		while (oray->hdof > 0 && oray->hdof <= DOF)
 		{
 			mx = oray->hx[oray->hdof - 1] >> 16;
 			my = oray->hy[oray->hdof - 1] >> 16;
@@ -123,6 +121,10 @@ void	ft_init_orays(t_max *max)
 				//max->map->m[mp] |= VISITED;
 				if ((max->map->m[mp]) & WALL)
 				{
+					if (oray->ra > WEST || oray->ra < EAST)
+						oray->wall |= NWALL;
+					else if (oray->ra < WEST && oray->ra > EAST)
+						oray->wall |= SWALL;
 					oray->hm = max->map->m[mp];
 					break ;
 				}
@@ -145,7 +147,6 @@ void	ft_init_orays(t_max *max)
 			oray->vy[0] = (((oray->xs - oray->vx[0]) * max->math->atan[oray->ra]) >> 16) + oray->ys;
 			oray->vxo = 65536;//check where to put minus and bitshifting
 			oray->vyo = ((65536 * max->math->natan[oray->ra]) >> 16);
-			oray->wall |= EWALL;
 		}
 		else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
 		{
@@ -154,7 +155,6 @@ void	ft_init_orays(t_max *max)
 
 			oray->vxo = -65536;
 			oray->vyo = (65536 * max->math->atan[oray->ra]) >> 16;
-			oray->wall |= WWALL;
 		}
 		//looking up or down
 		else
@@ -163,7 +163,7 @@ void	ft_init_orays(t_max *max)
 			oray->vx[0] = INT_MAX;
 			oray->vdof = -1;
 		}
-		while (oray->vdof > 0 && oray->vdof < DOF)
+		while (oray->vdof > 0 && oray->vdof <= DOF)
 		{
 			mx = oray->vx[oray->vdof - 1] >> 16;
 			my = oray->vy[oray->vdof - 1] >> 16;
@@ -173,6 +173,10 @@ void	ft_init_orays(t_max *max)
 			{
 				if ((max->map->m[mp]) & WALL)
 				{
+					if (oray->ra < SOUTH && oray->ra > NORTH)
+						oray->wall |= EWALL;
+					else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
+						oray->wall |= WWALL;
 					oray->vm = max->map->m[mp];
 					break ;
 				}
@@ -211,15 +215,19 @@ void	ft_init_orays(t_max *max)
 		if (!oray->hv)
 		{
 			oray->dof = oray->hdof;
+			// if (oray->dof >= DOF - 1)
+			// 	oray->wall = NOWALL;
+			// else
 			oray->wall &= NSWALL;
 		}
 		else
 		{
 			oray->dof = oray->vdof;
+			// if (oray->dof >= DOF - 1)
+			// 	oray->wall = NOWALL;
+			// else
 			oray->wall &= EWWALL;
 		}
-		if (oray->dof >= DOF)
-			oray->wall = NOWALL;
 		oray->length2 = oray->length;
 		// ft_printf("r1 = %i\n", r);
 		// ft_printf("hdof = %i\n", oray->hdof);
@@ -298,18 +306,26 @@ void	ft_init_orays(t_max *max)
 			// }
 		}
 		//ft_printf("r2 = %i\n", r);
-		
+		if (r == 0)
+			oray->c[0] = 0x00FF00FF;
+		else if (r == RAYS - 1)
+			oray->c[0] = 0xFF0000FF;
+		else
+			oray->c[0] = 0xFFFF00FF;
 		if (oray->length > MAXDIST)
 		{
+			//oray->c[0] = 0x00FFFFFF;
 			oray->wall = NOWALL;
 			oray->length = MAXDIST;
 		}
+		
 		if (oray->wall == NOWALL)
 		{
 			// x^2 + y^2 = RADIUS^2
 			// radius == MAXDIST
-			oray->rx = oray->xs + (MAXDIST * (max->math->sin[oray->ra])) / 65536;
-			oray->ry = oray->ys - (MAXDIST * (max->math->cos[oray->ra])) / 65536;
+			//oray->c[0] = 0xFF00FFFF;
+			oray->rx = oray->xs + ((MAXDIST) * (max->math->sin[oray->ra])) / 65536;
+			oray->ry = oray->ys - ((MAXDIST) * (max->math->cos[oray->ra])) / 65536;
 		}
 		//ft_printf("r3 = %i\n", r);
 		// oray->rx = oray->hx;
@@ -328,12 +344,6 @@ void	ft_init_orays(t_max *max)
 		// {
 		// 	oray->c[0] = 0xFFFF00FF;
 		// }
-		if (r == 0)
-				oray->c[0] = 0x00FF00FF;
-			else if (r == RAYS - 1)
-				oray->c[0] = 0xFF0000FF;
-			else
-				oray->c[0] = 0xFFFF00FF;
 		if (oray->length > maxdist)
 			oray->c[1] = 0x000000ff;
 		else
