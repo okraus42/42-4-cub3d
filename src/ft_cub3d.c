@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 16:15:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:20:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,22 @@ static void	ft_fill_clin(unsigned char clin[65536])
 void	ft_init_math(t_math *math)
 {
 	int		i;
-	double	step;
+	//double	step;
 
-	step = 6.28318531 / MAXDEGREE;
+	//step = 6.28318531 / MAXDEGREE;
+	//step = 0.0003834951969714103;
 	i = 0;
 	ft_fill_clin(math->clin);
 	ft_fill_clog(math->clog);
 	while (i < MAXDEGREE)
 	{
-		math->sin[i] = 65536 * sin(step * i);
-		math->cos[i] = 65536 * cos(step * i);
-		math->atan[i] = 65536 / tan(step * i);
-		math->natan[i] = -65536 / tan(step * i);
-		math->ntan[i] = (-65536 * (tan(step * i)));
-		math->tan[i] = (65536 * (tan(step * i)));
-		if (ABS(tan(step * i)) > 60000)
+		math->sin[i] = 65536 * sin(i * M_PI * 2 / MAXDEGREE);
+		math->cos[i] = 65536 * cos(i * M_PI * 2 / MAXDEGREE);
+		math->atan[i] = 65536 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->natan[i] = -65536 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->ntan[i] = (-65536 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		math->tan[i] = (65536 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		if (ABS(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
 			ft_printf("WARNING %i \n", i);
 	++i;
 	}

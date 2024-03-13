@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/13 13:21:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:25:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,14 @@ void	ft_init_orays(t_max *max)
 		{
 			oray->vx[0] = ((oray->xs >> 16) << 16) + 65536;
 			oray->vy[0] = (((oray->xs - oray->vx[0]) * max->math->atan[oray->ra]) >> 16) + oray->ys;
+			
 			oray->vxo = 65536;//check where to put minus and bitshifting
 			oray->vyo = ((65536 * max->math->natan[oray->ra]) >> 16);
 		}
 		else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
 		{
 			oray->vx[0] = ((oray->xs >> 16) << 16) - 1;
-			oray->vy[0] = (((oray->xs - oray->vx[0]) * max->math->atan[oray->ra]) >> 16) + oray->ys;
-
+			oray->vy[0] = (((oray->xs - oray->vx[0]) * max->math->atan[oray->ra]) / 65536) + oray->ys;
 			oray->vxo = -65536;
 			oray->vyo = (65536 * max->math->atan[oray->ra]) >> 16;
 		}

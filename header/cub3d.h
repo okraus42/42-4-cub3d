@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/13 13:21:13 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:22:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ typedef union u_clr
 
 # define NORTH 0
 # define EAST 4096			// == 90
-# define SOUTH 8092			// == 180
+# define SOUTH 8192			// == 180
 # define WEST 12288			// == 270
 # define MAXDEGREE 16384	// == 360
 
