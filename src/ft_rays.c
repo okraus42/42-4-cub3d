@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/13 16:55:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:21:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,8 +324,8 @@ void	ft_init_orays(t_max *max)
 			// x^2 + y^2 = RADIUS^2
 			// radius == MAXDIST
 			//oray->c[0] = 0xFF00FFFF;
-			oray->rx = oray->xs + ((MAXDIST) * (max->math->sin[oray->ra])) / 65536;
-			oray->ry = oray->ys - ((MAXDIST) * (max->math->cos[oray->ra])) / 65536;
+			oray->rx = oray->xs + ((MAXDIST) * (long long)(max->math->sin[oray->ra])) / 65536;
+			oray->ry = oray->ys - ((MAXDIST) * (long long)(max->math->cos[oray->ra])) / 65536;
 		}
 		//ft_printf("r3 = %i\n", r);
 		// oray->rx = oray->hx;
