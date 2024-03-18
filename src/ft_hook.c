@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/13 16:00:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/18 14:34:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,6 +332,84 @@ void	ft_revisit_map(t_map *map)
 //hook for moving player on the map
 //create hook for moving map instead of player
 
+void	ft_draw_strings(t_max *max)
+{
+	if (DEBUGGING)
+	{
+		if (max->key.two)
+		{
+			++max->ray;
+			max->key.two = 0;
+		}
+		if (max->key.three)
+		{
+			--max->ray;
+			max->key.three = 0;
+		}
+		if (max->ray == RAYS)
+			max->ray = 0;
+		if (max->ray < 0)
+			max->ray = RAYS - 1;
+		if (max->key.one)
+			ft_snprintf(max->s[0], 255, "FPS: %3i  Pos [%6x] [%6x]   Orientation [%5i]",
+				1000 / max->framems, max->map->p.x, max->map->p.y,
+				max->map->p.orientation);
+		else
+			ft_snprintf(max->s[0], 255, "Ray [%4i] ra [%5i] c0[%8x] c1[%8x] length[%Li]", max->ray,
+				max->map->p.oray[max->ray].ra, max->map->p.oray[max->ray].c[0],
+				max->map->p.oray[max->ray].c[1], max->map->p.oray[max->ray].length);
+		mlx_delete_image(max->mlx, max->str[0]);
+		//mlx_delete_image(max->mlx, max->str[1]);
+		
+		max->str[0] = mlx_put_string(max->mlx, max->s[0], 10, 5);
+		//max->str[1] = mlx_put_string(max->mlx, max->s[1], 10, 35);
+	}
+	else
+	{
+		ft_snprintf(max->s[0], 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
+			1000 / max->framems, max->map->p.x, max->map->p.y,
+			max->map->p.orientation * 360 / MAXDEGREE);
+		mlx_delete_image(max->mlx, max->str[0]);
+		max->str[0] = mlx_put_string(max->mlx, max->s[0], 10, 5);
+	}
+}
+
+void	ft_debug(t_max *max)
+{
+	if (max->key.five)
+	{
+		max->map->p.x = 0x214d9c;
+		max->map->p.y = 0x29d6a8;
+		max->map->p.orientation = 15568;
+		max->ray = 547;
+		max->key.five = 0;
+	}
+	if (max->key.six)
+	{
+		max->map->p.x = 0x45f0c;
+		max->map->p.y = 0x10ec2c;
+		max->map->p.orientation = 8486;
+		max->ray = 282;
+		max->key.six = 0;
+	}
+	if (max->key.seven)
+	{
+		max->map->p.x = 0x564a5;
+		max->map->p.y = 0x326b45;
+		max->map->p.orientation = 7774;
+		max->ray = 126;
+		max->key.seven = 0;
+	}
+	if (max->key.eight)
+	{
+		max->map->p.x = 0x5fdb1;
+		max->map->p.y = 0x361ed9;
+		max->map->p.orientation = 7774;
+		max->ray = 584;
+		max->key.eight = 0;
+	}
+}
+
 void	ft_hook(void *param)
 {
 	t_max	*max;
@@ -352,11 +430,8 @@ void	ft_hook(void *param)
 	// size based on fov... maybe tangens? fov cannot be more than 180
 	max->map->p.cx = max->math->cos[max->map->p.orientation];
 	max->map->p.cy = max->math->sin[max->map->p.orientation];
-	ft_snprintf(max->s, 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
-		1000 / max->framems, max->map->p.x, max->map->p.y,
-		max->map->p.orientation * 360 / MAXDEGREE);
-	mlx_delete_image(max->mlx, max->str);
-	max->str = mlx_put_string(max->mlx, max->s, 10, 5);
+	ft_draw_strings(max);
+	ft_debug(max);
 	//ft_printf("test\n");
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	{
@@ -376,6 +451,76 @@ void	ft_hook(void *param)
 		max->map->p.xspeed *= 2;
 		max->map->p.yspeed *= 2;
 		max->map->p.turnspeed /= 2;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_1))	//key1
+	{
+		if (max->key.one)
+			max->key.one = 0;
+		else
+			max->key.one = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_2))
+	{
+		if (max->key.two)
+			max->key.two = 0;
+		else
+			max->key.two = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_3))
+	{
+		if (max->key.three)
+			max->key.three = 0;
+		else
+			max->key.three = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_4))
+	{
+		if (max->key.four)
+			max->key.four = 0;
+		else
+			max->key.four = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_5))
+	{
+		if (max->key.five)
+			max->key.five = 0;
+		else
+			max->key.five = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_6))
+	{
+		if (max->key.six)
+			max->key.six = 0;
+		else
+			max->key.six = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_7))
+	{
+		if (max->key.seven)
+			max->key.seven = 0;
+		else
+			max->key.seven = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_8))
+	{
+		if (max->key.eight)
+			max->key.eight = 0;
+		else
+			max->key.eight = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_9))
+	{
+		if (max->key.nine)
+			max->key.nine = 0;
+		else
+			max->key.nine = 1;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_0))
+	{
+		if (max->key.zero)
+			max->key.zero = 0;
+		else
+			max->key.zero = 1;
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_UP) || mlx_is_key_down(max->mlx, MLX_KEY_W))
 	{

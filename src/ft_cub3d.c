@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/13 14:20:57 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/18 14:41:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ void	ft_init_math(t_math *math)
 	ft_fill_clog(math->clog);
 	while (i < MAXDEGREE)
 	{
-		math->sin[i] = 65536 * sin(i * M_PI * 2 / MAXDEGREE);
-		math->cos[i] = 65536 * cos(i * M_PI * 2 / MAXDEGREE);
-		math->atan[i] = 65536 / tan(i * M_PI * 2 / MAXDEGREE);
-		math->natan[i] = -65536 / tan(i * M_PI * 2 / MAXDEGREE);
-		math->ntan[i] = (-65536 * (tan(i * M_PI * 2 / MAXDEGREE)));
-		math->tan[i] = (65536 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		// not sure if everything needs .9999, but it helps the tan functions
+		math->sin[i] = 65536.9999 * sin(i * M_PI * 2 / MAXDEGREE);
+		math->cos[i] = 65536.9999 * cos(i * M_PI * 2 / MAXDEGREE);
+		math->atan[i] = 65536.9999 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->natan[i] = -65536.9999 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->ntan[i] = (-65536.9999 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		math->tan[i] = (65536.9999 * (tan(i * M_PI * 2 / MAXDEGREE)));
 		if (ABS(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
 			ft_printf("WARNING %i \n", i);
 	++i;
@@ -86,7 +87,9 @@ void	ft_cub3d(char *file)
 	max.t = &t;
 	max.map = &map;
 	max.mlx = NULL;
+	max.key.one = 0;
 	max.frame = 0;
+	max.ray = 0;
 	max.mmode = 0;
 	max.oldms = ft_get_time_in_ms();
 	max.newms = 0;

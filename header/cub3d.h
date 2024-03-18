@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/13 14:22:41 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/18 12:50:40 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
+#  define DEBUGGING 1
 #  define FOV 80
 #  define DOF 16
 #  define TICK 8
@@ -89,7 +90,11 @@
 #  define TICK 8
 # endif
 
+# ifndef DEBUGGING
+#  define DEBUGGING 0
+# endif
 
+# define STRINGS 16
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
 # define SCREENWIDTH WIDTH
@@ -177,10 +182,10 @@ typedef union u_clr
 # define WEST 12288			// == 270
 # define MAXDEGREE 16384	// == 360
 
-#define NORTHEAST 1
-#define NORTHWEST 2
-#define SOUTHWEST 3
-#define SOUTHEAST 4
+# define NORTHEAST 1
+# define NORTHWEST 2
+# define SOUTHWEST 3
+# define SOUTHEAST 4
 
 # define NWALL 1
 # define EWALL 2
@@ -374,6 +379,16 @@ typedef struct s_control
 	int		ctrl;
 	int		time;
 	int		t;
+	int		one;
+	int		two;
+	int		three;
+	int		four;
+	int		five;
+	int		six;
+	int		seven;
+	int		eight;
+	int		nine;
+	int		zero;
 }	t_controls;
 
 typedef struct s_math
@@ -409,14 +424,14 @@ typedef struct s_max
 	mlx_t			*mlx;
 	t_map			*map;
 	t_math			*math;
-	t_controls		*key;
+	t_controls		key;
 	mlx_image_t		*background;
 	mlx_image_t		*hud;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
-	mlx_image_t		*str;
-	char			s[256];
+	mlx_image_t		*str[STRINGS];
+	char			s[STRINGS][256];
 	t_textures		*t;
 	// t_imgs			*img;
 	// mlx_image_t		*str;
@@ -429,6 +444,7 @@ typedef struct s_max
 	// int				exit;
 	// int				time;
 	int				mmode;
+	int				ray;
 	time_t			oldms;
 	time_t			newms;
 	unsigned int	framems;

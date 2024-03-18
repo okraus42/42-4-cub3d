@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/13 16:23:58 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/18 12:56:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,47 +99,10 @@ void	ft_draw_minimap(t_max *max)
 		ft_place_line(max->minimap, max->map->p.miniray[r]);
 		++r;
 	}
-	r = 0;
-	
-	// while (r < RAYS)
-	// {	
-	// 	max->map->p.miniray[r].x[0] = MINIWIDTH / 2;
-	// 	max->map->p.miniray[r].y[0] = MINIHEIGHT / 2;
-	// 	max->map->p.miniray[r].ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 65536LL / (RAYS - 1) / 360;
-	// 	max->map->p.miniray[r].x[1] = MINIWIDTH / 2 - (((max->math->sin[max->map->p.miniray[r].ra]) * s) / 8192);
-	// 	max->map->p.miniray[r].y[1] = MINIHEIGHT / 2 - (((max->math->cos[max->map->p.miniray[r].ra]) * s) / 8192);
-	// 	max->map->p.miniray[r].c[0] = 0xffff00ff;
-	// 	max->map->p.miniray[r].c[1] = max->map->f.rgba;
-	// 	max->map->p.miniray[r].maxheight = MINIHEIGHT;
-	// 	max->map->p.miniray[r].maxwidth = MINIWIDTH;
-	// 	ft_place_line(max->minimap, max->map->p.miniray[r]);
-	// 	++r;
-	// }
-	// max->map->p.xl[0] = MINIWIDTH / 2;
-	// max->map->p.yl[0] = MINIHEIGHT / 2;
-	// max->map->p.xl[1] = MINIWIDTH / 2 - max->math->sin[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
-	// max->map->p.yl[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation + max->map->p.fov2)] * s / 16384;
-	// max->map->p.xr[0] = MINIWIDTH / 2;
-	// max->map->p.yr[0] = MINIHEIGHT / 2;
-	// max->map->p.xr[1] = MINIWIDTH / 2  - max->math->sin[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
-	// max->map->p.yr[1] = MINIHEIGHT / 2 - max->math->cos[(unsigned short)(max->map->p.orientation - max->map->p.fov2)] * s / 16384;
-	// ft_place_line(max->minimap, max->map->p.xx, max->map->p.yy, 0xff0000ff);
-	// ft_place_line(max->minimap, max->map->p.xl, max->map->p.yl, 0xffff00ff);
-	// ft_place_line(max->minimap, max->map->p.xr, max->map->p.yr, 0xffff00ff);
-	// max->map->p.xd[0] = MINIWIDTH / 2;;
-	// max->map->p.yd[0] = MINIHEIGHT / 2;
-	// max->map->p.xd[1] = max->map->p.xd[0] + max->map->p.dx * s / 16384;
-	// max->map->p.yd[1] = max->map->p.yd[0] + max->map->p.dy * s / 16384;
-	// ft_place_line(max->minimap, max->map->p.xd, max->map->p.yd, 0x0000ffff);
-	// max->map->p.xc[0] = max->map->p.xd[1];
-	// max->map->p.yc[0] = max->map->p.yd[1];
-	// max->map->p.xc[1] = max->map->p.xc[0] + max->map->p.cx * s / 16384;
-	// max->map->p.yc[1] = max->map->p.yc[0] + max->map->p.cy * s / 16384;
-	// ft_place_line(max->minimap, max->map->p.xc, max->map->p.yc, 0xff00ffff);
-	// max->map->p.xn[0] = max->map->p.xd[1];
-	// max->map->p.yn[0] = max->map->p.yd[1];
-	// max->map->p.xn[1] = max->map->p.xn[0] - max->map->p.cx * s / 16384;
-	// max->map->p.yn[1] = max->map->p.yn[0] - max->map->p.cy * s / 16384;
-	// ft_place_line(max->minimap, max->map->p.xn, max->map->p.yn, 0xffa0ffff);
+	if (DEBUGGING)
+	{
+		max->map->p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
+		ft_place_line(max->minimap, max->map->p.miniray[max->ray]);
+	}
 }
 
