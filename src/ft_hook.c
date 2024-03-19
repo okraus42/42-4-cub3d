@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 14:34:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:49:50 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,11 +410,25 @@ void	ft_debug(t_max *max)
 	}
 }
 
-void	ft_hook(void *param)
+void	ft_menuhook(t_max *max)
 {
-	t_max	*max;
+	if (mlx_is_key_down(max->mlx, MLX_KEY_UP))
+	{
+		max->menu.current_button = NEWGAME;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_DOWN))
+	{
+		max->menu.current_button = QUITGAME;
+	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_ENTER))
+	{
+		max->menu.enter = 1;
+	}
+	ft_menu(max);
+}
 
-	max = param;
+void	ft_gameplayhook(t_max *max)
+{
 	max->newms = ft_get_time_in_ms();
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
@@ -586,4 +600,15 @@ void	ft_hook(void *param)
 	//ft_printf("test2\n");
 	ft_draw_map(max);
 	ft_draw_minimap(max);
+}
+
+void	ft_hook(void *param)
+{
+	t_max	*max;
+
+	max = param;
+	if (max->game_mode == MENU)
+		ft_menuhook(max);
+	else if (max->game_mode == GAMEPLAY)
+		ft_gameplayhook(max);
 }

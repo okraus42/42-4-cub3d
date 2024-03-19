@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 12:29:13 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/19 16:02:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,20 @@ void	ft_amaze_standard(t_max *max)
 		//free everything
 		exit(10);
 	}
+	max->menuscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!screen || (mlx_image_to_window(mlx, max->menuscreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		exit(10);
+	}
 	max->mlx = mlx;
 	max->maximap = maximap;
 	max->minimap = minimap;
 	max->screen = screen;
 	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
+	ft_initmenu(max);
 	mlx_loop_hook(mlx, ft_hook, max);
 	mlx_loop(mlx);
 	if (max->t->nwall)

@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/03/13 13:07:30 by okraus           ###   ########.fr        #
+#    Updated: 2024/03/19 15:51:28 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ SRC_S		=	ft_cub3d.c \
 				ft_hook.c \
 				ft_parser.c \
 				ft_map.c \
+				ft_menu.c \
 				ft_minimap.c \
 				ft_rays.c \
 				ft_line.c

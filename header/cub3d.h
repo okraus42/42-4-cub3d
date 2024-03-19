@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 12:50:40 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:59:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,18 @@ typedef union u_clr
 # define WWALLCOLOUR 0x776600FF
 # define NOWALLCOLOUR 0xFFFF00FF
 
+//modes
+# define MENU 1
+# define GAMESTART 2
+# define GAMEPLAY 3
+# define GAMEWIN 4
+# define GAMELOSS 5
+# define NEXTLEVEL 6
+
+//buttons
+# define NEWGAME 1
+# define QUITGAME 2
+
 # define SQUARESIZE 65536
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
@@ -337,7 +349,6 @@ typedef struct s_player
 	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
 
-
 //add door textures and stuff later
 typedef struct s_map
 {
@@ -417,7 +428,16 @@ typedef struct s_textures
 	mlx_texture_t	*floor;
 }	t_textures;
 
-
+typedef struct s_menu
+{
+	int				current_button;
+	int				enter;
+	mlx_texture_t	*background;
+	mlx_texture_t	*new_game_button_on;
+	mlx_texture_t	*new_game_button_off;
+	mlx_texture_t	*quit_game_button_on;
+	mlx_texture_t	*quit_game_button_off;
+}	t_menu;
 
 typedef struct s_max
 {
@@ -427,6 +447,8 @@ typedef struct s_max
 	t_controls		key;
 	mlx_image_t		*background;
 	mlx_image_t		*hud;
+	mlx_image_t		*menuscreen;
+	t_menu			menu;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
@@ -443,6 +465,7 @@ typedef struct s_max
 	// int				score;
 	// int				exit;
 	// int				time;
+	int				game_mode;
 	int				mmode;
 	int				ray;
 	time_t			oldms;
@@ -454,7 +477,8 @@ typedef struct s_max
 // PROTOTYPES
 
 //parser.c
-int	ft_process_file(t_max *max);
+void	ft_load_texture(char *path, mlx_texture_t **texture);
+int		ft_process_file(t_max *max);
 
 //ft_game.c
 void	ft_amaze_standard(t_max *max);
@@ -475,5 +499,8 @@ void	ft_init_orays(t_max *max);
 //ft_line.c
 void	ft_place_line(mlx_image_t *img, t_line l);
 
+//ft_menu.c
+void	ft_initmenu(t_max *max);
+void	ft_menu(t_max *max);
 
 #endif
