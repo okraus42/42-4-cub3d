@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/19 15:49:50 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/21 16:50:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,6 +424,13 @@ void	ft_menuhook(t_max *max)
 	{
 		max->menu.enter = 1;
 	}
+	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
+	{
+		max->game_mode = GAMEPLAY;
+		max->menuscreen->enabled = 0;
+		// ft_printf("You have quit the game by pressing ESC.\n");
+		// mlx_close_window(max->mlx);
+	}
 	ft_menu(max);
 }
 
@@ -449,8 +456,10 @@ void	ft_gameplayhook(t_max *max)
 	//ft_printf("test\n");
 	if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	{
-		ft_printf("You have quit the game by pressing ESC.\n");
-		mlx_close_window(max->mlx);
+		max->game_mode = MENU;
+		max->menuscreen->enabled = 1;
+		// ft_printf("You have quit the game by pressing ESC.\n");
+		// mlx_close_window(max->mlx);
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_SPACE))	//sprinting, faster but slower turns LIMIT STAMINA
 	{
