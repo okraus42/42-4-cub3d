@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/19 15:59:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/22 15:50:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,16 @@ typedef union u_clr
 //buttons
 # define NEWGAME 1
 # define QUITGAME 2
+
+# define S_NEWGAME " NEW"
+# define S_QUITGAME "QUIT"
+# define S_SAVEGAME "SAVE"
+# define S_LOADGAME "LOAD"
+
+# define INACTIVE 1
+# define ACTIVE 2
+# define SELECTED 4
+# define ACTIVATED 8
 
 # define SQUARESIZE 65536
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
@@ -433,11 +443,17 @@ typedef struct s_menu
 	int				current_button;
 	int				enter;
 	mlx_texture_t	*background;
-	mlx_texture_t	*new_game_button_on;
-	mlx_texture_t	*new_game_button_off;
-	mlx_texture_t	*quit_game_button_on;
-	mlx_texture_t	*quit_game_button_off;
+	mlx_texture_t	*button;
+	// mlx_texture_t	*new_game_button_on;
+	// mlx_texture_t	*new_game_button_off;
+	// mlx_texture_t	*quit_game_button_on;
+	// mlx_texture_t	*quit_game_button_off;
 }	t_menu;
+
+typedef struct s_font
+{
+	mlx_texture_t	*asciitest;
+}	t_font;
 
 typedef struct s_max
 {
@@ -449,6 +465,7 @@ typedef struct s_max
 	mlx_image_t		*hud;
 	mlx_image_t		*menuscreen;
 	t_menu			menu;
+	t_font			font;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
@@ -502,5 +519,8 @@ void	ft_place_line(mlx_image_t *img, t_line l);
 //ft_menu.c
 void	ft_initmenu(t_max *max);
 void	ft_menu(t_max *max);
+
+//ft_keyhook.c
+void	ft_keyhook(mlx_key_data_t keydata, void *param);
 
 #endif

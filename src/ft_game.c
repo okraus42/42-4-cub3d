@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/19 16:02:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/22 12:34:23 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	ft_amaze_standard(t_max *max)
 	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);
+	mlx_key_hook(mlx, &ft_keyhook, max);
+	//mlx_mouse_hook(mlx, &mousehook, max);
 	mlx_loop_hook(mlx, ft_hook, max);
 	mlx_loop(mlx);
 	if (max->t->nwall)
