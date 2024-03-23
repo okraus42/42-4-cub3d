@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/22 15:47:50 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/23 15:04:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	ft_draw_button(t_max *max, int x, int y, char *str, int state)
 				c = (max->menu.button->pixels[a]) << 24 | (max->menu.button->pixels[a + 1]) << 16 | (max->menu.button->pixels[a + 2]) << 8 | (max->menu.button->pixels[a + 3]);
 			else
 				c = 0xFF00FFFF;
-			if (c == 0xFF00FFFF)
+			if (c & 0xFFFFFF00)
 			{
 				if (state & INACTIVE)
 					mlx_put_pixel(max->menuscreen, i + x, j + y, 0X7F7F7FFF);
