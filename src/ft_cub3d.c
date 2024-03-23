@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/19 15:17:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/23 16:23:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,29 +77,42 @@ void	ft_init_math(t_math *math)
 
 void	ft_cub3d(char *file)
 {
-	t_map		map;
-	t_max		max;
-	t_math		math;
-	t_textures	t;
+	t_map		*map;
+	t_max		*max;
+	t_math		*math;
+	t_textures	*t;
 
-	max.math = &math;
-	ft_init_math(max.math);
-	max.t = &t;
-	max.map = &map;
-	max.mlx = NULL;
-	max.key.one = 0;
-	max.frame = 0;
-	max.ray = 0;
-	max.mmode = 0;
-	max.game_mode = MENU;
-	max.oldms = ft_get_time_in_ms();
-	max.newms = 0;
+	max = NULL;
+	max = ft_calloc(sizeof(t_max), 1);
+	if (!max)
+		exit(11);
+	map = ft_calloc(sizeof(t_map), 1);
+	if (!map)
+		exit(11);
+	math = ft_calloc(sizeof(t_math), 1);
+	if (!math)
+		exit(11);
+	t = ft_calloc(sizeof(t_textures), 1);
+	if (!t)
+		exit(11);
+	max->math = math;
+	ft_init_math(max->math);
+	max->t = t;
+	max->map = map;
+	max->mlx = NULL;
+	max->key.one = 0;
+	max->frame = 0;
+	max->ray = 0;
+	max->mmode = 0;
+	max->game_mode = MENU;
+	max->oldms = ft_get_time_in_ms();
+	max->newms = 0;
 	if (file)
 	{
-		map.file = file;
-		if (ft_process_file(&max))
+		map->file = file;
+		if (ft_process_file(max))
 		{
-			ft_amaze_standard(&max);
+			ft_amaze_standard(max);
 		}
 		else
 		{
@@ -110,6 +123,10 @@ void	ft_cub3d(char *file)
 	{
 		ft_printf("Fun stuff happens here, one day.\n");
 	}
+	free(max);
+	free(t);
+	free(math);
+	free(map);
 }
 
 int	main(int ac, char *av[])
