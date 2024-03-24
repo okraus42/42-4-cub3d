@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 16:06:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/24 17:23:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,10 +240,9 @@ typedef union u_clr
 //map type
 # define CUSTOM 0
 # define RANDOM 1
-# define ONEMAP 2
-# define MTBACK 3
-# define MTCONTINUE 4
-# define MAPTYPEBUTTONCOUNT 5
+# define MTBACK 2
+# define MTCONTINUE 3
+# define MAPTYPEBUTTONCOUNT 4
 
 //map selection
 
@@ -580,6 +579,9 @@ typedef struct s_menu
 	int				current_button[BUTTONGROUPS];
 	int				current_buttongroup;
 	int				enter;
+	int				selection;
+	int				newmap;
+	//int			newlevel;
 	mlx_texture_t	*background;
 	mlx_texture_t	*button;
 	// t_button		yes;

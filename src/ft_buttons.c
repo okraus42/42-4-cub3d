@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 16:12:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/24 17:12:14 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,69 @@ void	ft_initbuttons(t_max *max)
 	max->menu.gamedifficultybuttons[GDCONTINUE].text.text = S_CONTINUE;
 	max->menu.gamedifficultybuttons[GDCONTINUE].text.sx = max->menu.gamedifficultybuttons[GDCONTINUE].x + 40;
 	max->menu.gamedifficultybuttons[GDCONTINUE].text.sy = max->menu.gamedifficultybuttons[GDCONTINUE].y + 40;
+	max->menu.gametypebuttons[CAMPAIGN] = button;
+	max->menu.gametypebuttons[CAMPAIGN].state = INACTIVE;
+	max->menu.gametypebuttons[CAMPAIGN].x = 600;
+	max->menu.gametypebuttons[CAMPAIGN].y = 100;
+	max->menu.gametypebuttons[CAMPAIGN].text.text = S_CAMPAIGN;
+	max->menu.gametypebuttons[CAMPAIGN].text.sx = max->menu.gametypebuttons[CAMPAIGN].x + 40;
+	max->menu.gametypebuttons[CAMPAIGN].text.sy = max->menu.gametypebuttons[CAMPAIGN].y + 40;
+	max->menu.gametypebuttons[TIMETRIAL] = button;
+	max->menu.gametypebuttons[TIMETRIAL].state = INACTIVE;
+	max->menu.gametypebuttons[TIMETRIAL].x = 1000;
+	max->menu.gametypebuttons[TIMETRIAL].y = 100;
+	max->menu.gametypebuttons[TIMETRIAL].text.text = S_TIMETRIAL;
+	max->menu.gametypebuttons[TIMETRIAL].text.sx = max->menu.gametypebuttons[TIMETRIAL].x + 40;
+	max->menu.gametypebuttons[TIMETRIAL].text.sy = max->menu.gametypebuttons[TIMETRIAL].y + 40;
+	max->menu.gametypebuttons[ONEMAP] = button;
+	max->menu.gametypebuttons[ONEMAP].state = ACTIVE;
+	max->menu.gametypebuttons[ONEMAP].x = 1400;
+	max->menu.gametypebuttons[ONEMAP].y = 100;
+	max->menu.gametypebuttons[ONEMAP].text.text = S_ONEMAP;
+	max->menu.gametypebuttons[ONEMAP].text.sx = max->menu.gametypebuttons[ONEMAP].x + 40;
+	max->menu.gametypebuttons[ONEMAP].text.sy = max->menu.gametypebuttons[ONEMAP].y + 40;
+	max->menu.gametypebuttons[GTBACK] = button;
+	max->menu.gametypebuttons[GTBACK].state = ACTIVE;
+	max->menu.gametypebuttons[GTBACK].x = 800;
+	max->menu.gametypebuttons[GTBACK].y = 300;
+	max->menu.gametypebuttons[GTBACK].text.text = S_BACK;
+	max->menu.gametypebuttons[GTBACK].text.sx = max->menu.gametypebuttons[GTBACK].x + 40;
+	max->menu.gametypebuttons[GTBACK].text.sy = max->menu.gametypebuttons[GTBACK].y + 40;
+	max->menu.gametypebuttons[GTCONTINUE] = button;
+	max->menu.gametypebuttons[GTCONTINUE].state = ACTIVE;
+	max->menu.gametypebuttons[GTCONTINUE].x = 1200;
+	max->menu.gametypebuttons[GTCONTINUE].y = 300;
+	max->menu.gametypebuttons[GTCONTINUE].text.text = S_CONTINUE;
+	max->menu.gametypebuttons[GTCONTINUE].text.sx = max->menu.gametypebuttons[GTCONTINUE].x + 40;
+	max->menu.gametypebuttons[GTCONTINUE].text.sy = max->menu.gametypebuttons[GTCONTINUE].y + 40;
+	max->menu.maptypebuttons[CUSTOM] = button;
+	max->menu.maptypebuttons[CUSTOM].state = ACTIVE;
+	max->menu.maptypebuttons[CUSTOM].x = 800;
+	max->menu.maptypebuttons[CUSTOM].y = 100;
+	max->menu.maptypebuttons[CUSTOM].text.text = S_CUSTOM;
+	max->menu.maptypebuttons[CUSTOM].text.sx = max->menu.maptypebuttons[CUSTOM].x + 40;
+	max->menu.maptypebuttons[CUSTOM].text.sy = max->menu.maptypebuttons[CUSTOM].y + 40;
+	max->menu.maptypebuttons[RANDOM] = button;
+	max->menu.maptypebuttons[RANDOM].state = ACTIVE;
+	max->menu.maptypebuttons[RANDOM].x = 1200;
+	max->menu.maptypebuttons[RANDOM].y = 100;
+	max->menu.maptypebuttons[RANDOM].text.text = S_RANDOM;
+	max->menu.maptypebuttons[RANDOM].text.sx = max->menu.maptypebuttons[RANDOM].x + 40;
+	max->menu.maptypebuttons[RANDOM].text.sy = max->menu.maptypebuttons[RANDOM].y + 40;
+	max->menu.maptypebuttons[MTBACK] = button;
+	max->menu.maptypebuttons[MTBACK].state = ACTIVE;
+	max->menu.maptypebuttons[MTBACK].x = 800;
+	max->menu.maptypebuttons[MTBACK].y = 860;
+	max->menu.maptypebuttons[MTBACK].text.text = S_BACK;
+	max->menu.maptypebuttons[MTBACK].text.sx = max->menu.maptypebuttons[MTBACK].x + 40;
+	max->menu.maptypebuttons[MTBACK].text.sy = max->menu.maptypebuttons[MTBACK].y + 40;
+	max->menu.maptypebuttons[MTCONTINUE] = button;
+	max->menu.maptypebuttons[MTCONTINUE].state = ACTIVE;
+	max->menu.maptypebuttons[MTCONTINUE].x = 1200;
+	max->menu.maptypebuttons[MTCONTINUE].y = 860;
+	max->menu.maptypebuttons[MTCONTINUE].text.text = S_CONTINUE;
+	max->menu.maptypebuttons[MTCONTINUE].text.sx = max->menu.maptypebuttons[MTCONTINUE].x + 40;
+	max->menu.maptypebuttons[MTCONTINUE].text.sy = max->menu.maptypebuttons[MTCONTINUE].y + 40;
 }
 
 void	ft_draw_button(t_button *b, int state)

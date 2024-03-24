@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 16:54:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/24 17:54:23 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 void	ft_initmenu(t_max *max)
 {
 	max->menu.enter = 0;
-	max->menu.current_button[0] = NEWGAME;
+	max->menu.current_button[MAINBUTTONS] = NEWGAME;
 	ft_load_texture("./textures/menu/labyrinth.png", &max->menu.background);
 	ft_load_texture("./textures/menu/button_small.png", &max->menu.button);
 	// ft_load_texture("./textures/menu/button_newgame_1_small.png",  &max->menu.new_game_button_on);
@@ -29,6 +29,10 @@ void	ft_initmenu(t_max *max)
 	//fonts
 	ft_load_texture("./textures/fonts/asciitest.png", &max->font.asciitest);
 	ft_initbuttons(max);
+	max->menu.selection = ONEMAP;
+	max->menu.newmap = CUSTOM;
+	max->menu.current_button[NEWSELECTION] = GTCONTINUE;
+	max->menu.current_button[NEWLEVEL] = MTCONTINUE;
 }
 
 // typedef struct s_text
@@ -111,6 +115,39 @@ void	ft_draw_menu(t_max *max)
 		ft_draw_button(&max->menu.gamedifficultybuttons[GDBACK], ACTIVE);
 		ft_draw_button(&max->menu.gamedifficultybuttons[GDCONTINUE], ACTIVE);
 	}
+	if (max->menu.current_buttongroup == NEWSELECTION)
+	{
+		// if (max->menu.selection == CAMPAIGN)
+		// 	ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVATED);
+		// else
+		// 	ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVE);
+		// if (max->menu.selection == TIMETRIAL)
+		// 	ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVATED);
+		// else
+		// 	ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], INACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], INACTIVE);
+		if (max->menu.selection == ONEMAP)
+			ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[GTBACK], ACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[GTCONTINUE], ACTIVE);
+	}
+	if (max->menu.current_buttongroup == NEWLEVEL)
+	{
+		if (max->menu.newmap == CUSTOM)
+			ft_draw_button(&max->menu.maptypebuttons[CUSTOM], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.maptypebuttons[CUSTOM], ACTIVE);
+		// if (max->menu.newmap == RANDOM)
+		// 	ft_draw_button(&max->menu.maptypebuttons[RANDOM], ACTIVATED);
+		// else
+		// 	ft_draw_button(&max->menu.maptypebuttons[RANDOM], ACTIVE);
+		ft_draw_button(&max->menu.maptypebuttons[RANDOM], INACTIVE);
+		ft_draw_button(&max->menu.maptypebuttons[MTBACK], ACTIVE);
+		ft_draw_button(&max->menu.maptypebuttons[MTCONTINUE], ACTIVE);
+	}
 }
 
 void	ft_selectbuttonmainmenu(t_max *max)
@@ -179,6 +216,72 @@ void	ft_selectbuttonnewdifficulty(t_max *max)
 	}
 }
 
+void	ft_selectbuttonnewselection(t_max *max)
+{
+	int	newbutton;
+
+	newbutton = max->menu.current_button[NEWSELECTION];
+	if (max->key.up)
+	{
+		while (newbutton > 0)
+		{
+			--newbutton;
+			if (max->menu.gametypebuttons[newbutton].state == ACTIVE)
+			{
+				max->menu.current_button[NEWSELECTION] = newbutton;
+				break ;
+			}
+		}
+		max->key.up = 0;
+	}
+	if (max->key.down)
+	{
+		while (newbutton < GAMETYPEBUTTONCOUNT - 1)
+		{
+			++newbutton;
+			if (max->menu.gametypebuttons[newbutton].state == ACTIVE)
+			{
+				max->menu.current_button[NEWSELECTION] = newbutton;
+				break ;
+			}
+		}
+		max->key.down = 0;
+	}
+}
+
+void	ft_selectbuttonnewlevel(t_max *max)
+{
+	int	newbutton;
+
+	newbutton = max->menu.current_button[NEWLEVEL];
+	if (max->key.up)
+	{
+		while (newbutton > 0)
+		{
+			--newbutton;
+			if (max->menu.maptypebuttons[newbutton].state == ACTIVE)
+			{
+				max->menu.current_button[NEWLEVEL] = newbutton;
+				break ;
+			}
+		}
+		max->key.up = 0;
+	}
+	if (max->key.down)
+	{
+		while (newbutton < MAPTYPEBUTTONCOUNT - 1)
+		{
+			++newbutton;
+			if (max->menu.maptypebuttons[newbutton].state == ACTIVE)
+			{
+				max->menu.current_button[NEWLEVEL] = newbutton;
+				break ;
+			}
+		}
+		max->key.down = 0;
+	}
+}
+
 void	ft_selectbutton(t_max *max)
 {
 	if (max->key.enter)
@@ -193,6 +296,14 @@ void	ft_selectbutton(t_max *max)
 	if (max->menu.current_buttongroup == NEWDIFFICULTY)
 	{
 		ft_selectbuttonnewdifficulty(max);
+	}
+	if (max->menu.current_buttongroup == NEWSELECTION)
+	{
+		ft_selectbuttonnewselection(max);
+	}
+	if (max->menu.current_buttongroup == NEWLEVEL)
+	{
+		ft_selectbuttonnewlevel(max);
 	}
 }
 
@@ -238,6 +349,51 @@ void	ft_draw_gamedifficultybuttons(t_max *max)
 		ft_draw_button(&max->menu.gamedifficultybuttons[GDCONTINUE], SELECTED);
 	}
 }
+
+void	ft_draw_gametypebuttons(t_max *max)
+{
+	if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
+	{
+		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], SELECTED);
+	}
+	else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
+	{
+		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], SELECTED);
+	}
+	else if (max->menu.current_button[NEWSELECTION] == ONEMAP)
+	{
+		ft_draw_button(&max->menu.gametypebuttons[ONEMAP], SELECTED);
+	}
+	else if (max->menu.current_button[NEWSELECTION] == GTBACK)
+	{
+		ft_draw_button(&max->menu.gametypebuttons[GTBACK], SELECTED);
+	}
+	else if (max->menu.current_button[NEWSELECTION] == GTCONTINUE)
+	{
+		ft_draw_button(&max->menu.gametypebuttons[GTCONTINUE], SELECTED);
+	}
+}
+
+void	ft_draw_maptypebuttons(t_max *max)
+{
+	if (max->menu.current_button[NEWLEVEL] == CUSTOM)
+	{
+		ft_draw_button(&max->menu.maptypebuttons[CUSTOM], SELECTED);
+	}
+	else if (max->menu.current_button[NEWLEVEL] == RANDOM)
+	{
+		ft_draw_button(&max->menu.maptypebuttons[RANDOM], SELECTED);
+	}
+	else if (max->menu.current_button[NEWLEVEL] == MTBACK)
+	{
+		ft_draw_button(&max->menu.maptypebuttons[MTBACK], SELECTED);
+	}
+	else if (max->menu.current_button[NEWLEVEL] == MTCONTINUE)
+	{
+		ft_draw_button(&max->menu.maptypebuttons[MTCONTINUE], SELECTED);
+	}
+}
+
 void	ft_menu(t_max *max)
 {
 	ft_selectbutton(max);
@@ -245,11 +401,14 @@ void	ft_menu(t_max *max)
 	ft_draw_mainmenubuttons(max);
 	if (max->menu.current_buttongroup == NEWDIFFICULTY)
 		ft_draw_gamedifficultybuttons(max);
+	if (max->menu.current_buttongroup == NEWSELECTION)
+		ft_draw_gametypebuttons(max);
+	if (max->menu.current_buttongroup == NEWLEVEL)
+		ft_draw_maptypebuttons(max);
 	//printf("%i\n", max->menu.current_buttongroup);
 	
 	if (max->menu.enter)
 	{
-		printf("enter\n");
 		max->menu.enter = 0;
 		if (max->menu.current_button[MAINBUTTONS] == RESUME)
 		{
@@ -282,7 +441,51 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWDIFFICULTY] == GDCONTINUE)
 				{
-					max->menu.current_button[NEWDIFFICULTY] = max->difficulty;
+					//max->menu.current_button[NEWDIFFICULTY] = max->difficulty;
+					max->menu.current_buttongroup = NEWSELECTION;
+				}
+			}
+			else if (max->menu.current_buttongroup == NEWSELECTION)
+			{
+				if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
+				{
+					max->menu.selection = CAMPAIGN;
+				}
+				else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
+				{
+					max->menu.selection = TIMETRIAL;
+				}
+				else if (max->menu.current_button[NEWSELECTION] == ONEMAP)
+				{
+					max->menu.selection = ONEMAP;
+				}
+				else if (max->menu.current_button[NEWSELECTION] == GTBACK)
+				{
+					max->menu.current_buttongroup = NEWDIFFICULTY;
+				}
+				else if (max->menu.current_button[NEWSELECTION] == GTCONTINUE)
+				{
+					//max->menu.current_button[NEWSELECTION] = max->menu.selection;
+					max->menu.current_buttongroup = NEWLEVEL;
+				}
+			}
+			else if (max->menu.current_buttongroup == NEWLEVEL)
+			{
+				if (max->menu.current_button[NEWLEVEL] == CUSTOM)
+				{
+					max->difficulty = CUSTOM;
+				}
+				else if (max->menu.current_button[NEWLEVEL] == RANDOM)
+				{
+					max->difficulty = RANDOM;
+				}
+				else if (max->menu.current_button[NEWLEVEL] == MTBACK)
+				{
+					max->menu.current_buttongroup = NEWSELECTION;
+				}
+				else if (max->menu.current_button[NEWLEVEL] == MTCONTINUE)
+				{
+					//max->menu.current_button[NEWLEVEL] = max->menu.newmap;
 					max->map->file = "maps/validmap4.cub";
 					if (ft_process_file(max))
 					{
