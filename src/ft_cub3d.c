@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/23 16:23:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/24 11:59:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	ft_cub3d(char *file)
 	}
 	else
 	{
-		ft_printf("Fun stuff happens here, one day.\n");
+		ft_amaze_bonus(max);;
 	}
 	free(max);
 	free(t);

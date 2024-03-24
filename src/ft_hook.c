@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/22 12:37:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/24 12:22:05 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,18 +412,7 @@ void	ft_debug(t_max *max)
 
 void	ft_menuhook(t_max *max)
 {
-	if (mlx_is_key_down(max->mlx, MLX_KEY_UP))
-	{
-		max->menu.current_button = NEWGAME;
-	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_DOWN))
-	{
-		max->menu.current_button = QUITGAME;
-	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_ENTER))
-	{
-		max->menu.enter = 1;
-	}
+	
 	// if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	// {
 	// 	max->game_mode = GAMEPLAY;

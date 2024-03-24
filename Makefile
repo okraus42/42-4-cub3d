@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/03/22 12:40:03 by okraus           ###   ########.fr        #
+#    Updated: 2024/03/24 10:52:58 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,8 @@ SRC_DIR		=	src/
 
 # cub3d functions
 
-SRC_S		=	ft_cub3d.c \
+SRC_S		=	ft_buttons.c \
+				ft_cub3d.c \
 				ft_game.c \
 				ft_hook.c \
 				ft_keyhook.c \
@@ -64,7 +65,8 @@ SRC_S		=	ft_cub3d.c \
 				ft_menu.c \
 				ft_minimap.c \
 				ft_parser.c \
-				ft_rays.c
+				ft_rays.c \
+				ft_text.c
 
 # Formating
 
