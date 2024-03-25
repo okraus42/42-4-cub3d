@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 11:54:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/25 13:31:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,27 @@ void	ft_draw_char(t_text *text)
 //(120) for the width of the character in the font.png
 void	ft_draw_text(t_text *text, int state)
 {
-	int	i;
+	int				i;
+	unsigned int	oldcb;
 
 	if (state & INACTIVE)
 		text->c = 0x666666FF;
 	else
 		text->c = 0xFF;
+	oldcb = text->cb;
 	i = 0;
 	text->x = text->sx;
 	text->y = text->sy;
 	while (text->text[i])
 	{
+		if (i == text->highlight)
+		{
+			text->cb = 0x00FF00FF;
+		}
+		else
+		{
+			text->cb = oldcb;
+		}
 		if (ft_isprint(text->text[i]))
 		{
 			text->offset = (text->text[i] - ' ') * 120;
@@ -83,4 +93,5 @@ void	ft_draw_text(t_text *text, int state)
 		}
 		++i;
 	}
+	text->cb = oldcb;
 }

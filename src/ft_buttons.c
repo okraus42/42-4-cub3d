@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 17:12:14 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/25 14:39:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	ft_initbuttons(t_max *max)
 	text.x = 0;
 	text.y = 0;
 	text.height = 60;
+	text.highlight = -1;
 	text.i = 0;
 	text.offset = 0;
 	button.button = max->menu.button;
@@ -107,6 +108,41 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mainbuttons[QUITGAME].text.text = S_QUITGAME;
 	max->menu.mainbuttons[QUITGAME].text.sx = max->menu.mainbuttons[QUITGAME].x + 40;
 	max->menu.mainbuttons[QUITGAME].text.sy = max->menu.mainbuttons[QUITGAME].y + 40;
+	max->menu.newwritingbuttons[NAME] = button;
+	max->menu.newwritingbuttons[NAME].state = ACTIVE;
+	max->menu.newwritingbuttons[NAME].x = 600;
+	max->menu.newwritingbuttons[NAME].y = 20;
+	max->menu.newwritingbuttons[NAME].text.text = S_NAME;
+	max->menu.newwritingbuttons[NAME].text.sx = max->menu.newwritingbuttons[NAME].x + 40;
+	max->menu.newwritingbuttons[NAME].text.sy = max->menu.newwritingbuttons[NAME].y + 40;
+	max->menu.newwritingbuttons[COALITION] = button;
+	max->menu.newwritingbuttons[COALITION].state = ACTIVE;
+	max->menu.newwritingbuttons[COALITION].x = 600;
+	max->menu.newwritingbuttons[COALITION].y = 300;
+	max->menu.newwritingbuttons[COALITION].text.text = S_COALITION;
+	max->menu.newwritingbuttons[COALITION].text.sx = max->menu.newwritingbuttons[COALITION].x + 40;
+	max->menu.newwritingbuttons[COALITION].text.sy = max->menu.newwritingbuttons[COALITION].y + 40;
+	max->menu.newwritingbuttons[CAMPUS] = button;
+	max->menu.newwritingbuttons[CAMPUS].state = ACTIVE;
+	max->menu.newwritingbuttons[CAMPUS].x = 600;
+	max->menu.newwritingbuttons[CAMPUS].y = 580;
+	max->menu.newwritingbuttons[CAMPUS].text.text = S_CAMPUS;
+	max->menu.newwritingbuttons[CAMPUS].text.sx = max->menu.newwritingbuttons[CAMPUS].x + 40;
+	max->menu.newwritingbuttons[CAMPUS].text.sy = max->menu.newwritingbuttons[CAMPUS].y + 40;
+	max->menu.newwritingbuttons[NWBACK] = button;
+	max->menu.newwritingbuttons[NWBACK].state = ACTIVE;
+	max->menu.newwritingbuttons[NWBACK].x = 800;
+	max->menu.newwritingbuttons[NWBACK].y = 860;
+	max->menu.newwritingbuttons[NWBACK].text.text = S_BACK;
+	max->menu.newwritingbuttons[NWBACK].text.sx = max->menu.newwritingbuttons[NWBACK].x + 40;
+	max->menu.newwritingbuttons[NWBACK].text.sy = max->menu.newwritingbuttons[NWBACK].y + 40;
+	max->menu.newwritingbuttons[NWCONTINUE] = button;
+	max->menu.newwritingbuttons[NWCONTINUE].state = ACTIVE;
+	max->menu.newwritingbuttons[NWCONTINUE].x = 1200;
+	max->menu.newwritingbuttons[NWCONTINUE].y = 860;
+	max->menu.newwritingbuttons[NWCONTINUE].text.text = S_CONTINUE;
+	max->menu.newwritingbuttons[NWCONTINUE].text.sx = max->menu.newwritingbuttons[NWCONTINUE].x + 40;
+	max->menu.newwritingbuttons[NWCONTINUE].text.sy = max->menu.newwritingbuttons[NWCONTINUE].y + 40;
 	max->menu.gamedifficultybuttons[EASY] = button;
 	max->menu.gamedifficultybuttons[EASY].state = ACTIVE;
 	max->menu.gamedifficultybuttons[EASY].x = 600;
@@ -180,14 +216,14 @@ void	ft_initbuttons(t_max *max)
 	max->menu.maptypebuttons[CUSTOM] = button;
 	max->menu.maptypebuttons[CUSTOM].state = ACTIVE;
 	max->menu.maptypebuttons[CUSTOM].x = 800;
-	max->menu.maptypebuttons[CUSTOM].y = 100;
+	max->menu.maptypebuttons[CUSTOM].y = 20;
 	max->menu.maptypebuttons[CUSTOM].text.text = S_CUSTOM;
 	max->menu.maptypebuttons[CUSTOM].text.sx = max->menu.maptypebuttons[CUSTOM].x + 40;
 	max->menu.maptypebuttons[CUSTOM].text.sy = max->menu.maptypebuttons[CUSTOM].y + 40;
 	max->menu.maptypebuttons[RANDOM] = button;
 	max->menu.maptypebuttons[RANDOM].state = ACTIVE;
 	max->menu.maptypebuttons[RANDOM].x = 1200;
-	max->menu.maptypebuttons[RANDOM].y = 100;
+	max->menu.maptypebuttons[RANDOM].y = 20;
 	max->menu.maptypebuttons[RANDOM].text.text = S_RANDOM;
 	max->menu.maptypebuttons[RANDOM].text.sx = max->menu.maptypebuttons[RANDOM].x + 40;
 	max->menu.maptypebuttons[RANDOM].text.sy = max->menu.maptypebuttons[RANDOM].y + 40;
@@ -198,13 +234,34 @@ void	ft_initbuttons(t_max *max)
 	max->menu.maptypebuttons[MTBACK].text.text = S_BACK;
 	max->menu.maptypebuttons[MTBACK].text.sx = max->menu.maptypebuttons[MTBACK].x + 40;
 	max->menu.maptypebuttons[MTBACK].text.sy = max->menu.maptypebuttons[MTBACK].y + 40;
-	max->menu.maptypebuttons[MTCONTINUE] = button;
-	max->menu.maptypebuttons[MTCONTINUE].state = ACTIVE;
-	max->menu.maptypebuttons[MTCONTINUE].x = 1200;
-	max->menu.maptypebuttons[MTCONTINUE].y = 860;
-	max->menu.maptypebuttons[MTCONTINUE].text.text = S_CONTINUE;
-	max->menu.maptypebuttons[MTCONTINUE].text.sx = max->menu.maptypebuttons[MTCONTINUE].x + 40;
-	max->menu.maptypebuttons[MTCONTINUE].text.sy = max->menu.maptypebuttons[MTCONTINUE].y + 40;
+	max->menu.mapselectionbuttons[CUSTOM] = button;
+	max->menu.mapselectionbuttons[CUSTOM].state = ACTIVE;
+	max->menu.mapselectionbuttons[CUSTOM].x = 800;
+	max->menu.mapselectionbuttons[CUSTOM].y = 20;
+	max->menu.mapselectionbuttons[CUSTOM].text.text = S_CUSTOM;
+	max->menu.mapselectionbuttons[CUSTOM].text.sx = max->menu.mapselectionbuttons[CUSTOM].x + 40;
+	max->menu.mapselectionbuttons[CUSTOM].text.sy = max->menu.mapselectionbuttons[CUSTOM].y + 40;
+	max->menu.mapselectionbuttons[RANDOM] = button;
+	max->menu.mapselectionbuttons[RANDOM].state = ACTIVE;
+	max->menu.mapselectionbuttons[RANDOM].x = 1200;
+	max->menu.mapselectionbuttons[RANDOM].y = 20;
+	max->menu.mapselectionbuttons[RANDOM].text.text = S_RANDOM;
+	max->menu.mapselectionbuttons[RANDOM].text.sx = max->menu.mapselectionbuttons[RANDOM].x + 40;
+	max->menu.mapselectionbuttons[RANDOM].text.sy = max->menu.mapselectionbuttons[RANDOM].y + 40;
+	max->menu.mapselectionbuttons[MSBACK] = button;
+	max->menu.mapselectionbuttons[MSBACK].state = ACTIVE;
+	max->menu.mapselectionbuttons[MSBACK].x = 800;
+	max->menu.mapselectionbuttons[MSBACK].y = 860;
+	max->menu.mapselectionbuttons[MSBACK].text.text = S_BACK;
+	max->menu.mapselectionbuttons[MSBACK].text.sx = max->menu.mapselectionbuttons[MSBACK].x + 40;
+	max->menu.mapselectionbuttons[MSBACK].text.sy = max->menu.mapselectionbuttons[MSBACK].y + 40;
+	max->menu.mapselectionbuttons[MSCONTINUE] = button;
+	max->menu.mapselectionbuttons[MSCONTINUE].state = ACTIVE;
+	max->menu.mapselectionbuttons[MSCONTINUE].x = 1200;
+	max->menu.mapselectionbuttons[MSCONTINUE].y = 860;
+	max->menu.mapselectionbuttons[MSCONTINUE].text.text = S_CONTINUE;
+	max->menu.mapselectionbuttons[MSCONTINUE].text.sx = max->menu.mapselectionbuttons[MSCONTINUE].x + 40;
+	max->menu.mapselectionbuttons[MSCONTINUE].text.sy = max->menu.mapselectionbuttons[MSCONTINUE].y + 40;
 }
 
 void	ft_draw_button(t_button *b, int state)

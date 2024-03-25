@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/03/24 10:52:58 by okraus           ###   ########.fr        #
+#    Updated: 2024/03/25 14:02:34 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ endif
 NAME		=	cub3d
 LIBFT_F		=	libft/
 LIBFT		=	libft.a
-HEADER		=	header/cub3d.h
+HEADER		=	header/cub3d.h header/menu.h
 LIBMLX		=	./.MLX42
 LIBS		=	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LHEADERS	=	-I ./include -I $(LIBMLX)/include
@@ -61,12 +61,14 @@ SRC_S		=	ft_buttons.c \
 				ft_hook.c \
 				ft_keyhook.c \
 				ft_line.c \
+				ft_listfield.c \
 				ft_map.c \
 				ft_menu.c \
 				ft_minimap.c \
 				ft_parser.c \
 				ft_rays.c \
-				ft_text.c
+				ft_text.c \
+				ft_textfield.c
 
 # Formating
 
