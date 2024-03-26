@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 12:22:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/26 16:10:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,7 @@ void	ft_move_player(t_map *map, int y, int x)
 	}
 }
 
+//makes map less visible
 void	ft_revisit_map(t_map *map)
 {
 	int	y;
@@ -578,8 +579,16 @@ void	ft_gameplayhook(t_max *max)
 	// 		max->mmode = 0;
 	// }
 	//ft_printf("test0\n");
-	if (!(max->frame % TICK))
-		ft_revisit_map(max->map);
+	if (max->difficulty == MEDIUM)
+	{
+		if (!(max->frame % TICK ))
+			ft_revisit_map(max->map);
+	}
+	else if (max->difficulty == HARD)
+	{
+		if (!(max->frame % 2))
+			ft_revisit_map(max->map);
+	}
 	
 	//ft_printf("test1\n");
 	//ft_init_rays(max);

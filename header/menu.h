@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/25 15:07:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/26 17:16:38 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,23 @@
 # define MSCONTINUE 3
 # define MAPSELECTIONBUTTONCOUNT 4
 
+// compile with libft.a
+// pass number for
+// width, height, ratio of dead ends, loops, T-intersections, X-intersections
+// notoverlapping room placement attempts, overlapping rooms placement attempts
+// chance to create extra doors (higher is better, 4096 is max)
+// chance to remove deadends 0 keeps deadends, 1 removes dead ends,
+// 2 - 1024 chance to remove percentage of deadends
+// like 52 26 4 5 3 2 20 10 25 512
+
 //random parametres
+//width || height
+//deadends || loops || T || X
+//rooms not overlapping || rooms overlapping
+// doors || deadends
+# define RBACK 2
+# define RCONTINUE 3
+# define RANDOMBUTTONCOUNT 4
 
 # define MAINBUTTONS 0		//resume-quit
 # define NEWWRITING 1		// name, coalition, campus 
@@ -142,6 +158,10 @@ typedef struct s_button
 	int				w;
 	int				h;
 	int				state;
+	struct s_button	*up;
+	struct s_button	*down;
+	struct s_button	*left;
+	struct s_button	*right;
 }	t_button;
 
 typedef struct s_textfield
@@ -186,6 +206,8 @@ typedef struct s_menu
 	int				selection;
 	int				newmap;
 	int				newwriting;
+	int				cm_state;
+	int				rm_state;
 	//int			newlevel;
 	mlx_texture_t	*background;
 	mlx_texture_t	*button;
@@ -200,6 +222,7 @@ typedef struct s_menu
 	t_button		gametypebuttons[GAMETYPEBUTTONCOUNT];
 	t_button		maptypebuttons[MAPTYPEBUTTONCOUNT];
 	t_button		mapselectionbuttons[MAPSELECTIONBUTTONCOUNT];
+	t_button		randomselectionbuttons[RANDOMBUTTONCOUNT];
 	t_listfield		custommap;
 }	t_menu;
 

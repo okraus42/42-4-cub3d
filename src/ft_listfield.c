@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/25 15:16:40 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/26 15:49:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	ft_draw_listfield(t_listfield *lf, int state)
 		++j;
 	}
 	//draw text
-	lf->text[i].cb = 0x00FF00FF;
+	lf->text[lf->highlight].cb = 0x00FF00FF;
 	ft_draw_text(&lf->text[0], state);
 	ft_draw_text(&lf->text[1], state);
 	ft_draw_text(&lf->text[2], state);
@@ -125,33 +125,20 @@ void	ft_choose_in_listfield(t_max *max, t_listfield *listfield)
 	int	i;
 
 	i = listfield->highlight;
+	listfield->text[i].cb = 0;
+	if (max->key.up)
+	{
+		--i;
+		max->key.up = 0;
+	}
+	if (max->key.down)
+	{
+		++i;
+		max->key.down = 0;
+	}
 	if (i < 0)
 		i = 0;
 	if (i > 4)
 		i = 4;
-	(void)max;
-	// if (!listfield->text.text[i])
-	// 	listfield->text.text[i] = 'A';
-	// if (max->key.left)
-	// {
-	// 	listfield->text.text[i] = '\0';
-	// 	--i;
-	// 	max->key.left = 0;
-	// }
-	// if (max->key.right)
-	// {
-	// 	++i;
-	// 	max->key.right = 0;
-	// }
-	// if (max->key.up && listfield->text.text[i] > ' ')
-	// {
-	// 	--listfield->text.text[i];
-	// 	max->key.up = 0;
-	// }
-	// if (max->key.down && listfield->text.text[i] < '~')
-	// {
-	// 	++listfield->text.text[i];
-	// 	max->key.down = 0;
-	// }
 	listfield->highlight = i;
 }

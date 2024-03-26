@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/25 14:39:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/26 17:03:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,34 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[MSCONTINUE].text.text = S_CONTINUE;
 	max->menu.mapselectionbuttons[MSCONTINUE].text.sx = max->menu.mapselectionbuttons[MSCONTINUE].x + 40;
 	max->menu.mapselectionbuttons[MSCONTINUE].text.sy = max->menu.mapselectionbuttons[MSCONTINUE].y + 40;
+	max->menu.randomselectionbuttons[CUSTOM] = button;
+	max->menu.randomselectionbuttons[CUSTOM].state = ACTIVE;
+	max->menu.randomselectionbuttons[CUSTOM].x = 800;
+	max->menu.randomselectionbuttons[CUSTOM].y = 20;
+	max->menu.randomselectionbuttons[CUSTOM].text.text = S_CUSTOM;
+	max->menu.randomselectionbuttons[CUSTOM].text.sx = max->menu.randomselectionbuttons[CUSTOM].x + 40;
+	max->menu.randomselectionbuttons[CUSTOM].text.sy = max->menu.randomselectionbuttons[CUSTOM].y + 40;
+	max->menu.randomselectionbuttons[RANDOM] = button;
+	max->menu.randomselectionbuttons[RANDOM].state = ACTIVE;
+	max->menu.randomselectionbuttons[RANDOM].x = 1200;
+	max->menu.randomselectionbuttons[RANDOM].y = 20;
+	max->menu.randomselectionbuttons[RANDOM].text.text = S_RANDOM;
+	max->menu.randomselectionbuttons[RANDOM].text.sx = max->menu.randomselectionbuttons[RANDOM].x + 40;
+	max->menu.randomselectionbuttons[RANDOM].text.sy = max->menu.randomselectionbuttons[RANDOM].y + 40;
+	max->menu.randomselectionbuttons[RBACK] = button;
+	max->menu.randomselectionbuttons[RBACK].state = ACTIVE;
+	max->menu.randomselectionbuttons[RBACK].x = 800;
+	max->menu.randomselectionbuttons[RBACK].y = 860;
+	max->menu.randomselectionbuttons[RBACK].text.text = S_BACK;
+	max->menu.randomselectionbuttons[RBACK].text.sx = max->menu.randomselectionbuttons[RBACK].x + 40;
+	max->menu.randomselectionbuttons[RBACK].text.sy = max->menu.randomselectionbuttons[RBACK].y + 40;
+	max->menu.randomselectionbuttons[RCONTINUE] = button;
+	max->menu.randomselectionbuttons[RCONTINUE].state = ACTIVE;
+	max->menu.randomselectionbuttons[RCONTINUE].x = 1200;
+	max->menu.randomselectionbuttons[RCONTINUE].y = 860;
+	max->menu.randomselectionbuttons[RCONTINUE].text.text = S_CONTINUE;
+	max->menu.randomselectionbuttons[RCONTINUE].text.sx = max->menu.randomselectionbuttons[RCONTINUE].x + 40;
+	max->menu.randomselectionbuttons[RCONTINUE].text.sy = max->menu.randomselectionbuttons[RCONTINUE].y + 40;
 }
 
 void	ft_draw_button(t_button *b, int state)
