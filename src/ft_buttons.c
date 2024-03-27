@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/26 17:03:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 18:33:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,30 +262,115 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[MSCONTINUE].text.text = S_CONTINUE;
 	max->menu.mapselectionbuttons[MSCONTINUE].text.sx = max->menu.mapselectionbuttons[MSCONTINUE].x + 40;
 	max->menu.mapselectionbuttons[MSCONTINUE].text.sy = max->menu.mapselectionbuttons[MSCONTINUE].y + 40;
-	max->menu.randomselectionbuttons[CUSTOM] = button;
-	max->menu.randomselectionbuttons[CUSTOM].state = ACTIVE;
-	max->menu.randomselectionbuttons[CUSTOM].x = 800;
-	max->menu.randomselectionbuttons[CUSTOM].y = 20;
-	max->menu.randomselectionbuttons[CUSTOM].text.text = S_CUSTOM;
-	max->menu.randomselectionbuttons[CUSTOM].text.sx = max->menu.randomselectionbuttons[CUSTOM].x + 40;
-	max->menu.randomselectionbuttons[CUSTOM].text.sy = max->menu.randomselectionbuttons[CUSTOM].y + 40;
-	max->menu.randomselectionbuttons[RANDOM] = button;
-	max->menu.randomselectionbuttons[RANDOM].state = ACTIVE;
-	max->menu.randomselectionbuttons[RANDOM].x = 1200;
-	max->menu.randomselectionbuttons[RANDOM].y = 20;
-	max->menu.randomselectionbuttons[RANDOM].text.text = S_RANDOM;
-	max->menu.randomselectionbuttons[RANDOM].text.sx = max->menu.randomselectionbuttons[RANDOM].x + 40;
-	max->menu.randomselectionbuttons[RANDOM].text.sy = max->menu.randomselectionbuttons[RANDOM].y + 40;
+// 	# define RWIDTH 0
+// # define RHEIGHT 1
+// # define RRATIODE 2 //deadends || loops || T || X
+// # define RRATIOLO 3
+// # define RRATIOTI 4
+// # define RRATIOXI 5
+// # define RNOROOMS 6
+// # define ROROOMS 7
+// # define RDOORS 8
+// # define RDEADENDS 9
+// # define RBACK 10
+// # define RCONTINUE 11
+// # define RANDOMBUTTONCOUNT 12
+	button.button = max->menu.buttonplus;
+	button.text.height = 40;
+	max->menu.randomselectionbuttons[RWIDTH] = button;
+	max->menu.randomselectionbuttons[RWIDTH].state = ACTIVE;
+	max->menu.randomselectionbuttons[RWIDTH].x = 700;
+	max->menu.randomselectionbuttons[RWIDTH].y = 20;
+	ft_snprintf(max->menu.randomselectionbuttons[RWIDTH].text.str, 19, "RWIDTH: %i", 32);
+	max->menu.randomselectionbuttons[RWIDTH].text.text = max->menu.randomselectionbuttons[RWIDTH].text.str;
+	max->menu.randomselectionbuttons[RWIDTH].text.sx = max->menu.randomselectionbuttons[RWIDTH].x + 110;
+	max->menu.randomselectionbuttons[RWIDTH].text.sy = max->menu.randomselectionbuttons[RWIDTH].y + 50;
+	max->menu.randomselectionbuttons[RHEIGHT] = button;
+	max->menu.randomselectionbuttons[RHEIGHT].state = ACTIVE;
+	max->menu.randomselectionbuttons[RHEIGHT].x = 1250;
+	max->menu.randomselectionbuttons[RHEIGHT].y = 20;
+	ft_snprintf(max->menu.randomselectionbuttons[RHEIGHT].text.str, 19, "RHEIGHT: %i", 32);
+	max->menu.randomselectionbuttons[RHEIGHT].text.text = max->menu.randomselectionbuttons[RHEIGHT].text.str;
+	max->menu.randomselectionbuttons[RHEIGHT].text.sx = max->menu.randomselectionbuttons[RHEIGHT].x + 110;
+	max->menu.randomselectionbuttons[RHEIGHT].text.sy = max->menu.randomselectionbuttons[RHEIGHT].y + 50;
+	max->menu.randomselectionbuttons[RRATIODE] = button;
+	max->menu.randomselectionbuttons[RRATIODE].state = ACTIVE;
+	max->menu.randomselectionbuttons[RRATIODE].x = 700;
+	max->menu.randomselectionbuttons[RRATIODE].y = 160;
+	ft_snprintf(max->menu.randomselectionbuttons[RRATIODE].text.str, 19, "RRATIODE: %i", 32);
+	max->menu.randomselectionbuttons[RRATIODE].text.text = max->menu.randomselectionbuttons[RRATIODE].text.str;
+	max->menu.randomselectionbuttons[RRATIODE].text.sx = max->menu.randomselectionbuttons[RRATIODE].x + 110;
+	max->menu.randomselectionbuttons[RRATIODE].text.sy = max->menu.randomselectionbuttons[RRATIODE].y + 50;
+	max->menu.randomselectionbuttons[RRATIOLO] = button;
+	max->menu.randomselectionbuttons[RRATIOLO].state = ACTIVE;
+	max->menu.randomselectionbuttons[RRATIOLO].x = 1250;
+	max->menu.randomselectionbuttons[RRATIOLO].y = 160;
+	ft_snprintf(max->menu.randomselectionbuttons[RRATIOLO].text.str, 19, "RRATIOLO: %i", 32);
+	max->menu.randomselectionbuttons[RRATIOLO].text.text = max->menu.randomselectionbuttons[RRATIOLO].text.str;
+	max->menu.randomselectionbuttons[RRATIOLO].text.sx = max->menu.randomselectionbuttons[RRATIOLO].x + 110;
+	max->menu.randomselectionbuttons[RRATIOLO].text.sy = max->menu.randomselectionbuttons[RRATIOLO].y + 50;
+	max->menu.randomselectionbuttons[RRATIOTI] = button;
+	max->menu.randomselectionbuttons[RRATIOTI].state = ACTIVE;
+	max->menu.randomselectionbuttons[RRATIOTI].x = 700;
+	max->menu.randomselectionbuttons[RRATIOTI].y = 300;
+	ft_snprintf(max->menu.randomselectionbuttons[RRATIOTI].text.str, 19, "RRATIOTI: %i", 32);
+	max->menu.randomselectionbuttons[RRATIOTI].text.text = max->menu.randomselectionbuttons[RRATIOTI].text.str;
+	max->menu.randomselectionbuttons[RRATIOTI].text.sx = max->menu.randomselectionbuttons[RRATIOTI].x + 110;
+	max->menu.randomselectionbuttons[RRATIOTI].text.sy = max->menu.randomselectionbuttons[RRATIOTI].y + 50;
+	max->menu.randomselectionbuttons[RRATIOXI] = button;
+	max->menu.randomselectionbuttons[RRATIOXI].state = ACTIVE;
+	max->menu.randomselectionbuttons[RRATIOXI].x = 1250;
+	max->menu.randomselectionbuttons[RRATIOXI].y = 300;
+	ft_snprintf(max->menu.randomselectionbuttons[RRATIOXI].text.str, 19, "RRATIOXI: %i", 32);
+	max->menu.randomselectionbuttons[RRATIOXI].text.text = max->menu.randomselectionbuttons[RRATIOXI].text.str;
+	max->menu.randomselectionbuttons[RRATIOXI].text.sx = max->menu.randomselectionbuttons[RRATIOXI].x + 110;
+	max->menu.randomselectionbuttons[RRATIOXI].text.sy = max->menu.randomselectionbuttons[RRATIOXI].y + 50;
+	max->menu.randomselectionbuttons[RNOROOMS] = button;
+	max->menu.randomselectionbuttons[RNOROOMS].state = ACTIVE;
+	max->menu.randomselectionbuttons[RNOROOMS].x = 700;
+	max->menu.randomselectionbuttons[RNOROOMS].y = 440;
+	ft_snprintf(max->menu.randomselectionbuttons[RNOROOMS].text.str, 19, "RNOROOMS: %i", 32);
+	max->menu.randomselectionbuttons[RNOROOMS].text.text = max->menu.randomselectionbuttons[RNOROOMS].text.str;
+	ft_printf("%s\n", max->menu.randomselectionbuttons[RNOROOMS].text.str);
+	ft_printf("%s\n", max->menu.randomselectionbuttons[RNOROOMS].text.text);
+	max->menu.randomselectionbuttons[RNOROOMS].text.sx = max->menu.randomselectionbuttons[RNOROOMS].x + 110;
+	max->menu.randomselectionbuttons[RNOROOMS].text.sy = max->menu.randomselectionbuttons[RNOROOMS].y + 50;
+	max->menu.randomselectionbuttons[ROROOMS] = button;
+	max->menu.randomselectionbuttons[ROROOMS].state = ACTIVE;
+	max->menu.randomselectionbuttons[ROROOMS].x = 1250;
+	max->menu.randomselectionbuttons[ROROOMS].y = 440;
+	ft_snprintf(max->menu.randomselectionbuttons[ROROOMS].text.str, 19, "ROROOMS: %i", 32);
+	max->menu.randomselectionbuttons[ROROOMS].text.text = max->menu.randomselectionbuttons[ROROOMS].text.str;
+	max->menu.randomselectionbuttons[ROROOMS].text.sx = max->menu.randomselectionbuttons[ROROOMS].x + 110;
+	max->menu.randomselectionbuttons[ROROOMS].text.sy = max->menu.randomselectionbuttons[ROROOMS].y + 50;
+	max->menu.randomselectionbuttons[RDOORS] = button;
+	max->menu.randomselectionbuttons[RDOORS].state = ACTIVE;
+	max->menu.randomselectionbuttons[RDOORS].x = 700;
+	max->menu.randomselectionbuttons[RDOORS].y = 580;
+	ft_snprintf(max->menu.randomselectionbuttons[RDOORS].text.str, 19, "RDOORS: %i", 32);
+	max->menu.randomselectionbuttons[RDOORS].text.text = max->menu.randomselectionbuttons[RDOORS].text.str;
+	max->menu.randomselectionbuttons[RDOORS].text.sx = max->menu.randomselectionbuttons[RDOORS].x + 110;
+	max->menu.randomselectionbuttons[RDOORS].text.sy = max->menu.randomselectionbuttons[RDOORS].y + 50;
+	max->menu.randomselectionbuttons[RDEADENDS] = button;
+	max->menu.randomselectionbuttons[RDEADENDS].state = ACTIVE;
+	max->menu.randomselectionbuttons[RDEADENDS].x = 1250;
+	max->menu.randomselectionbuttons[RDEADENDS].y = 580;
+	ft_snprintf(max->menu.randomselectionbuttons[RDEADENDS].text.str, 19, "RDEADENDS: %i", 32);
+	max->menu.randomselectionbuttons[RDEADENDS].text.text = max->menu.randomselectionbuttons[RDEADENDS].text.str;
+	max->menu.randomselectionbuttons[RDEADENDS].text.sx = max->menu.randomselectionbuttons[RDEADENDS].x + 110;
+	max->menu.randomselectionbuttons[RDEADENDS].text.sy = max->menu.randomselectionbuttons[RDEADENDS].y + 50;
+	button.text.height = 60;
+	button.button = max->menu.button;
 	max->menu.randomselectionbuttons[RBACK] = button;
 	max->menu.randomselectionbuttons[RBACK].state = ACTIVE;
-	max->menu.randomselectionbuttons[RBACK].x = 800;
+	max->menu.randomselectionbuttons[RBACK].x = 850;
 	max->menu.randomselectionbuttons[RBACK].y = 860;
 	max->menu.randomselectionbuttons[RBACK].text.text = S_BACK;
 	max->menu.randomselectionbuttons[RBACK].text.sx = max->menu.randomselectionbuttons[RBACK].x + 40;
 	max->menu.randomselectionbuttons[RBACK].text.sy = max->menu.randomselectionbuttons[RBACK].y + 40;
 	max->menu.randomselectionbuttons[RCONTINUE] = button;
 	max->menu.randomselectionbuttons[RCONTINUE].state = ACTIVE;
-	max->menu.randomselectionbuttons[RCONTINUE].x = 1200;
+	max->menu.randomselectionbuttons[RCONTINUE].x = 1250;
 	max->menu.randomselectionbuttons[RCONTINUE].y = 860;
 	max->menu.randomselectionbuttons[RCONTINUE].text.text = S_CONTINUE;
 	max->menu.randomselectionbuttons[RCONTINUE].text.sx = max->menu.randomselectionbuttons[RCONTINUE].x + 40;

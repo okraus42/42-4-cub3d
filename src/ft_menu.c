@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 12:27:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 18:41:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	ft_initmenu(t_max *max)
 	max->menu.current_button[MAINBUTTONS] = NEWGAME;
 	ft_load_texture("./textures/menu/labyrinth.png", &max->menu.background);
 	ft_load_texture("./textures/menu/button_small.png", &max->menu.button);
+	ft_load_texture("./textures/menu/buttonplus.png", &max->menu.buttonplus);
 	ft_load_texture("./textures/menu/textfield.png", &max->menu.textfield);
 	ft_load_texture("./textures/menu/listfield.png", &max->menu.listfield);
 	// ft_load_texture("./textures/menu/button_newgame_1_small.png",  &max->menu.new_game_button_on);
@@ -198,10 +199,18 @@ void	ft_draw_menu(t_max *max)
 	}
 	if (max->menu.current_buttongroup == NEWRANDOM)
 	{
-		ft_draw_button(&max->menu.randomselectionbuttons[CUSTOM], ACTIVE);
-		ft_draw_button(&max->menu.randomselectionbuttons[RANDOM], ACTIVATED);
-		ft_draw_button(&max->menu.randomselectionbuttons[MSBACK], ACTIVE);
-		ft_draw_button(&max->menu.randomselectionbuttons[MSCONTINUE], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RWIDTH], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RHEIGHT], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RRATIODE], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RRATIOLO], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RRATIOTI], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RRATIOXI], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RNOROOMS], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[ROROOMS], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RDOORS], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RDEADENDS], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RBACK], ACTIVE);
+		ft_draw_button(&max->menu.randomselectionbuttons[RCONTINUE], ACTIVE);
 	}
 	//draw optionbuttons
 }
@@ -428,7 +437,11 @@ void	ft_selectbuttonnewrandom(t_max *max)
 {
 	int	newbutton;
 
+	// check random state to see which button is pressed and allow to change values
+	// get the plus and minus key presses and store them in key struct
+	// struct: ((string current value, min allowed value, max allowed value,)) button,
 	newbutton = max->menu.current_button[NEWRANDOM];
+	
 	if (max->key.up)
 	{
 		while (newbutton > 0)
@@ -862,7 +875,7 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWMAP] == MSBACK)
 				{
-					max->menu.current_buttongroup = NEWSELECTION;
+					max->menu.current_buttongroup = NEWLEVEL;
 				}
 				else if (max->menu.current_button[NEWMAP] == MSCONTINUE)
 				{
@@ -882,6 +895,9 @@ void	ft_menu(t_max *max)
 					}
 				}
 			}
+			//
+			// THIS NEEDS UPDATES to check which button is pressed and change its state
+			//
 			else if (max->menu.current_buttongroup == NEWRANDOM)
 			{
 				if (max->menu.current_button[NEWRANDOM] == CUSTOM)
@@ -906,7 +922,7 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWRANDOM] == RBACK)
 				{
-					max->menu.current_buttongroup = NEWSELECTION;
+					max->menu.current_buttongroup = NEWLEVEL;
 				}
 				else if (max->menu.current_button[NEWRANDOM] == RCONTINUE)
 				{

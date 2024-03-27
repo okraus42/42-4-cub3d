@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 11:27:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 18:36:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,19 @@
 //deadends || loops || T || X
 //rooms not overlapping || rooms overlapping
 // doors || deadends
-# define RBACK 2
-# define RCONTINUE 3
-# define RANDOMBUTTONCOUNT 4
+# define RWIDTH 0
+# define RHEIGHT 1
+# define RRATIODE 2 //deadends || loops || T || X
+# define RRATIOLO 3
+# define RRATIOTI 4
+# define RRATIOXI 5
+# define RNOROOMS 6
+# define ROROOMS 7
+# define RDOORS 8
+# define RDEADENDS 9
+# define RBACK 10
+# define RCONTINUE 11
+# define RANDOMBUTTONCOUNT 12
 
 # define MAINBUTTONS 0		//resume-quit
 # define NEWWRITING 1		// name, coalition, campus 
@@ -136,6 +146,7 @@ typedef struct s_text
 	mlx_texture_t	*font;
 	mlx_image_t		*image;
 	char			*text;
+	char			str[20];
 	unsigned int	c;
 	unsigned int	cb;
 	int				sx;
@@ -209,9 +220,11 @@ typedef struct s_menu
 	int				newwriting;
 	int				cm_state;
 	int				rm_state;
+	int				random_state[RANDOMBUTTONCOUNT];
 	//int			newlevel;
 	mlx_texture_t	*background;
 	mlx_texture_t	*button;
+	mlx_texture_t	*buttonplus;
 	mlx_texture_t	*textfield;
 	mlx_texture_t	*listfield;
 	// t_button		yes;
