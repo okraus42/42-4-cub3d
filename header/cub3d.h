@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/25 14:48:48 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 12:47:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,23 +340,23 @@ typedef struct s_player
 typedef struct s_map
 {
 	unsigned long long	m[65536];		//1d array of map representation
-	char			*file;			//original mapfile string
-	char			*mapstr;		//actual content of the file
-	char			*northtexture;	//path to the north texture
-	char			*southtexture;
-	char			*westtexture;
-	char			*easttexture;
-	t_clr			f;			//floor colour
-	t_clr			c;			//ceiling colour
-	t_clr			b;			//optional brume colour
-	int				valid;		//1 if valid map
-	int				w;			//256
-	int				ww;			//width of actual map
-	int				h;			//256
-	int				hh;			//height of actual map
-	t_player		p;			//player pos and orientation
-	unsigned int	e;			//position of exit on map, future stuff
-	//t_door			**d;		//doors for bonus, NULL terminated array
+	char				*file;			//original mapfile string
+	char				*mapstr;		//actual content of the file
+	char				*northtexture;	//path to the north texture
+	char				*southtexture;
+	char				*westtexture;
+	char				*easttexture;
+	t_clr				f;				//floor colour
+	t_clr				c;				//ceiling colour
+	t_clr				b;				//optional brume colour
+	int					valid;			//1 if valid map
+	int					w;				//256
+	int					ww;				//width of actual map
+	int					h;				//256
+	int					hh;				//height of actual map
+	t_player			p;				//player pos and orientation
+	unsigned int		e;				//position of exit on map, future stuff
+	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
 
 typedef struct s_highscore
@@ -481,8 +481,14 @@ void	ft_choose_in_listfield(t_max *max, t_listfield *listfield);
 void	ft_draw_text(t_text *text, int state);
 
 //parser.c
+void	ft_init_brume(t_max *max);
+void	ft_print_map(t_map *map);
+void	ft_fill_colours_to_map(t_map *map);
 void	ft_load_texture(char *path, mlx_texture_t **texture);
 int		ft_process_file(t_max *max);
+
+//ft_random.map.c
+int		ft_process_random(t_max *max);
 
 //ft_game.c
 void	ft_amaze_standard(t_max *max);

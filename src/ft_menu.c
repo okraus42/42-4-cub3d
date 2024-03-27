@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/26 17:37:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 12:27:10 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -911,8 +911,8 @@ void	ft_menu(t_max *max)
 				else if (max->menu.current_button[NEWRANDOM] == RCONTINUE)
 				{
 					//max->menu.current_button[NEWLEVEL] = max->menu.newmap;
-					max->map->file = "maps/validmap4.cub";
-					if (ft_process_file(max))
+					max->map->file = "RANDOM";
+					if (ft_process_random(max))
 					{
 						max->game_mode = GAMEPLAY;
 						max->menu.current_button[MAINBUTTONS] = RESUME;

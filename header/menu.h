@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/26 17:16:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 11:27:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@
 // chance to remove deadends 0 keeps deadends, 1 removes dead ends,
 // 2 - 1024 chance to remove percentage of deadends
 // like 52 26 4 5 3 2 20 10 25 512
+//	++ floor colour || ceiling colour || fog colour
 
 //random parametres
 //width || height

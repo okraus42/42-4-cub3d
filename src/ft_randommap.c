@@ -1,18 +1,578 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   extraplusmazegen.c                                 :+:      :+:    :+:   */
+/*   ft_randommap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/29 13:32:35 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 11:39:38 by okraus           ###   ########.fr       */
+/*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
+/*   Updated: 2024/03/27 13:13:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/header/libft.h"
-#include <math.h>
-#include <time.h>
+#include "../header/cub3d.h"
+
+// generate map
+// player coordiantes and orientation
+// colours
+// textures
+
+// void	ft_load_texture(char *path, mlx_texture_t **texture)
+// {
+// 	if (access(path, R_OK) < 0)
+// 	{
+// 		ft_dprintf(2, "Cannot open north texture\n");
+// 		exit(-3);
+// 	}
+// 	*texture = mlx_load_png(path);
+// 	if (!*texture)
+// 		exit(-4);
+// }
+
+// int	ft_init_textures(t_max *max)
+// {
+// 	ft_load_texture(max->map->northtexture, &max->t->nwall);
+// 	ft_load_texture(max->map->westtexture, &max->t->wwall);
+// 	ft_load_texture(max->map->southtexture, &max->t->swall);
+// 	ft_load_texture(max->map->easttexture, &max->t->ewall);
+// 	return (1);
+// }
+
+static void	ft_map_init(t_map *map)
+{
+	int	i;
+
+	map->mapstr = NULL;
+	map->northtexture = NULL;
+	map->southtexture = NULL;
+	map->westtexture = NULL;
+	map->easttexture = NULL;
+	//map->d = NULL;
+	map->valid = 1;
+	map->e = -1;
+	map->p.orientation = -1;
+	map->p.x = 0;
+	map->p.y = 0;
+	map->p.speed = 16;
+	map->p.turnspeed = 512;
+	map->p.xspeed = 0;
+	map->p.yspeed = 0;
+	map->p.fov = FOV;
+	map->p.fov2 = map->p.fov * 65536 / 720;
+	map->h = 0;
+	map->w = 0;
+	map->f.rgba = 0x004488FF;
+	map->c.rgba = 0xFFAA66FF;
+	map->b.rgba = 0xFF;
+	i = 0;
+	while (i < 65536)
+	{
+		map->m[i] = 0;
+		++i;
+	}
+}
+
+// static int	ft_puterror(char *err, int r)
+// {
+// 	ft_dprintf(2, "Error\n");
+// 	if (err)
+// 		ft_dprintf(2, "%s\n", err);
+// 	return (r);
+// }
+
+// static void	ft_freemap(t_map *map)
+// {
+// 	if (map->mapstr)
+// 		free(map->mapstr);
+// 	map->mapstr = NULL;
+// 	if (map->northtexture)
+// 		free(map->northtexture);
+// 	map->northtexture = NULL;
+// 	if (map->southtexture)
+// 		free(map->southtexture);
+// 	map->southtexture = NULL;
+// 	if (map->westtexture)
+// 		free(map->westtexture);
+// 	map->westtexture = NULL;
+// 	if (map->easttexture)
+// 		free(map->easttexture);
+// 	map->easttexture = NULL;
+// 	// if (map->d)
+// 	// 	free(map->d); //door need better freeing
+// 	// map->d = NULL;
+// }
+
+// static void	ft_exit(t_max *max, int exitcode)
+// {
+// 	//free map; and all
+// 	ft_freemap(max->map);
+// 	exit(exitcode);
+// }
+
+// int	ft_checkfileextension(char *s)
+// {
+// 	int	l;
+
+// 	if (!s)
+// 		return (0);
+// 	l = ft_strlen(s);
+// 	if (l < 5)
+// 		return (0);
+// 	--l;
+// 	if (s[l] != 'b' || s[l - 1] != 'u' || s[l - 2] != 'c' || s[l - 3] != '.')
+// 		return (0);
+// 	return (1);
+// }
+
+// int	ft_read_map(t_map *map)
+// {
+// 	int	fd;
+// 	int	r;
+
+// 	if (!ft_checkfileextension(map->file))
+// 		return (ft_puterror("Invalid file name", 0));
+// 	fd = open(map->file, O_RDONLY);
+// 	if (fd < 0)
+// 		return (ft_puterror("Could not open the file", 0));
+// 	map->mapstr = ft_calloc(69632 + 1, sizeof(char));
+// 	if (!map->mapstr)
+// 		return (ft_puterror("Malloc failure", 0));
+// 	r = read(fd, map->mapstr, 69632);
+// 	if (r <= 0)
+// 		return (ft_puterror("Reading error", 0));
+// 	if (r == 69632)
+// 		return (ft_puterror("File too big", 0));
+// 	r = close(fd);
+// 	if (r < 0)
+// 		return (ft_puterror("Unexpected error closing the file", 0));
+// 	return (1);
+// }
+
+// need to check for invalid texture paths as well
+// int	ft_fill_textures(t_map *map)
+// {
+// 	char	**split;
+// 	int		j;
+
+// 	split = ft_split(map->mapstr, '\n');
+// 	if (!split)
+// 		return(ft_puterror("Malloc error", 0));
+// 	j = 0;
+// 	while (split[j])
+// 	{
+// 		if (!ft_strncmp(split[j], "NO ", 3))
+// 			map->northtexture = ft_strdup(&split[j][3]);
+// 		if (!ft_strncmp(split[j], "SO ", 3))
+// 			map->southtexture = ft_strdup(&split[j][3]);
+// 		if (!ft_strncmp(split[j], "WE ", 3))
+// 			map->westtexture = ft_strdup(&split[j][3]);
+// 		if (!ft_strncmp(split[j], "EA ", 3))
+// 			map->easttexture = ft_strdup(&split[j][3]);
+// 		++j;
+// 	}
+// 	ft_free_split(&split);
+// 	if (!map->northtexture || !map->southtexture || !map->westtexture
+// 		|| !map->easttexture)
+// 		return(ft_puterror("Missing texture path", 0));
+// 	return (1);
+// }
+
+// int	ft_fill_colour2(char **split, int c, t_map *map)
+// {
+// 	if (c == 'F')
+// 	{
+// 		map->f.r = ft_atoi(split[0]);
+// 		map->f.g = ft_atoi(split[1]);
+// 		map->f.b = ft_atoi(split[2]);
+// 		map->f.a = 0xFF;
+// 	}
+// 	if (c == 'C')
+// 	{
+// 		map->c.r = ft_atoi(split[0]);
+// 		map->c.g = ft_atoi(split[1]);
+// 		map->c.b = ft_atoi(split[2]);
+// 		map->c.a = 0xFF;
+// 	}
+// 	if (c == 'B')
+// 	{
+// 		map->b.r = ft_atoi(split[0]);
+// 		map->b.g = ft_atoi(split[1]);
+// 		map->b.b = ft_atoi(split[2]);
+// 		map->b.a = 0xFF;
+// 	}
+// 	ft_free_split(&split);
+// 	return (1);
+// }
+
+// int	ft_fill_colour(int c, char *s, t_map *map, int j)
+// {
+// 	char	**split;
+// 	int		i;
+
+// 	split = ft_split(s, ',');
+// 	if (!split)
+// 		return(ft_puterror("Malloc error", 0));
+// 	while (j < 3)
+// 	{
+// 		i = 0;
+// 		while (split[j][i])
+// 		{
+// 			if (!ft_isdigit(split[j][i]))
+// 			{
+// 				ft_free_split(&split);
+// 				return(ft_puterror("Invalid character in colour", 0));
+// 			}
+// 			++i;
+// 		}
+// 		if (i > 3 || j > 2 || ft_atoi(split[j]) > 255)
+// 		{
+// 			ft_free_split(&split);
+// 			return(ft_puterror("Colour format is not right", 0));
+// 		}
+// 		++j;
+// 	}
+// 	return (ft_fill_colour2(split, c, map));
+// }
+
+// int	ft_fill_colours(t_map *map)
+// {
+// 	char	**split;
+// 	int		j;
+
+// 	split = ft_split(map->mapstr, '\n');
+// 	if (!split)
+// 		return(ft_puterror("Malloc error", 0));
+// 	j = 0;
+// 	while (split[j])
+// 	{
+// 		if (!ft_strncmp(split[j], "F ", 2) || !ft_strncmp(split[j], "C ", 2)
+// 			|| !ft_strncmp(split[j], "B ", 2))
+// 			if (!ft_fill_colour(split[j][0], &split[j][2], map, 0))
+// 			{
+// 				ft_free_split(&split);
+// 				return (0);
+// 			}
+// 		++j;
+// 	}
+// 	ft_free_split(&split);
+// 	if (!map->c.rgba || !map->f.rgba)
+// 		return(ft_puterror("Missing floor or ceiling colour, aborting...", 0));
+// 	return (1);
+// }
+
+// int	ft_check_map(t_map *map, char **split, int j, int a)
+// {
+// 	int	p;
+// 	int	i;
+
+// 	p = 0;
+// 	while (split[j])
+// 	{
+// 		i = 0;
+// 		while (split[j][i])
+// 		{
+// 			if (!ft_strchr(" 01NSEW", split[j][i]))
+// 			{
+// 				ft_free_split(&split);
+// 				return(ft_puterror("Invalid character in map", 0));
+// 			}
+// 			if (ft_strchr("NSEW", split[j][i]))
+// 				++p;
+// 			++i;
+// 			map->w = MAX(map->w, i);
+// 		}
+// 		++j;
+// 	}
+// 	map->h = j - a;
+// 	if (p != 1)
+// 	{
+// 		ft_free_split(&split);
+// 		if (!p)
+// 			return(ft_puterror("No player location in the map", 0));
+// 		else
+// 			return(ft_puterror("Too many player locations in map", 0));
+// 	}
+// 	if (map->w < 3 || map->h <3 || map->w > 256 || map->h > 256)
+// 	{
+// 		ft_free_split(&split);
+// 		return(ft_puterror("Wrong map dimensions, minimum size is 3x3", 0));
+// 	}
+// 	map->ww = map->w;
+// 	map->w = 256;
+// 	map->hh = map->h;
+// 	map->h = 256;
+// 	return (1);
+// }
+
+// void	ft_fill_array3(t_map *map, char c, int y, int x)
+// {
+// 	if (c == '0')
+// 		map->m[y * map->w + x] = FLOOR1;
+// 	else if (c == '1')
+// 		map->m[y * map->w + x] = WALL1;
+// 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
+// 	{
+// 		map->m[y * map->w + x] = FLOOR1;
+// 		map->p.mx = x;
+// 		map->p.my = y;
+// 		map->p.sx = 0x7f7f;
+// 		map->p.sy = 0x7f7f;
+// 		map->p.unused_x = 0;
+// 		map->p.unused_y = 0;
+// 		if (c == 'N')
+// 		{
+// 			map->p.orientation = NORTH;
+// 		}
+// 		else if (c == 'W')
+// 		{
+// 			map->p.orientation = WEST;
+// 		}
+// 		else if (c == 'S')
+// 		{
+// 			map->p.orientation = SOUTH;
+// 		}
+// 		else if (c == 'E')
+// 		{
+// 			map->p.orientation = EAST;
+// 		}
+// 	}
+// }
+
+// FLOORWN = 0x10,
+// FLOORWE = 0x20,
+// FLOORWS = 0x40,
+// FLOORWW = 0x80,
+
+void	ft_flood_randomcheck(t_map *map, int pos)
+{
+	if (map->m[pos] & FLOOD1)
+		return ;
+	if ((map->m[pos] & WALL))
+		return ;
+	if (!(map->m[pos]))
+	{
+		map->valid = 0;
+		return ;
+	}
+	map->m[pos] |= FLOOD1;
+	if (map->m[pos + 1] & WALL)
+		map->m[pos] |= FLOORWE;
+	if (map->m[pos - 1] & WALL)
+		map->m[pos] |= FLOORWW;
+	if (map->m[pos + map->w] & WALL)
+		map->m[pos] |= FLOORWS;
+	if (map->m[pos - map->w] & WALL)
+		map->m[pos] |= FLOORWN;
+	if (map->m[pos + map->w + 1] & WALL)
+		map->m[pos] |= FLOORWSE;
+	if (map->m[pos + map->w - 1] & WALL)
+		map->m[pos] |= FLOORWSW;
+	if (map->m[pos - map->w + 1] & WALL)
+		map->m[pos] |= FLOORWNE;
+	if (map->m[pos - map->w - 1] & WALL)
+		map->m[pos] |= FLOORWNW;
+	if (pos < map->w || pos > (map->h - 1) * map->w || !(pos % map->w)
+		|| pos % map->w == map->w - 1)
+	{
+		map->valid = 0;
+		return ;
+	}
+	ft_flood_randomcheck(map, pos + 1);
+	ft_flood_randomcheck(map, pos - 1);
+	ft_flood_randomcheck(map, pos + map->w);
+	ft_flood_randomcheck(map, pos - map->w);
+}
+
+// int	ft_fill_array2(t_map *map, char **split, int j, int a)
+// {
+// 	int	i;
+
+// 	while (split[j])
+// 	{
+// 		i = 0;
+// 		while (split[j][i])
+// 		{
+// 			ft_fill_array3(map, split[j][i], j - a, i);
+// 			++i;
+// 		}
+// 		++j;
+// 	}
+// 	ft_flood_randomcheck(map, map->p.mx + map->p.my * map->w);
+// 	if (!map->valid)
+// 	{
+// 		ft_free_split(&split);
+// 		return(ft_puterror("Invalid map border or player position", 0));
+// 	}
+// 	return (1);
+// }
+
+// int	ft_fill_array(t_map *map)
+// {
+// 	char	**split;
+// 	int		j;
+// 	int		a;
+
+// 	split = ft_split(map->mapstr, '\n');
+// 	if (!split)
+// 		return(ft_puterror("Malloc error", 0));
+// 	j = 0;
+// 	while (split[j])
+// 	{
+// 		if (ft_strchr(" 01", split[j][0]))
+// 			break;
+// 		++j;
+// 	}
+// 	if (!split[j])
+// 	{
+// 		ft_free_split(&split);
+// 		return(ft_puterror("Map not found", 0));
+// 	}
+// 	a = j;
+// 	if (!ft_check_map(map, split, j, a))
+// 		return (0);
+// 	if (!ft_fill_array2(map, split, j, a))
+// 		return (0);
+// 	ft_free_split(&split);
+// 	return (1);
+// }
+
+// void	ft_fill_colours_to_map(t_map *map)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < map->h * map->w)
+// 	{
+// 		if (map->m[i] & FLOOR)
+// 		{
+// 			map->m[i] &= 0x00000000FFFFFFFF;
+// 			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+// 		}
+// 		else if (map->m[i] & WALL)
+// 		{
+// 			map->m[i] &= 0x00000000FFFFFFFF;
+// 			map->m[i] |= 0x000000FFFFFFFFFF;
+// 		}
+// 		else
+// 			map->m[i] &= 0x00000000FFFFFFFF;
+// 		++i;
+// 	}
+// }
+
+void	ft_fill_randommap(t_map *map)
+{
+	//fill paths to textures
+	// if (!ft_fill_textures(map))
+	// 	return (0);
+	// if (!ft_fill_colours(map))
+	// 	return (0);
+	// if (!ft_fill_array(map))
+	// 	return (0);
+	ft_flood_randomcheck(map, map->p.mx + map->p.my * map->w);
+	//fill colours in map
+	ft_fill_colours_to_map(map);
+	//fill actual map (get width and height first)
+}
+
+	// unsigned int	m[65536];		//1d array of map representation
+	// char			*file;			//original mapfile string
+	// char			*mapstr;		//actual content of the file
+	// char			*northtexture;	//path to the north texture
+	// char			*southtexture;
+	// char			*westtexture;
+	// char			*easttexture;
+	// t_clr			f;			//floor colour
+	// t_clr			c;			//ceiling colour
+	// int				valid;		//1 if valid map
+	// int				w;			//width of map
+	// int				h;			//height of map
+	// t_player		p;			//player pos and orientation
+	// unsigned int	e;			//position of exit on map, future stuff
+	// t_door			**d;		//doors for bonus, NULL terminated array
+
+// void	ft_print_map(t_map *map)
+// {
+// 	int	i;
+// 	int	c;
+// 	ft_printf("FILE: %s\n", map->file);
+// 	ft_printf("%s\n", map->mapstr);
+// 	ft_printf("N: <%s>\n", map->northtexture);
+// 	ft_printf("S: <%s>\n", map->southtexture);
+// 	ft_printf("W: <%s>\n", map->westtexture);
+// 	ft_printf("E: <%s>\n", map->easttexture);
+// 	ft_printf("f: %#8x, c: %#8x b: %#8x\n", map->f.rgba, map->c.rgba, map->b.rgba);
+// 	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
+// 	ft_printf("Player posx %#8x, posy %#8x, ori: %5i\n", map->p.x, map->p.y, map->p.orientation);
+// 	ft_printf("Player py %4x, px %4x \n", map->p.y, map->p.x);
+// 	ft_printf("Player my %2x, sy %2x, mx %2x, sx %2x \n", map->p.my, map->p.sy, map->p.mx, map->p.sx);
+// 	i = 0;
+// 	while (i < map->h * map->w)
+// 	{
+// 		if (i == (map->p.mx + map->p.my * map->w))
+// 		{
+// 			if (map->p.orientation == NORTH)
+// 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == WEST)
+// 				ft_printf("%^*C<<%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == SOUTH)
+// 				ft_printf("%^*Cvv%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == EAST)
+// 				ft_printf("%^*C>>%C", map->c.rgba >> 8);
+// 			else
+// 				ft_printf("%^*C??%C", map->c.rgba >> 8);
+// 		}
+// 		else if (map->m[i] & WALL)
+// 			ft_printf("%^*C  %C", 0x333333);
+// 		else if (map->m[i] & FLOOR)
+// 			ft_printf("%^*C  %C", map->f.rgba >> 8);
+// 		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
+// 			ft_printf("  ");
+// 		++i;
+// 		if (!(i % map->w) && ((i & 0xff00) >> 8) < map->hh)
+// 			ft_printf("\n");
+// 	}
+// 	ft_printf("Indexing floor near walls\n");
+// 	i = 0;
+// 	while (i < map->h * map->w)
+// 	{
+// 		c = 0xffffff;
+// 		if (map->m[i] & FLOORWN)
+// 			c &= 0xFF80FF;
+// 		if (map->m[i] & FLOORWS)
+// 			c &= 0x80FFFF;
+// 		if (map->m[i] & FLOORWW)
+// 			c &= 0xFFFF80;
+// 		if (map->m[i] & FLOORWE)
+// 			c &= 0x40A040;
+// 		if (i == (map->p.mx + map->p.my * map->w))
+// 		{
+// 			if (map->p.orientation == NORTH)
+// 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == WEST)
+// 				ft_printf("%^*C<<%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == SOUTH)
+// 				ft_printf("%^*Cvv%C", map->c.rgba >> 8);
+// 			else if (map->p.orientation == EAST)
+// 				ft_printf("%^*C>>%C", map->c.rgba >> 8);
+// 			else
+// 				ft_printf("%^*C??%C", map->c.rgba >> 8);
+// 		}
+// 		else if (map->m[i] & WALL)
+// 			ft_printf("%^*C  %C", 0x333333);
+// 		else if (map->m[i] & FLOORW)
+// 			ft_printf("%^*C  %C", c);
+// 		else if (map->m[i] & FLOOR)
+// 			ft_printf("%^*C  %C", map->f.rgba >> 8);
+// 		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
+// 			ft_printf("  ");
+// 		++i;
+// 		if (!(i % map->w) && ((i & 0xff00) >> 8) < map->hh)
+// 			ft_printf("\n");
+// 	}
+// }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 
 // compile with libft.a
 // pass number for
@@ -105,11 +665,11 @@ typedef struct s_rmap
 typedef enum e_map_block
 {
 	EDGE = 0x0,
-	WALL = 0xF0,
-	WALL_A = 0x10,
-	WALL_B = 0x20,
-	WALL_C = 0x40,
-	WALL_D = 0x80,
+	RWALL = 0xF0,
+	RWALL_A = 0x10,
+	RWALL_B = 0x20,
+	RWALL_C = 0x40,
+	RWALL_D = 0x80,
 	DOOR_NS = 0x100,
 	DOOR_WE = 0x200,
 	DOOR = 0xF00,
@@ -135,11 +695,11 @@ typedef enum e_map_block
 // typedef enum e_map_block
 // {
 // 	EDGE = 0x0,
-// 	WALL = 0xF0,
-// 	WALL_A = 0x10,		//WALL COLUMN, permanent wall except for 
-// 	WALL_B = 0x20,		//WALL between columns
-// 	WALL_C = 0x40,		//WALL between columns between two different areas
-// 	WALL_D = 0x80,		//WALL after deadend
+// 	RWALL = 0xF0,
+// 	RWALL_A = 0x10,		//RWALL COLUMN, permanent wall except for 
+// 	RWALL_B = 0x20,		//RWALL between columns
+// 	RWALL_C = 0x40,		//RWALL between columns between two different areas
+// 	RWALL_D = 0x80,		//RWALL after deadend
 // 	DOOR_NS = 0x100,		// corridor at 
 // 	DOOR_WE = 0x200,
 // 	DOOR = 0xF00,
@@ -175,13 +735,13 @@ void	map_print(char *str, t_rmap *m)
 		m->colour = m->red << 16 | m->green << 8 | m->blue;
 		if (m->map[i] == EDGE)
 			ft_printf("%^*C  %0C", 0x000000);
-		else if (m->map[i] == WALL_A)
+		else if (m->map[i] == RWALL_A)
 			ft_printf("%^*C  %0C", 0x002222);
-		else if (m->map[i] == WALL_B)
+		else if (m->map[i] == RWALL_B)
 			ft_printf("%^*C  %0C", 0x444400);
-		else if (m->map[i] == WALL_C)
+		else if (m->map[i] == RWALL_C)
 			ft_printf("%^*C  %0C", 0x660066);
-		else if (m->map[i] == WALL_D)
+		else if (m->map[i] == RWALL_D)
 			ft_printf("%^*C  %0C", 0x330033);
 		else if (m->map[i] == DEADEND)
 			ft_printf("%^*C  %0C", 0xff8888);
@@ -227,39 +787,39 @@ void	map_print2(char *str, t_rmap *m)
 		m->blue = ((m->map[i] / 4) + m->map[i] * 16) % 64 + 192;
 		m->colour = m->red << 16 | m->green << 8 | m->blue;
 		if (m->map[i] == EDGE)
-			ft_printf(" ", 0x000000);
-		else if (m->map[i] == WALL_A)
-			ft_printf("1", 0x002222);
-		else if (m->map[i] == WALL_B)
-			ft_printf("1", 0x444400);
-		else if (m->map[i] == WALL_C)
-			ft_printf("1", 0x660066);
-		else if (m->map[i] == WALL_D)
-			ft_printf("1", 0x330033);
+			ft_printf(" ");
+		else if (m->map[i] == RWALL_A)
+			ft_printf("1");
+		else if (m->map[i] == RWALL_B)
+			ft_printf("1");
+		else if (m->map[i] == RWALL_C)
+			ft_printf("1");
+		else if (m->map[i] == RWALL_D)
+			ft_printf("1");
 		else if (m->map[i] == DEADEND)
-			ft_printf("0", 0xff8888);
+			ft_printf("0");
 		else if (m->map[i] == CORRIDOR_A)
-			ft_printf("0", 0x999999);
+			ft_printf("0");
 		else if (m->map[i] == T_JUNCTION)
-			ft_printf("0", 0xaaffaa);
+			ft_printf("0");
 		else if (m->map[i] == X_JUNCTION)
-			ft_printf("0", 0xbbbbff);
+			ft_printf("0");
 		else if (m->map[i] == CORRIDOR_B)
-			ft_printf("0", 0xdddddd);
+			ft_printf("0");
 		else if (m->map[i] == ROOM_A)
-			ft_printf("0", 0xffffff);
+			ft_printf("0");
 		else if (m->map[i] == ROOM_B)
-			ft_printf("0", 0xffeeff);
+			ft_printf("0");
 		else if (m->map[i] == DOOR_NS)
-			ft_printf("0", 0, 0xcc9966);
+			ft_printf("0");
 		else if (m->map[i] == DOOR_WE)
-			ft_printf("0", 0, 0xcc9966);
+			ft_printf("0");
 		else if (m->map[i] & FLOOD_A)
-			ft_printf("0", m->colour);
+			ft_printf("0");
 		else if (m->map[i] & FLOOD_B)
-			ft_printf("0", 0xff0000);
+			ft_printf("0");
 		else
-			ft_printf("0", 0x222277);
+			ft_printf("0");
 		++(i);
 		if (i % m->w == 0)
 			ft_printf("\n");
@@ -277,10 +837,10 @@ void	map_prefill2(t_rmap *m)
 		else if ((m->i / m->w) & 1 && !(m->i & 1))
 			m->map[m->i] = FLOOD_A;
 		else if (!((m->i / m->w) & 1) && !(m->i & 1))
-			m->map[m->i] = WALL_A;
+			m->map[m->i] = RWALL_A;
 		else if (m->i > m->w && m->i < (m->h - 1) * m->w
 			&& m->i % m->w && m->i % m->w < (m->w - 1))
-			m->map[m->i] = WALL_B;
+			m->map[m->i] = RWALL_B;
 		else
 			m->map[m->i] = FLOOD_A;
 		++(m->i);
@@ -419,13 +979,13 @@ void	map_refill4(t_rmap *m)
 		m->walls = 0;
 		if (m->map[m->i] & FLOOD_B)
 		{
-			if (m->map[m->i - 1] == WALL_B)
+			if (m->map[m->i - 1] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i + 1] == WALL_B)
+			if (m->map[m->i + 1] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i - m->w] == WALL_B)
+			if (m->map[m->i - m->w] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i + m->w] == WALL_B)
+			if (m->map[m->i + m->w] == RWALL_B)
 				m->walls++;
 		}
 		if (m->walls == 3)
@@ -471,16 +1031,16 @@ void	breakwall4(t_rmap *m, int counter)
 	{
 		m->d = rand() % 4;
 		--counter;
-		if (m->d == 0 && m->map[m->i - 1] == WALL_B)
+		if (m->d == 0 && m->map[m->i - 1] == RWALL_B)
 			m->map[m->i - 1] = CORRIDOR_B;
-		else if (m->d == 1 && m->map[m->i + 1] == WALL_B)
+		else if (m->d == 1 && m->map[m->i + 1] == RWALL_B)
 			m->map[m->i + 1] = CORRIDOR_B;
-		else if (m->d == 2 && m->map[m->i - m->w] == WALL_B)
+		else if (m->d == 2 && m->map[m->i - m->w] == RWALL_B)
 			m->map[m->i - m->w] = CORRIDOR_B;
-		else if (m->d == 3 && m->map[m->i + m->w] == WALL_B)
+		else if (m->d == 3 && m->map[m->i + m->w] == RWALL_B)
 			m->map[m->i + m->w] = CORRIDOR_B;
-		else if (m->map[m->i - 1] != WALL_B && m->map[m->i + 1] != WALL_B
-			&& m->map[m->i - m->w] != WALL_B && m->map[m->i + m->w] != WALL_B)
+		else if (m->map[m->i - 1] != RWALL_B && m->map[m->i + 1] != RWALL_B
+			&& m->map[m->i - m->w] != RWALL_B && m->map[m->i + m->w] != RWALL_B)
 			counter = 0;
 		else
 			++counter;
@@ -539,7 +1099,7 @@ void	map_outerwall(t_rmap *m)
 			if (!(m->map[m->i - 1]) || !(m->map[m->i + 1])
 				|| !(m->map[m->i + m->w])
 				|| !(m->map[m->i - m->w]))
-				m->map[m->i] = WALL_B;
+				m->map[m->i] = RWALL_B;
 		}
 		++(m->i);
 	}
@@ -554,13 +1114,13 @@ void	map_refill5(t_rmap *m)
 		m->walls = 0;
 		if (m->map[m->i] == FLOOD_B || m->map[m->i] & CORNER_CORRIDOR)
 		{
-			if (m->map[m->i - 1] == WALL_B)
+			if (m->map[m->i - 1] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i + 1] == WALL_B)
+			if (m->map[m->i + 1] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i - m->w] == WALL_B)
+			if (m->map[m->i - m->w] == RWALL_B)
 				m->walls++;
-			if (m->map[m->i + m->w] == WALL_B)
+			if (m->map[m->i + m->w] == RWALL_B)
 				m->walls++;
 			if (m->walls == 3)
 				m->map[m->i] = DEADEND;
@@ -705,7 +1265,7 @@ void	add_room_walls6(t_rmap *m)
 			if (m->map[m->i + 1] == ROOM_B || m->map[m->i - 1] == ROOM_B
 				|| m->map[m->i - m->w] == ROOM_B
 				|| m->map[m->i + m->w] == ROOM_B)
-				m->map[m->i] = WALL_B;
+				m->map[m->i] = RWALL_B;
 		}
 		++(m->i);
 	}
@@ -770,13 +1330,13 @@ void	add_wall_c(t_rmap *m)
 	m->wall_c = 0;
 	while (i < m->s)
 	{
-		if (m->map[i] == WALL_B
+		if (m->map[i] == RWALL_B
 			&& ((m->map[i - 1] & FLOOD_A && m->map[i + 1] & FLOOD_B)
 				|| (m->map[i + 1] & FLOOD_A && m->map[i - 1] & FLOOD_B)
 				|| (m->map[i - m->w] & FLOOD_A && m->map[i + m->w] & FLOOD_B)
 				|| (m->map[i + m->w] & FLOOD_A && m->map[i - m->w] & FLOOD_B)))
 		{
-			m->map[i] = WALL_C;
+			m->map[i] = RWALL_C;
 			m->wall_c++;
 		}
 		++i;
@@ -785,7 +1345,7 @@ void	add_wall_c(t_rmap *m)
 
 void	add_door(t_rmap *m, int i)
 {
-	if (m->map[i + 1] == WALL_A || m->map[i - 1] == WALL_A)
+	if (m->map[i + 1] == RWALL_A || m->map[i - 1] == RWALL_A)
 		m->map[i] = DOOR_NS;
 	else
 		m->map[i] = DOOR_WE;
@@ -802,11 +1362,11 @@ void	open_door(t_rmap *m)
 	r = rand() % m->wall_c;
 	while (c < r)
 	{
-		if (m->map[i] == WALL_C)
+		if (m->map[i] == RWALL_C)
 			++c;
 		++i;
 	}
-	while (m->map[i] != WALL_C)
+	while (m->map[i] != RWALL_C)
 		++i;
 	add_door(m, i);
 	m->i = i;
@@ -820,17 +1380,17 @@ void	close_wall_c(t_rmap *m)
 	i = 0;
 	while (i < m->s)
 	{
-		if (m->map[i] == WALL_C)
+		if (m->map[i] == RWALL_C)
 		{
 			if (!m->cw)
-				m->map[i] = WALL_B;
+				m->map[i] = RWALL_B;
 			else
 			{
 				r = rand() % 4096;
 				if (r < m->cw)
 					add_door(m, i);
 				else
-					m->map[i] = WALL_B;
+					m->map[i] = RWALL_B;
 			}
 		}
 		++i;
@@ -910,13 +1470,13 @@ void	refill_corridors1(t_rmap *m)
 	{
 		if (m->map[m->i] & FLOOD_B)
 		{
-			if ((m->map[m->i - 1]) == WALL_A || (m->map[m->i + 1]) == WALL_A
-				|| (m->map[m->i + m->w]) == WALL_A
-				|| (m->map[m->i - m->w]) == WALL_A)
+			if ((m->map[m->i - 1]) == RWALL_A || (m->map[m->i + 1]) == RWALL_A
+				|| (m->map[m->i + m->w]) == RWALL_A
+				|| (m->map[m->i - m->w]) == RWALL_A)
 				m->map[m->i] = CORRIDOR_B;
-			if ((m->map[m->i - 1]) == WALL_B || (m->map[m->i + 1]) == WALL_B
-				|| (m->map[m->i + m->w]) == WALL_B
-				|| (m->map[m->i - m->w]) == WALL_B
+			if ((m->map[m->i - 1]) == RWALL_B || (m->map[m->i + 1]) == RWALL_B
+				|| (m->map[m->i + m->w]) == RWALL_B
+				|| (m->map[m->i - m->w]) == RWALL_B
 				|| m->map[m->i - 1] == DOOR_WE || m->map[m->i + 1] == DOOR_WE
 				|| (m->map[m->i + m->w]) == DOOR_NS
 				|| (m->map[m->i - m->w]) == DOOR_NS)
@@ -937,10 +1497,10 @@ void	refill_corridors2(t_rmap *m)
 				&& (m->map[m->i + 1]) == CORRIDOR_B
 				&& (m->map[m->i + m->w]) == CORRIDOR_B
 				&& (m->map[m->i - m->w]) == CORRIDOR_B
-				&& (m->map[m->i + m->w - 1]) == WALL_A
-				&& (m->map[m->i + m->w + 1]) == WALL_A
-				&& (m->map[m->i - m->w - 1]) == WALL_A
-				&& (m->map[m->i - m->w + 1]) == WALL_A)
+				&& (m->map[m->i + m->w - 1]) == RWALL_A
+				&& (m->map[m->i + m->w + 1]) == RWALL_A
+				&& (m->map[m->i - m->w - 1]) == RWALL_A
+				&& (m->map[m->i - m->w + 1]) == RWALL_A)
 				m->map[m->i] = CORRIDOR_A;
 		}
 		++(m->i);
@@ -1008,27 +1568,27 @@ void	rd_north(t_rmap *m)
 	if (m->map[m->d - (m->w * 2)] == CORRIDOR_A)
 	{
 		m->map[m->d - (m->w * 2)] = DEADEND;
-		m->map[m->d - (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 		m->d = m->d - (m->w * 2);
 		remove_deadend(m);
 	}
 	else if (m->map[m->d - (m->w * 2)] == T_JUNCTION)
 	{
 		m->map[m->d - (m->w * 2)] = CORRIDOR_A;
-		m->map[m->d - (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d - (m->w * 2)] == X_JUNCTION)
 	{
 		m->map[m->d - (m->w * 2)] = T_JUNCTION;
-		m->map[m->d - (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d - (m->w * 2)] & ROOM)
 	{
-		m->map[m->d - (m->w)] = WALL_B;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - (m->w)] = RWALL_B;
+		m->map[m->d] = RWALL_D;
 	}
 }
 
@@ -1037,27 +1597,27 @@ void	rd_south(t_rmap *m)
 	if (m->map[m->d + (m->w * 2)] == CORRIDOR_A)
 	{
 		m->map[m->d + (m->w * 2)] = DEADEND;
-		m->map[m->d + (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 		m->d = m->d + (m->w * 2);
 		remove_deadend(m);
 	}
 	else if (m->map[m->d + (m->w * 2)] == T_JUNCTION)
 	{
 		m->map[m->d + (m->w * 2)] = CORRIDOR_A;
-		m->map[m->d + (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d + (m->w * 2)] == X_JUNCTION)
 	{
 		m->map[m->d + (m->w * 2)] = T_JUNCTION;
-		m->map[m->d + (m->w)] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + (m->w)] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d + (m->w * 2)] & ROOM)
 	{
-		m->map[m->d + (m->w)] = WALL_B;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + (m->w)] = RWALL_B;
+		m->map[m->d] = RWALL_D;
 	}
 }
 
@@ -1066,27 +1626,27 @@ void	rd_west(t_rmap *m)
 	if (m->map[m->d - 2] == CORRIDOR_A)
 	{
 		m->map[m->d - 2] = DEADEND;
-		m->map[m->d - 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 		m->d = m->d - 2;
 		remove_deadend(m);
 	}
 	else if (m->map[m->d - 2] == T_JUNCTION)
 	{
 		m->map[m->d - 2] = CORRIDOR_A;
-		m->map[m->d - 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d - 2] == X_JUNCTION)
 	{
 		m->map[m->d - 2] = T_JUNCTION;
-		m->map[m->d - 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d - 2] & ROOM)
 	{
-		m->map[m->d - 1] = WALL_B;
-		m->map[m->d] = WALL_D;
+		m->map[m->d - 1] = RWALL_B;
+		m->map[m->d] = RWALL_D;
 	}
 }
 
@@ -1095,27 +1655,27 @@ void	rd_east(t_rmap *m)
 	if (m->map[m->d + 2] == CORRIDOR_A)
 	{
 		m->map[m->d + 2] = DEADEND;
-		m->map[m->d + 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 		m->d = m->d + 2;
 		remove_deadend(m);
 	}
 	else if (m->map[m->d + 2] == T_JUNCTION)
 	{
 		m->map[m->d + 2] = CORRIDOR_A;
-		m->map[m->d + 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d + 2] == X_JUNCTION)
 	{
 		m->map[m->d + 2] = T_JUNCTION;
-		m->map[m->d + 1] = WALL_D;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + 1] = RWALL_D;
+		m->map[m->d] = RWALL_D;
 	}
 	else if (m->map[m->d + 2] & ROOM)
 	{
-		m->map[m->d + 1] = WALL_B;
-		m->map[m->d] = WALL_D;
+		m->map[m->d + 1] = RWALL_B;
+		m->map[m->d] = RWALL_D;
 	}
 }
 
@@ -1162,43 +1722,45 @@ void	map_refill42(t_rmap *m)
 	m->i = 0;
 	while (m->i < m->s)
 	{
-		if (m->map[m->i] & WALL)
-			m->map[m->i] = WALL_A;
+		if (m->map[m->i] & RWALL)
+			m->map[m->i] = RWALL_A;
 		if (m->map[m->i] & CORRIDOR)
 			m->map[m->i] = CORRIDOR_A;
 		++(m->i);
 	}
 }
 
-void	map_init(t_rmap *m, char *av[])
+void	map_init(t_rmap *m)
 {
-	m->width = ft_atoi(av[1]);
-	m->height = ft_atoi(av[2]);
-	m->e = ft_atoi(av[3]);
-	m->l = ft_atoi(av[4]);
-	m->t = ft_atoi(av[5]);
-	m->x = ft_atoi(av[6]);
-	m->rn = ft_atoi(av[7]);
-	m->ro = ft_atoi(av[8]);
-	m->cw = ft_atoi(av[9]);
-	m->dr = ft_atoi(av[10]);
+	m->width = 32;
+	m->height = 16;
+	m->e = 64;
+	m->l = 16;
+	m->t = 4;
+	m->x = 1;
+	m->rn = 36;
+	m->ro = 36;
+	m->cw = 64;
+	m->dr = 1;
 	m->w = m->width * 2 + 5;
 	m->h = m->height * 2 + 5;
 	m->s = m->w * m->h;
 }
 
-int	main(int ac, char *av[])
+void	ft_random_init(t_max *max)
 {
 	t_rmap	m;
+	int		i;
+	int		j;
+	int		p;
 
-	if (ac != 11)
-		return (2);
-	map_init(&m, av);
-	if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
-		return (1);
-	if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0
-		|| m.cw < 0 || m.dr < 0)
-		return (4);
+	ft_map_init(max->map);
+	map_init(&m);
+	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
+	// 	return (1);
+	// if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0
+	// 	|| m.cw < 0 || m.dr < 0)
+	// 	return (4);
 	map_prefill2(&m);
 	map_print("prefilled map", &m);
 	maze_gen2(&m);
@@ -1211,5 +1773,73 @@ int	main(int ac, char *av[])
 	map_refill42(&m);
 	map_print("FINAL MAP", &m);
 	map_print2("copy map", &m);
-	return (0);
+	i = 0;
+	p = 1;
+	j = 0;
+	max->map->ww = m.w;
+	max->map->w = 256;
+	max->map->hh = m.h;
+	max->map->h = 256;
+	while (i < 65536)
+	{
+		if (j < m.s && (i % 256 < m.w))
+		{
+			if (m.map[j] & RWALL)
+				max->map->m[i] = WALL1;
+			if ((m.map[j] & CORRIDOR) || (m.map[j] & DOOR) || (m.map[j] & ROOM))
+			{
+				max->map->m[i] = FLOOR1;
+				if (p)
+				{
+					max->map->p.mx = i % 256;
+					max->map->p.my = i / 256;
+					max->map->p.sx = 0x7f7f;
+					max->map->p.sy = 0x7f7f;
+					max->map->p.orientation = EAST;
+					max->map->p.unused_x = 0;
+					max->map->p.unused_y = 0;
+					p = 0;
+				}
+			}
+			++j;
+		}
+		++i;
+	}
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+int	ft_process_random(t_max *max)
+{
+	t_map	*map;
+
+	map = max->map;
+	ft_random_init(max);
+	// if (!ft_read_map(map))
+	// {
+	// 	ft_freemap(map);
+	// 	return (0);
+	// }
+	ft_fill_randommap(map);
+	//no textures now
+	// if (!ft_init_textures(max))
+	// {
+	// 	ft_freemap(map);
+	// 	return (0);
+	// }
+	ft_init_brume(max);
+	// int i;
+
+	// i = 0;
+	// while (i < 256)
+	// {
+	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
+	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
+	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
+	// 	++i;
+	// }
+	//for debugging
+	ft_print_map(map);
+	//ft_freemap(map);
+	return (1);
 }

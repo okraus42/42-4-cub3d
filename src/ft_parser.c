@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 16:42:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/27 12:00:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_init_textures(t_max *max)
 	return (1);
 }
 
-void	ft_map_init(t_map *map)
+static void	ft_map_init(t_map *map)
 {
 	int	i;
 
@@ -622,16 +622,16 @@ int	ft_process_file(t_max *max)
 		return (0);
 	}
 	ft_init_brume(max);
-	int i;
+	// int i;
 
-	i = 0;
-	while (i < 256)
-	{
-		ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
-		ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
-		ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
-		++i;
-	}
+	// i = 0;
+	// while (i < 256)
+	// {
+	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
+	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
+	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
+	// 	++i;
+	// }
 	//for debugging
 	ft_print_map(map);
 	ft_freemap(map);
