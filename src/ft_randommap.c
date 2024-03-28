@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 11:07:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 15:18:50 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1264,15 +1264,15 @@ void	map_refill42(t_rmap *m)
 void	map_init(t_randommap *rm, t_rmap *m)
 {
 	m->width = rm->width.value;
-	m->height = 16;
-	m->e = 64;
-	m->l = 16;
-	m->t = 4;
-	m->x = 1;
-	m->rn = 36;
-	m->ro = 36;
-	m->cw = 64;
-	m->dr = 1;
+	m->height = rm->height.value;
+	m->e = rm->ratiode.value;
+	m->l = rm->ratiolo.value;
+	m->t = rm->ratioti.value;
+	m->x = rm->ratioxi.value;
+	m->rn = rm->rnorooms.value;
+	m->ro = rm->rorooms.value;
+	m->cw = rm->rdoors.value;
+	m->dr = rm->rdeadends.value;
 	m->w = m->width * 2 + 5;
 	m->h = m->height * 2 + 5;
 	m->s = m->w * m->h;

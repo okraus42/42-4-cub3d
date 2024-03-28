@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 11:03:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 16:04:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,10 @@
 # define S_RESUME "RESUME"
 # define S_SETTINGS "SETTINGS"
 # define S_HALLOFFAME "HALL OF\n  FAME"
-# define S_NEWGAME " NEW"
-# define S_QUITGAME "QUIT"
-# define S_SAVEGAME "SAVE"
-# define S_LOADGAME "LOAD"
+# define S_NEWGAME "NEW GAME"
+# define S_QUITGAME "QUIT GAME"
+# define S_SAVEGAME "SAVE GAME"
+# define S_LOADGAME "LOAD GAME"
 
 # define S_NAME "NAME"
 # define S_COALITION "COALITION"
@@ -131,10 +131,10 @@
 # define S_RWIDTH "WIDTH"
 # define S_RHEIGHT "HEIGHT"
 # define S_RRATIODE "RATIODE"
-# define S_RRATIOLO "RATOLO"
+# define S_RRATIOLO "RATIOLO"
 # define S_RRATIOTI "RATIOTI"
 # define S_RRATIOXI "RATIOXI"
-# define S_RNOROOMS "NO DOORS"
+# define S_RNOROOMS "NO ROOMS"
 # define S_ROROOMS "O ROOMS"
 # define S_RDOORS "DOORS"
 # define S_RDEADENDS "DEAD ENDS"
@@ -201,8 +201,10 @@ typedef struct s_button
 	int				y;
 	int				w;
 	int				h;
+	int				id;
+	int				group;
 	int				state;
-	t_values			*val;
+	t_values		*val;
 	char			*str;
 	struct s_button	*up;
 	struct s_button	*down;
