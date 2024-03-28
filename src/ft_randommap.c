@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 15:18:50 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 18:19:13 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1284,8 +1284,10 @@ void	ft_random_init(t_max *max)
 	int		i;
 	int		j;
 	int		p;
+	unsigned int	seed;
 
-	srand(time(0));
+	seed = time(0);
+	srand(seed);
 	ft_map_init(max->map);
 	map_init(&max->menu.rm, &m);
 	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)

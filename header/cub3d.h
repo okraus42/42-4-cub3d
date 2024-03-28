@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 11:03:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 17:54:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -492,23 +492,46 @@ typedef struct s_highscore
 
 typedef struct s_control
 {
-	int		w;
-	int		s;
+	int		left_shift;
+	int		right_shift;
+	int		caps_lock;
+	int		space;
 	int		a;
+	int		b;
+	int		c;
 	int		d;
+	int		e;
+	int		f;
+	int		g;
+	int		h;
+	int		i;
+	int		j;
+	int		k;
+	int		l;
+	int		m;
+	int		n;
+	int		o;
+	int		p;
+	int		q;
+	int		r;
+	int		s;
+	int		t;
+	int		u;
+	int		v;
+	int		w;
+	int		x;
+	int		y;
+	int		z;
 	int		up;
 	int		down;
 	int		left;
 	int		right;
 	int		enter;
-	int		space;
+	int		backspace;
 	int		add;
 	int		subtract;
 	int		multiply;
 	int		divide;
-	int		ctrl;
-	int		time;
-	int		t;
 	int		one;
 	int		two;
 	int		three;

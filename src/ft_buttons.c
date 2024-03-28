@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 16:51:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 17:31:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,10 +335,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.maptypebuttons[MTBACK].text.sx = max->menu.maptypebuttons[MTBACK].x + 40;
 	max->menu.maptypebuttons[MTBACK].text.sy = max->menu.maptypebuttons[MTBACK].y + 40;
 	max->menu.mapselectionbuttons[CUSTOM] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.mapselectionbuttons[CUSTOM].id = CUSTOM;
+	max->menu.mapselectionbuttons[CUSTOM].group = NEWMAP;
+	max->menu.mapselectionbuttons[CUSTOM].right = &max->menu.mapselectionbuttons[RANDOM];
+	max->menu.mapselectionbuttons[CUSTOM].down = &max->menu.mapselectionbuttons[MSCONTINUE];
 	max->menu.mapselectionbuttons[CUSTOM].state = ACTIVE;
 	max->menu.mapselectionbuttons[CUSTOM].x = 800;
 	max->menu.mapselectionbuttons[CUSTOM].y = 20;
@@ -346,10 +346,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[CUSTOM].text.sx = max->menu.mapselectionbuttons[CUSTOM].x + 40;
 	max->menu.mapselectionbuttons[CUSTOM].text.sy = max->menu.mapselectionbuttons[CUSTOM].y + 40;
 	max->menu.mapselectionbuttons[RANDOM] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.mapselectionbuttons[RANDOM].id = RANDOM;
+	max->menu.mapselectionbuttons[RANDOM].group = NEWMAP;
+	max->menu.mapselectionbuttons[RANDOM].left = &max->menu.mapselectionbuttons[CUSTOM];
+	max->menu.mapselectionbuttons[RANDOM].down = &max->menu.mapselectionbuttons[MSCONTINUE];
 	max->menu.mapselectionbuttons[RANDOM].state = ACTIVE;
 	max->menu.mapselectionbuttons[RANDOM].x = 1200;
 	max->menu.mapselectionbuttons[RANDOM].y = 20;
@@ -357,10 +357,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[RANDOM].text.sx = max->menu.mapselectionbuttons[RANDOM].x + 40;
 	max->menu.mapselectionbuttons[RANDOM].text.sy = max->menu.mapselectionbuttons[RANDOM].y + 40;
 	max->menu.mapselectionbuttons[MSBACK] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.mapselectionbuttons[MSBACK].id = MSBACK;
+	max->menu.mapselectionbuttons[MSBACK].group = NEWMAP;
+	max->menu.mapselectionbuttons[MSBACK].up = &max->menu.mapselectionbuttons[CUSTOM];
+	max->menu.mapselectionbuttons[MSBACK].right = &max->menu.mapselectionbuttons[MSCONTINUE];
 	max->menu.mapselectionbuttons[MSBACK].state = ACTIVE;
 	max->menu.mapselectionbuttons[MSBACK].x = 800;
 	max->menu.mapselectionbuttons[MSBACK].y = 860;
@@ -368,10 +368,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[MSBACK].text.sx = max->menu.mapselectionbuttons[MSBACK].x + 40;
 	max->menu.mapselectionbuttons[MSBACK].text.sy = max->menu.mapselectionbuttons[MSBACK].y + 40;
 	max->menu.mapselectionbuttons[MSCONTINUE] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.mapselectionbuttons[MSCONTINUE].id = MSCONTINUE;
+	max->menu.mapselectionbuttons[MSCONTINUE].group = NEWMAP;
+	max->menu.mapselectionbuttons[MSCONTINUE].up = &max->menu.mapselectionbuttons[CUSTOM];
+	max->menu.mapselectionbuttons[MSCONTINUE].left = &max->menu.mapselectionbuttons[MSBACK];
 	max->menu.mapselectionbuttons[MSCONTINUE].state = ACTIVE;
 	max->menu.mapselectionbuttons[MSCONTINUE].x = 1200;
 	max->menu.mapselectionbuttons[MSCONTINUE].y = 860;
@@ -394,10 +394,10 @@ void	ft_initbuttons(t_max *max)
 	button.button = max->menu.buttonplus;
 	button.text.height = 40;
 	max->menu.randomselectionbuttons[RWIDTH] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RWIDTH].id = RWIDTH;
+	max->menu.randomselectionbuttons[RWIDTH].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RWIDTH].down = &max->menu.randomselectionbuttons[RRATIODE];
+	max->menu.randomselectionbuttons[RWIDTH].right = &max->menu.randomselectionbuttons[RHEIGHT];
 	max->menu.randomselectionbuttons[RWIDTH].state = ACTIVE;
 	max->menu.randomselectionbuttons[RWIDTH].x = 700;
 	max->menu.randomselectionbuttons[RWIDTH].y = 20;
@@ -408,10 +408,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RWIDTH].text.sx = max->menu.randomselectionbuttons[RWIDTH].x + 110;
 	max->menu.randomselectionbuttons[RWIDTH].text.sy = max->menu.randomselectionbuttons[RWIDTH].y + 50;
 	max->menu.randomselectionbuttons[RHEIGHT] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RHEIGHT].id = RHEIGHT;
+	max->menu.randomselectionbuttons[RHEIGHT].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RHEIGHT].down = &max->menu.randomselectionbuttons[RRATIOLO];
+	max->menu.randomselectionbuttons[RHEIGHT].left = &max->menu.randomselectionbuttons[RWIDTH];
 	max->menu.randomselectionbuttons[RHEIGHT].state = ACTIVE;
 	max->menu.randomselectionbuttons[RHEIGHT].x = 1250;
 	max->menu.randomselectionbuttons[RHEIGHT].y = 20;
@@ -422,10 +422,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RHEIGHT].text.sx = max->menu.randomselectionbuttons[RHEIGHT].x + 110;
 	max->menu.randomselectionbuttons[RHEIGHT].text.sy = max->menu.randomselectionbuttons[RHEIGHT].y + 50;
 	max->menu.randomselectionbuttons[RRATIODE] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RRATIODE].id = RRATIODE;
+	max->menu.randomselectionbuttons[RRATIODE].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RRATIODE].up = &max->menu.randomselectionbuttons[RWIDTH];
+	max->menu.randomselectionbuttons[RRATIODE].down = &max->menu.randomselectionbuttons[RRATIOTI];
+	max->menu.randomselectionbuttons[RRATIODE].right = &max->menu.randomselectionbuttons[RRATIOLO];
 	max->menu.randomselectionbuttons[RRATIODE].state = ACTIVE;
 	max->menu.randomselectionbuttons[RRATIODE].x = 700;
 	max->menu.randomselectionbuttons[RRATIODE].y = 160;
@@ -436,10 +437,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RRATIODE].text.sx = max->menu.randomselectionbuttons[RRATIODE].x + 110;
 	max->menu.randomselectionbuttons[RRATIODE].text.sy = max->menu.randomselectionbuttons[RRATIODE].y + 50;
 	max->menu.randomselectionbuttons[RRATIOLO] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RRATIOLO].id = RRATIOLO;
+	max->menu.randomselectionbuttons[RRATIOLO].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RRATIOLO].up = &max->menu.randomselectionbuttons[RHEIGHT];
+	max->menu.randomselectionbuttons[RRATIOLO].down = &max->menu.randomselectionbuttons[RRATIOXI];
+	max->menu.randomselectionbuttons[RRATIOLO].left = &max->menu.randomselectionbuttons[RRATIODE];
 	max->menu.randomselectionbuttons[RRATIOLO].state = ACTIVE;
 	max->menu.randomselectionbuttons[RRATIOLO].x = 1250;
 	max->menu.randomselectionbuttons[RRATIOLO].y = 160;
@@ -450,10 +452,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RRATIOLO].text.sx = max->menu.randomselectionbuttons[RRATIOLO].x + 110;
 	max->menu.randomselectionbuttons[RRATIOLO].text.sy = max->menu.randomselectionbuttons[RRATIOLO].y + 50;
 	max->menu.randomselectionbuttons[RRATIOTI] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RRATIOTI].id = RRATIOTI;
+	max->menu.randomselectionbuttons[RRATIOTI].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RRATIOTI].up = &max->menu.randomselectionbuttons[RRATIODE];
+	max->menu.randomselectionbuttons[RRATIOTI].down = &max->menu.randomselectionbuttons[RNOROOMS];
+	max->menu.randomselectionbuttons[RRATIOTI].right = &max->menu.randomselectionbuttons[RRATIOXI];
 	max->menu.randomselectionbuttons[RRATIOTI].state = ACTIVE;
 	max->menu.randomselectionbuttons[RRATIOTI].x = 700;
 	max->menu.randomselectionbuttons[RRATIOTI].y = 300;
@@ -464,10 +467,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RRATIOTI].text.sx = max->menu.randomselectionbuttons[RRATIOTI].x + 110;
 	max->menu.randomselectionbuttons[RRATIOTI].text.sy = max->menu.randomselectionbuttons[RRATIOTI].y + 50;
 	max->menu.randomselectionbuttons[RRATIOXI] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RRATIOXI].id = RRATIOXI;
+	max->menu.randomselectionbuttons[RRATIOXI].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RRATIOXI].up = &max->menu.randomselectionbuttons[RRATIOLO];
+	max->menu.randomselectionbuttons[RRATIOXI].down = &max->menu.randomselectionbuttons[ROROOMS];
+	max->menu.randomselectionbuttons[RRATIOXI].left = &max->menu.randomselectionbuttons[RRATIOTI];
 	max->menu.randomselectionbuttons[RRATIOXI].state = ACTIVE;
 	max->menu.randomselectionbuttons[RRATIOXI].x = 1250;
 	max->menu.randomselectionbuttons[RRATIOXI].y = 300;
@@ -478,10 +482,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RRATIOXI].text.sx = max->menu.randomselectionbuttons[RRATIOXI].x + 110;
 	max->menu.randomselectionbuttons[RRATIOXI].text.sy = max->menu.randomselectionbuttons[RRATIOXI].y + 50;
 	max->menu.randomselectionbuttons[RNOROOMS] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RNOROOMS].id = RNOROOMS;
+	max->menu.randomselectionbuttons[RNOROOMS].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RNOROOMS].up = &max->menu.randomselectionbuttons[RRATIOTI];
+	max->menu.randomselectionbuttons[RNOROOMS].down = &max->menu.randomselectionbuttons[RDOORS];
+	max->menu.randomselectionbuttons[RNOROOMS].right = &max->menu.randomselectionbuttons[ROROOMS];
 	max->menu.randomselectionbuttons[RNOROOMS].state = ACTIVE;
 	max->menu.randomselectionbuttons[RNOROOMS].x = 700;
 	max->menu.randomselectionbuttons[RNOROOMS].y = 440;
@@ -492,10 +497,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RNOROOMS].text.sx = max->menu.randomselectionbuttons[RNOROOMS].x + 110;
 	max->menu.randomselectionbuttons[RNOROOMS].text.sy = max->menu.randomselectionbuttons[RNOROOMS].y + 50;
 	max->menu.randomselectionbuttons[ROROOMS] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[ROROOMS].id = ROROOMS;
+	max->menu.randomselectionbuttons[ROROOMS].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[ROROOMS].up = &max->menu.randomselectionbuttons[RRATIOXI];
+	max->menu.randomselectionbuttons[ROROOMS].down = &max->menu.randomselectionbuttons[RDEADENDS];
+	max->menu.randomselectionbuttons[ROROOMS].left = &max->menu.randomselectionbuttons[RNOROOMS];
 	max->menu.randomselectionbuttons[ROROOMS].state = ACTIVE;
 	max->menu.randomselectionbuttons[ROROOMS].x = 1250;
 	max->menu.randomselectionbuttons[ROROOMS].y = 440;
@@ -506,10 +512,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[ROROOMS].text.sx = max->menu.randomselectionbuttons[ROROOMS].x + 110;
 	max->menu.randomselectionbuttons[ROROOMS].text.sy = max->menu.randomselectionbuttons[ROROOMS].y + 50;
 	max->menu.randomselectionbuttons[RDOORS] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RDOORS].id = RDOORS;
+	max->menu.randomselectionbuttons[RDOORS].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RDOORS].up = &max->menu.randomselectionbuttons[RNOROOMS];
+	max->menu.randomselectionbuttons[RDOORS].down = &max->menu.randomselectionbuttons[RCONTINUE];
+	max->menu.randomselectionbuttons[RDOORS].right = &max->menu.randomselectionbuttons[RDEADENDS];
 	max->menu.randomselectionbuttons[RDOORS].state = ACTIVE;
 	max->menu.randomselectionbuttons[RDOORS].x = 700;
 	max->menu.randomselectionbuttons[RDOORS].y = 580;
@@ -520,10 +527,11 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RDOORS].text.sx = max->menu.randomselectionbuttons[RDOORS].x + 110;
 	max->menu.randomselectionbuttons[RDOORS].text.sy = max->menu.randomselectionbuttons[RDOORS].y + 50;
 	max->menu.randomselectionbuttons[RDEADENDS] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RDEADENDS].id = RDEADENDS;
+	max->menu.randomselectionbuttons[RDEADENDS].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RDEADENDS].up = &max->menu.randomselectionbuttons[ROROOMS];
+	max->menu.randomselectionbuttons[RDEADENDS].down = &max->menu.randomselectionbuttons[RCONTINUE];
+	max->menu.randomselectionbuttons[RDEADENDS].left = &max->menu.randomselectionbuttons[RDOORS];
 	max->menu.randomselectionbuttons[RDEADENDS].state = ACTIVE;
 	max->menu.randomselectionbuttons[RDEADENDS].x = 1250;
 	max->menu.randomselectionbuttons[RDEADENDS].y = 580;
@@ -536,10 +544,10 @@ void	ft_initbuttons(t_max *max)
 	button.text.height = 60;
 	button.button = max->menu.button;
 	max->menu.randomselectionbuttons[RBACK] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RBACK].id = RBACK;
+	max->menu.randomselectionbuttons[RBACK].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RBACK].up = &max->menu.randomselectionbuttons[RDOORS];
+	max->menu.randomselectionbuttons[RBACK].right = &max->menu.randomselectionbuttons[RCONTINUE];
 	max->menu.randomselectionbuttons[RBACK].state = ACTIVE;
 	max->menu.randomselectionbuttons[RBACK].x = 850;
 	max->menu.randomselectionbuttons[RBACK].y = 860;
@@ -547,10 +555,10 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RBACK].text.sx = max->menu.randomselectionbuttons[RBACK].x + 40;
 	max->menu.randomselectionbuttons[RBACK].text.sy = max->menu.randomselectionbuttons[RBACK].y + 40;
 	max->menu.randomselectionbuttons[RCONTINUE] = button;
-	max->menu.mainbuttons[SETTINGS].id = SETTINGS;
-	max->menu.mainbuttons[SETTINGS].group = MAINBUTTONS;
-	max->menu.mainbuttons[SETTINGS].up = &max->menu.mainbuttons[LOADGAME];
-	max->menu.mainbuttons[SETTINGS].down = &max->menu.mainbuttons[HALLOFFAME];
+	max->menu.randomselectionbuttons[RCONTINUE].id = RCONTINUE;
+	max->menu.randomselectionbuttons[RCONTINUE].group = NEWRANDOM;
+	max->menu.randomselectionbuttons[RCONTINUE].up = &max->menu.randomselectionbuttons[RDEADENDS];
+	max->menu.randomselectionbuttons[RCONTINUE].left = &max->menu.randomselectionbuttons[RBACK];
 	max->menu.randomselectionbuttons[RCONTINUE].state = ACTIVE;
 	max->menu.randomselectionbuttons[RCONTINUE].x = 1250;
 	max->menu.randomselectionbuttons[RCONTINUE].y = 860;
@@ -609,15 +617,19 @@ void	ft_choose_in_button(t_max *max, t_button *button)
 	int	i;
 
 	i = button->val->value;
-	if (max->key.add)
+	if (max->key.add || max->key.right)
 	{
 		++i;
 		max->key.add = 0;
+		max->key.up = 0;
+		max->key.right = 0;
 	}
-	if (max->key.subtract)
+	if (max->key.subtract || max->key.left)
 	{
 		--i;
 		max->key.subtract = 0;
+		max->key.down = 0;
+		max->key.left = 0;
 	}
 	if (max->key.multiply)
 	{
@@ -628,6 +640,16 @@ void	ft_choose_in_button(t_max *max, t_button *button)
 	{
 		i /= 2;
 		max->key.divide = 0;
+	}
+	if (max->key.up)
+	{
+		i += 10;
+		max->key.up = 0;
+	}
+	if (max->key.down)
+	{
+		i -= 10;
+		max->key.down = 0;
 	}
 	if (i < button->val->min)
 		i = button->val->min;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 11:05:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 17:57:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,5 +229,309 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 	else
 	{
 		max->key.divide = 0;
+	}
+		if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
+	{
+		max->key.a = 1;
+	}
+	else
+	{
+		max->key.a = 0;
+	}
+	if (keydata.key == MLX_KEY_B && keydata.action == MLX_PRESS)
+	{
+		max->key.b = 1;
+	}
+	else
+	{
+		max->key.b = 0;
+	}
+	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
+	{
+		max->key.c = 1;
+	}
+	else
+	{
+		max->key.c = 0;
+	}
+	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
+	{
+		max->key.d = 1;
+	}
+	else
+	{
+		max->key.d = 0;
+	}
+	if (keydata.key == MLX_KEY_E && keydata.action == MLX_PRESS)
+	{
+		max->key.e = 1;
+	}
+	else
+	{
+		max->key.e = 0;
+	}
+	if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
+	{
+		max->key.f = 1;
+	}
+	else
+	{
+		max->key.f = 0;
+	}
+	if (keydata.key == MLX_KEY_G && keydata.action == MLX_PRESS)
+	{
+		max->key.g = 1;
+	}
+	else
+	{
+		max->key.g = 0;
+	}
+	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
+	{
+		max->key.h = 1;
+	}
+	else
+	{
+		max->key.h = 0;
+	}
+	if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS)
+	{
+		max->key.i = 1;
+	}
+	else
+	{
+		max->key.i = 0;
+	}
+	if (keydata.key == MLX_KEY_J && keydata.action == MLX_PRESS)
+	{
+		max->key.j = 1;
+	}
+	else
+	{
+		max->key.j = 0;
+	}
+	if (keydata.key == MLX_KEY_K && keydata.action == MLX_PRESS)
+	{
+		max->key.k = 1;
+	}
+	else
+	{
+		max->key.k = 0;
+	}
+	if (keydata.key == MLX_KEY_L && keydata.action == MLX_PRESS)
+	{
+		max->key.l = 1;
+	}
+	else
+	{
+		max->key.l = 0;
+	}
+	if (keydata.key == MLX_KEY_M && keydata.action == MLX_PRESS)
+	{
+		max->key.m = 1;
+	}
+	else
+	{
+		max->key.m = 0;
+	}
+	if (keydata.key == MLX_KEY_N && keydata.action == MLX_PRESS)
+	{
+		max->key.n = 1;
+	}
+	else
+	{
+		max->key.n = 0;
+	}
+	if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS)
+	{
+		max->key.o = 1;
+	}
+	else
+	{
+		max->key.o = 0;
+	}
+	if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS)
+	{
+		max->key.p = 1;
+	}
+	else
+	{
+		max->key.p = 0;
+	}
+	if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
+	{
+		max->key.q = 1;
+	}
+	else
+	{
+		max->key.q = 0;
+	}
+	if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
+	{
+		max->key.r = 1;
+	}
+	else
+	{
+		max->key.r = 0;
+	}
+	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
+	{
+		max->key.s = 1;
+	}
+	else
+	{
+		max->key.s = 0;
+	}
+	if (keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
+	{
+		max->key.t = 1;
+	}
+	else
+	{
+		max->key.t = 0;
+	}
+	if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS)
+	{
+		max->key.u = 1;
+	}
+	else
+	{
+		max->key.u = 0;
+	}
+	if (keydata.key == MLX_KEY_V && keydata.action == MLX_PRESS)
+	{
+		max->key.v = 1;
+	}
+	else
+	{
+		max->key.v = 0;
+	}
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
+	{
+		max->key.w = 1;
+	}
+	else
+	{
+		max->key.w = 0;
+	}
+	if (keydata.key == MLX_KEY_X && keydata.action == MLX_PRESS)
+	{
+		max->key.x = 1;
+	}
+	else
+	{
+		max->key.x = 0;
+	}
+	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
+	{
+		max->key.y = 1;
+	}
+	else
+	{
+		max->key.y = 0;
+	}
+	if (keydata.key == MLX_KEY_Z && keydata.action == MLX_PRESS)
+	{
+		max->key.z = 1;
+	}
+	else
+	{
+		max->key.z = 0;
+	}
+	if (keydata.key == MLX_KEY_1 && keydata.action == MLX_PRESS)
+	{
+		max->key.one = 1;
+	}
+	else
+	{
+		max->key.one = 0;
+	}
+	if (keydata.key == MLX_KEY_2 && keydata.action == MLX_PRESS)
+	{
+		max->key.two = 1;
+	}
+	else
+	{
+		max->key.two = 0;
+	}
+	if (keydata.key == MLX_KEY_3 && keydata.action == MLX_PRESS)
+	{
+		max->key.three = 1;
+	}
+	else
+	{
+		max->key.three = 0;
+	}
+	if (keydata.key == MLX_KEY_4 && keydata.action == MLX_PRESS)
+	{
+		max->key.four = 1;
+	}
+	else
+	{
+		max->key.four = 0;
+	}
+	if (keydata.key == MLX_KEY_5 && keydata.action == MLX_PRESS)
+	{
+		max->key.five = 1;
+	}
+	else
+	{
+		max->key.five = 0;
+	}
+	if (keydata.key == MLX_KEY_6 && keydata.action == MLX_PRESS)
+	{
+		max->key.six = 1;
+	}
+	else
+	{
+		max->key.six = 0;
+	}
+	if (keydata.key == MLX_KEY_7 && keydata.action == MLX_PRESS)
+	{
+		max->key.seven = 1;
+	}
+	else
+	{
+		max->key.seven = 0;
+	}
+	if (keydata.key == MLX_KEY_8 && keydata.action == MLX_PRESS)
+	{
+		max->key.eight = 1;
+	}
+	else
+	{
+		max->key.eight = 0;
+	}
+	if (keydata.key == MLX_KEY_9 && keydata.action == MLX_PRESS)
+	{
+		max->key.nine = 1;
+	}
+	else
+	{
+		max->key.nine = 0;
+	}
+	if (keydata.key == MLX_KEY_0 && keydata.action == MLX_PRESS)
+	{
+		max->key.zero = 1;
+	}
+	else
+	{
+		max->key.zero = 0;
+	}
+	if (keydata.key == MLX_KEY_SPACE && keydata.action == MLX_PRESS)
+	{
+		max->key.space = 1;
+	}
+	else
+	{
+		max->key.space = 0;
+	}
+	if (keydata.key == MLX_KEY_BACKSPACE && keydata.action == MLX_PRESS)
+	{
+		max->key.backspace = 1;
+	}
+	else
+	{
+		max->key.backspace = 0;
 	}
 }

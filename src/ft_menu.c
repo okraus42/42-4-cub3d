@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 16:52:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 17:18:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,127 +486,127 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 // 	}
 // }
 
-void	ft_selectbuttonnewmap(t_max *max)
-{
-	int	newbutton;
+// void	ft_selectbuttonnewmap(t_max *max)
+// {
+// 	int	newbutton;
 
-	if (max->menu.cm_state)
-	{
-		ft_choose_in_listfield(max, &max->menu.custommap);
-		return ;
-	}
-	newbutton = max->menu.current_button[NEWMAP];
-	if (max->key.up)
-	{
-		while (newbutton > 0)
-		{
-			--newbutton;
-			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-			{
-				max->menu.current_button[NEWMAP] = newbutton;
-				break ;
-			}
-		}
-		max->key.up = 0;
-	}
-	if (max->key.down)
-	{
-		while (newbutton < MAPSELECTIONBUTTONCOUNT - 1)
-		{
-			++newbutton;
-			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-			{
-				max->menu.current_button[NEWMAP] = newbutton;
-				break ;
-			}
-		}
-		max->key.down = 0;
-	}
-}
+// 	if (max->menu.cm_state)
+// 	{
+// 		ft_choose_in_listfield(max, &max->menu.custommap);
+// 		return ;
+// 	}
+// 	newbutton = max->menu.current_button[NEWMAP];
+// 	if (max->key.up)
+// 	{
+// 		while (newbutton > 0)
+// 		{
+// 			--newbutton;
+// 			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
+// 			{
+// 				max->menu.current_button[NEWMAP] = newbutton;
+// 				break ;
+// 			}
+// 		}
+// 		max->key.up = 0;
+// 	}
+// 	if (max->key.down)
+// 	{
+// 		while (newbutton < MAPSELECTIONBUTTONCOUNT - 1)
+// 		{
+// 			++newbutton;
+// 			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
+// 			{
+// 				max->menu.current_button[NEWMAP] = newbutton;
+// 				break ;
+// 			}
+// 		}
+// 		max->key.down = 0;
+// 	}
+// }
 
-void	ft_selectbuttonnewrandom(t_max *max)
-{
-	int	newbutton;
+// void	ft_selectbuttonnewrandom(t_max *max)
+// {
+// 	int	newbutton;
 
-	if (max->menu.random_state[RWIDTH])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RWIDTH]);
-		return ;
-	}
-	if (max->menu.random_state[RHEIGHT])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RHEIGHT]);
-		return ;
-	}
-	if (max->menu.random_state[RRATIODE])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIODE]);
-		return ;
-	}
-	if (max->menu.random_state[RRATIOLO])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOLO]);
-		return ;
-	}
-	if (max->menu.random_state[RRATIOTI])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOTI]);
-		return ;
-	}
-	if (max->menu.random_state[RRATIOXI])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOXI]);
-		return ;
-	}
-	if (max->menu.random_state[RNOROOMS])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RNOROOMS]);
-		return ;
-	}
-	if (max->menu.random_state[ROROOMS])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[ROROOMS]);
-		return ;
-	}
-	if (max->menu.random_state[RDOORS])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDOORS]);
-		return ;
-	}
-	if (max->menu.random_state[RDEADENDS])
-	{
-		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDEADENDS]);
-		return ;
-	}
-	newbutton = max->menu.current_button[NEWRANDOM];
+// 	if (max->menu.random_state[RWIDTH])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RWIDTH]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RHEIGHT])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RHEIGHT]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RRATIODE])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIODE]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RRATIOLO])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOLO]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RRATIOTI])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOTI]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RRATIOXI])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOXI]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RNOROOMS])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RNOROOMS]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[ROROOMS])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[ROROOMS]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RDOORS])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDOORS]);
+// 		return ;
+// 	}
+// 	if (max->menu.random_state[RDEADENDS])
+// 	{
+// 		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDEADENDS]);
+// 		return ;
+// 	}
+// 	newbutton = max->menu.current_button[NEWRANDOM];
 	
-	if (max->key.up)
-	{
-		while (newbutton > 0)
-		{
-			--newbutton;
-			if (max->menu.randomselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-			{
-				max->menu.current_button[NEWRANDOM] = newbutton;
-				break ;
-			}
-		}
-		max->key.up = 0;
-	}
-	if (max->key.down)
-	{
-		while (newbutton < RANDOMBUTTONCOUNT - 1)
-		{
-			++newbutton;
-			if (max->menu.randomselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-			{
-				max->menu.current_button[NEWRANDOM] = newbutton;
-				break ;
-			}
-		}
-		max->key.down = 0;
-	}
-}
+// 	if (max->key.up)
+// 	{
+// 		while (newbutton > 0)
+// 		{
+// 			--newbutton;
+// 			if (max->menu.randomselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
+// 			{
+// 				max->menu.current_button[NEWRANDOM] = newbutton;
+// 				break ;
+// 			}
+// 		}
+// 		max->key.up = 0;
+// 	}
+// 	if (max->key.down)
+// 	{
+// 		while (newbutton < RANDOMBUTTONCOUNT - 1)
+// 		{
+// 			++newbutton;
+// 			if (max->menu.randomselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
+// 			{
+// 				max->menu.current_button[NEWRANDOM] = newbutton;
+// 				break ;
+// 			}
+// 		}
+// 		max->key.down = 0;
+// 	}
+// }
 
 void	ft_selectbutton(t_max *max)
 {
@@ -657,11 +657,68 @@ void	ft_selectbutton(t_max *max)
 	}
 	if (max->menu.current_buttongroup == NEWMAP)
 	{
-		ft_selectbuttonnewmap(max);
+		//ft_selectbuttonnewmap(max);
+		if (max->menu.cm_state)
+		{
+			ft_choose_in_listfield(max, &max->menu.custommap);
+			return ;
+		}
+		ft_selectnewbutton(max, &max->menu.mapselectionbuttons[max->menu.current_button[NEWMAP]]);
 	}
 	if (max->menu.current_buttongroup == NEWRANDOM)
 	{
-		ft_selectbuttonnewrandom(max);
+		if (max->menu.random_state[RWIDTH])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RWIDTH]);
+			return ;
+		}
+		if (max->menu.random_state[RHEIGHT])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RHEIGHT]);
+			return ;
+		}
+		if (max->menu.random_state[RRATIODE])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIODE]);
+			return ;
+		}
+		if (max->menu.random_state[RRATIOLO])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOLO]);
+			return ;
+		}
+		if (max->menu.random_state[RRATIOTI])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOTI]);
+			return ;
+		}
+		if (max->menu.random_state[RRATIOXI])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RRATIOXI]);
+			return ;
+		}
+		if (max->menu.random_state[RNOROOMS])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RNOROOMS]);
+			return ;
+		}
+		if (max->menu.random_state[ROROOMS])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[ROROOMS]);
+			return ;
+		}
+		if (max->menu.random_state[RDOORS])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDOORS]);
+			return ;
+		}
+		if (max->menu.random_state[RDEADENDS])
+		{
+			ft_choose_in_button(max, &max->menu.randomselectionbuttons[RDEADENDS]);
+			return ;
+		}
+		//ft_selectbuttonnewrandom(max);
+		ft_selectnewbutton(max, &max->menu.randomselectionbuttons[max->menu.current_button[NEWRANDOM]]);
 	}
 }
 
