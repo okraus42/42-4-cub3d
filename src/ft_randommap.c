@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 16:35:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 11:07:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1261,9 +1261,9 @@ void	map_refill42(t_rmap *m)
 	}
 }
 
-void	map_init(t_rmap *m)
+void	map_init(t_randommap *rm, t_rmap *m)
 {
-	m->width = 32;
+	m->width = rm->width.value;
 	m->height = 16;
 	m->e = 64;
 	m->l = 16;
@@ -1287,7 +1287,7 @@ void	ft_random_init(t_max *max)
 
 	srand(time(0));
 	ft_map_init(max->map);
-	map_init(&m);
+	map_init(&max->menu.rm, &m);
 	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
 	// 	return (1);
 	// if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0

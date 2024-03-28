@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 18:33:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 11:03:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,9 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomselectionbuttons[RWIDTH].state = ACTIVE;
 	max->menu.randomselectionbuttons[RWIDTH].x = 700;
 	max->menu.randomselectionbuttons[RWIDTH].y = 20;
-	ft_snprintf(max->menu.randomselectionbuttons[RWIDTH].text.str, 19, "RWIDTH: %i", 32);
+	max->menu.randomselectionbuttons[RWIDTH].str = S_RWIDTH;
+	max->menu.randomselectionbuttons[RWIDTH].val = &max->menu.rm.width;
+	ft_snprintf(max->menu.randomselectionbuttons[RWIDTH].text.str, 19, "%s: %i", S_RWIDTH, max->menu.randomselectionbuttons[RWIDTH].val->value);
 	max->menu.randomselectionbuttons[RWIDTH].text.text = max->menu.randomselectionbuttons[RWIDTH].text.str;
 	max->menu.randomselectionbuttons[RWIDTH].text.sx = max->menu.randomselectionbuttons[RWIDTH].x + 110;
 	max->menu.randomselectionbuttons[RWIDTH].text.sy = max->menu.randomselectionbuttons[RWIDTH].y + 50;
@@ -422,3 +424,35 @@ void	ft_draw_button(t_button *b, int state)
 	ft_draw_text(&b->text, state);
 }
 
+void	ft_choose_in_button(t_max *max, t_button *button)
+{
+	int	i;
+
+	i = button->val->value;
+	if (max->key.add)
+	{
+		++i;
+		max->key.add = 0;
+	}
+	if (max->key.subtract)
+	{
+		--i;
+		max->key.subtract = 0;
+	}
+	if (max->key.multiply)
+	{
+		i *= 2;
+		max->key.multiply = 0;
+	}
+	if (max->key.divide)
+	{
+		i /= 2;
+		max->key.divide = 0;
+	}
+	if (i < button->val->min)
+		i = button->val->min;
+	if (i > button->val->max)
+		i = button->val->max;
+	button->val->value = i;
+	ft_snprintf(max->menu.randomselectionbuttons[RWIDTH].text.str, 19, "%s: %i", button->str, button->val->value);
+}

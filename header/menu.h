@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 18:36:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 11:03:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,17 @@
 # define S_ONEMAP "ONE MAP"
 # define S_CUSTOM "CUSTOM"
 # define S_RANDOM "RANDOM"
+# define S_RWIDTH "WIDTH"
+# define S_RHEIGHT "HEIGHT"
+# define S_RRATIODE "RATIODE"
+# define S_RRATIOLO "RATOLO"
+# define S_RRATIOTI "RATIOTI"
+# define S_RRATIOXI "RATIOXI"
+# define S_RNOROOMS "NO DOORS"
+# define S_ROROOMS "O ROOMS"
+# define S_RDOORS "DOORS"
+# define S_RDEADENDS "DEAD ENDS"
+
 //# define S_ ""
 
 # define C_INACTIVE 0x7F7F7FFF
@@ -159,6 +170,27 @@ typedef struct s_text
 	int				height;
 }	t_text;
 
+typedef struct s_values
+{
+	int				min;
+	int				max;
+	int				value;
+}	t_values;
+
+typedef struct s_randommap
+{
+	t_values	width;
+	t_values	height;
+	t_values	ratiode;
+	t_values	ratiolo;
+	t_values	ratioti;
+	t_values	ratioxi;
+	t_values	rnorooms;
+	t_values	rorooms;
+	t_values	rdoors;
+	t_values	rdeadends;
+}	t_randommap;
+
 typedef struct s_button
 {
 	mlx_texture_t	*button;
@@ -170,6 +202,8 @@ typedef struct s_button
 	int				w;
 	int				h;
 	int				state;
+	t_values			*val;
+	char			*str;
 	struct s_button	*up;
 	struct s_button	*down;
 	struct s_button	*left;
@@ -219,8 +253,8 @@ typedef struct s_menu
 	int				newmap;
 	int				newwriting;
 	int				cm_state;
-	int				rm_state;
 	int				random_state[RANDOMBUTTONCOUNT];
+	t_randommap		rm;
 	//int			newlevel;
 	mlx_texture_t	*background;
 	mlx_texture_t	*button;

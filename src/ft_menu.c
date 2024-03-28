@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 18:41:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/28 10:56:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,13 @@
 
 //maybe will need smaller function for initialising menu from the game?
 //maybe define texture path in header
+void	ft_initrandommapvalues(t_randommap *rm)
+{
+	rm->width.min = 5;
+	rm->width.max = 120;
+	rm->width.value = 32;
+}
+
 void	ft_initmenu(t_max *max)
 {
 	max->menu.enter = 0;
@@ -31,6 +38,7 @@ void	ft_initmenu(t_max *max)
 
 	//fonts
 	ft_load_texture("./textures/fonts/asciitest.png", &max->font.asciitest);
+	ft_initrandommapvalues(&max->menu.rm);
 	ft_initbuttons(max);
 	ft_inittextfields(max);
 	ft_initlistfields(max);
@@ -440,6 +448,12 @@ void	ft_selectbuttonnewrandom(t_max *max)
 	// check random state to see which button is pressed and allow to change values
 	// get the plus and minus key presses and store them in key struct
 	// struct: ((string current value, min allowed value, max allowed value,)) button,
+	//remove rm state
+	if (max->menu.random_state[RWIDTH])
+	{
+		ft_choose_in_button(max, &max->menu.randomselectionbuttons[RWIDTH]);
+		return ;
+	}
 	newbutton = max->menu.current_button[NEWRANDOM];
 	
 	if (max->key.up)
@@ -681,16 +695,75 @@ void	ft_draw_newmaplistfields(t_max *max)
 
 void	ft_draw_newrandombuttons(t_max *max)
 {
-	if (max->menu.current_button[NEWRANDOM] == CUSTOM)
+	if (max->menu.current_button[NEWRANDOM] == RWIDTH)
 	{
-		ft_draw_button(&max->menu.randomselectionbuttons[CUSTOM], SELECTED);
-	}
-	else if (max->menu.current_button[NEWRANDOM] == RANDOM)
-	{
-		if (max->menu.rm_state)
-			ft_draw_button(&max->menu.randomselectionbuttons[RANDOM], ACTIVATED);
+		if (max->menu.random_state[RWIDTH])
+			ft_draw_button(&max->menu.randomselectionbuttons[RWIDTH], ACTIVATED);
 		else
-			ft_draw_button(&max->menu.randomselectionbuttons[RANDOM], SELECTED);
+			ft_draw_button(&max->menu.randomselectionbuttons[RWIDTH], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RHEIGHT)
+	{
+		if (max->menu.random_state[RHEIGHT])
+			ft_draw_button(&max->menu.randomselectionbuttons[RHEIGHT], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RHEIGHT], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RRATIODE)
+	{
+		if (max->menu.random_state[RRATIODE])
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIODE], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIODE], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RRATIOLO)
+	{
+		if (max->menu.random_state[RRATIOLO])
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOLO], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOLO], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RRATIOTI)
+	{
+		if (max->menu.random_state[RRATIOTI])
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOTI], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOTI], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RRATIOXI)
+	{
+		if (max->menu.random_state[RRATIOXI])
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOXI], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RRATIOXI], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RNOROOMS)
+	{
+		if (max->menu.random_state[RNOROOMS])
+			ft_draw_button(&max->menu.randomselectionbuttons[RNOROOMS], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RNOROOMS], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == ROROOMS)
+	{
+		if (max->menu.random_state[ROROOMS])
+			ft_draw_button(&max->menu.randomselectionbuttons[ROROOMS], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[ROROOMS], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RDOORS)
+	{
+		if (max->menu.random_state[RDOORS])
+			ft_draw_button(&max->menu.randomselectionbuttons[RDOORS], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RDOORS], SELECTED);
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RDEADENDS)
+	{
+		if (max->menu.random_state[RDEADENDS])
+			ft_draw_button(&max->menu.randomselectionbuttons[RDEADENDS], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.randomselectionbuttons[RDEADENDS], SELECTED);
 	}
 	else if (max->menu.current_button[NEWRANDOM] == RBACK)
 	{
@@ -845,8 +918,6 @@ void	ft_menu(t_max *max)
 				else if (max->menu.current_button[NEWLEVEL] == RANDOM)
 				{
 					max->menu.current_buttongroup = NEWRANDOM;
-					max->menu.current_button[NEWRANDOM] = RANDOM;
-					max->menu.rm_state = 1;
 				}
 				else if (max->menu.current_button[NEWLEVEL] == MTBACK)
 				{
@@ -870,8 +941,6 @@ void	ft_menu(t_max *max)
 				else if (max->menu.current_button[NEWMAP] == RANDOM)
 				{
 					max->menu.current_buttongroup = NEWRANDOM;
-					max->menu.current_button[NEWRANDOM] = RANDOM;
-					max->menu.rm_state = 1;
 				}
 				else if (max->menu.current_button[NEWMAP] == MSBACK)
 				{
@@ -900,24 +969,114 @@ void	ft_menu(t_max *max)
 			//
 			else if (max->menu.current_buttongroup == NEWRANDOM)
 			{
-				if (max->menu.current_button[NEWRANDOM] == CUSTOM)
+				if (max->menu.current_button[NEWRANDOM] == RWIDTH)
 				{
-					max->menu.current_buttongroup = NEWMAP;
-					max->menu.current_button[NEWMAP] = CUSTOM;
-					max->menu.cm_state = 1;
-					
-				}
-				else if (max->menu.current_button[NEWRANDOM] == RANDOM)
-				{
-					if (max->menu.rm_state)
+					if (max->menu.random_state[RWIDTH])
 					{
-						//this might need change?
-						max->menu.rm_state = 0;
-						max->menu.current_button[NEWRANDOM] = RCONTINUE;
+						max->menu.random_state[RWIDTH] = 0;
 					}
 					else
 					{
-						max->menu.rm_state = 1;
+						max->menu.random_state[RWIDTH] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RHEIGHT)
+				{
+					if (max->menu.random_state[RHEIGHT])
+					{
+						max->menu.random_state[RHEIGHT] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RHEIGHT] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RRATIODE)
+				{
+					if (max->menu.random_state[RRATIODE])
+					{
+						max->menu.random_state[RRATIODE] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RRATIODE] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RRATIOLO)
+				{
+					if (max->menu.random_state[RRATIOLO])
+					{
+						max->menu.random_state[RRATIOLO] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RRATIOLO] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RRATIOTI)
+				{
+					if (max->menu.random_state[RRATIOTI])
+					{
+						max->menu.random_state[RRATIOTI] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RRATIOTI] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RRATIOXI)
+				{
+					if (max->menu.random_state[RRATIOXI])
+					{
+						max->menu.random_state[RRATIOXI] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RRATIOXI] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RNOROOMS)
+				{
+					if (max->menu.random_state[RNOROOMS])
+					{
+						max->menu.random_state[RNOROOMS] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RNOROOMS] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == ROROOMS)
+				{
+					if (max->menu.random_state[ROROOMS])
+					{
+						max->menu.random_state[ROROOMS] = 0;
+					}
+					else
+					{
+						max->menu.random_state[ROROOMS] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RDOORS)
+				{
+					if (max->menu.random_state[RDOORS])
+					{
+						max->menu.random_state[RDOORS] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RDOORS] = 1;
+					}
+				}
+				else if (max->menu.current_button[NEWRANDOM] == RDEADENDS)
+				{
+					if (max->menu.random_state[RDEADENDS])
+					{
+						max->menu.random_state[RDEADENDS] = 0;
+					}
+					else
+					{
+						max->menu.random_state[RDEADENDS] = 1;
 					}
 				}
 				else if (max->menu.current_button[NEWRANDOM] == RBACK)
