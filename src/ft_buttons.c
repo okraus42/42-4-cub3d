@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 17:31:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 10:27:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,59 +193,56 @@ void	ft_initbuttons(t_max *max)
 	max->menu.gamedifficultybuttons[EASY] = button;
 	max->menu.gamedifficultybuttons[EASY].id = EASY;
 	max->menu.gamedifficultybuttons[EASY].group = NEWDIFFICULTY;
-	max->menu.gamedifficultybuttons[EASY].right = &max->menu.gamedifficultybuttons[MEDIUM];
-	max->menu.gamedifficultybuttons[EASY].down = &max->menu.gamedifficultybuttons[GDCONTINUE];
+	max->menu.gamedifficultybuttons[EASY].down = &max->menu.gamedifficultybuttons[MEDIUM];
 	max->menu.gamedifficultybuttons[EASY].state = ACTIVE;
-	max->menu.gamedifficultybuttons[EASY].x = 600;
-	max->menu.gamedifficultybuttons[EASY].y = 100;
+	max->menu.gamedifficultybuttons[EASY].x = 1000;
+	max->menu.gamedifficultybuttons[EASY].y = 200;
 	max->menu.gamedifficultybuttons[EASY].text.text = S_EASY;
 	max->menu.gamedifficultybuttons[EASY].text.sx = max->menu.gamedifficultybuttons[EASY].x + 40;
 	max->menu.gamedifficultybuttons[EASY].text.sy = max->menu.gamedifficultybuttons[EASY].y + 40;
 	max->menu.gamedifficultybuttons[MEDIUM] = button;
 	max->menu.gamedifficultybuttons[MEDIUM].id = MEDIUM;
 	max->menu.gamedifficultybuttons[MEDIUM].group = NEWDIFFICULTY;
-	max->menu.gamedifficultybuttons[MEDIUM].left = &max->menu.gamedifficultybuttons[EASY];
-	max->menu.gamedifficultybuttons[MEDIUM].right = &max->menu.gamedifficultybuttons[HARD];
-	max->menu.gamedifficultybuttons[MEDIUM].down = &max->menu.gamedifficultybuttons[GDCONTINUE];
+	max->menu.gamedifficultybuttons[MEDIUM].up = &max->menu.gamedifficultybuttons[EASY];
+	max->menu.gamedifficultybuttons[MEDIUM].down = &max->menu.gamedifficultybuttons[HARD];
 	max->menu.gamedifficultybuttons[MEDIUM].state = ACTIVE;
 	max->menu.gamedifficultybuttons[MEDIUM].x = 1000;
-	max->menu.gamedifficultybuttons[MEDIUM].y = 100;
+	max->menu.gamedifficultybuttons[MEDIUM].y = 400;
 	max->menu.gamedifficultybuttons[MEDIUM].text.text = S_MEDIUM;
 	max->menu.gamedifficultybuttons[MEDIUM].text.sx = max->menu.gamedifficultybuttons[MEDIUM].x + 40;
 	max->menu.gamedifficultybuttons[MEDIUM].text.sy = max->menu.gamedifficultybuttons[MEDIUM].y + 40;
 	max->menu.gamedifficultybuttons[HARD] = button;
 	max->menu.gamedifficultybuttons[HARD].id = HARD;
 	max->menu.gamedifficultybuttons[HARD].group = NEWDIFFICULTY;
-	max->menu.gamedifficultybuttons[HARD].left = &max->menu.gamedifficultybuttons[MEDIUM];
-	max->menu.gamedifficultybuttons[HARD].down = &max->menu.gamedifficultybuttons[GDCONTINUE];
+	max->menu.gamedifficultybuttons[HARD].up = &max->menu.gamedifficultybuttons[MEDIUM];
 	max->menu.gamedifficultybuttons[HARD].state = ACTIVE;
-	max->menu.gamedifficultybuttons[HARD].x = 1400;
-	max->menu.gamedifficultybuttons[HARD].y = 100;
+	max->menu.gamedifficultybuttons[HARD].x = 1000;
+	max->menu.gamedifficultybuttons[HARD].y = 600;
 	max->menu.gamedifficultybuttons[HARD].text.text = S_HARD;
 	max->menu.gamedifficultybuttons[HARD].text.sx = max->menu.gamedifficultybuttons[HARD].x + 40;
 	max->menu.gamedifficultybuttons[HARD].text.sy = max->menu.gamedifficultybuttons[HARD].y + 40;
-	max->menu.gamedifficultybuttons[GDBACK] = button;
-	max->menu.gamedifficultybuttons[GDBACK].id = GDBACK;
-	max->menu.gamedifficultybuttons[GDBACK].group = NEWDIFFICULTY;
-	max->menu.gamedifficultybuttons[GDBACK].up = &max->menu.gamedifficultybuttons[MEDIUM];
-	max->menu.gamedifficultybuttons[GDBACK].right = &max->menu.gamedifficultybuttons[GDCONTINUE];
-	max->menu.gamedifficultybuttons[GDBACK].state = ACTIVE;
-	max->menu.gamedifficultybuttons[GDBACK].x = 800;
-	max->menu.gamedifficultybuttons[GDBACK].y = 300;
-	max->menu.gamedifficultybuttons[GDBACK].text.text = S_BACK;
-	max->menu.gamedifficultybuttons[GDBACK].text.sx = max->menu.gamedifficultybuttons[GDBACK].x + 40;
-	max->menu.gamedifficultybuttons[GDBACK].text.sy = max->menu.gamedifficultybuttons[GDBACK].y + 40;
-	max->menu.gamedifficultybuttons[GDCONTINUE] = button;
-	max->menu.gamedifficultybuttons[GDCONTINUE].id = GDCONTINUE;
-	max->menu.gamedifficultybuttons[GDCONTINUE].group = NEWDIFFICULTY;
-	max->menu.gamedifficultybuttons[GDCONTINUE].up = &max->menu.gamedifficultybuttons[MEDIUM];
-	max->menu.gamedifficultybuttons[GDCONTINUE].left = &max->menu.gamedifficultybuttons[GDBACK];
-	max->menu.gamedifficultybuttons[GDCONTINUE].state = ACTIVE;
-	max->menu.gamedifficultybuttons[GDCONTINUE].x = 1200;
-	max->menu.gamedifficultybuttons[GDCONTINUE].y = 300;
-	max->menu.gamedifficultybuttons[GDCONTINUE].text.text = S_CONTINUE;
-	max->menu.gamedifficultybuttons[GDCONTINUE].text.sx = max->menu.gamedifficultybuttons[GDCONTINUE].x + 40;
-	max->menu.gamedifficultybuttons[GDCONTINUE].text.sy = max->menu.gamedifficultybuttons[GDCONTINUE].y + 40;
+	// max->menu.gamedifficultybuttons[GDBACK] = button;
+	// max->menu.gamedifficultybuttons[GDBACK].id = GDBACK;
+	// max->menu.gamedifficultybuttons[GDBACK].group = NEWDIFFICULTY;
+	// max->menu.gamedifficultybuttons[GDBACK].up = &max->menu.gamedifficultybuttons[MEDIUM];
+	// max->menu.gamedifficultybuttons[GDBACK].right = &max->menu.gamedifficultybuttons[GDCONTINUE];
+	// max->menu.gamedifficultybuttons[GDBACK].state = ACTIVE;
+	// max->menu.gamedifficultybuttons[GDBACK].x = 800;
+	// max->menu.gamedifficultybuttons[GDBACK].y = 300;
+	// max->menu.gamedifficultybuttons[GDBACK].text.text = S_BACK;
+	// max->menu.gamedifficultybuttons[GDBACK].text.sx = max->menu.gamedifficultybuttons[GDBACK].x + 40;
+	// max->menu.gamedifficultybuttons[GDBACK].text.sy = max->menu.gamedifficultybuttons[GDBACK].y + 40;
+	// max->menu.gamedifficultybuttons[GDCONTINUE] = button;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].id = GDCONTINUE;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].group = NEWDIFFICULTY;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].up = &max->menu.gamedifficultybuttons[MEDIUM];
+	// max->menu.gamedifficultybuttons[GDCONTINUE].left = &max->menu.gamedifficultybuttons[GDBACK];
+	// max->menu.gamedifficultybuttons[GDCONTINUE].state = ACTIVE;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].x = 1200;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].y = 300;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].text.text = S_CONTINUE;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].text.sx = max->menu.gamedifficultybuttons[GDCONTINUE].x + 40;
+	// max->menu.gamedifficultybuttons[GDCONTINUE].text.sy = max->menu.gamedifficultybuttons[GDCONTINUE].y + 40;
 	max->menu.gametypebuttons[CAMPAIGN] = button;
 	max->menu.gametypebuttons[CAMPAIGN].id = CAMPAIGN;
 	max->menu.gametypebuttons[CAMPAIGN].group = NEWSELECTION;

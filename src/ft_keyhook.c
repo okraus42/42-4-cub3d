@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 17:57:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 14:21:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,11 @@
 // 	MLX_KEY_MENU			= 348,
 // }	keys_t;
 
+void	ft_clear_keys(t_max *max)
+{
+	ft_bzero(&max->key, sizeof(t_controls));
+}
+
 void	ft_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_max	*max;
@@ -141,12 +146,20 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 	max = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
-		if (max->game_mode != MENU)
+		if (max->game_mode == GAMEPLAY)
 		{
 			max->game_mode = MENU;
 			max->menu.current_button[0] = RESUME;
 			max->menu.current_buttongroup = MAINBUTTONS;
 			max->menuscreen->enabled = 1;
+		}
+		else if (max->game_mode == GAMESTART)
+		{
+			max->game_mode = MENU;
+			max->menu.current_button[0] = NEWGAME;
+			max->menu.current_buttongroup = MAINBUTTONS;
+			max->menuscreen->enabled = 1;
+			max->textscreen->enabled = 0;
 		}
 		else if (max->game_in_progress)
 		{
@@ -158,380 +171,254 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 			mlx_close_window(max->mlx);
 		}
 	}
+	if (keydata.key < 350 && keydata.action == MLX_PRESS)
+		max->keys[keydata.key] = 1;
+	if (keydata.key < 350 && keydata.action == MLX_RELEASE)
+		max->keys[keydata.key] = 0;
 	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
 	{
 		max->key.up = 1;
-	}
-	else
-	{
-		max->key.up = 0;
 	}
 	if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
 	{
 		max->key.down = 1;
 	}
-	else
-	{
-		max->key.down = 0;
-	}
 	if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS)
 	{
 		max->key.right = 1;
 	}
-	else
-	{
-		max->key.right = 0;
-	}
+
 	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
 	{
 		max->key.left = 1;
 	}
-	else
-	{
-		max->key.left = 0;
-	}
+
 	if (keydata.key == MLX_KEY_ENTER && keydata.action == MLX_PRESS)
 	{
 		max->key.enter = 1;
-	}
-	else
-	{
-		max->key.enter = 0;
 	}
 	if (keydata.key == MLX_KEY_KP_ADD && keydata.action == MLX_PRESS)
 	{
 		max->key.add = 1;
 	}
-	else
-	{
-		max->key.add = 0;
-	}
 	if (keydata.key == MLX_KEY_KP_SUBTRACT && keydata.action == MLX_PRESS)
 	{
 		max->key.subtract = 1;
-	}
-	else
-	{
-		max->key.subtract = 0;
 	}
 	if (keydata.key == MLX_KEY_KP_MULTIPLY && keydata.action == MLX_PRESS)
 	{
 		max->key.multiply = 1;
 	}
-	else
-	{
-		max->key.multiply = 0;
-	}
 	if (keydata.key == MLX_KEY_KP_DIVIDE && keydata.action == MLX_PRESS)
 	{
 		max->key.divide = 1;
 	}
-	else
-	{
-		max->key.divide = 0;
-	}
-		if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
-	{
-		max->key.a = 1;
-	}
-	else
-	{
-		max->key.a = 0;
-	}
-	if (keydata.key == MLX_KEY_B && keydata.action == MLX_PRESS)
-	{
-		max->key.b = 1;
-	}
-	else
-	{
-		max->key.b = 0;
-	}
-	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
-	{
-		max->key.c = 1;
-	}
-	else
-	{
-		max->key.c = 0;
-	}
-	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
-	{
-		max->key.d = 1;
-	}
-	else
-	{
-		max->key.d = 0;
-	}
-	if (keydata.key == MLX_KEY_E && keydata.action == MLX_PRESS)
-	{
-		max->key.e = 1;
-	}
-	else
-	{
-		max->key.e = 0;
-	}
-	if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
-	{
-		max->key.f = 1;
-	}
-	else
-	{
-		max->key.f = 0;
-	}
-	if (keydata.key == MLX_KEY_G && keydata.action == MLX_PRESS)
-	{
-		max->key.g = 1;
-	}
-	else
-	{
-		max->key.g = 0;
-	}
-	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
-	{
-		max->key.h = 1;
-	}
-	else
-	{
-		max->key.h = 0;
-	}
-	if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS)
-	{
-		max->key.i = 1;
-	}
-	else
-	{
-		max->key.i = 0;
-	}
-	if (keydata.key == MLX_KEY_J && keydata.action == MLX_PRESS)
-	{
-		max->key.j = 1;
-	}
-	else
-	{
-		max->key.j = 0;
-	}
-	if (keydata.key == MLX_KEY_K && keydata.action == MLX_PRESS)
-	{
-		max->key.k = 1;
-	}
-	else
-	{
-		max->key.k = 0;
-	}
-	if (keydata.key == MLX_KEY_L && keydata.action == MLX_PRESS)
-	{
-		max->key.l = 1;
-	}
-	else
-	{
-		max->key.l = 0;
-	}
-	if (keydata.key == MLX_KEY_M && keydata.action == MLX_PRESS)
-	{
-		max->key.m = 1;
-	}
-	else
-	{
-		max->key.m = 0;
-	}
-	if (keydata.key == MLX_KEY_N && keydata.action == MLX_PRESS)
-	{
-		max->key.n = 1;
-	}
-	else
-	{
-		max->key.n = 0;
-	}
-	if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS)
-	{
-		max->key.o = 1;
-	}
-	else
-	{
-		max->key.o = 0;
-	}
-	if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS)
-	{
-		max->key.p = 1;
-	}
-	else
-	{
-		max->key.p = 0;
-	}
-	if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
-	{
-		max->key.q = 1;
-	}
-	else
-	{
-		max->key.q = 0;
-	}
-	if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
-	{
-		max->key.r = 1;
-	}
-	else
-	{
-		max->key.r = 0;
-	}
-	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
-	{
-		max->key.s = 1;
-	}
-	else
-	{
-		max->key.s = 0;
-	}
-	if (keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
-	{
-		max->key.t = 1;
-	}
-	else
-	{
-		max->key.t = 0;
-	}
-	if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS)
-	{
-		max->key.u = 1;
-	}
-	else
-	{
-		max->key.u = 0;
-	}
-	if (keydata.key == MLX_KEY_V && keydata.action == MLX_PRESS)
-	{
-		max->key.v = 1;
-	}
-	else
-	{
-		max->key.v = 0;
-	}
-	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
-	{
-		max->key.w = 1;
-	}
-	else
-	{
-		max->key.w = 0;
-	}
-	if (keydata.key == MLX_KEY_X && keydata.action == MLX_PRESS)
-	{
-		max->key.x = 1;
-	}
-	else
-	{
-		max->key.x = 0;
-	}
-	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
-	{
-		max->key.y = 1;
-	}
-	else
-	{
-		max->key.y = 0;
-	}
-	if (keydata.key == MLX_KEY_Z && keydata.action == MLX_PRESS)
-	{
-		max->key.z = 1;
-	}
-	else
-	{
-		max->key.z = 0;
-	}
-	if (keydata.key == MLX_KEY_1 && keydata.action == MLX_PRESS)
+	// if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.a = 1;
+	// }
+	// if (keydata.key == MLX_KEY_B && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.b = 1;
+	// }
+	// if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.c = 1;
+	// }
+	// if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.d = 1;
+	// }
+	// if (keydata.key == MLX_KEY_E && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.e = 1;
+	// }
+	// if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.f = 1;
+	// }
+	// if (keydata.key == MLX_KEY_G && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.g = 1;
+	// }
+	// if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.h = 1;
+	// }
+	// if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.i = 1;
+	// }
+	// if (keydata.key == MLX_KEY_J && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.j = 1;
+	// }
+	// if (keydata.key == MLX_KEY_K && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.k = 1;
+	// }
+	// if (keydata.key == MLX_KEY_L && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.l = 1;
+	// }
+	// if (keydata.key == MLX_KEY_M && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.m = 1;
+	// }
+	// if (keydata.key == MLX_KEY_N && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.n = 1;
+	// }
+	// if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.o = 1;
+	// }
+	// if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.p = 1;
+	// }
+	// if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.q = 1;
+	// }
+	// if (keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.r = 1;
+	// }
+	// if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.s = 1;
+	// }
+	// if (keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.t = 1;
+	// }
+	// if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.u = 1;
+	// }
+	// if (keydata.key == MLX_KEY_V && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.v = 1;
+	// }
+	// if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.w = 1;
+	// }
+	// if (keydata.key == MLX_KEY_X && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.x = 1;
+	// }
+	// if (keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.y = 1;
+	// }
+	// if (keydata.key == MLX_KEY_Z && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.z = 1;
+	// }
+	// if (keydata.key == MLX_KEY_1 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.one = 1;
+	// }
+	// if (keydata.key == MLX_KEY_2 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.two = 1;
+	// }
+	// if (keydata.key == MLX_KEY_3 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.three = 1;
+	// }
+	// if (keydata.key == MLX_KEY_4 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.four = 1;
+	// }
+	// if (keydata.key == MLX_KEY_5 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.five = 1;
+	// }
+	// if (keydata.key == MLX_KEY_6 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.six = 1;
+	// }
+	// if (keydata.key == MLX_KEY_7 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.seven = 1;
+	// }
+	// if (keydata.key == MLX_KEY_8 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.eight = 1;
+	// }
+	// if (keydata.key == MLX_KEY_9 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.nine = 1;
+	// }
+	// if (keydata.key == MLX_KEY_0 && keydata.action == MLX_PRESS)
+	// {
+	// 	max->key.zero = 1;
+	// }
+	if (keydata.key == MLX_KEY_KP_1 && keydata.action == MLX_PRESS)
 	{
 		max->key.one = 1;
 	}
-	else
-	{
-		max->key.one = 0;
-	}
-	if (keydata.key == MLX_KEY_2 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_2 && keydata.action == MLX_PRESS)
 	{
 		max->key.two = 1;
 	}
-	else
-	{
-		max->key.two = 0;
-	}
-	if (keydata.key == MLX_KEY_3 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_3 && keydata.action == MLX_PRESS)
 	{
 		max->key.three = 1;
 	}
-	else
-	{
-		max->key.three = 0;
-	}
-	if (keydata.key == MLX_KEY_4 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_4 && keydata.action == MLX_PRESS)
 	{
 		max->key.four = 1;
 	}
-	else
-	{
-		max->key.four = 0;
-	}
-	if (keydata.key == MLX_KEY_5 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_5 && keydata.action == MLX_PRESS)
 	{
 		max->key.five = 1;
 	}
-	else
-	{
-		max->key.five = 0;
-	}
-	if (keydata.key == MLX_KEY_6 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_6 && keydata.action == MLX_PRESS)
 	{
 		max->key.six = 1;
 	}
-	else
-	{
-		max->key.six = 0;
-	}
-	if (keydata.key == MLX_KEY_7 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_7 && keydata.action == MLX_PRESS)
 	{
 		max->key.seven = 1;
 	}
-	else
-	{
-		max->key.seven = 0;
-	}
-	if (keydata.key == MLX_KEY_8 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_8 && keydata.action == MLX_PRESS)
 	{
 		max->key.eight = 1;
 	}
-	else
-	{
-		max->key.eight = 0;
-	}
-	if (keydata.key == MLX_KEY_9 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_9 && keydata.action == MLX_PRESS)
 	{
 		max->key.nine = 1;
 	}
-	else
-	{
-		max->key.nine = 0;
-	}
-	if (keydata.key == MLX_KEY_0 && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_KP_0 && keydata.action == MLX_PRESS)
 	{
 		max->key.zero = 1;
-	}
-	else
-	{
-		max->key.zero = 0;
 	}
 	if (keydata.key == MLX_KEY_SPACE && keydata.action == MLX_PRESS)
 	{
 		max->key.space = 1;
 	}
-	else
-	{
-		max->key.space = 0;
-	}
 	if (keydata.key == MLX_KEY_BACKSPACE && keydata.action == MLX_PRESS)
 	{
 		max->key.backspace = 1;
 	}
-	else
+	if (keydata.key == MLX_KEY_LEFT_SHIFT && keydata.action == MLX_PRESS)
 	{
-		max->key.backspace = 0;
+		max->key.left_shift = 1;
+	}
+	if (keydata.key == MLX_KEY_LEFT_SHIFT && keydata.action == MLX_RELEASE)
+	{
+		max->key.left_shift = 0;
+	}
+	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_PRESS)
+	{
+		max->key.right_shift = 1;
+	}
+	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_RELEASE)
+	{
+		max->key.right_shift = 0;
 	}
 }

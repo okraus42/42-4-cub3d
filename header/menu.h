@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 16:04:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 10:32:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@
 # define EASY 0
 # define MEDIUM 1
 # define HARD 2
-# define GDBACK 3
-# define GDCONTINUE 4
-# define DIFFICULTYBUTTONCOUNT 5
+// # define GDBACK 3
+// # define GDCONTINUE 4
+# define DIFFICULTYBUTTONCOUNT 3
 
 //game type
 # define CAMPAIGN 0
@@ -250,7 +250,6 @@ typedef struct s_menu
 {
 	int				current_button[BUTTONGROUPS];
 	int				current_buttongroup;
-	int				enter;
 	int				selection;
 	int				newmap;
 	int				newwriting;

@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/03/27 12:26:44 by okraus           ###   ########.fr        #
+#    Updated: 2024/03/29 14:09:39 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ PERC		=	$(shell expr $(HIT_COUNT3) / $(HIT_TOTAL) | bc)
 ECHO		=	echo "[`expr ${HIT_COUNT1} '*' 100 / ${HIT_TOTAL}`%]"
 endif
 
-NAME		=	cub3d
+NAME		=	cub3D
 LIBFT_F		=	libft/
 LIBFT		=	libft.a
 HEADER		=	header/cub3d.h header/menu.h
@@ -58,6 +58,7 @@ SRC_DIR		=	src/
 SRC_S		=	ft_buttons.c \
 				ft_cub3d.c \
 				ft_game.c \
+				ft_gamestart.c \
 				ft_hook.c \
 				ft_keyhook.c \
 				ft_line.c \

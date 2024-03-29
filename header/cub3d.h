@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 17:54:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 11:24:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -570,16 +570,38 @@ typedef struct s_textures
 	mlx_texture_t	*floor;
 }	t_textures;
 
+typedef struct s_gametext
+{
+	mlx_texture_t	*background;
+	mlx_texture_t	*font;
+	char			*text;
+	int				i;	
+	mlx_image_t		*image;
+	unsigned int	c;
+	unsigned int	cb;
+	int				sx;
+	int				sy;
+	int				x;
+	int				y;
+	int				highlight;
+	int				offset;
+	int				height;
+	int				timems;
+}	t_gametext;
+
 typedef struct s_max
 {
 	mlx_t			*mlx;
 	t_map			*map;
 	t_math			*math;
 	t_controls		key;
+	int				keys[350];
 	mlx_image_t		*background;
 	mlx_image_t		*hud;
 	mlx_image_t		*menuscreen;
+	mlx_image_t		*textscreen;
 	t_menu			menu;
+	t_gametext		gamestart;
 	t_font			font;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
@@ -645,6 +667,10 @@ int		ft_process_random(t_max *max);
 void	ft_amaze_standard(t_max *max);
 void	ft_amaze_bonus(t_max *max);
 
+//ft_gamestart.c
+void	ft_initgamestart(t_max *max);
+void	ft_gamestart(t_max *max);
+
 //ft_hook.c
 void	ft_hook(void *param);
 
@@ -666,6 +692,7 @@ void	ft_initmenu(t_max *max);
 void	ft_menu(t_max *max);
 
 //ft_keyhook.c
+void	ft_clear_keys(t_max *max);
 void	ft_keyhook(mlx_key_data_t keydata, void *param);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:33:59 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 18:08:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 10:22:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,16 +110,24 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 {
 	int	i;
+	int	c;
+	int	shift;
 
+	shift = 0;
+	if (max->key.left_shift || max->key.right_shift)
+		shift = -32;
 	i = textfield->text.highlight;
+	if (i < 0)
+	{
+		i = 0;
+		while (textfield->text.text[i])
+			++i;
+	}
 	if (i < 0)
 		i = 0;
 	if (i > 15)
 		i = 15;
-	if (!textfield->text.text[i])
-	{
-		textfield->text.text[i] = ' ';
-	}
+	textfield->text.text[i] = ' ';
 	// if (max->key.left)
 	// {
 	// 	textfield->text.text[i] = '\0';
@@ -141,72 +149,6 @@ void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 	// 	++textfield->text.text[i];
 	// 	max->key.down = 0;
 	// }
-	if (max->key.zero)
-	{
-		textfield->text.text[i] = '0';
-		max->key.zero = 0;
-		++i;
-	}
-	if (max->key.one)
-	{
-		textfield->text.text[i] = '1';
-		max->key.one = 0;
-		++i;
-	}
-	if (max->key.two)
-	{
-		textfield->text.text[i] = '2';
-		max->key.two = 0;
-		++i;
-	}
-	if (max->key.three)
-	{
-		textfield->text.text[i] = '3';
-		max->key.three = 0;
-		++i;
-	}
-	if (max->key.four)
-	{
-		textfield->text.text[i] = '4';
-		max->key.four = 0;
-		++i;
-	}
-	if (max->key.five)
-	{
-		textfield->text.text[i] = '5';
-		max->key.five = 0;
-		++i;
-	}
-	if (max->key.six)
-	{
-		textfield->text.text[i] = '6';
-		max->key.six = 0;
-		++i;
-	}
-	if (max->key.seven)
-	{
-		textfield->text.text[i] = '7';
-		max->key.seven = 0;
-		++i;
-	}
-	if (max->key.eight)
-	{
-		textfield->text.text[i] = '8';
-		max->key.eight = 0;
-		++i;
-	}
-	if (max->key.nine)
-	{
-		textfield->text.text[i] = '9';
-		max->key.nine = 0;
-		++i;
-	}
-	if (max->key.space)
-	{
-		textfield->text.text[i] = ' ';
-		max->key.space = 0;
-		++i;
-	}
 	if (max->key.backspace)
 	{
 		textfield->text.text[i] = '\0';
@@ -215,161 +157,248 @@ void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 		max->key.backspace = 0;
 		--i;
 	}
-		if (max->key.a)
+	// if (max->key.zero)
+	// {
+	// 	textfield->text.text[i] = '0';
+	// 	max->key.zero = 0;
+	// 	++i;
+	// }
+	// if (max->key.one)
+	// {
+	// 	textfield->text.text[i] = '1';
+	// 	max->key.one = 0;
+	// 	++i;
+	// }
+	// if (max->key.two)
+	// {
+	// 	textfield->text.text[i] = '2';
+	// 	max->key.two = 0;
+	// 	++i;
+	// }
+	// if (max->key.three)
+	// {
+	// 	textfield->text.text[i] = '3';
+	// 	max->key.three = 0;
+	// 	++i;
+	// }
+	// if (max->key.four)
+	// {
+	// 	textfield->text.text[i] = '4';
+	// 	max->key.four = 0;
+	// 	++i;
+	// }
+	// if (max->key.five)
+	// {
+	// 	textfield->text.text[i] = '5';
+	// 	max->key.five = 0;
+	// 	++i;
+	// }
+	// if (max->key.six)
+	// {
+	// 	textfield->text.text[i] = '6';
+	// 	max->key.six = 0;
+	// 	++i;
+	// }
+	// if (max->key.seven)
+	// {
+	// 	textfield->text.text[i] = '7';
+	// 	max->key.seven = 0;
+	// 	++i;
+	// }
+	// if (max->key.eight)
+	// {
+	// 	textfield->text.text[i] = '8';
+	// 	max->key.eight = 0;
+	// 	++i;
+	// }
+	// if (max->key.nine)
+	// {
+	// 	textfield->text.text[i] = '9';
+	// 	max->key.nine = 0;
+	// 	++i;
+	// }
+	c = 32;
+	while (c <= 126)
 	{
-		textfield->text.text[i] = 'a';
-		max->key.a = 0;
-		++i;
+		if (max->keys[c])
+		{
+			textfield->text.text[i] = c;
+			if (ft_isupper(c))
+			{
+				textfield->text.text[i] = 32 + c + shift;
+			}
+			if (c == MLX_KEY_MINUS && shift)
+				textfield->text.text[i] = '_';
+			max->keys[c] = 0;
+			++i;
+		}
+		++c;
 	}
-	if (max->key.b)
-	{
-		textfield->text.text[i] = 'b';
-		max->key.b = 0;
-		++i;
-	}
-	if (max->key.c)
-	{
-		textfield->text.text[i] = 'c';
-		max->key.c = 0;
-		++i;
-	}
-	if (max->key.d)
-	{
-		textfield->text.text[i] = 'd';
-		max->key.d = 0;
-		++i;
-	}
-	if (max->key.e)
-	{
-		textfield->text.text[i] = 'e';
-		max->key.e = 0;
-		++i;
-	}
-	if (max->key.f)
-	{
-		textfield->text.text[i] = 'f';
-		max->key.f = 0;
-		++i;
-	}
-	if (max->key.g)
-	{
-		textfield->text.text[i] = 'g';
-		max->key.g = 0;
-		++i;
-	}
-	if (max->key.h)
-	{
-		textfield->text.text[i] = 'h';
-		max->key.h = 0;
-		++i;
-	}
-	if (max->key.i)
-	{
-		textfield->text.text[i] = 'i';
-		max->key.i = 0;
-		++i;
-	}
-	if (max->key.j)
-	{
-		textfield->text.text[i] = 'j';
-		max->key.j = 0;
-		++i;
-	}
-	if (max->key.k)
-	{
-		textfield->text.text[i] = 'k';
-		max->key.k = 0;
-		++i;
-	}
-	if (max->key.l)
-	{
-		textfield->text.text[i] = 'l';
-		max->key.l = 0;
-		++i;
-	}
-	if (max->key.m)
-	{
-		textfield->text.text[i] = 'm';
-		max->key.m = 0;
-		++i;
-	}
-	if (max->key.n)
-	{
-		textfield->text.text[i] = 'n';
-		max->key.n = 0;
-		++i;
-	}
-	if (max->key.o)
-	{
-		textfield->text.text[i] = 'o';
-		max->key.o = 0;
-		++i;
-	}
-	if (max->key.p)
-	{
-		textfield->text.text[i] = 'p';
-		max->key.p = 0;
-		++i;
-	}
-	if (max->key.q)
-	{
-		textfield->text.text[i] = 'q';
-		max->key.q = 0;
-		++i;
-	}
-	if (max->key.r)
-	{
-		textfield->text.text[i] = 'r';
-		max->key.r = 0;
-		++i;
-	}
-	if (max->key.s)
-	{
-		textfield->text.text[i] = 's';
-		max->key.s = 0;
-		++i;
-	}
-	if (max->key.t)
-	{
-		textfield->text.text[i] = 't';
-		max->key.t = 0;
-		++i;
-	}
-	if (max->key.u)
-	{
-		textfield->text.text[i] = 'u';
-		max->key.u = 0;
-		++i;
-	}
-	if (max->key.v)
-	{
-		textfield->text.text[i] = 'v';
-		max->key.v = 0;
-		++i;
-	}
-	if (max->key.w)
-	{
-		textfield->text.text[i] = 'w';
-		max->key.w = 0;
-		++i;
-	}
-	if (max->key.x)
-	{
-		textfield->text.text[i] = 'x';
-		max->key.x = 0;
-		++i;
-	}
-	if (max->key.y)
-	{
-		textfield->text.text[i] = 'y';
-		max->key.y = 0;
-		++i;
-	}
-	if (max->key.z)
-	{
-		textfield->text.text[i] = 'z';
-		max->key.z = 0;
-		++i;
-	}
+	// if (max->key.space)
+	// {
+	// 	textfield->text.text[i] = ' ';
+	// 	max->key.space = 0;
+	// 	++i;
+	// }
+	// if (max->key.a)
+	// {
+	// 	textfield->text.text[i] = 'a' + shift;
+	// 	max->key.a = 0;
+	// 	++i;
+	// }
+	// if (max->key.b)
+	// {
+	// 	textfield->text.text[i] = 'b' + shift;
+	// 	max->key.b = 0;
+	// 	++i;
+	// }
+	// if (max->key.c)
+	// {
+	// 	textfield->text.text[i] = 'c' + shift;
+	// 	max->key.c = 0;
+	// 	++i;
+	// }
+	// if (max->key.d)
+	// {
+	// 	textfield->text.text[i] = 'd' + shift;
+	// 	max->key.d = 0;
+	// 	++i;
+	// }
+	// if (max->key.e)
+	// {
+	// 	textfield->text.text[i] = 'e' + shift;
+	// 	max->key.e = 0;
+	// 	++i;
+	// }
+	// if (max->key.f)
+	// {
+	// 	textfield->text.text[i] = 'f' + shift;
+	// 	max->key.f = 0;
+	// 	++i;
+	// }
+	// if (max->key.g)
+	// {
+	// 	textfield->text.text[i] = 'g' + shift;
+	// 	max->key.g = 0;
+	// 	++i;
+	// }
+	// if (max->key.h)
+	// {
+	// 	textfield->text.text[i] = 'h' + shift;
+	// 	max->key.h = 0;
+	// 	++i;
+	// }
+	// if (max->key.i)
+	// {
+	// 	textfield->text.text[i] = 'i' + shift;
+	// 	max->key.i = 0;
+	// 	++i;
+	// }
+	// if (max->key.j)
+	// {
+	// 	textfield->text.text[i] = 'j' + shift;
+	// 	max->key.j = 0;
+	// 	++i;
+	// }
+	// if (max->key.k)
+	// {
+	// 	textfield->text.text[i] = 'k' + shift;
+	// 	max->key.k = 0;
+	// 	++i;
+	// }
+	// if (max->key.l)
+	// {
+	// 	textfield->text.text[i] = 'l' + shift;
+	// 	max->key.l = 0;
+	// 	++i;
+	// }
+	// if (max->key.m)
+	// {
+	// 	textfield->text.text[i] = 'm' + shift;
+	// 	max->key.m = 0;
+	// 	++i;
+	// }
+	// if (max->key.n)
+	// {
+	// 	textfield->text.text[i] = 'n' + shift;
+	// 	max->key.n = 0;
+	// 	++i;
+	// }
+	// if (max->key.o)
+	// {
+	// 	textfield->text.text[i] = 'o' + shift;
+	// 	max->key.o = 0;
+	// 	++i;
+	// }
+	// if (max->key.p)
+	// {
+	// 	textfield->text.text[i] = 'p' + shift;
+	// 	max->key.p = 0;
+	// 	++i;
+	// }
+	// if (max->key.q)
+	// {
+	// 	textfield->text.text[i] = 'q' + shift;
+	// 	max->key.q = 0;
+	// 	++i;
+	// }
+	// if (max->key.r)
+	// {
+	// 	textfield->text.text[i] = 'r' + shift;
+	// 	max->key.r = 0;
+	// 	++i;
+	// }
+	// if (max->key.s)
+	// {
+	// 	textfield->text.text[i] = 's' + shift;
+	// 	max->key.s = 0;
+	// 	++i;
+	// }
+	// if (max->key.t)
+	// {
+	// 	textfield->text.text[i] = 't' + shift;
+	// 	max->key.t = 0;
+	// 	++i;
+	// }
+	// if (max->key.u)
+	// {
+	// 	textfield->text.text[i] = 'u' + shift;
+	// 	max->key.u = 0;
+	// 	++i;
+	// }
+	// if (max->key.v)
+	// {
+	// 	textfield->text.text[i] = 'v' + shift;
+	// 	max->key.v = 0;
+	// 	++i;
+	// }
+	// if (max->key.w)
+	// {
+	// 	textfield->text.	textfield->text.text[1] = '\0';text[i] = 'w' + shift;
+	// 	max->key.w = 0;
+	// 	++i;
+	// }
+	// if (max->key.x)
+	// {
+	// 	textfield->text.text[i] = 'x' + shift;
+	// 	max->key.x = 0;
+	// 	++i;
+	// }
+	// if (max->key.y)
+	// {
+	// 	textfield->text.text[i] = 'y' + shift;
+	// 	max->key.y = 0;
+	// 	++i;
+	// }
+	// if (max->key.z)
+	// {
+	// 	textfield->text.text[i] = 'z' + shift;
+	// 	max->key.z = 0;
+	// 	++i;
+	// }
 	textfield->text.highlight = i;
+	textfield->text.text[16] = '\0';
+	textfield->text.text[17] = '\0';
+	textfield->text.text[18] = '\0';
+	textfield->text.text[19] = '\0';
 }

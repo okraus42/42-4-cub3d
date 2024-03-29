@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 11:58:26 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 11:48:43 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,13 @@ void	ft_amaze_standard(t_max *max)
 		//free everything
 		exit(10);
 	}
+	max->textscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!max->textscreen || (mlx_image_to_window(mlx, max->textscreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		exit(10);
+	}
 	max->mlx = mlx;
 	max->maximap = maximap;
 	max->minimap = minimap;
@@ -63,6 +70,7 @@ void	ft_amaze_standard(t_max *max)
 	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);
+	ft_initgamestart(max);
 	mlx_key_hook(mlx, &ft_keyhook, max);
 	//mlx_mouse_hook(mlx, &mousehook, max);
 	mlx_loop_hook(mlx, ft_hook, max);
@@ -116,7 +124,14 @@ void	ft_amaze_bonus(t_max *max)
 		exit(10);
 	}
 	max->menuscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!screen || (mlx_image_to_window(mlx, max->menuscreen, 0, 0) < 0))
+	if (!max->menuscreen || (mlx_image_to_window(mlx, max->menuscreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		exit(10);
+	}
+	max->textscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!max->textscreen || (mlx_image_to_window(mlx, max->textscreen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
@@ -129,6 +144,7 @@ void	ft_amaze_bonus(t_max *max)
 	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);
+	ft_initgamestart(max);
 	mlx_key_hook(mlx, &ft_keyhook, max);
 	//mlx_mouse_hook(mlx, &mousehook, max);
 	mlx_loop_hook(mlx, ft_hook, max);

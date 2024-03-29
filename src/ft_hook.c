@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/26 16:10:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 11:41:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -426,8 +426,8 @@ void	ft_menuhook(t_max *max)
 
 void	ft_gameplayhook(t_max *max)
 {
-	max->newms = ft_get_time_in_ms();
-	max->framems = (unsigned int)(max->newms - max->oldms);
+	// max->newms = ft_get_time_in_ms();
+	// max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
 	// Add some max speed to prevent running through walls.
 	max->map->p.turnspeed = max->framems * 8;
@@ -435,7 +435,7 @@ void	ft_gameplayhook(t_max *max)
 	max->map->p.xspeed = (max->map->p.speed * max->math->cos[max->map->p.orientation]) / 65536;
 	max->map->p.yspeed = -(max->map->p.speed * max->math->sin[max->map->p.orientation]) / 65536;
 	++max->frame;
-	max->oldms = max->newms;
+	// max->oldms = max->newms;
 	max->map->p.dx = -max->math->sin[max->map->p.orientation];
 	max->map->p.dy = -max->math->cos[max->map->p.orientation];
 	// size based on fov... maybe tangens? fov cannot be more than 180
@@ -609,13 +609,23 @@ void	ft_gameplayhook(t_max *max)
 	ft_draw_minimap(max);
 }
 
+void	ft_gamestarthook(t_max *max)
+{
+	ft_gamestart(max);
+}
+
 void	ft_hook(void *param)
 {
 	t_max	*max;
 
 	max = param;
+	max->newms = ft_get_time_in_ms();
+	max->framems = (unsigned int)(max->newms - max->oldms);
+	max->oldms = max->newms;
 	if (max->game_mode == MENU)
 		ft_menuhook(max);
+	else if (max->game_mode == GAMESTART)
+		ft_gamestarthook(max);
 	else if (max->game_mode == GAMEPLAY)
 		ft_gameplayhook(max);
 }
