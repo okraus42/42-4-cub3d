@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 10:32:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 16:52:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@
 # define MAINBUTTONSCOUNT 7
 
 //newwriting
+//continue ->confirm
 # define NAME 0
 # define COALITION 1
 # define CAMPUS 2
-# define NWBACK 3
-# define NWCONTINUE 4
-# define WRITINGBUTTONCOUNT 5
+# define NWCONFIRM 3
+# define WRITINGBUTTONCOUNT 4
 # define WRITINGTEXTFIELDCOUNT 3
 
 //game difficulty
@@ -54,20 +54,27 @@
 # define CAMPAIGN 0
 # define TIMETRIAL 1
 # define ONEMAP 2
-# define GTBACK 3
-# define GTCONTINUE 4
-# define GAMETYPEBUTTONCOUNT 5
+// # define GTBACK 3
+// # define GTCONTINUE 4
+# define GAMETYPEBUTTONCOUNT 3
 
 //map type
 # define CUSTOM 0
 # define RANDOM 1
-# define MTBACK 2
-# define MAPTYPEBUTTONCOUNT 3
+// # define MTBACK 2
+# define MAPTYPEBUTTONCOUNT 2
 
 //map selection
-# define MSBACK 2
-# define MSCONTINUE 3
-# define MAPSELECTIONBUTTONCOUNT 4
+// # define MSBACK 2
+# define CHOOSELEVEL 0
+# define MSPLAY 1
+# define MAPSELECTIONBUTTONCOUNT 2
+
+//random selection
+// # define MSBACK 2
+# define RSPLAY 0
+# define RSADVANCED 1
+# define RANDOMSELECTIONBUTTONCOUNT 2
 
 // compile with libft.a
 // pass number for
@@ -94,9 +101,9 @@
 # define ROROOMS 7
 # define RDOORS 8
 # define RDEADENDS 9
-# define RBACK 10
-# define RCONTINUE 11
-# define RANDOMBUTTONCOUNT 12
+# define RRANDOMIZE 10
+# define RPLAY 11
+# define RANDOMADVANCEDBUTTONCOUNT 12
 
 # define MAINBUTTONS 0		//resume-quit
 # define NEWWRITING 1		// name, coalition, campus 
@@ -104,8 +111,9 @@
 # define NEWSELECTION 3		// campaign, time, one level
 # define NEWLEVEL 4			// select map || random map
 # define NEWMAP 5			// choose a map from the list
-# define NEWRANDOM 6		// choose parameters for a random generation
-# define BUTTONGROUPS 7
+# define NEWRANDOM 6
+# define NEWRANDOMADVANCED 7		// choose parameters for a random generation
+# define BUTTONGROUPS 8
 
 # define S_RESUME "RESUME"
 # define S_SETTINGS "SETTINGS"
@@ -123,11 +131,16 @@
 # define S_HARD "HARD"
 # define S_BACK "BACK"
 # define S_CONTINUE "CONTINUE"
+# define S_CONFIRM "CONFIRM"
+# define S_CHOOSELEVEL "CHOOSE LEVEL"
+# define S_PLAY "PLAY"
+# define S_ADVANCED "ADVANCED"
 # define S_CAMPAIGN "CAMPAIGN"
 # define S_TIMETRIAL "TIME TRIAL"
 # define S_ONEMAP "ONE MAP"
 # define S_CUSTOM "CUSTOM"
 # define S_RANDOM "RANDOM"
+# define S_RANDOMIZE "RANDOMIZE"
 # define S_RWIDTH "WIDTH"
 # define S_RHEIGHT "HEIGHT"
 # define S_RRATIODE "RATIODE"
@@ -189,6 +202,7 @@ typedef struct s_randommap
 	t_values	rorooms;
 	t_values	rdoors;
 	t_values	rdeadends;
+	int			seed;
 }	t_randommap;
 
 typedef struct s_button
@@ -254,7 +268,7 @@ typedef struct s_menu
 	int				newmap;
 	int				newwriting;
 	int				cm_state;
-	int				random_state[RANDOMBUTTONCOUNT];
+	int				random_state[RANDOMADVANCEDBUTTONCOUNT];
 	t_randommap		rm;
 	//int			newlevel;
 	mlx_texture_t	*background;
@@ -271,7 +285,8 @@ typedef struct s_menu
 	t_button		gametypebuttons[GAMETYPEBUTTONCOUNT];
 	t_button		maptypebuttons[MAPTYPEBUTTONCOUNT];
 	t_button		mapselectionbuttons[MAPSELECTIONBUTTONCOUNT];
-	t_button		randomselectionbuttons[RANDOMBUTTONCOUNT];
+	t_button		randomselectionbuttons[RANDOMSELECTIONBUTTONCOUNT];
+	t_button		randomadvancedbuttons[RANDOMADVANCEDBUTTONCOUNT];
 	t_listfield		custommap;
 }	t_menu;
 

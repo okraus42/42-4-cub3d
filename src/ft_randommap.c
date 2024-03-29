@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/28 18:19:13 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/29 17:56:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -606,10 +606,14 @@ void	wallbreaker4(t_rmap *m)
 
 void	map_loops4(t_rmap *m)
 {
+	//might loop forever sometimes
+	int	i;
+
+	i = 0;
 	m->ll = 0;
 	m->tt = 0;
 	m->xx = 0;
-	while (m->ll + m->tt + m->xx != m->l + m->t + m->x)
+	while (m->ll + m->tt + m->xx != m->l + m->t + m->x && i < 4096)
 	{
 		m->i = 0;
 		while (m->i < m->s - 3)
@@ -617,7 +621,10 @@ void	map_loops4(t_rmap *m)
 			wallbreaker4(m);
 			++(m->i);
 		}
+		++i;
 	}
+	if (i == 4096)
+		ft_printf("broken loop??\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 }
 
 void	map_outerwall(t_rmap *m)
