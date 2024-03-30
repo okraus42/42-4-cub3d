@@ -6,10 +6,13 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 16:52:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 13:38:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MENU_H
+
+# define MENU_H
 
 # include "../.MLX42/include/MLX42/MLX42.h"
 # include "../libft/header/libft.h"
@@ -290,3 +293,4 @@ typedef struct s_menu
 	t_listfield		custommap;
 }	t_menu;
 
+#endif

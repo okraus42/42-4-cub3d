@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 11:41:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 15:17:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,41 +375,41 @@ void	ft_draw_strings(t_max *max)
 	}
 }
 
-void	ft_debug(t_max *max)
-{
-	if (max->key.five)
-	{
-		max->map->p.x = 0x214d9c;
-		max->map->p.y = 0x29d6a8;
-		max->map->p.orientation = 15568;
-		max->ray = 547;
-		max->key.five = 0;
-	}
-	if (max->key.six)
-	{
-		max->map->p.x = 0x45f0c;
-		max->map->p.y = 0x10ec2c;
-		max->map->p.orientation = 8486;
-		max->ray = 282;
-		max->key.six = 0;
-	}
-	if (max->key.seven)
-	{
-		max->map->p.x = 0x564a5;
-		max->map->p.y = 0x326b45;
-		max->map->p.orientation = 7774;
-		max->ray = 126;
-		max->key.seven = 0;
-	}
-	if (max->key.eight)
-	{
-		max->map->p.x = 0x5fdb1;
-		max->map->p.y = 0x361ed9;
-		max->map->p.orientation = 7774;
-		max->ray = 584;
-		max->key.eight = 0;
-	}
-}
+// void	ft_debug(t_max *max)
+// {
+// 	if (max->key.five)
+// 	{
+// 		max->map->p.x = 0x214d9c;
+// 		max->map->p.y = 0x29d6a8;
+// 		max->map->p.orientation = 15568;
+// 		max->ray = 547;
+// 		max->key.five = 0;
+// 	}
+// 	if (max->key.six)
+// 	{
+// 		max->map->p.x = 0x45f0c;
+// 		max->map->p.y = 0x10ec2c;
+// 		max->map->p.orientation = 8486;
+// 		max->ray = 282;
+// 		max->key.six = 0;
+// 	}
+// 	if (max->key.seven)
+// 	{
+// 		max->map->p.x = 0x564a5;
+// 		max->map->p.y = 0x326b45;
+// 		max->map->p.orientation = 7774;
+// 		max->ray = 126;
+// 		max->key.seven = 0;
+// 	}
+// 	if (max->key.eight)
+// 	{
+// 		max->map->p.x = 0x5fdb1;
+// 		max->map->p.y = 0x361ed9;
+// 		max->map->p.orientation = 7774;
+// 		max->ray = 584;
+// 		max->key.eight = 0;
+// 	}
+// }
 
 void	ft_menuhook(t_max *max)
 {
@@ -442,7 +442,7 @@ void	ft_gameplayhook(t_max *max)
 	max->map->p.cx = max->math->cos[max->map->p.orientation];
 	max->map->p.cy = max->math->sin[max->map->p.orientation];
 	ft_draw_strings(max);
-	ft_debug(max);
+	//ft_debug(max);
 	//ft_printf("test\n");
 	// if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
 	// {
@@ -451,112 +451,112 @@ void	ft_gameplayhook(t_max *max)
 	// 	// ft_printf("You have quit the game by pressing ESC.\n");
 	// 	// mlx_close_window(max->mlx);
 	// }
-	if (mlx_is_key_down(max->mlx, MLX_KEY_SPACE))	//sprinting, faster but slower turns LIMIT STAMINA
+	if (max->keys[MLX_KEY_SPACE])	//sprinting, faster but slower turns LIMIT STAMINA
 	{
 		//ft_printf("You have pressed space.\n");
 		max->map->p.xspeed *= 2;
 		max->map->p.yspeed *= 2;
 		max->map->p.turnspeed /= 2;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_LEFT_SHIFT))	//sprinting, faster but slower turns LIMIT STAMINA
+	if (max->keys[MLX_KEY_LEFT_SHIFT])	//sprinting, faster but slower turns LIMIT STAMINA
 	{
 		//ft_printf("You have pressed space.\n");
 		max->map->p.xspeed *= 2;
 		max->map->p.yspeed *= 2;
 		max->map->p.turnspeed /= 2;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_1))	//key1
+	if (max->keys[MLX_KEY_1])	//key1
 	{
 		if (max->key.one)
 			max->key.one = 0;
 		else
 			max->key.one = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_2))
+	if (max->keys[MLX_KEY_2])
 	{
 		if (max->key.two)
 			max->key.two = 0;
 		else
 			max->key.two = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_3))
+	if (max->keys[MLX_KEY_3])
 	{
 		if (max->key.three)
 			max->key.three = 0;
 		else
 			max->key.three = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_4))
+	if (max->keys[MLX_KEY_4])
 	{
 		if (max->key.four)
 			max->key.four = 0;
 		else
 			max->key.four = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_5))
+	if (max->keys[MLX_KEY_5])
 	{
 		if (max->key.five)
 			max->key.five = 0;
 		else
 			max->key.five = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_6))
+	if (max->keys[MLX_KEY_6])
 	{
 		if (max->key.six)
 			max->key.six = 0;
 		else
 			max->key.six = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_7))
+	if (max->keys[MLX_KEY_7])
 	{
 		if (max->key.seven)
 			max->key.seven = 0;
 		else
 			max->key.seven = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_8))
+	if (max->keys[MLX_KEY_8])
 	{
 		if (max->key.eight)
 			max->key.eight = 0;
 		else
 			max->key.eight = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_9))
+	if (max->keys[MLX_KEY_9])
 	{
 		if (max->key.nine)
 			max->key.nine = 0;
 		else
 			max->key.nine = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_0))
+	if (max->keys[MLX_KEY_0])
 	{
 		if (max->key.zero)
 			max->key.zero = 0;
 		else
 			max->key.zero = 1;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_UP) || mlx_is_key_down(max->mlx, MLX_KEY_W))
+	if (max->keys[MLX_KEY_UP] || max->keys[MLX_KEY_W])
 	{
 		//ft_printf("You have pressed up arrow.\n");
 		//ft_printf("xspeed %i | yspeed %i | orientation %i.\n", max->map->p.xspeed, max->map->p.yspeed, max->map->p.orientation);
 		ft_move_player(max->map, max->map->p.y - max->map->p.xspeed, max->map->p.x - max->map->p.yspeed);
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_DOWN) || mlx_is_key_down(max->mlx, MLX_KEY_S))
+	if (max->keys[MLX_KEY_DOWN] || max->keys[MLX_KEY_S])
 	{
 		//ft_printf("You have pressed down arrow.\n");
 		ft_move_player(max->map, max->map->p.y + max->map->p.xspeed, max->map->p.x + max->map->p.yspeed);
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_A))
+	if (max->keys[MLX_KEY_A])
 	{
 		//ft_printf("You have pressed A.\n");
 		ft_move_player(max->map, max->map->p.y + max->map->p.yspeed, max->map->p.x - max->map->p.xspeed);
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_D))
+	if (max->keys[MLX_KEY_D])
 	{
 		//ft_printf("You have pressed D.\n");
 		ft_move_player(max->map, max->map->p.y - max->map->p.yspeed, max->map->p.x + max->map->p.xspeed);
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_LEFT) || mlx_is_key_down(max->mlx, MLX_KEY_Q))
+	if (max->keys[MLX_KEY_LEFT] || max->keys[MLX_KEY_Q])
 	{
 		//ft_printf("You have pressed left arrow.\n");
 		//ft_printf("xspeed %i | yspeed %i | orientation %i.\n", max->map->p.xspeed, max->map->p.yspeed, max->map->p.orientation);
@@ -564,7 +564,7 @@ void	ft_gameplayhook(t_max *max)
 		if (max->map->p.orientation < 0)
 			max->map->p.orientation += MAXDEGREE;
 	}
-	if (mlx_is_key_down(max->mlx, MLX_KEY_RIGHT) || mlx_is_key_down(max->mlx, MLX_KEY_E))
+	if (max->keys[MLX_KEY_RIGHT] || max->keys[MLX_KEY_E])
 	{
 		//ft_printf("You have pressed right arrow.\n");
 		max->map->p.orientation += max->map->p.turnspeed;
@@ -581,7 +581,7 @@ void	ft_gameplayhook(t_max *max)
 	//ft_printf("test0\n");
 	if (max->difficulty == MEDIUM)
 	{
-		if (!(max->frame % TICK ))
+		if (!(max->frame % TICK))
 			ft_revisit_map(max->map);
 	}
 	else if (max->difficulty == HARD)
@@ -589,22 +589,7 @@ void	ft_gameplayhook(t_max *max)
 		if (!(max->frame % 2))
 			ft_revisit_map(max->map);
 	}
-	
-	//ft_printf("test1\n");
-	//ft_init_rays(max);
 	ft_init_orays(max);
-	//ft_draw_screen(max);
-	// if (max->mmode > 0)
-	// {
-	// 	++max->mmode;
-	// 	ft_draw_map(max);
-	// }
-	// else
-	// {
-	// 	--max->mmode;
-	// 	ft_erase_map(max);
-	// }
-	//ft_printf("test2\n");
 	ft_draw_map(max);
 	ft_draw_minimap(max);
 }

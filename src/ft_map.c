@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 13:37:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 15:30:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	ft_draw_map(t_max *max)
 {
 	int	y;
 	int	x;
-	
 	int	s; //scaling factor
 	int	r;
 

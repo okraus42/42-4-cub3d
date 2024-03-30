@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 11:24:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 15:39:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define DEBUGGING 1
+#  define DEBUGGING 0
 #  define FOV 80
 #  define DOF 16
 #  define TICK 8
@@ -323,7 +323,7 @@ typedef struct s_player
 	int	dy;
 	int	xd[2];
 	int	yd[2];
-	int	cx;	//camera vector
+	int	cx;	//camera plane vector
 	int	cy;
 	int	xc[2];
 	int	yc[2];
@@ -635,6 +635,10 @@ typedef struct s_max
 
 // PROTOTYPES
 
+//ft_free.c
+void	ft_free(t_max *max);
+void	ft_exit(t_max *max, int code);
+void	ft_freemap(t_map *map);
 
 //ft_button.c
 void	ft_initbuttons(t_max *max);

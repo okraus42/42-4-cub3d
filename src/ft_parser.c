@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/27 12:00:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 14:28:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,34 +89,6 @@ int	ft_puterror(char *err, int r)
 	return (r);
 }
 
-void	ft_freemap(t_map *map)
-{
-	if (map->mapstr)
-		free(map->mapstr);
-	map->mapstr = NULL;
-	if (map->northtexture)
-		free(map->northtexture);
-	map->northtexture = NULL;
-	if (map->southtexture)
-		free(map->southtexture);
-	map->southtexture = NULL;
-	if (map->westtexture)
-		free(map->westtexture);
-	map->westtexture = NULL;
-	if (map->easttexture)
-		free(map->easttexture);
-	map->easttexture = NULL;
-	// if (map->d)
-	// 	free(map->d); //door need better freeing
-	// map->d = NULL;
-}
-
-void	ft_exit(t_max *max, int exitcode)
-{
-	//free map; and all
-	ft_freemap(max->map);
-	exit(exitcode);
-}
 
 int	ft_checkfileextension(char *s)
 {

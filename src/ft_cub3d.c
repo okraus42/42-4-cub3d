@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/24 11:59:02 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 14:10:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	ft_init_math(t_math *math)
 	ft_printf("NTAN 0 %Li 90 %Li  180 %Li 270 %Li\n", math->ntan[NORTH + 2], math->ntan[EAST - 2], math->ntan[SOUTH - 2], math->ntan[WEST - 2]);
 }
 
+//maybe allocate only max
 void	ft_cub3d(char *file)
 {
 	t_map		*map;
@@ -85,16 +86,16 @@ void	ft_cub3d(char *file)
 	max = NULL;
 	max = ft_calloc(sizeof(t_max), 1);
 	if (!max)
-		exit(11);
+		ft_exit(max, 11);
 	map = ft_calloc(sizeof(t_map), 1);
 	if (!map)
-		exit(11);
+		ft_exit(max, 11);
 	math = ft_calloc(sizeof(t_math), 1);
 	if (!math)
-		exit(11);
+		ft_exit(max, 11);
 	t = ft_calloc(sizeof(t_textures), 1);
 	if (!t)
-		exit(11);
+		ft_exit(max, 11);
 	max->math = math;
 	ft_init_math(max->math);
 	max->t = t;

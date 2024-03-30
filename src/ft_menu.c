@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 17:20:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 15:46:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,6 @@ void	ft_initmenu(t_max *max)
 	ft_load_texture("./textures/menu/buttonplus.png", &max->menu.buttonplus);
 	ft_load_texture("./textures/menu/textfield.png", &max->menu.textfield);
 	ft_load_texture("./textures/menu/listfield.png", &max->menu.listfield);
-	// ft_load_texture("./textures/menu/button_newgame_1_small.png",  &max->menu.new_game_button_on);
-	// ft_load_texture("./textures/menu/button_newgame_2_small.png",  &max->menu.new_game_button_off);
-	// ft_load_texture("./textures/menu/button_quitgame_1_small.png",  &max->menu.quit_game_button_on);
-	// ft_load_texture("./textures/menu/button_quitgame_2_small.png",  &max->menu.quit_game_button_off);
 
 	//fonts
 	ft_load_texture("./textures/fonts/asciitest.png", &max->font.asciitest);
@@ -80,29 +76,6 @@ void	ft_initmenu(t_max *max)
 	max->menu.current_button[NEWLEVEL] = CUSTOM;
 	max->difficulty = -1;
 }
-
-// typedef struct s_text
-// {
-// 	mlx_texture_t	*font;
-// 	char			*text;
-// 	unsigned int	c;
-// 	unsigned int	cb;
-// 	int				x;
-// 	int				y;
-// 	int				height;
-// }	t_text;
-
-// typedef struct s_button
-// {
-// 	mlx_texture_t	*button;
-// 	t_text			text;
-// 	unsigned int	c;
-// 	int				x;
-// 	int				y;
-// 	int				w;
-// 	int				h;
-// 	int				state
-// }	t_button;
 
 void	ft_draw_menu(t_max *max)
 {
@@ -192,20 +165,10 @@ void	ft_draw_menu(t_max *max)
 			ft_draw_button(&max->menu.gamedifficultybuttons[HARD], ACTIVATED);
 		else
 			ft_draw_button(&max->menu.gamedifficultybuttons[HARD], ACTIVE);
-		// ft_draw_button(&max->menu.gamedifficultybuttons[GDBACK], ACTIVE);
-		// ft_draw_button(&max->menu.gamedifficultybuttons[GDCONTINUE], ACTIVE);
 	}
 	//draw selection buttons
 	if (max->menu.current_buttongroup == NEWSELECTION)
 	{
-		// if (max->menu.selection == CAMPAIGN)
-		// 	ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVATED);
-		// else
-		// 	ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVE);
-		// if (max->menu.selection == TIMETRIAL)
-		// 	ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVATED);
-		// else
-		// 	ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVE);
 		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], INACTIVE);
 		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], INACTIVE);
 		//maybe if else not needd
@@ -220,14 +183,11 @@ void	ft_draw_menu(t_max *max)
 		//maybe if else not needed
 		ft_draw_button(&max->menu.maptypebuttons[CUSTOM], ACTIVE);
 		ft_draw_button(&max->menu.maptypebuttons[RANDOM], ACTIVE);
-		// ft_draw_button(&max->menu.maptypebuttons[MTBACK], ACTIVE);
 	}
 		//draw newmap buttons
 	if (max->menu.current_buttongroup == NEWMAP)
 	{
 		ft_draw_button(&max->menu.mapselectionbuttons[CHOOSELEVEL], ACTIVE);
-		// ft_draw_button(&max->menu.mapselectionbuttons[RANDOM], ACTIVE);
-		// ft_draw_button(&max->menu.mapselectionbuttons[MSBACK], ACTIVE);
 		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], ACTIVE);
 	}
 	//draw newmap listfield
@@ -315,313 +275,10 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 	}
 }
 
-// void	ft_selectbuttonmainmenu(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	newbutton = max->menu.current_button[MAINBUTTONS];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.mainbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[MAINBUTTONS] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < MAINBUTTONSCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.mainbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[MAINBUTTONS] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonnewwriting(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	if (max->menu.newwriting == NAME)
-// 	{
-// 		ft_write_in_textfield(max, &max->menu.newwritingfields[NAME]);
-// 		return ;
-// 	}
-// 	if (max->menu.newwriting == COALITION)
-// 	{
-// 		ft_write_in_textfield(max, &max->menu.newwritingfields[COALITION]);
-// 		return ;
-// 	}
-// 	if (max->menu.newwriting == CAMPUS)
-// 	{
-// 		ft_write_in_textfield(max, &max->menu.newwritingfields[CAMPUS]);
-// 		return ;
-// 	}
-// 	newbutton = max->menu.current_button[NEWWRITING];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.newwritingbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWWRITING] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < DIFFICULTYBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.newwritingbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWWRITING] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonnewdifficulty(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	newbutton = max->menu.current_button[NEWDIFFICULTY];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.gamedifficultybuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWDIFFICULTY] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < DIFFICULTYBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.gamedifficultybuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWDIFFICULTY] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonnewselection(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	newbutton = max->menu.current_button[NEWSELECTION];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.gametypebuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWSELECTION] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < GAMETYPEBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.gametypebuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWSELECTION] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonnewlevel(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	newbutton = max->menu.current_button[NEWLEVEL];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.maptypebuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWLEVEL] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < MAPTYPEBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.maptypebuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWLEVEL] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonnewmap(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	if (max->menu.cm_state)
-// 	{
-// 		ft_choose_in_listfield(max, &max->menu.custommap);
-// 		return ;
-// 	}
-// 	newbutton = max->menu.current_button[NEWMAP];
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWMAP] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < MAPSELECTIONBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.mapselectionbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWMAP] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
-// void	ft_selectbuttonNEWRANDOMADVANCED(t_max *max)
-// {
-// 	int	newbutton;
-
-// 	if (max->menu.random_state[RWIDTH])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RWIDTH]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RHEIGHT])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RHEIGHT]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RRATIODE])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIODE]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RRATIOLO])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOLO]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RRATIOTI])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOTI]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RRATIOXI])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOXI]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RNOROOMS])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RNOROOMS]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[ROROOMS])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[ROROOMS]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RDOORS])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RDOORS]);
-// 		return ;
-// 	}
-// 	if (max->menu.random_state[RDEADENDS])
-// 	{
-// 		ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RDEADENDS]);
-// 		return ;
-// 	}
-// 	newbutton = max->menu.current_button[NEWRANDOMADVANCED];
-	
-// 	if (max->key.up)
-// 	{
-// 		while (newbutton > 0)
-// 		{
-// 			--newbutton;
-// 			if (max->menu.randomadvancedbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWRANDOMADVANCED] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.up = 0;
-// 	}
-// 	if (max->key.down)
-// 	{
-// 		while (newbutton < RANDOMADVANCEDBUTTONCOUNT - 1)
-// 		{
-// 			++newbutton;
-// 			if (max->menu.randomadvancedbuttons[newbutton].state & (ACTIVE | ACTIVATED))
-// 			{
-// 				max->menu.current_button[NEWRANDOMADVANCED] = newbutton;
-// 				break ;
-// 			}
-// 		}
-// 		max->key.down = 0;
-// 	}
-// }
-
 void	ft_selectbutton(t_max *max)
 {
 	if (max->menu.current_buttongroup == MAINBUTTONS)
 	{
-		//ft_selectbuttonmainmenu(max);
 		ft_selectnewbutton(max, &max->menu.mainbuttons[max->menu.current_button[MAINBUTTONS]]);
 	}
 	if (max->menu.current_buttongroup == NEWWRITING)
@@ -642,26 +299,21 @@ void	ft_selectbutton(t_max *max)
 			return ;
 		}
 		ft_selectnewbutton(max, &max->menu.newwritingbuttons[max->menu.current_button[NEWWRITING]]);
-		//ft_selectbuttonnewwriting(max);
 	}
 	if (max->menu.current_buttongroup == NEWDIFFICULTY)
 	{
-		//ft_selectbuttonnewdifficulty(max);
 		ft_selectnewbutton(max, &max->menu.gamedifficultybuttons[max->menu.current_button[NEWDIFFICULTY]]);
 	}
 	if (max->menu.current_buttongroup == NEWSELECTION)
 	{
-		//ft_selectbuttonnewselection(max);
 		ft_selectnewbutton(max, &max->menu.gametypebuttons[max->menu.current_button[NEWSELECTION]]);
 	}
 	if (max->menu.current_buttongroup == NEWLEVEL)
 	{
-		//ft_selectbuttonnewlevel(max);
 		ft_selectnewbutton(max, &max->menu.maptypebuttons[max->menu.current_button[NEWLEVEL]]);
 	}
 	if (max->menu.current_buttongroup == NEWMAP)
 	{
-		//ft_selectbuttonnewmap(max);
 		if (max->menu.cm_state)
 		{
 			ft_choose_in_listfield(max, &max->menu.custommap);
@@ -671,7 +323,6 @@ void	ft_selectbutton(t_max *max)
 	}
 	if (max->menu.current_buttongroup == NEWRANDOM)
 	{
-		//printf("max->menu.current_button[NEWRANDOM] %i\n", max->menu.current_button[NEWRANDOM]);
 		ft_selectnewbutton(max, &max->menu.randomselectionbuttons[max->menu.current_button[NEWRANDOM]]);
 	}
 	if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
@@ -726,7 +377,6 @@ void	ft_selectbutton(t_max *max)
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RDEADENDS]);
 			return ;
 		}
-		//ft_selectbuttonNEWRANDOMADVANCED(max);
 		ft_selectnewbutton(max, &max->menu.randomadvancedbuttons[max->menu.current_button[NEWRANDOMADVANCED]]);
 	}
 }
@@ -773,10 +423,6 @@ void	ft_draw_newwritingbuttons(t_max *max)
 		else
 			ft_draw_button(&max->menu.newwritingbuttons[CAMPUS], SELECTED);
 	}
-	// else if (max->menu.current_button[NEWWRITING] == NWBACK)
-	// {
-	// 	ft_draw_button(&max->menu.newwritingbuttons[NWBACK], SELECTED);
-	// }
 	else if (max->menu.current_button[NEWWRITING] == NWCONFIRM)
 	{
 		ft_draw_button(&max->menu.newwritingbuttons[NWCONFIRM], SELECTED);
@@ -822,14 +468,6 @@ void	ft_draw_gamedifficultybuttons(t_max *max)
 	{
 		ft_draw_button(&max->menu.gamedifficultybuttons[HARD], SELECTED);
 	}
-	// else if (max->menu.current_button[NEWDIFFICULTY] == GDBACK)
-	// {
-	// 	ft_draw_button(&max->menu.gamedifficultybuttons[GDBACK], SELECTED);
-	// }
-	// else if (max->menu.current_button[NEWDIFFICULTY] == GDCONTINUE)
-	// {
-	// 	ft_draw_button(&max->menu.gamedifficultybuttons[GDCONTINUE], SELECTED);
-	// }
 }
 
 void	ft_draw_gametypebuttons(t_max *max)
@@ -846,14 +484,6 @@ void	ft_draw_gametypebuttons(t_max *max)
 	{
 		ft_draw_button(&max->menu.gametypebuttons[ONEMAP], SELECTED);
 	}
-	// else if (max->menu.current_button[NEWSELECTION] == GTBACK)
-	// {
-	// 	ft_draw_button(&max->menu.gametypebuttons[GTBACK], SELECTED);
-	// }
-	// else if (max->menu.current_button[NEWSELECTION] == GTCONTINUE)
-	// {
-	// 	ft_draw_button(&max->menu.gametypebuttons[GTCONTINUE], SELECTED);
-	// }
 }
 
 void	ft_draw_maptypebuttons(t_max *max)
@@ -866,10 +496,6 @@ void	ft_draw_maptypebuttons(t_max *max)
 	{
 		ft_draw_button(&max->menu.maptypebuttons[RANDOM], SELECTED);
 	}
-	// else if (max->menu.current_button[NEWLEVEL] == MTBACK)
-	// {
-	// 	ft_draw_button(&max->menu.maptypebuttons[MTBACK], SELECTED);
-	// }
 }
 
 void	ft_draw_newmapbuttons(t_max *max)
@@ -881,14 +507,6 @@ void	ft_draw_newmapbuttons(t_max *max)
 		else
 			ft_draw_button(&max->menu.mapselectionbuttons[CHOOSELEVEL], SELECTED);
 	}
-	// else if (max->menu.current_button[NEWMAP] == RANDOM)
-	// {
-	// 	ft_draw_button(&max->menu.mapselectionbuttons[RANDOM], SELECTED);
-	// }
-	// else if (max->menu.current_button[NEWMAP] == MSBACK)
-	// {
-	// 	ft_draw_button(&max->menu.mapselectionbuttons[MSBACK], SELECTED);
-	// }
 	else if (max->menu.current_button[NEWMAP] == MSPLAY)
 	{
 		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
@@ -1048,17 +666,13 @@ void	ft_menu(t_max *max)
 	if (max->menu.current_buttongroup == NEWRANDOM)
 	{
 		ft_draw_newrandombuttons(max);
-		//draw game options buttons
 	}
 	if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
 	{
 		ft_draw_newrandomadvancedbuttons(max);
-		//draw game options buttons
 	}
-	//printf("%i\n", max->menu.current_buttongroup);
 	if (max->key.backspace)
 	{
-		// will get more complicated with settings and stuff
 		if (max->menu.current_buttongroup)
 			--max->menu.current_buttongroup;
 		max->key.backspace = 0;
@@ -1115,13 +729,8 @@ void	ft_menu(t_max *max)
 					else
 						max->menu.newwriting = CAMPUS;
 				}
-				// else if (max->menu.current_button[NEWWRITING] == NWBACK)
-				// {
-				// 	max->menu.current_buttongroup = MAINBUTTONS;
-				// }
 				else if (max->menu.current_button[NEWWRITING] == NWCONFIRM)
 				{
-					//max->menu.current_button[NEWDIFFICULTY] = max->difficulty;
 					max->menu.current_buttongroup = NEWDIFFICULTY;
 					printf("%s\n%s\n%s\n", max->name, max->coalition, max->campus);
 				}
@@ -1143,15 +752,6 @@ void	ft_menu(t_max *max)
 					max->difficulty = HARD;
 					max->menu.current_buttongroup = NEWSELECTION;
 				}
-				// else if (max->menu.current_button[NEWDIFFICULTY] == GDBACK)
-				// {
-				// 	max->menu.current_buttongroup = NEWWRITING;
-				// }
-				// else if (max->menu.current_button[NEWDIFFICULTY] == GDCONTINUE)
-				// {
-				// 	//max->menu.current_button[NEWDIFFICULTY] = max->difficulty;
-				// 	max->menu.current_buttongroup = NEWSELECTION;
-				// }
 			}
 			else if (max->menu.current_buttongroup == NEWSELECTION)
 			{
@@ -1170,15 +770,6 @@ void	ft_menu(t_max *max)
 					max->menu.selection = ONEMAP;
 					max->menu.current_buttongroup = NEWLEVEL;
 				}
-				// else if (max->menu.current_button[NEWSELECTION] == GTBACK)
-				// {
-				// 	max->menu.current_buttongroup = NEWDIFFICULTY;
-				// }
-				// else if (max->menu.current_button[NEWSELECTION] == GTCONTINUE)
-				// {
-				// 	//max->menu.current_button[NEWSELECTION] = max->menu.selection;
-				// 	max->menu.current_buttongroup = NEWLEVEL;
-				// }
 			}
 			else if (max->menu.current_buttongroup == NEWLEVEL)
 			{
@@ -1192,10 +783,6 @@ void	ft_menu(t_max *max)
 				{
 					max->menu.current_buttongroup = NEWRANDOM;
 				}
-				// else if (max->menu.current_button[NEWLEVEL] == MTBACK)
-				// {
-				// 	max->menu.current_buttongroup = NEWSELECTION;
-				// }
 			}
 			else if (max->menu.current_buttongroup == NEWMAP)
 			{
@@ -1211,17 +798,8 @@ void	ft_menu(t_max *max)
 						max->menu.cm_state = 1;
 					}
 				}
-				// else if (max->menu.current_button[NEWMAP] == RANDOM)
-				// {
-				// 	max->menu.current_buttongroup = NEWRANDOMADVANCED;
-				// }
-				// else if (max->menu.current_button[NEWMAP] == MSBACK)
-				// {
-				// 	max->menu.current_buttongroup = NEWLEVEL;
-				// }
 				else if (max->menu.current_button[NEWMAP] == MSPLAY)
 				{
-					//max->menu.current_button[NEWLEVEL] = max->menu.newmap;
 					max->map->file = max->menu.custommap.text[max->menu.custommap.highlight].text;
 					if (ft_process_file(max))
 					{
@@ -1403,21 +981,6 @@ void	ft_menu(t_max *max)
 						ft_dprintf(2, "Invalid map\n");
 					}
 				}
-				// ft_printf("to be built");
-				// //temp
-				// max->map->file = "maps/validmap4.cub";
-				// if (ft_process_file(max))
-				// {
-				// 	max->game_mode = GAMEPLAY;
-				// 	max->menu.current_button[MAINBUTTONS] = RESUME;
-				// 	max->menu.current_buttongroup = MAINBUTTONS;
-				// 	max->game_in_progress = 1;
-				// 	max->menuscreen->enabled = 0;
-				// }
-				// else
-				// {
-				// 	ft_dprintf(2, "Invalid map\n");
-				// }
 			}
 		}
 		if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
@@ -1425,5 +988,4 @@ void	ft_menu(t_max *max)
 			mlx_close_window(max->mlx);
 		}
 	}
-	//ft_clear_keys(max);
 }

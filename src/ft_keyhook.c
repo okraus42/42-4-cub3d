@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 15:48:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 14:40:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,5 +276,9 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_RELEASE)
 	{
 		max->key.right_shift = 0;
+	}
+	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_PRESS)
+	{
+		max->key.caps_lock ^= 1;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 12:56:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/30 15:43:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,6 @@ void	ft_draw_minimap(t_max *max)
 				{
 					mlx_put_pixel(max->minimap, x, y, ((max->map->m[(ny / s) * max->map->w + (nx / s)]) >> 32) & TMASK);
 				}
-				// else if (ft_is_inside2(max, 1024, (y << 8) / s, (x << 8) / s))
-				// {
-				// 	mlx_put_pixel(max->map, x, y, 0x00ff00ff & TMASK);	//green circle for the direction visualisation
-				// }
-				// else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & WALL)
-				// {
-				// 	//mlx_put_pixel(max->minimap, x, y, 0x000000FF & TMASK); //walls are black for now
-				// 	if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-				// 		mlx_put_pixel(max->minimap, x, y, 0x000000ff & TMASK); //Visited wall shine white
-				// 	else
-				// 		mlx_put_pixel(max->minimap, x, y, UNDISCOVERDWALL & TMASK); //black for unvisited area
-				// }
-				// else if (max->map->m[(ny / s) * max->map->w + (nx / s)] & FLOOR)
-				// {
-				// 	// mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
-				// 	if (max->map->m[(ny / s) * max->map->w + (nx / s)] & VISITED)
-				// 		mlx_put_pixel(max->minimap, x, y, max->map->f.rgba & TMASK); //floor is the proper colour
-				// 	else
-				// 		mlx_put_pixel(max->minimap, x, y, UNDISCOVERDFLOOR & TMASK); //black for unvisited area
-				// }
-				// else
-				// 	mlx_put_pixel(max->minimap, x, y, 0x404040FF & TMASK);
 			}
 			else
 				mlx_put_pixel(max->minimap, x, y, 0x808080FF & TMASK);
