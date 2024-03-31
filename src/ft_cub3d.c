@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 14:10:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 14:53:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	ft_cub3d(char *file)
 	max->t = t;
 	max->map = map;
 	max->mlx = NULL;
-	max->key.one = 0;
+	max->keys[MLX_KEY_KP_1] = 0;
 	max->frame = 0;
 	max->ray = 0;
 	max->mmode = 0;

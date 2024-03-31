@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 14:17:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 14:46:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,13 +163,13 @@ void	ft_gamestart(t_max *max)
 	ft_draw_gamestarttext(&max->gamestart);
 
 	//launch game after user input
-	if (max->key.enter)
+	if (max->keys[MLX_KEY_ENTER])
 	{
 		max->game_mode = GAMEPLAY;
 		max->textscreen->enabled = 0;
 		max->game_in_progress = 1;
 		max->gamestart.i = 0;
-		max->key.enter = 0;
+		max->keys[MLX_KEY_ENTER] = 0;
 	}
 	//launch game
 }

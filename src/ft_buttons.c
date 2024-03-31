@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 17:11:15 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 14:48:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -626,39 +626,39 @@ void	ft_choose_in_button(t_max *max, t_button *button)
 	int	i;
 
 	i = button->val->value;
-	if (max->key.add || max->key.right)
+	if (max->keys[MLX_KEY_KP_ADD] || max->keys[MLX_KEY_RIGHT])
 	{
 		++i;
-		max->key.add = 0;
-		max->key.up = 0;
-		max->key.right = 0;
+		max->keys[MLX_KEY_KP_ADD] = 0;
+		max->keys[MLX_KEY_UP] = 0;
+		max->keys[MLX_KEY_RIGHT] = 0;
 	}
-	if (max->key.subtract || max->key.left)
+	if (max->keys[MLX_KEY_KP_SUBTRACT] || max->keys[MLX_KEY_LEFT])
 	{
 		--i;
-		max->key.subtract = 0;
-		max->key.down = 0;
-		max->key.left = 0;
+		max->keys[MLX_KEY_KP_SUBTRACT] = 0;
+		max->keys[MLX_KEY_DOWN] = 0;
+		max->keys[MLX_KEY_LEFT] = 0;
 	}
-	if (max->key.multiply)
+	if (max->keys[MLX_KEY_KP_MULTIPLY])
 	{
 		i *= 2;
-		max->key.multiply = 0;
+		max->keys[MLX_KEY_KP_MULTIPLY] = 0;
 	}
-	if (max->key.divide)
+	if (max->keys[MLX_KEY_KP_DIVIDE])
 	{
 		i /= 2;
-		max->key.divide = 0;
+		max->keys[MLX_KEY_KP_DIVIDE] = 0;
 	}
-	if (max->key.up)
+	if (max->keys[MLX_KEY_UP])
 	{
 		i += 10;
-		max->key.up = 0;
+		max->keys[MLX_KEY_UP] = 0;
 	}
-	if (max->key.down)
+	if (max->keys[MLX_KEY_DOWN])
 	{
 		i -= 10;
-		max->key.down = 0;
+		max->keys[MLX_KEY_DOWN] = 0;
 	}
 	if (i < button->val->min)
 		i = button->val->min;

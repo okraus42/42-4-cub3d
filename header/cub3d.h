@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 12:14:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 17:02:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define DEBUGGING 1
+#  define DEBUGGING 0
 #  define FOV 80
 #  define DOF 64
 #  define TICK 8
@@ -194,17 +194,20 @@ typedef union u_clr
 # define NSWALL 5
 # define NOWALL 0
 
+# if DEBUGGING
+#  define NWALLCOLOUR 0xFFFFFFFF
+#  define EWALLCOLOUR 0xAA0000FF
+#  define SWALLCOLOUR 0x887700FF
+#  define WWALLCOLOUR 0x0000AAFF
+#  define NOWALLCOLOUR 0xFFFF00FF
+# else
+#  define NWALLCOLOUR 0x998800FF
+#  define EWALLCOLOUR 0xAA9900FF
+#  define SWALLCOLOUR 0x887700FF
+#  define WWALLCOLOUR 0x776600FF
+#  define NOWALLCOLOUR 0xFFFF00FF
+# endif
 
-// # define NWALLCOLOUR 0x998800FF
-// # define EWALLCOLOUR 0xAA9900FF
-// # define SWALLCOLOUR 0x887700FF
-// # define WWALLCOLOUR 0x776600FF
-// # define NOWALLCOLOUR 0xFFFF00FF
-# define NWALLCOLOUR 0xFFFFFFFF
-# define EWALLCOLOUR 0xAA0000FF
-# define SWALLCOLOUR 0x887700FF
-# define WWALLCOLOUR 0x0000AAFF
-# define NOWALLCOLOUR 0xFFFF00FF
 
 # define SQUARESIZE 65536
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
@@ -375,128 +378,8 @@ typedef struct s_highscore
 	int		score;
 }	t_hs;
 
-// typedef enum keys
-// {
-// 	MLX_KEY_SPACE			= 32,
-// 	MLX_KEY_APOSTROPHE		= 39,
-// 	MLX_KEY_COMMA			= 44,
-// 	MLX_KEY_MINUS			= 45,
-// 	MLX_KEY_PERIOD			= 46,
-// 	MLX_KEY_SLASH			= 47,
-// 	MLX_KEY_0				= 48,
-// 	MLX_KEY_1				= 49,
-// 	MLX_KEY_2				= 50,
-// 	MLX_KEY_3				= 51,
-// 	MLX_KEY_4				= 52,
-// 	MLX_KEY_5				= 53,
-// 	MLX_KEY_6				= 54,
-// 	MLX_KEY_7				= 55,
-// 	MLX_KEY_8				= 56,
-// 	MLX_KEY_9				= 57,
-// 	MLX_KEY_SEMICOLON		= 59,
-// 	MLX_KEY_EQUAL			= 61,
-// 	MLX_KEY_A				= 65,
-// 	MLX_KEY_B				= 66,
-// 	MLX_KEY_C				= 67,
-// 	MLX_KEY_D				= 68,
-// 	MLX_KEY_E				= 69,
-// 	MLX_KEY_F				= 70,
-// 	MLX_KEY_G				= 71,
-// 	MLX_KEY_H				= 72,
-// 	MLX_KEY_I				= 73,
-// 	MLX_KEY_J				= 74,
-// 	MLX_KEY_K				= 75,
-// 	MLX_KEY_L				= 76,
-// 	MLX_KEY_M				= 77,
-// 	MLX_KEY_N				= 78,
-// 	MLX_KEY_O				= 79,
-// 	MLX_KEY_P				= 80,
-// 	MLX_KEY_Q				= 81,
-// 	MLX_KEY_R				= 82,
-// 	MLX_KEY_S				= 83,
-// 	MLX_KEY_T				= 84,
-// 	MLX_KEY_U				= 85,
-// 	MLX_KEY_V				= 86,
-// 	MLX_KEY_W				= 87,
-// 	MLX_KEY_X				= 88,
-// 	MLX_KEY_Y				= 89,
-// 	MLX_KEY_Z				= 90,
-// 	MLX_KEY_LEFT_BRACKET	= 91,
-// 	MLX_KEY_BACKSLASH		= 92,
-// 	MLX_KEY_RIGHT_BRACKET	= 93,
-// 	MLX_KEY_GRAVE_ACCENT	= 96,
-// 	MLX_KEY_ESCAPE			= 256,
-// 	MLX_KEY_ENTER			= 257,
-// 	MLX_KEY_TAB				= 258,
-// 	MLX_KEY_BACKSPACE		= 259,
-// 	MLX_KEY_INSERT			= 260,
-// 	MLX_KEY_DELETE			= 261,
-// 	MLX_KEY_RIGHT			= 262,
-// 	MLX_KEY_LEFT			= 263,
-// 	MLX_KEY_DOWN			= 264,
-// 	MLX_KEY_UP				= 265,
-// 	MLX_KEY_PAGE_UP			= 266,
-// 	MLX_KEY_PAGE_DOWN		= 267,
-// 	MLX_KEY_HOME			= 268,
-// 	MLX_KEY_END				= 269,
-// 	MLX_KEY_CAPS_LOCK		= 280,
-// 	MLX_KEY_SCROLL_LOCK		= 281,
-// 	MLX_KEY_NUM_LOCK		= 282,
-// 	MLX_KEY_PRINT_SCREEN	= 283,
-// 	MLX_KEY_PAUSE			= 284,
-// 	MLX_KEY_F1				= 290,
-// 	MLX_KEY_F2				= 291,
-// 	MLX_KEY_F3				= 292,
-// 	MLX_KEY_F4				= 293,
-// 	MLX_KEY_F5				= 294,
-// 	MLX_KEY_F6				= 295,
-// 	MLX_KEY_F7				= 296,
-// 	MLX_KEY_F8				= 297,
-// 	MLX_KEY_F9				= 298,
-// 	MLX_KEY_F10				= 299,
-// 	MLX_KEY_F11				= 300,
-// 	MLX_KEY_F12				= 301,
-// 	MLX_KEY_F13				= 302,
-// 	MLX_KEY_F14				= 303,
-// 	MLX_KEY_F15				= 304,
-// 	MLX_KEY_F16				= 305,
-// 	MLX_KEY_F17				= 306,
-// 	MLX_KEY_F18				= 307,
-// 	MLX_KEY_F19				= 308,
-// 	MLX_KEY_F20				= 309,
-// 	MLX_KEY_F21				= 310,
-// 	MLX_KEY_F22				= 311,
-// 	MLX_KEY_F23				= 312,
-// 	MLX_KEY_F24				= 313,
-// 	MLX_KEY_F25				= 314,
-// 	MLX_KEY_KP_0			= 320,
-// 	MLX_KEY_KP_1			= 321,
-// 	MLX_KEY_KP_2			= 322,
-// 	MLX_KEY_KP_3			= 323,
-// 	MLX_KEY_KP_4			= 324,
-// 	MLX_KEY_KP_5			= 325,
-// 	MLX_KEY_KP_6			= 326,
-// 	MLX_KEY_KP_7			= 327,
-// 	MLX_KEY_KP_8			= 328,
-// 	MLX_KEY_KP_9			= 329,
-// 	MLX_KEY_KP_DECIMAL		= 330,
-// 	MLX_KEY_KP_DIVIDE		= 331,
-// 	MLX_KEY_KP_MULTIPLY		= 332,
-// 	MLX_KEY_KP_SUBTRACT		= 333,
-// 	MLX_KEY_KP_ADD			= 334,
-// 	MLX_KEY_KP_ENTER		= 335,
-// 	MLX_KEY_KP_EQUAL		= 336,
-// 	MLX_KEY_LEFT_SHIFT		= 340,
-// 	MLX_KEY_LEFT_CONTROL	= 341,
-// 	MLX_KEY_LEFT_ALT		= 342,
-// 	MLX_KEY_LEFT_SUPER		= 343,
-// 	MLX_KEY_RIGHT_SHIFT		= 344,
-// 	MLX_KEY_RIGHT_CONTROL	= 345,
-// 	MLX_KEY_RIGHT_ALT		= 346,
-// 	MLX_KEY_RIGHT_SUPER		= 347,
-// 	MLX_KEY_MENU			= 348,
-// }	keys_t;
 
+// remove or simplify
 typedef struct s_control
 {
 	int		left_shift;
@@ -551,6 +434,17 @@ typedef struct s_control
 	int		zero;
 }	t_controls;
 
+typedef struct s_keyboard
+{
+	int		shift;
+	int		ctrl;
+	int		alt;
+	int		caps_lock;
+	int		num_lock;
+	int		scroll_lock;
+	int		character;
+}	t_kb;
+
 typedef struct s_math
 {
 	int				sin[MAXDEGREE];	//done multiplied by MAXDEGREE
@@ -575,7 +469,27 @@ typedef struct s_textures
 	mlx_texture_t	*wwall;
 	mlx_texture_t	*ceiling;
 	mlx_texture_t	*floor;
+	mlx_texture_t	*textbg;
+	mlx_texture_t	*font;
+	mlx_texture_t	*menubg;
+	mlx_texture_t	*button;
+	mlx_texture_t	*buttonplus;
+	mlx_texture_t	*textfield;
+	mlx_texture_t	*listfield;
+
 }	t_textures;
+
+typedef struct s_images
+{
+	mlx_image_t		*background;
+	mlx_image_t		*hud;
+	mlx_image_t		*menuscreen;
+	mlx_image_t		*textscreen;
+	mlx_image_t		*screen;
+	mlx_image_t		*maximap;
+	mlx_image_t		*minimap;
+	mlx_image_t		*str[STRINGS];
+}	t_images;
 
 typedef struct s_gametext
 {
@@ -599,10 +513,11 @@ typedef struct s_gametext
 typedef struct s_max
 {
 	mlx_t			*mlx;
-	t_map			*map;
-	t_math			*math;
+	t_map			*map; //no need for pointer
+	t_math			*math; //no need for a pointer
 	t_controls		key;
 	int				keys[350];
+	t_kb			kb;
 	mlx_image_t		*background;
 	mlx_image_t		*hud;
 	mlx_image_t		*menuscreen;
@@ -618,7 +533,8 @@ typedef struct s_max
 	char			name[20];
 	char			coalition[20];
 	char			campus[20];//make it a list later
-	t_textures		*t;
+	t_textures		*t;//not a pointer
+	t_images		i;
 	// t_imgs			*img;
 	// mlx_image_t		*str;
 	// mlx_image_t		*tmp;
@@ -676,6 +592,8 @@ int		ft_process_random(t_max *max);
 
 //ft_game.c
 void	ft_amaze_standard(t_max *max);
+
+//ft_game.c
 void	ft_amaze_bonus(t_max *max);
 
 //ft_gamestart.c

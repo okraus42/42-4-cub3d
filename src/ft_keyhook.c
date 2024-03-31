@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 14:40:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 16:08:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,110 +175,13 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 		max->keys[keydata.key] = 1;
 	if (keydata.key < 350 && keydata.action == MLX_RELEASE)
 		max->keys[keydata.key] = 0;
-	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
-	{
-		max->key.up = 1;
-	}
-	if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
-	{
-		max->key.down = 1;
-	}
-	if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS)
-	{
-		max->key.right = 1;
-	}
-
-	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
-	{
-		max->key.left = 1;
-	}
-
-	if (keydata.key == MLX_KEY_ENTER && keydata.action == MLX_PRESS)
-	{
-		max->key.enter = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_ADD && keydata.action == MLX_PRESS)
-	{
-		max->key.add = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_SUBTRACT && keydata.action == MLX_PRESS)
-	{
-		max->key.subtract = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_MULTIPLY && keydata.action == MLX_PRESS)
-	{
-		max->key.multiply = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_DIVIDE && keydata.action == MLX_PRESS)
-	{
-		max->key.divide = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_1 && keydata.action == MLX_PRESS)
-	{
-		max->key.one = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_2 && keydata.action == MLX_PRESS)
-	{
-		max->key.two = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_3 && keydata.action == MLX_PRESS)
-	{
-		max->key.three = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_4 && keydata.action == MLX_PRESS)
-	{
-		max->key.four = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_5 && keydata.action == MLX_PRESS)
-	{
-		max->key.five = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_6 && keydata.action == MLX_PRESS)
-	{
-		max->key.six = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_7 && keydata.action == MLX_PRESS)
-	{
-		max->key.seven = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_8 && keydata.action == MLX_PRESS)
-	{
-		max->key.eight = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_9 && keydata.action == MLX_PRESS)
-	{
-		max->key.nine = 1;
-	}
-	if (keydata.key == MLX_KEY_KP_0 && keydata.action == MLX_PRESS)
-	{
-		max->key.zero = 1;
-	}
-	if (keydata.key == MLX_KEY_SPACE && keydata.action == MLX_PRESS)
-	{
-		max->key.space = 1;
-	}
-	if (keydata.key == MLX_KEY_BACKSPACE && keydata.action == MLX_PRESS)
-	{
-		max->key.backspace = 1;
-	}
-	if (keydata.key == MLX_KEY_LEFT_SHIFT && keydata.action == MLX_PRESS)
-	{
-		max->key.left_shift = 1;
-	}
-	if (keydata.key == MLX_KEY_LEFT_SHIFT && keydata.action == MLX_RELEASE)
-	{
-		max->key.left_shift = 0;
-	}
-	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_PRESS)
-	{
-		max->key.right_shift = 1;
-	}
-	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_RELEASE)
-	{
-		max->key.right_shift = 0;
-	}
-	if (keydata.key == MLX_KEY_RIGHT_SHIFT && keydata.action == MLX_PRESS)
+	if (keydata.key == MLX_KEY_CAPS_LOCK && keydata.action == MLX_PRESS)
 	{
 		max->key.caps_lock ^= 1;
 	}
+	//NUM LOCK
+	//SCROLL LOCK
+	//INSERT
+	// if (keydata.action == MLX_PRESS)
+	// 	printf("%i\n", keydata.key);
 }

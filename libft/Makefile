@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/14 13:43:18 by okraus            #+#    #+#              #
-#    Updated: 2023/12/30 15:55:32 by okraus           ###   ########.fr        #
+#    Updated: 2024/03/31 14:23:53 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -172,8 +172,8 @@ PRINT2		=	for num in `seq 1 $(BAR_LENGTH)` ; do \
 						printf "$(REVERSE) $(NRM_FORMAT)" ; \
 					else \
 						printf " " ; \
-        			fi \
-    			done
+					fi \
+				done
 
 # Objects
 

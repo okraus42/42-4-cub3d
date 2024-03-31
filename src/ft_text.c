@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/25 13:31:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 16:06:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	ft_draw_text(t_text *text, int state)
 		if (ft_isprint(text->text[i]))
 		{
 			text->offset = (text->text[i] - ' ') * 120;
-			if (text->offset)
-				text->offset -= 2; // add 2 pixels to image
+			// if (text->offset)
+			// 	text->offset -= 2; // add 2 pixels to image
 			ft_draw_char(text);
 			text->x += text->height / 2;
 		}

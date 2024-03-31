@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   fixedpoint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/10 16:14:01 by okraus            #+#    #+#             */
-/*   Updated: 2023/08/15 16:09:22 by okraus           ###   ########.fr       */
+/*   Created: 2023/11/08 15:29:03 by okraus            #+#    #+#             */
+/*   Updated: 2024/02/28 16:45:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/libft.h"
+#include "./header/libft.h"
 
-size_t	ft_strlen(const char *s)
+int	main(int ac, char *av[])
 {
-	size_t	i;
+	double	f;
+	t_fix64	fix;
 
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	if (ac != 2)
+		return (5);
+	f = atof(av[1]);
+	printf("Float is: %20.3f\n", f);
+	fix = ft_ftofix(f, 16);
+	ft_printf("Fix is %23.3LP\n", fix);
+	ft_printf("Next fix is %18.3LP\nPrevious fix is %14.3LP\n",
+		fix + 1, fix - 1);
+	return (0);
 }

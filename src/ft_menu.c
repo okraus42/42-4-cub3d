@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 15:46:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 16:59:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	ft_draw_menu(t_max *max)
 
 void	ft_selectnewbutton(t_max *max, t_button *button)
 {
-	if (max->key.up)
+	if (max->keys[MLX_KEY_UP])
 	{
 		while (button->up)
 		{
@@ -232,9 +232,9 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 				break ;
 			}
 		}
-		max->key.up = 0;
+		max->keys[MLX_KEY_UP] = 0;
 	}
-	if (max->key.down)
+	if (max->keys[MLX_KEY_DOWN])
 	{
 		while (button->down)
 		{
@@ -245,9 +245,9 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 				break ;
 			}
 		}
-		max->key.down = 0;
+		max->keys[MLX_KEY_DOWN] = 0;
 	}
-	if (max->key.left)
+	if (max->keys[MLX_KEY_LEFT])
 	{
 		while (button->left)
 		{
@@ -258,9 +258,9 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 				break ;
 			}
 		}
-		max->key.left = 0;
+		max->keys[MLX_KEY_LEFT] = 0;
 	}
-	if (max->key.right)
+	if (max->keys[MLX_KEY_RIGHT])
 	{
 		while (button->right)
 		{
@@ -271,7 +271,7 @@ void	ft_selectnewbutton(t_max *max, t_button *button)
 				break ;
 			}
 		}
-		max->key.right = 0;
+		max->keys[MLX_KEY_RIGHT] = 0;
 	}
 }
 
@@ -281,38 +281,99 @@ void	ft_selectbutton(t_max *max)
 	{
 		ft_selectnewbutton(max, &max->menu.mainbuttons[max->menu.current_button[MAINBUTTONS]]);
 	}
-	if (max->menu.current_buttongroup == NEWWRITING)
+	else if (max->menu.current_buttongroup == NEWWRITING)
 	{
-		if (max->menu.newwriting == NAME)
+		ft_selectnewbutton(max, &max->menu.newwritingbuttons[max->menu.current_button[NEWWRITING]]);
+		// if (max->menu.newwriting == NAME)
+		// {
+		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[NAME]);
+		// }
+		// else if (max->menu.newwriting == COALITION)
+		// {
+		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[COALITION]);
+		// }
+		// else if (max->menu.newwriting == CAMPUS)
+		// {
+		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[CAMPUS]);
+		// }
+		if (max->menu.current_button[NEWWRITING] == NAME)
 		{
 			ft_write_in_textfield(max, &max->menu.newwritingfields[NAME]);
-			return ;
+			max->menu.newwriting = NAME;
+			if (max->menu.newwritingfields[COALITION].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[COALITION].text.text[max->menu.newwritingfields[COALITION].text.highlight] = '\0';
+				max->menu.newwritingfields[COALITION].text.highlight = -1;
+			}
+			if (max->menu.newwritingfields[CAMPUS].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[CAMPUS].text.text[max->menu.newwritingfields[CAMPUS].text.highlight] = '\0';
+				max->menu.newwritingfields[CAMPUS].text.highlight = -1;
+			}
 		}
-		if (max->menu.newwriting == COALITION)
+		else if (max->menu.current_button[NEWWRITING]  == COALITION)
 		{
 			ft_write_in_textfield(max, &max->menu.newwritingfields[COALITION]);
-			return ;
+			max->menu.newwriting = COALITION;
+			if (max->menu.newwritingfields[NAME].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[NAME].text.text[max->menu.newwritingfields[NAME].text.highlight] = '\0';
+				max->menu.newwritingfields[NAME].text.highlight = -1;
+			}
+			if (max->menu.newwritingfields[CAMPUS].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[CAMPUS].text.text[max->menu.newwritingfields[CAMPUS].text.highlight] = '\0';
+				max->menu.newwritingfields[CAMPUS].text.highlight = -1;
+			}
 		}
-		if (max->menu.newwriting == CAMPUS)
+		else if (max->menu.current_button[NEWWRITING]  == CAMPUS)
 		{
 			ft_write_in_textfield(max, &max->menu.newwritingfields[CAMPUS]);
-			return ;
+			max->menu.newwriting = CAMPUS;
+			if (max->menu.newwritingfields[NAME].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[NAME].text.text[max->menu.newwritingfields[NAME].text.highlight] = '\0';
+				max->menu.newwritingfields[NAME].text.highlight = -1;
+			}
+			if (max->menu.newwritingfields[COALITION].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[COALITION].text.text[max->menu.newwritingfields[COALITION].text.highlight] = '\0';
+				max->menu.newwritingfields[COALITION].text.highlight = -1;
+			}
 		}
-		ft_selectnewbutton(max, &max->menu.newwritingbuttons[max->menu.current_button[NEWWRITING]]);
+		else
+		{
+			{
+				max->menu.newwritingfields[NAME].text.text[max->menu.newwritingfields[NAME].text.highlight] = '\0';
+				max->menu.newwritingfields[NAME].text.highlight = -1;
+			}
+			if (max->menu.newwritingfields[COALITION].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[COALITION].text.text[max->menu.newwritingfields[COALITION].text.highlight] = '\0';
+				max->menu.newwritingfields[COALITION].text.highlight = -1;
+			}
+			if (max->menu.newwritingfields[CAMPUS].text.highlight >= 0)
+			{
+				max->menu.newwritingfields[CAMPUS].text.text[max->menu.newwritingfields[CAMPUS].text.highlight] = '\0';
+				max->menu.newwritingfields[CAMPUS].text.highlight = -1;
+			}
+			max->menu.newwriting = -1;
+		}
+		
 	}
-	if (max->menu.current_buttongroup == NEWDIFFICULTY)
+	else if (max->menu.current_buttongroup == NEWDIFFICULTY)
 	{
 		ft_selectnewbutton(max, &max->menu.gamedifficultybuttons[max->menu.current_button[NEWDIFFICULTY]]);
 	}
-	if (max->menu.current_buttongroup == NEWSELECTION)
+	else if (max->menu.current_buttongroup == NEWSELECTION)
 	{
 		ft_selectnewbutton(max, &max->menu.gametypebuttons[max->menu.current_button[NEWSELECTION]]);
 	}
-	if (max->menu.current_buttongroup == NEWLEVEL)
+	else if (max->menu.current_buttongroup == NEWLEVEL)
 	{
 		ft_selectnewbutton(max, &max->menu.maptypebuttons[max->menu.current_button[NEWLEVEL]]);
 	}
-	if (max->menu.current_buttongroup == NEWMAP)
+	else if (max->menu.current_buttongroup == NEWMAP)
 	{
 		if (max->menu.cm_state)
 		{
@@ -321,58 +382,58 @@ void	ft_selectbutton(t_max *max)
 		}
 		ft_selectnewbutton(max, &max->menu.mapselectionbuttons[max->menu.current_button[NEWMAP]]);
 	}
-	if (max->menu.current_buttongroup == NEWRANDOM)
+	else if (max->menu.current_buttongroup == NEWRANDOM)
 	{
 		ft_selectnewbutton(max, &max->menu.randomselectionbuttons[max->menu.current_button[NEWRANDOM]]);
 	}
-	if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
+	else if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
 	{
 		if (max->menu.random_state[RWIDTH])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RWIDTH]);
 			return ;
 		}
-		if (max->menu.random_state[RHEIGHT])
+		else if (max->menu.random_state[RHEIGHT])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RHEIGHT]);
 			return ;
 		}
-		if (max->menu.random_state[RRATIODE])
+		else if (max->menu.random_state[RRATIODE])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIODE]);
 			return ;
 		}
-		if (max->menu.random_state[RRATIOLO])
+		else if (max->menu.random_state[RRATIOLO])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOLO]);
 			return ;
 		}
-		if (max->menu.random_state[RRATIOTI])
+		else if (max->menu.random_state[RRATIOTI])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOTI]);
 			return ;
 		}
-		if (max->menu.random_state[RRATIOXI])
+		else if (max->menu.random_state[RRATIOXI])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RRATIOXI]);
 			return ;
 		}
-		if (max->menu.random_state[RNOROOMS])
+		else if (max->menu.random_state[RNOROOMS])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RNOROOMS]);
 			return ;
 		}
-		if (max->menu.random_state[ROROOMS])
+		else if (max->menu.random_state[ROROOMS])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[ROROOMS]);
 			return ;
 		}
-		if (max->menu.random_state[RDOORS])
+		else if (max->menu.random_state[RDOORS])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RDOORS]);
 			return ;
 		}
-		if (max->menu.random_state[RDEADENDS])
+		else if (max->menu.random_state[RDEADENDS])
 		{
 			ft_choose_in_button(max, &max->menu.randomadvancedbuttons[RDEADENDS]);
 			return ;
@@ -671,15 +732,15 @@ void	ft_menu(t_max *max)
 	{
 		ft_draw_newrandomadvancedbuttons(max);
 	}
-	if (max->key.backspace)
+	if (max->keys[MLX_KEY_BACKSPACE])
 	{
 		if (max->menu.current_buttongroup)
 			--max->menu.current_buttongroup;
-		max->key.backspace = 0;
+		max->keys[MLX_KEY_BACKSPACE] = 0;
 	}
-	if (max->key.enter)
+	if (max->keys[MLX_KEY_ENTER])
 	{
-		max->key.enter = 0;
+		max->keys[MLX_KEY_ENTER] = 0;
 		if (max->menu.current_button[MAINBUTTONS] == RESUME)
 		{
 			max->game_mode = GAMEPLAY;
@@ -697,7 +758,7 @@ void	ft_menu(t_max *max)
 				{
 					if (max->menu.newwriting == NAME)
 					{
-						max->menu.newwriting = -1;
+						max->menu.newwriting = COALITION;
 						max->menu.newwritingfields[NAME].text.text[max->menu.newwritingfields[NAME].text.highlight] = '\0';
 						max->menu.newwritingfields[NAME].text.highlight = -1;
 						max->menu.current_button[NEWWRITING] = COALITION;
@@ -709,7 +770,7 @@ void	ft_menu(t_max *max)
 				{
 					if (max->menu.newwriting == COALITION)
 					{
-						max->menu.newwriting = -1;
+						max->menu.newwriting = CAMPUS;
 						max->menu.newwritingfields[COALITION].text.text[max->menu.newwritingfields[COALITION].text.highlight] = '\0';
 						max->menu.newwritingfields[COALITION].text.highlight = -1;
 						max->menu.current_button[NEWWRITING] = CAMPUS;

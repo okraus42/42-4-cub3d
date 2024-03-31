@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 11:53:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 16:42:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,28 +336,32 @@ void	ft_draw_strings(t_max *max)
 {
 	if (DEBUGGING)
 	{
-		if (max->key.two)
+		if (max->keys[MLX_KEY_2])
 		{
 			++max->ray;
-			max->key.two = 0;
+			max->keys[MLX_KEY_2] = 0;
 		}
-		if (max->key.three)
+		if (max->keys[MLX_KEY_3])
 		{
 			--max->ray;
-			max->key.three = 0;
+			max->keys[MLX_KEY_3] = 0;
 		}
 		if (max->ray == RAYS)
 			max->ray = 0;
 		if (max->ray < 0)
 			max->ray = RAYS - 1;
-		if (max->key.one)
-			ft_snprintf(max->s[0], 255, "FPS: %3i  Pos [%6x] [%6x]   Orientation [%5i]",
-				1000 / max->framems, max->map->p.x, max->map->p.y,
-				max->map->p.orientation);
-		else
+		if (max->kb.caps_lock)
+		{
 			ft_snprintf(max->s[0], 255, "Ray [%4i] ra [%5i] c0[%8x] c1[%8x] length[%Li]", max->ray,
 				max->map->p.oray[max->ray].ra, max->map->p.oray[max->ray].c[0],
 				max->map->p.oray[max->ray].c[1], max->map->p.oray[max->ray].length);
+		}
+		else
+		{
+			ft_snprintf(max->s[0], 255, "FPS: %3i  Pos [%6x] [%6x]   Orientation [%5i]",
+				1000 / max->framems, max->map->p.x, max->map->p.y,
+				max->map->p.orientation);
+		}
 		mlx_delete_image(max->mlx, max->str[0]);
 		//mlx_delete_image(max->mlx, max->str[1]);
 		
@@ -376,37 +380,37 @@ void	ft_draw_strings(t_max *max)
 
 // void	ft_debug(t_max *max)
 // {
-// 	if (max->key.five)
+// 	if (max->keys[MLX_KEY_KP_5])
 // 	{
 // 		max->map->p.x = 0x214d9c;
 // 		max->map->p.y = 0x29d6a8;
 // 		max->map->p.orientation = 15568;
 // 		max->ray = 547;
-// 		max->key.five = 0;
+// 		max->keys[MLX_KEY_KP_5] = 0;
 // 	}
-// 	if (max->key.six)
+// 	if (max->keys[MLX_KEY_KP_6])
 // 	{
 // 		max->map->p.x = 0x45f0c;
 // 		max->map->p.y = 0x10ec2c;
 // 		max->map->p.orientation = 8486;
 // 		max->ray = 282;
-// 		max->key.six = 0;
+// 		max->keys[MLX_KEY_KP_6] = 0;
 // 	}
-// 	if (max->key.seven)
+// 	if (max->keys[MLX_KEY_KP_7])
 // 	{
 // 		max->map->p.x = 0x564a5;
 // 		max->map->p.y = 0x326b45;
 // 		max->map->p.orientation = 7774;
 // 		max->ray = 126;
-// 		max->key.seven = 0;
+// 		max->keys[MLX_KEY_KP_7] = 0;
 // 	}
-// 	if (max->key.eight)
+// 	if (max->keys[MLX_KEY_KP_8])
 // 	{
 // 		max->map->p.x = 0x5fdb1;
 // 		max->map->p.y = 0x361ed9;
 // 		max->map->p.orientation = 7774;
 // 		max->ray = 584;
-// 		max->key.eight = 0;
+// 		max->keys[MLX_KEY_KP_8] = 0;
 // 	}
 // }
 
@@ -451,79 +455,79 @@ void	ft_gameplay(t_max *max)
 		max->map->p.yspeed *= 2;
 		max->map->p.turnspeed /= 2;
 	}
-	if (max->keys[MLX_KEY_1])	//key1
-	{
-		if (max->key.one)
-			max->key.one = 0;
-		else
-			max->key.one = 1;
-		max->keys[MLX_KEY_1] = 0;
-	}
-	if (max->keys[MLX_KEY_2])
-	{
-		if (max->key.two)
-			max->key.two = 0;
-		else
-			max->key.two = 1;
-		max->keys[MLX_KEY_2] = 0;
-	}
-	if (max->keys[MLX_KEY_3])
-	{
-		if (max->key.three)
-			max->key.three = 0;
-		else
-			max->key.three = 1;
-		max->keys[MLX_KEY_3] = 0;
-	}
-	if (max->keys[MLX_KEY_4])
-	{
-		if (max->key.four)
-			max->key.four = 0;
-		else
-			max->key.four = 1;
-	}
-	if (max->keys[MLX_KEY_5])
-	{
-		if (max->key.five)
-			max->key.five = 0;
-		else
-			max->key.five = 1;
-	}
-	if (max->keys[MLX_KEY_6])
-	{
-		if (max->key.six)
-			max->key.six = 0;
-		else
-			max->key.six = 1;
-	}
-	if (max->keys[MLX_KEY_7])
-	{
-		if (max->key.seven)
-			max->key.seven = 0;
-		else
-			max->key.seven = 1;
-	}
-	if (max->keys[MLX_KEY_8])
-	{
-		if (max->key.eight)
-			max->key.eight = 0;
-		else
-			max->key.eight = 1;
-	}
-	if (max->keys[MLX_KEY_9])
-	{
-		if (max->key.nine)
-			max->key.nine = 0;
-		else
-			max->key.nine = 1;
-	}
-	if (max->keys[MLX_KEY_0])
-	{
-		if (max->key.zero)
-			max->key.zero = 0;
-		else
-			max->key.zero = 1;
-	}
+	// if (max->keys[MLX_KEY_1])	//key1
+	// {
+	// 	if (max->keys[MLX_KEY_KP_1])
+	// 		max->keys[MLX_KEY_KP_1] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_1] = 1;
+	// 	max->keys[MLX_KEY_1] = 0;
+	// }
+	// if (max->keys[MLX_KEY_2])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_2])
+	// 		max->keys[MLX_KEY_KP_2] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_2] = 1;
+	// 	max->keys[MLX_KEY_2] = 0;
+	// }
+	// if (max->keys[MLX_KEY_3])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_3])
+	// 		max->keys[MLX_KEY_KP_3] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_3] = 1;
+	// 	max->keys[MLX_KEY_3] = 0;
+	// }
+	// if (max->keys[MLX_KEY_4])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_4])
+	// 		max->keys[MLX_KEY_KP_4] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_4] = 1;
+	// }
+	// if (max->keys[MLX_KEY_5])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_5])
+	// 		max->keys[MLX_KEY_KP_5] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_5] = 1;
+	// }
+	// if (max->keys[MLX_KEY_6])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_6])
+	// 		max->keys[MLX_KEY_KP_6] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_6] = 1;
+	// }
+	// if (max->keys[MLX_KEY_7])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_7])
+	// 		max->keys[MLX_KEY_KP_7] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_7] = 1;
+	// }
+	// if (max->keys[MLX_KEY_8])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_8])
+	// 		max->keys[MLX_KEY_KP_8] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_8] = 1;
+	// }
+	// if (max->keys[MLX_KEY_9])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_9])
+	// 		max->keys[MLX_KEY_KP_9] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_9] = 1;
+	// }
+	// if (max->keys[MLX_KEY_0])
+	// {
+	// 	if (max->keys[MLX_KEY_KP_0])
+	// 		max->keys[MLX_KEY_KP_0] = 0;
+	// 	else
+	// 		max->keys[MLX_KEY_KP_0] = 1;
+	// }
 	if (max->keys[MLX_KEY_UP] || max->keys[MLX_KEY_W])
 	{
 		//ft_printf("You have pressed up arrow.\n");

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 13:38:26 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 16:00:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 
 # include "../.MLX42/include/MLX42/MLX42.h"
 # include "../libft/header/libft.h"
+
+//keys
+# define ISO_KEY_BACKSLASH 161
 
 //modes
 # define MENU 1

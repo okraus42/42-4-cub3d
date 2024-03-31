@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/26 15:49:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 14:45:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,15 @@ void	ft_choose_in_listfield(t_max *max, t_listfield *listfield)
 
 	i = listfield->highlight;
 	listfield->text[i].cb = 0;
-	if (max->key.up)
+	if (max->keys[MLX_KEY_UP])
 	{
 		--i;
-		max->key.up = 0;
+		max->keys[MLX_KEY_UP] = 0;
 	}
-	if (max->key.down)
+	if (max->keys[MLX_KEY_DOWN])
 	{
 		++i;
-		max->key.down = 0;
+		max->keys[MLX_KEY_DOWN] = 0;
 	}
 	if (i < 0)
 		i = 0;

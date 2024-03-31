@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2023/10/19 15:09:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 14:16:50 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@
 # include <stdint.h>
 # include <stdarg.h>
 # include <limits.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <sys/time.h>
+
+//	Useful Macros
+# define ABS(a) (((a) > 0) * (a) - ((a) < 0) * (a))
+# define PN(a) (((a) > 0) - ((a) < 0))
+# define MAX(a, b) (((a) > (b)) * (a) + ((a) <= (b)) * (b))
+# define MIN(a, b) (((a) < (b)) * (a) + ((a) >= (b)) * (b))
+//# define PERCENTIL(a, b, c, d) (MIN(a, b) + (MAX(a, b) - MIN(a, b)) * (c) / (d))
+# define PERCENTIL(a, b, c, d) ((a) + ((b) - (a)) * (c) / (d))
 
 // DEFINITIONS
 // GET_NEXT_LINE definitions
