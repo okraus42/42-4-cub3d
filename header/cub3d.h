@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 15:39:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 12:14:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@
 #  define MAPHEIGHT 1024
 #  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define DEBUGGING 0
+#  define DEBUGGING 1
 #  define FOV 80
-#  define DOF 16
+#  define DOF 64
 #  define TICK 8
 # else
 #  define WIDTH 2560
@@ -96,8 +96,8 @@
 # define STRINGS 16
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
-# define SCREENWIDTH WIDTH
-# define SCREENHEIGHT HEIGHT //- HUD later
+# define SCREENWIDTH (192 * 2)
+# define SCREENHEIGHT (108 * 2) //- HUD later
 # define TMASK 0xFFFFFFFF //
 
 
@@ -193,10 +193,17 @@ typedef union u_clr
 # define EWWALL 10
 # define NSWALL 5
 # define NOWALL 0
-# define NWALLCOLOUR 0x998800FF
-# define EWALLCOLOUR 0xAA9900FF
+
+
+// # define NWALLCOLOUR 0x998800FF
+// # define EWALLCOLOUR 0xAA9900FF
+// # define SWALLCOLOUR 0x887700FF
+// # define WWALLCOLOUR 0x776600FF
+// # define NOWALLCOLOUR 0xFFFF00FF
+# define NWALLCOLOUR 0xFFFFFFFF
+# define EWALLCOLOUR 0xAA0000FF
 # define SWALLCOLOUR 0x887700FF
-# define WWALLCOLOUR 0x776600FF
+# define WWALLCOLOUR 0x0000AAFF
 # define NOWALLCOLOUR 0xFFFF00FF
 
 # define SQUARESIZE 65536
@@ -256,8 +263,8 @@ typedef struct s_oray
 	long long		length;
 	long long		length2;
 	long long		ldof;
-	long long		vl;
-	long long		hl;
+	unsigned long long		vl;
+	unsigned long long		hl;
 	long long		xs; //ray starting position 65536 is 1.000
 	long long		ys;
 	long long		hx[DOF + 1];
@@ -694,6 +701,12 @@ void	ft_place_line(mlx_image_t *img, t_line l);
 //ft_menu.c
 void	ft_initmenu(t_max *max);
 void	ft_menu(t_max *max);
+
+//ft_gameplay.c
+void	ft_gameplay(t_max *max);
+
+//ft_screen3d.c
+void	ft_draw_screen3d(t_max *max);
 
 //ft_keyhook.c
 void	ft_clear_keys(t_max *max);

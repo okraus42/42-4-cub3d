@@ -6,13 +6,13 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/18 14:20:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 12:07:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
-int	ft_otest(t_oray *oray, t_max *max, int r)
+int	ft_otest(t_oray *oray, t_max *max, int r, int debug)
 {
 	int	h;
 	int	v;
@@ -31,6 +31,10 @@ int	ft_otest(t_oray *oray, t_max *max, int r)
 		{
 			oray->length  = ABS((oray->hx[h] - oray->xs) * 65536 / max->math->sin[oray->ra]);
 		}
+		if (debug)
+		{
+			ft_printf("A otest return 0\n");
+		}
 		return (0);
 	}
 	if (oray->hdof < 0)
@@ -44,10 +48,23 @@ int	ft_otest(t_oray *oray, t_max *max, int r)
 		{
 			oray->length =  ABS((oray->vy[v] - oray->ys) * 65536 / max->math->cos[oray->ra]);
 		}
+		if (debug)
+		{
+			ft_printf("B otest return 1\n");
+		}
 		return (1);
 	}
 	oray->hl = (oray->hx[h] - oray->xs) * (oray->hx[h] - oray->xs) + (oray->hy[h] - oray->ys) * (oray->hy[h] - oray->ys);
 	oray->vl = (oray->vx[v] - oray->xs) * (oray->vx[v] - oray->xs) + (oray->vy[v] - oray->ys) * (oray->vy[v] - oray->ys);
+	if (debug)
+	{
+		ft_printf("U hl %llx, vl %llx\n", oray->hl, oray->vl);
+		ft_printf("S hl %lli, vl %lli\n", oray->hl, oray->vl);
+		ft_printf("U hlx %llx, vlx %llx\n", (oray->hx[h] - oray->xs) * (oray->hx[h] - oray->xs), (oray->vx[v] - oray->xs) * (oray->vx[v] - oray->xs));
+		ft_printf("U hly %llx, vly %llx\n", (oray->hy[h] - oray->ys) * (oray->hy[h] - oray->ys), (oray->vy[v] - oray->ys) * (oray->vy[v] - oray->ys));
+		ft_printf("S hlx %lli, vlx %lli\n", (oray->hx[h] - oray->xs) * (oray->hx[h] - oray->xs), (oray->vx[v] - oray->xs) * (oray->vx[v] - oray->xs));
+		ft_printf("S hly %lli, vly %lli\n", (oray->hy[h] - oray->ys) * (oray->hy[h] - oray->ys), (oray->vy[v] - oray->ys) * (oray->vy[v] - oray->ys));
+	}
 	if (oray->hl > oray->vl)
 	{
 		oray->hv = 1;
@@ -58,6 +75,10 @@ int	ft_otest(t_oray *oray, t_max *max, int r)
 		else
 		{
 			oray->length =  ABS((oray->vy[v] - oray->ys) * 65536 / max->math->cos[oray->ra]);
+		}
+		if (debug)
+		{
+			ft_printf("C otest return 1\n");
 		}
 		return (1);
 	}
@@ -71,6 +92,10 @@ int	ft_otest(t_oray *oray, t_max *max, int r)
 		else
 		{
 			oray->length  = ABS((oray->hx[h] - oray->xs) * 65536 / max->math->sin[oray->ra]);
+		}
+		if (debug)
+		{
+			ft_printf("D otest return 0\n");
 		}
 		return (0);
 	}
@@ -95,9 +120,9 @@ void	ft_init_orays(t_max *max)
 	//ft_printf("\nNEWNEW\n\n\n");
 	while (r < RAYS)
 	{
-		debug = r == max->ray && max->key.four;
+		debug = r == max->ray && max->keys[MLX_KEY_4];
 		if (debug)
-			max->key.four = 0;
+			max->keys[MLX_KEY_4] = 0;
 		oray = &max->map->p.oray[r];
 		oray->xs = ((int)max->map->p.x);// * 256;
 		oray->ys = ((int)max->map->p.y);// * 256;
@@ -109,11 +134,11 @@ void	ft_init_orays(t_max *max)
 		//ft_printf("r0 = %i\n", r);
 		if (NOFISHEYE)
 			oray->ra = max->map->p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
-		else //need check
-			oray->ra = max->map->p.orientation - max->map->p.fov2 + r * max->map->p.fov * 16384LL / (RAYS - 1) / 360;
-		if (oray->ra < 0)
+		else //need check!!!
+			oray->ra = max->map->p.orientation + 2 * max->map->p.fov2 + r * max->map->p.fov * 16384LL / (RAYS - 1) / 360;
+		while (oray->ra < 0)
 			oray->ra += MAXDEGREE; 
-		else if (oray->ra >= MAXDEGREE)
+		while (oray->ra >= MAXDEGREE)
 			oray->ra -= MAXDEGREE;
 		oray->hdof = 1;
 		if (debug)
@@ -243,7 +268,7 @@ void	ft_init_orays(t_max *max)
 		}
 		--oray->vdof;
 		--oray->hdof;
-		if (ft_otest(oray, max, r))
+		if (ft_otest(oray, max, r, debug))
 		{
 			oray->rx = oray->vx[oray->vdof];
 			oray->ry = oray->vy[oray->vdof];
@@ -255,15 +280,18 @@ void	ft_init_orays(t_max *max)
 			oray->ry = oray->hy[oray->hdof];
 			oray->m = oray->hm;
 		}
-		
-		// ft_printf("hx = %Li hy = %Li | ", oray->hx, oray->hy);
-		// ft_printf("vx = %Li vy = %Li | ", oray->vx, oray->vy);
-		// ft_printf("rx = %Li ry = %Li\n", oray->rx, oray->ry);
-		// ft_printf("hdof = %i vdof = %Li | ", oray->hdof, oray->vdof);
-		// ft_printf("hxo = %Li hyo = %Li | ", oray->hxo, oray->hyo);
-		// ft_printf("vxo = %Li vyo = %Li\n", oray->vxo, oray->vyo);
 		// oray->rx = oray->vx;
 		// oray->ry = oray->vy;
+		if (debug)
+		{
+			ft_printf("hx = %Li hy = %Li | ", oray->hx[oray->hdof], oray->hy[oray->hdof]);
+			ft_printf("vx = %Li vy = %Li\n", oray->vx[oray->vdof], oray->vy[oray->vdof]);
+			ft_printf("rx = %Li ry = %Li", oray->rx, oray->ry);
+			ft_printf("hdof = %i vdof = %Li\n", oray->hdof, oray->vdof);
+			ft_printf("hxo = %Li hyo = %Li | ", oray->hxo, oray->hyo);
+			ft_printf("vxo = %Li vyo = %Li\n", oray->vxo, oray->vyo);
+			ft_printf("oray hv = %i", oray->hv);
+		}
 		if (!oray->hv)
 		{
 			oray->dof = oray->hdof;
@@ -382,16 +410,16 @@ void	ft_init_orays(t_max *max)
 		//ft_printf("r3 = %i\n", r);
 		// oray->rx = oray->hx;
 		// oray->ry = oray->hy;
-		// if (oray->wall == NOWALL)
-		// 	oray->c[0] = NOWALLCOLOUR;
-		// else if (oray->wall == WWALL)
-		// 	oray->c[0] = WWALLCOLOUR;
-		// else if (oray->wall == EWALL)
-		// 	oray->c[0] = EWALLCOLOUR;
-		// else if (oray->wall == NWALL)
-		// 	oray->c[0] = NWALLCOLOUR;
-		// else if (oray->wall == SWALL)
-		// 	oray->c[0] = SWALLCOLOUR;
+		if (oray->wall == NOWALL)
+			oray->c[0] = NOWALLCOLOUR;
+		else if (oray->wall == WWALL)
+			oray->c[0] = WWALLCOLOUR;
+		else if (oray->wall == EWALL)
+			oray->c[0] = EWALLCOLOUR;
+		else if (oray->wall == NWALL)
+			oray->c[0] = NWALLCOLOUR;
+		else if (oray->wall == SWALL)
+			oray->c[0] = SWALLCOLOUR;
 		// else
 		// {
 		// 	oray->c[0] = 0xFFFF00FF;

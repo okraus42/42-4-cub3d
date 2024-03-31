@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 14:34:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/03/31 11:11:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_amaze_standard(t_max *max)
 	}
 	screen = mlx_new_image(mlx, SCREENWIDTH, SCREENHEIGHT);
 	if (!screen || (mlx_image_to_window(mlx, screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	//if (!screen || (mlx_image_to_window(mlx, screen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
@@ -103,7 +104,8 @@ void	ft_amaze_bonus(t_max *max)
 		ft_exit(max, 9);
 	}
 	max->screen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
-	if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	//if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
