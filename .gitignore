@@ -50,16 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-tests/mazegen/libft/.vscode/settings.json
-tests/mazegen/.nfs00000000014231da0000000e
-.gitignore
-tests/mazegen/.nfs00000000014216310000000b
-tests/mazegen/.nfs00000000014231550000000c
-tests/mazegen/.nfs000000000142341c0000000f
-tests/mazegen/extraplusmazegen.c
 .vscode/settings.json
 
 # Custom files
 .MLX42/build/
 .vscode/
-cub3d
+cub3D
