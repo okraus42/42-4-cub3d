@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 16:40:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/02 17:01:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,8 @@ void	ft_menuhook(t_max *max)
 	// 	// mlx_close_window(max->mlx);
 	// }
 	ft_process_keylocks(max);
-	ft_process_input(max);
+	if (max->menu.current_buttongroup == NEWWRITING)
+		ft_process_input(max);
 	ft_menu(max);
 }
 

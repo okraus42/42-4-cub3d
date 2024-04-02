@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 17:02:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/02 16:36:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@
 #  define FULLSCREEN 0
 #  define DEBUGGING 0
 #  define FOV 80
-#  define DOF 64
+#  define DOF 16
 #  define TICK 8
 # else
 #  define WIDTH 2560
@@ -339,6 +339,7 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
+	int	reveal;			//radius of revealed map
 	//t_oray			ray[RAYS];
 	t_oray			oray[RAYS];
 	t_line			miniray[RAYS];

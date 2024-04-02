@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 16:42:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/02 16:56:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,6 +329,54 @@ void	ft_revisit_map(t_map *map)
 	}
 }
 
+static int	ft_is_inside(t_map *map, long long rad2, long long y, long long x)
+{
+	long long	cx;
+	long long	cy;
+
+	cx = x - map->p.x;
+	cy = y - map->p.y;
+	if (cx * cx + cy * cy <= rad2)
+	{
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_discover_map(t_map *map)
+{
+	int			i;
+	long long	mx;
+	long long	my;
+	long long	rad2;
+	long long	vis;
+	
+	vis = (long long)(0xFF / ((map->p.reveal / 4) + 1)) << 32;
+	i = 0;
+	rad2 = map->p.reveal * 65536;
+	rad2 *= rad2;
+	while (i < map->hh * map->ww)
+	{
+		my = (i / map->ww) * 65536 + 32768;
+		mx = i % map->ww * 65536 + 32768;
+		if (ft_is_inside(map, rad2, my, mx))
+			map->m[(i / map->ww) * 256 + i % map->ww] |= vis;
+		++i;
+	}
+}
+
+void	ft_discover_full_map(t_map *map)
+{
+	int	i;
+	
+	i = 0;
+	while (i < map->ww * map->hh)
+	{
+		map->m[(i / map->ww) * 256 + i % map->ww] |= 0X8F00000000;
+		++i;
+	}
+}
+
 //hook for moving player on the map
 //create hook for moving map instead of player
 
@@ -455,79 +503,6 @@ void	ft_gameplay(t_max *max)
 		max->map->p.yspeed *= 2;
 		max->map->p.turnspeed /= 2;
 	}
-	// if (max->keys[MLX_KEY_1])	//key1
-	// {
-	// 	if (max->keys[MLX_KEY_KP_1])
-	// 		max->keys[MLX_KEY_KP_1] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_1] = 1;
-	// 	max->keys[MLX_KEY_1] = 0;
-	// }
-	// if (max->keys[MLX_KEY_2])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_2])
-	// 		max->keys[MLX_KEY_KP_2] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_2] = 1;
-	// 	max->keys[MLX_KEY_2] = 0;
-	// }
-	// if (max->keys[MLX_KEY_3])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_3])
-	// 		max->keys[MLX_KEY_KP_3] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_3] = 1;
-	// 	max->keys[MLX_KEY_3] = 0;
-	// }
-	// if (max->keys[MLX_KEY_4])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_4])
-	// 		max->keys[MLX_KEY_KP_4] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_4] = 1;
-	// }
-	// if (max->keys[MLX_KEY_5])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_5])
-	// 		max->keys[MLX_KEY_KP_5] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_5] = 1;
-	// }
-	// if (max->keys[MLX_KEY_6])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_6])
-	// 		max->keys[MLX_KEY_KP_6] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_6] = 1;
-	// }
-	// if (max->keys[MLX_KEY_7])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_7])
-	// 		max->keys[MLX_KEY_KP_7] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_7] = 1;
-	// }
-	// if (max->keys[MLX_KEY_8])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_8])
-	// 		max->keys[MLX_KEY_KP_8] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_8] = 1;
-	// }
-	// if (max->keys[MLX_KEY_9])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_9])
-	// 		max->keys[MLX_KEY_KP_9] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_9] = 1;
-	// }
-	// if (max->keys[MLX_KEY_0])
-	// {
-	// 	if (max->keys[MLX_KEY_KP_0])
-	// 		max->keys[MLX_KEY_KP_0] = 0;
-	// 	else
-	// 		max->keys[MLX_KEY_KP_0] = 1;
-	// }
 	if (max->keys[MLX_KEY_UP] || max->keys[MLX_KEY_W])
 	{
 		//ft_printf("You have pressed up arrow.\n");
@@ -572,6 +547,23 @@ void	ft_gameplay(t_max *max)
 	// 		max->mmode = 0;
 	// }
 	//ft_printf("test0\n");
+	if (max->keys[MLX_KEY_SPACE])
+	{
+		max->map->p.reveal = 1;
+		max->keys[MLX_KEY_SPACE] = 0;
+	}
+	if (max->keys[MLX_KEY_TAB])
+	{
+		ft_discover_full_map(max->map);
+		max->keys[MLX_KEY_TAB] = 0;
+	}
+	if (max->map->p.reveal && !(max->frame % 4))
+	{
+		ft_discover_map(max->map);
+		++max->map->p.reveal;
+		if (max->map->p.reveal > 32)
+			max->map->p.reveal = 0;
+	}
 	if (max->difficulty == MEDIUM)
 	{
 		if (!(max->frame % TICK))
