@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:36:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 12:45:23 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ void	ft_amaze_standard(t_max *max)
 	//mlx_mouse_hook(mlx, &mousehook, max);
 	mlx_loop_hook(mlx, ft_hook, max);
 	mlx_loop(mlx);
-	if (max->t->nwall)
-		mlx_delete_texture(max->t->nwall);
-	if (max->t->ewall)
-		mlx_delete_texture(max->t->ewall);
-	if (max->t->swall)
-		mlx_delete_texture(max->t->swall);
-	if (max->t->wwall)
-		mlx_delete_texture(max->t->wwall);
+	if (max->t.nwall)
+		mlx_delete_texture(max->t.nwall);
+	if (max->t.ewall)
+		mlx_delete_texture(max->t.ewall);
+	if (max->t.swall)
+		mlx_delete_texture(max->t.swall);
+	if (max->t.wwall)
+		mlx_delete_texture(max->t.wwall);
 	mlx_terminate(mlx);
 }

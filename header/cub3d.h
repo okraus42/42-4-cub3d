@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/02 16:36:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 13:12:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,10 @@
 # define STRINGS 16
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
+# define SUPERMAPWIDTH 960
+# define SUPERMAPHEIGHT 540
+# define SUPERMAPBORDER 128
+
 # define SCREENWIDTH (192 * 2)
 # define SCREENHEIGHT (108 * 2) //- HUD later
 # define TMASK 0xFFFFFFFF //
@@ -317,6 +321,8 @@ typedef struct s_player
 			unsigned char	unused_y;
 		};
 	};
+	int	smx;	//x position on supermap
+	int	smy;	//y position on supermap
 	int	xx[2];	//x screen position and point ahead
 	int	yy[2];	//y screen position and point ahaed
 	int fov;
@@ -477,7 +483,8 @@ typedef struct s_textures
 	mlx_texture_t	*buttonplus;
 	mlx_texture_t	*textfield;
 	mlx_texture_t	*listfield;
-
+	mlx_texture_t	*supermapfloor;
+	mlx_texture_t	*supermapwall;
 }	t_textures;
 
 typedef struct s_images
@@ -489,6 +496,7 @@ typedef struct s_images
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
+	mlx_image_t		*supermap;
 	mlx_image_t		*str[STRINGS];
 }	t_images;
 
@@ -529,12 +537,13 @@ typedef struct s_max
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
+	mlx_image_t		*supermap;
 	mlx_image_t		*str[STRINGS];
 	char			s[STRINGS][256];
 	char			name[20];
 	char			coalition[20];
 	char			campus[20];//make it a list later
-	t_textures		*t;//not a pointer
+	t_textures		t;//not a pointer
 	t_images		i;
 	// t_imgs			*img;
 	// mlx_image_t		*str;
@@ -623,6 +632,9 @@ void	ft_menu(t_max *max);
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);
+
+//ft_screen2d.c
+void	ft_draw_screen2d(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);

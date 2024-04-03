@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/02 16:56:41 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 13:02:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,8 @@ void	ft_erase_map(t_max *max)
 
 void	ft_move_player(t_map *map, int y, int x)
 {
+	int	oldy;
+	int	oldx;
 	//ft_printf ("%x %x %x %x %x\n",y >> 8, x >> 8, map->m[((y >> 8) * map->w + (x >> 8))], WALL);
 	//ft_printf("moving player\n");
 	if (map->m[((y >> 16) * map->w + (x >> 16))] & WALL)
@@ -232,6 +234,8 @@ void	ft_move_player(t_map *map, int y, int x)
 	}
 	else
 	{
+		oldy = map->p.y;
+		oldx = map->p.x;
 		map->p.y = y;
 		map->p.x = x;
 		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
@@ -308,6 +312,17 @@ void	ft_move_player(t_map *map, int y, int x)
 		}
 		//ft_printf("moved player\n");
 	}
+	map->p.smx += ((int)map->p.x - oldx) / 1024;
+	map->p.smy += ((int)map->p.y - oldy) / 1024;
+	//ft_printf("smx %i smy %i\n", map->p.smx , map->p.smy);
+	if (map->p.smx < SUPERMAPBORDER)
+		map->p.smx = SUPERMAPBORDER;
+	if (map->p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+		map->p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+	if (map->p.smy < SUPERMAPBORDER)
+		map->p.smy = SUPERMAPBORDER;
+	if (map->p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+		map->p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
 }
 
 //makes map less visible
@@ -575,7 +590,8 @@ void	ft_gameplay(t_max *max)
 			ft_revisit_map(max->map);
 	}
 	ft_init_orays(max);
-	ft_draw_map(max);
-	ft_draw_minimap(max);
-	ft_draw_screen3d(max);
+	//ft_draw_map(max);
+	//ft_draw_minimap(max);
+	//ft_draw_screen3d(max);
+	ft_draw_screen2d(max);
 }

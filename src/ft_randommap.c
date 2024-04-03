@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/29 17:56:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 12:15:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1336,6 +1336,12 @@ void	ft_random_init(t_max *max)
 					max->map->p.my = i / 256;
 					max->map->p.sx = 0x7f7f;
 					max->map->p.sy = 0x7f7f;
+					max->map->p.smx = i % 256 * 64;
+					max->map->p.smy = i / 256 * 64;
+					if (max->map->p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+						max->map->p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+					if (max->map->p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+						max->map->p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
 					max->map->p.orientation = EAST;
 					max->map->p.unused_x = 0;
 					max->map->p.unused_y = 0;

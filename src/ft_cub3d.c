@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:53:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 12:44:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	ft_cub3d(char *file)
 	t_map		*map;
 	t_max		*max;
 	t_math		*math;
-	t_textures	*t;
 
 	max = NULL;
 	max = ft_calloc(sizeof(t_max), 1);
@@ -93,12 +92,8 @@ void	ft_cub3d(char *file)
 	math = ft_calloc(sizeof(t_math), 1);
 	if (!math)
 		ft_exit(max, 11);
-	t = ft_calloc(sizeof(t_textures), 1);
-	if (!t)
-		ft_exit(max, 11);
 	max->math = math;
 	ft_init_math(max->math);
-	max->t = t;
 	max->map = map;
 	max->mlx = NULL;
 	max->keys[MLX_KEY_KP_1] = 0;
@@ -125,7 +120,6 @@ void	ft_cub3d(char *file)
 		ft_amaze_bonus(max);;
 	}
 	free(max);
-	free(t);
 	free(math);
 	free(map);
 }

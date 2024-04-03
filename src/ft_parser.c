@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 14:28:27 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/03 12:56:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 {
 	if (access(path, R_OK) < 0)
 	{
-		ft_dprintf(2, "Cannot open north texture\n");
+		ft_dprintf(2, "Cannot open texture\n");
 		exit(-3);
 	}
 	*texture = mlx_load_png(path);
@@ -40,10 +40,10 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 
 int	ft_init_textures(t_max *max)
 {
-	ft_load_texture(max->map->northtexture, &max->t->nwall);
-	ft_load_texture(max->map->westtexture, &max->t->wwall);
-	ft_load_texture(max->map->southtexture, &max->t->swall);
-	ft_load_texture(max->map->easttexture, &max->t->ewall);
+	ft_load_texture(max->map->northtexture, &max->t.nwall);
+	ft_load_texture(max->map->westtexture, &max->t.wwall);
+	ft_load_texture(max->map->southtexture, &max->t.swall);
+	ft_load_texture(max->map->easttexture, &max->t.ewall);
 	return (1);
 }
 
@@ -300,6 +300,12 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 		map->p.sy = 0x7f7f;
 		map->p.unused_x = 0;
 		map->p.unused_y = 0;
+		map->p.smx = x * 64;
+		map->p.smy = y * 64;
+		if (map->p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+			map->p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+		if (map->p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+			map->p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
 		if (c == 'N')
 		{
 			map->p.orientation = NORTH;
