@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/03 12:57:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 11:32:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_amaze_bonus(t_max *max)
 		ft_exit(max, 10);
 	}
 	max->supermap = mlx_new_image(max->mlx, SUPERMAPWIDTH, SUPERMAPHEIGHT);
-	if (!max->supermap || (mlx_image_to_window(max->mlx, max->supermap, 0, 0) < 0))
+	if (!max->supermap || (mlx_image_to_window(max->mlx, max->supermap, 0, HEIGHT - SUPERMAPHEIGHT) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
@@ -71,8 +71,10 @@ void	ft_amaze_bonus(t_max *max)
 		//free everything
 		ft_exit(max, 10);
 	}
-	ft_load_texture("./textures/map/brick64.png", &max->t.supermapwall);
-	ft_load_texture("./textures/map/floor64.png", &max->t.supermapfloor);
+	// ft_load_texture("./textures/map/brick64.png", &max->t.supermapwall);
+	// ft_load_texture("./textures/map/floor64.png", &max->t.supermapfloor);
+	ft_load_texture("./textures/map/brick32.png", &max->t.supermapwall);
+	ft_load_texture("./textures/map/floor32.png", &max->t.supermapfloor);
 	// max->mlx = mlx;
 	// max->maximap = maximap;
 	// max->minimap = minimap;

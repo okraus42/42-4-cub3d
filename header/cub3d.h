@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/03 13:12:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 12:34:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@
 # define STRINGS 16
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
-# define SUPERMAPWIDTH 960
-# define SUPERMAPHEIGHT 540
-# define SUPERMAPBORDER 128
+# define SUPERMAPWIDTH 1920
+# define SUPERMAPHEIGHT 1080
+# define SUPERMAPBORDER 256
 
 # define SCREENWIDTH (192 * 2)
 # define SCREENHEIGHT (108 * 2) //- HUD later
@@ -119,29 +119,42 @@
 //	RED      GREEN    BLUE      VISITED  DOOR     WALLS    CEILING  FLOOR
 //  FLOOD???
 
-typedef enum e_emap
-{
-	EMPTINESS = 0x0,
-	FLOOR1 = 0x1,
-	FLOOR = 0xFF,
-	FLOORWN = 0x10,
-	FLOORWE = 0x20,
-	FLOORWS = 0x40,
-	FLOORWW = 0x80,
-	FLOORWNW = 0x100,
-	FLOORWNE = 0x200,
-	FLOORWSW = 0x400,
-	FLOORWSE = 0x800,
-	FLOORW = 0xFF0,
-	WALL1 = 0x1000,
-	WALL = 0xF000,
-	FLOOD1 = 0x10000,
-	FLOOD2 = 0x20000,
-	EXIT = 0x100000,
-	DOOR1 = 0x1000000,
-	VISIT = 0x100000000,
-	VISITED = 0xFF00000000
-}	t_emap;
+// 00000000 00000000 00000000 00000000
+//  DOOR WALLS CEILING  FLOOR
+//  FLOOD???
+
+//	00000000 00000000 00000000 00000000
+//	RED      GREEN    BLUE      VISITED
+//
+
+//	00000000 00000000 00000000 00000000
+//	 NORTH    SOUTH     EAST     WEST   WALL
+//
+
+// WALL 0	//perimeter wall separating outside and inside
+// WALL 1	// precalculated columns
+// other types of wall
+
+# define EMPTINESS 0x0			//outside of the playable map
+# define FLOOR1 0x1
+# define FLOOR 0xFF
+# define FLOORWN 0x10
+# define FLOORWE 0x20
+# define FLOORWS 0x40
+# define FLOORWW 0x80
+# define FLOORWNW 0x100
+# define FLOORWNE 0x200
+# define FLOORWSW 0x400
+# define FLOORWSE 0x800
+# define FLOORW 0xFF0
+# define WALL1 0x1000
+# define WALL 0xF000
+# define FLOOD1 0x10000
+# define FLOOD2 0x20000
+# define EXIT 0x100000
+# define DOOR1 0x1000000
+# define VISIT 0x100000000
+# define VISITED 0xFF00000000
 
 //	STRUCTURES
 
@@ -635,6 +648,8 @@ void	ft_gameplay(t_max *max);
 
 //ft_screen2d.c
 void	ft_draw_screen2d(t_max *max);
+//ft_screen2d.c
+void	ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);

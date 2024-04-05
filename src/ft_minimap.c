@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 15:43:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 11:07:10 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_draw_minimap(t_max *max)
 			nx = x + ((int)max->map->p.x * s / 65536) - MINIWIDTH / 2;
 			if (ny > 0 && nx > 0 && ny < max->map->h * s && nx < max->map->w * s)
 			{
-				if (ft_is_inside(max->map, 2147483648LL, (ny << 16) / s, (nx << 16) / s))
+				if (ft_is_inside(max->map, 268435456 * 2, (ny << 16) / s, (nx << 16) / s))
 				{
 					mlx_put_pixel(max->minimap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}

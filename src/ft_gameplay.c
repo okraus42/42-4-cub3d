@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/03 13:02:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 12:17:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -590,8 +590,9 @@ void	ft_gameplay(t_max *max)
 			ft_revisit_map(max->map);
 	}
 	ft_init_orays(max);
-	//ft_draw_map(max);
-	//ft_draw_minimap(max);
-	//ft_draw_screen3d(max);
-	ft_draw_screen2d(max);
+	ft_draw_map(max);
+	ft_draw_minimap(max);
+	ft_draw_screen3d(max);
+	//ft_draw_screen2d(max);
+	//ft_draw_screen2dquad(max);
 }

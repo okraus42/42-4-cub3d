@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/30 15:30:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 11:06:05 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_draw_map(t_max *max)
 		{
 			if (y < max->map->h * s && x < max->map->w * s)
 			{
-				if (ft_is_inside(max->map, 2147483648LL, (y << 16) / s, (x << 16) / s))
+				if (ft_is_inside(max->map, 268435456 * 2, (y << 16) / s, (x << 16) / s))
 				{
 					//ft_printf("y= %i, x= %i\n", y, x);
 					mlx_put_pixel(max->maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour

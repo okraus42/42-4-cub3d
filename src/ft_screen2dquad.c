@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_screen2d.c                                      :+:      :+:    :+:   */
+/*   ft_screen2dquad.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:38:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 11:25:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/05 11:34:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ static unsigned int	ft_get_wall_colour(t_max *max, int y, int x)
 {
 	unsigned int	c;
 
-	c = max->t.supermapwall->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 0] << 24 | 
-		max->t.supermapwall->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 1] << 16 |
-		max->t.supermapwall->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 2] << 8 |
-		(max->t.supermapwall->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 3] & 0);
+	y >>= 1;
+	x >>= 1;
+	c = max->t.supermapwall->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 0] << 24 | 
+		max->t.supermapwall->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 1] << 16 |
+		max->t.supermapwall->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 2] << 8 |
+		(max->t.supermapwall->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 3] & 0);
 	return (c);
 }
 
@@ -41,14 +43,24 @@ static unsigned int	ft_get_floor_colour(t_max *max, int y, int x)
 {
 	unsigned int	c;
 
-	c = max->t.supermapfloor->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 0] << 24 | 
-		max->t.supermapfloor->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 1] << 16 |
-		max->t.supermapfloor->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 2] << 8 |
-		(max->t.supermapfloor->pixels[y % 64 * 64 * 4 + x % 64 * 4 + 3] & 0);
+	y >>= 1;
+	x >>= 1;
+	c = max->t.supermapfloor->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 0] << 24 | 
+		max->t.supermapfloor->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 1] << 16 |
+		max->t.supermapfloor->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 2] << 8 |
+		(max->t.supermapfloor->pixels[y % 32 * 32 * 4 + x % 32 * 4 + 3] & 0);
 	return (c);
 }
 
-void	ft_draw_screen2d(t_max *max)
+static void	ft_put_quad_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
+{
+	mlx_put_pixel(image, x, y, color);
+	mlx_put_pixel(image, x + 1, y, color);
+	mlx_put_pixel(image, x, y + 1, color);
+	mlx_put_pixel(image, x + 1, y + 1, color);
+}
+
+void	ft_draw_screen2dquad(t_max *max)
 {
 	int	y;
 	int	x;
@@ -70,27 +82,27 @@ void	ft_draw_screen2d(t_max *max)
 			{
 				if (ft_is_inside(max->map, 268435456 * 2, (ny << 16) >> s, (nx << 16) >> s))
 				{
-					mlx_put_pixel(max->supermap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					ft_put_quad_pixel(max->supermap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}
 				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & WALL)
 				{
-					mlx_put_pixel(max->supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					ft_put_quad_pixel(max->supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
 				}
 				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & FLOOR)
 				{
-					//mlx_put_pixel(max->supermap, x, y, ((max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32) & TMASK);
-					mlx_put_pixel(max->supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					//ft_put_quad_pixel(max->supermap, x, y, ((max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32) & TMASK);
+					ft_put_quad_pixel(max->supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
 				}
 				else
 				{
-					mlx_put_pixel(max->supermap, x, y, 0x0 & TMASK);
+					ft_put_quad_pixel(max->supermap, x, y, 0x0 & TMASK);
 				}
 			}
 			else //outside of map is transparent
-				mlx_put_pixel(max->supermap, x, y, 0x0 & TMASK);
-			++x;
+				ft_put_quad_pixel(max->supermap, x, y, 0x0 & TMASK);
+			x += 2;
 		}
-		++y;
+		y += 2;
 	}
 
 	r = 0;
