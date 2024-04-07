@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 12:34:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 15:22:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@
 # define WALL 0xF000
 # define FLOOD1 0x10000
 # define FLOOD2 0x20000
-# define EXIT 0x100000
+# define EXIT 0x2			//exit behaves like floor
 # define DOOR1 0x1000000
 # define VISIT 0x100000000
 # define VISITED 0xFF00000000
@@ -518,6 +518,7 @@ typedef struct s_gametext
 	mlx_texture_t	*background;
 	mlx_texture_t	*font;
 	char			*text;
+	char			stats[512];
 	int				i;	
 	mlx_image_t		*image;
 	unsigned int	c;
@@ -546,6 +547,8 @@ typedef struct s_max
 	mlx_image_t		*textscreen;
 	t_menu			menu;
 	t_gametext		gamestart;
+	t_gametext		gamewon;
+	t_gametext		gamelost;
 	t_font			font;
 	mlx_image_t		*screen;
 	mlx_image_t		*maximap;
@@ -568,14 +571,20 @@ typedef struct s_max
 	// int				score;
 	// int				exit;
 	// int				time;
-	int				game_mode;
-	int				difficulty;
+	int				game_mode;		//GAMESTART / MENU / GAMEPLAY/ GAMEWON...
+	int				game_type;		//CAMPAIGN, TIMETRIAL, ONEMAP
+	int				difficulty;		//EASY MEDIUM HARD
 	int				game_in_progress;
 	int				mmode;
 	int				ray;
+	int				level;
 	time_t			oldms;
 	time_t			newms;
+	unsigned int	gamems;
+	unsigned int	levelms;
 	unsigned int	framems;
+	unsigned int	limitms;
+	unsigned int	timetriallimitms;
 	long			frame;
 }	t_max;
 
@@ -609,8 +618,10 @@ void	ft_print_map(t_map *map);
 void	ft_fill_colours_to_map(t_map *map);
 void	ft_load_texture(char *path, mlx_texture_t **texture);
 int		ft_process_file(t_max *max);
+void	ft_init_time(t_max *max);
 
 //ft_random.map.c
+void	ft_inittimetrialmap(t_randommap *rm, int level);
 int		ft_process_random(t_max *max);
 
 //ft_game.c
@@ -622,6 +633,12 @@ void	ft_amaze_bonus(t_max *max);
 //ft_gamestart.c
 void	ft_initgamestart(t_max *max);
 void	ft_gamestart(t_max *max);
+
+void	ft_initgamewon(t_max *max);
+void	ft_gamewon(t_max *max);
+
+void	ft_initgamelost(t_max *max);
+void	ft_gamelost(t_max *max);
 
 //ft_hook.c
 void	ft_hook(void *param);

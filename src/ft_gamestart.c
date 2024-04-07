@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:46:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 15:54:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_draw_background(t_max *max)
 	}
 }
 
-void	ft_draw_gamestartchar(t_gametext *text)
+void	ft_draw_gamechar(t_gametext *text)
 {
 	int				w;
 	int				h;
@@ -97,7 +97,7 @@ void	ft_draw_gamestartchar(t_gametext *text)
 }
 
 //(120) for the width of the character in the font.png
-void	ft_draw_gamestarttext(t_gametext *text)
+void	ft_draw_gametext(t_gametext *text)
 {
 	int				i;
 	unsigned int	oldcb;
@@ -132,7 +132,7 @@ void	ft_draw_gamestarttext(t_gametext *text)
 			text->offset = (text->text[i] - ' ') * 120;
 			if (text->offset)
 				text->offset -= 2; // add 2 pixels to image
-			ft_draw_gamestartchar(text);
+			ft_draw_gamechar(text);
 			text->x += text->height / 2;
 		}
 		else if (text->text[i] == '\t')
@@ -160,7 +160,12 @@ void	ft_gamestart(t_max *max)
 		if (max->gamestart.i <= (int)ft_strlen(max->gamestart.text))
 			++max->gamestart.i;
 	}
-	ft_draw_gamestarttext(&max->gamestart);
+	if (max->keys[MLX_KEY_SPACE])
+	{
+		max->gamestart.i = (int)ft_strlen(max->gamestart.text);
+		max->keys[MLX_KEY_SPACE] = 0;
+	}
+	ft_draw_gametext(&max->gamestart);
 
 	//launch game after user input
 	if (max->keys[MLX_KEY_ENTER])
@@ -169,7 +174,142 @@ void	ft_gamestart(t_max *max)
 		max->textscreen->enabled = 0;
 		max->game_in_progress = 1;
 		max->gamestart.i = 0;
+		max->levelms = 0;
 		max->keys[MLX_KEY_ENTER] = 0;
+	}
+	//launch game
+}
+
+void	ft_initgamewon(t_max *max)
+{
+	max->gamewon.background = max->gamestart.background;
+	max->gamewon.text = max->gamewon.stats;
+	ft_sprintf(max->gamewon.stats, "You won!\nCongratulations!\n");
+	max->gamewon.font = max->font.asciitest;
+	max->gamewon.image = max->textscreen;
+	max->gamewon.c = 0XFF;
+	max->gamewon.cb = 0;
+	max->gamewon.sx = 200;
+	max->gamewon.sy = 100;
+	max->gamewon.x = 0;
+	max->gamewon.y = 0;
+	max->gamewon.height = 80;
+	max->gamewon.highlight = -1;
+	max->gamewon.i = 0;
+}
+
+void	ft_gamewon(t_max *max)
+{
+	max->gamewon.timems += max->framems;
+
+	ft_draw_background(max);
+	if (max->gamewon.timems >= 25)
+	{
+		max->gamewon.timems = 0;
+		if (max->gamewon.i <= (int)ft_strlen(max->gamewon.text))
+			++max->gamewon.i;
+	}
+	if (max->keys[MLX_KEY_SPACE])
+	{
+		max->gamewon.i = (int)ft_strlen(max->gamewon.text);
+		max->keys[MLX_KEY_SPACE] = 0;
+	}
+	ft_draw_gametext(&max->gamewon);
+
+	//launch game after user input
+	
+	if (max->keys[MLX_KEY_ENTER])
+	{
+		if (max->game_type == ONEMAP)
+		{
+			max->game_mode = MENU;
+			max->textscreen->enabled = 0;
+			max->game_in_progress = 0;
+			max->gamewon.i = 0;
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
+		if (max->game_type == TIMETRIAL)
+		{
+			++max->level;
+			ft_inittimetrialmap(&max->menu.rm, max->level);
+			max->map->file = "RANDOM";
+			if (ft_process_random(max))
+			{
+				printf("gamestart loop starting...\n");
+				max->game_mode = GAMESTART;
+				max->menu.current_button[MAINBUTTONS] = RESUME;
+				max->menu.current_buttongroup = MAINBUTTONS;
+				max->game_in_progress = 0;
+				max->menuscreen->enabled = 0;
+				max->textscreen->enabled = 1;
+			}
+			else
+			{
+				ft_dprintf(2, "Invalid map\n");
+			}
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
+	}
+	//launch game
+}
+
+
+void	ft_initgamelost(t_max *max)
+{
+	max->gamelost.background = max->gamestart.background;
+	max->gamelost.text = max->gamelost.stats;
+	ft_sprintf(max->gamelost.stats, "You lost:(\n");
+	max->gamelost.font = max->font.asciitest;
+	max->gamelost.image = max->textscreen;
+	max->gamelost.c = 0XFF;
+	max->gamelost.cb = 0;
+	max->gamelost.sx = 200;
+	max->gamelost.sy = 100;
+	max->gamelost.x = 0;
+	max->gamelost.y = 0;
+	max->gamelost.height = 80;
+	max->gamelost.highlight = -1;
+	max->gamelost.i = 0;
+}
+
+void	ft_gamelost(t_max *max)
+{
+	max->gamelost.timems += max->framems;
+
+	ft_draw_background(max);
+	if (max->gamelost.timems >= 25)
+	{
+		max->gamelost.timems = 0;
+		if (max->gamelost.i <= (int)ft_strlen(max->gamelost.text))
+			++max->gamelost.i;
+	}
+	if (max->keys[MLX_KEY_SPACE])
+	{
+		max->gamelost.i = (int)ft_strlen(max->gamelost.text);
+		max->keys[MLX_KEY_SPACE] = 0;
+	}
+	ft_draw_gametext(&max->gamelost);
+
+	//launch game after user input
+	
+	if (max->keys[MLX_KEY_ENTER])
+	{
+		if (max->game_type == ONEMAP)
+		{
+			max->game_mode = MENU;
+			max->textscreen->enabled = 0;
+			max->game_in_progress = 0;
+			max->gamelost.i = 0;
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
+		if (max->game_type == TIMETRIAL)
+		{
+			max->game_mode = MENU;
+			max->textscreen->enabled = 0;
+			max->game_in_progress = 0;
+			max->gamelost.i = 0;
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
 	}
 	//launch game
 }

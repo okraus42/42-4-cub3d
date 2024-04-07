@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 16:00:55 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 12:22:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # define MENU 1
 # define GAMESTART 2
 # define GAMEPLAY 3
-# define GAMEWIN 4
-# define GAMELOSS 5
+# define GAMEWON 4
+# define GAMELOST 5
 # define NEXTLEVEL 6
 
 //buttons

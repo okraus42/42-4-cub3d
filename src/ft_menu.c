@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 16:59:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 16:02:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_initmenu(t_max *max)
 	ft_initbuttons(max);
 	ft_inittextfields(max);
 	ft_initlistfields(max);
-	max->menu.selection = ONEMAP;
+	max->game_type = ONEMAP;
 	max->menu.newmap = -1;
 	max->menu.current_button[NEWSELECTION] = ONEMAP;
 	max->menu.current_button[NEWLEVEL] = CUSTOM;
@@ -170,12 +170,9 @@ void	ft_draw_menu(t_max *max)
 	if (max->menu.current_buttongroup == NEWSELECTION)
 	{
 		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], INACTIVE);
-		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], INACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVE);
 		//maybe if else not needd
-		if (max->menu.selection == ONEMAP)
-			ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVATED);
-		else
-			ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVE);
 	}
 	//draw level
 	if (max->menu.current_buttongroup == NEWLEVEL)
@@ -818,17 +815,35 @@ void	ft_menu(t_max *max)
 			{
 				if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
 				{
-					max->menu.selection = CAMPAIGN;
+					max->game_type = CAMPAIGN;
 					max->menu.current_buttongroup = NEWLEVEL;
 				}
 				else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
 				{
-					max->menu.selection = TIMETRIAL;
-					max->menu.current_buttongroup = NEWLEVEL;
+					max->game_type = TIMETRIAL;
+					max->level = 1;
+					max->gamems = 0;
+					max->timetriallimitms = 30000;
+					ft_inittimetrialmap(&max->menu.rm, max->level);
+					max->map->file = "RANDOM";
+					if (ft_process_random(max))
+					{
+						printf("gamestart loop starting...\n");
+						max->game_mode = GAMESTART;
+						max->menu.current_button[MAINBUTTONS] = RESUME;
+						max->menu.current_buttongroup = MAINBUTTONS;
+						max->game_in_progress = 0;
+						max->menuscreen->enabled = 0;
+						max->textscreen->enabled = 1;
+					}
+					else
+					{
+						ft_dprintf(2, "Invalid map\n");
+					}
 				}
 				else if (max->menu.current_button[NEWSELECTION] == ONEMAP)
 				{
-					max->menu.selection = ONEMAP;
+					max->game_type = ONEMAP;
 					max->menu.current_buttongroup = NEWLEVEL;
 				}
 			}

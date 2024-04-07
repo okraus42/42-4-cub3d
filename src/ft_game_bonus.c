@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 11:32:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:33:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void	ft_amaze_bonus(t_max *max)
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);
 	ft_initgamestart(max);
+	ft_initgamewon(max);
+	ft_initgamelost(max);
 	mlx_key_hook(max->mlx, &ft_keyhook, max);
 	//mlx_mouse_hook(mlx, &ft_mousehook, max);
 	mlx_loop_hook(max->mlx, ft_hook, max);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/03 12:56:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 13:27:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 		i = 0;
 		while (split[j][i])
 		{
-			if (!ft_strchr(" 01NSEW", split[j][i]))
+			if (!ft_strchr(" 01NSEWX", split[j][i]))
 			{
 				ft_free_split(&split);
 				return(ft_puterror("Invalid character in map", 0));
@@ -291,6 +291,8 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 		map->m[y * map->w + x] = FLOOR1;
 	else if (c == '1')
 		map->m[y * map->w + x] = WALL1;
+	else if (c == 'X')
+		map->m[y * map->w + x] = EXIT;
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
 		map->m[y * map->w + x] = FLOOR1;
@@ -430,7 +432,12 @@ void	ft_fill_colours_to_map(t_map *map)
 	i = 0;
 	while (i < map->h * map->w)
 	{
-		if (map->m[i] & FLOOR)
+		if (map->m[i] & EXIT)
+		{
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= 0xFF00FFFF00000000;
+		}
+		else if (map->m[i] & FLOOR)
 		{
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
@@ -510,6 +517,8 @@ void	ft_print_map(t_map *map)
 		}
 		else if (map->m[i] & WALL)
 			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & EXIT)
+			ft_printf("%^*CXX%C", 0xFF00FF);
 		else if (map->m[i] & FLOOR)
 			ft_printf("%^*C  %C", map->f.rgba >> 8);
 		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
@@ -546,6 +555,8 @@ void	ft_print_map(t_map *map)
 		}
 		else if (map->m[i] & WALL)
 			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & EXIT)
+			ft_printf("%^*CXX%C", 0xFF00FF);
 		else if (map->m[i] & FLOORW)
 			ft_printf("%^*C  %C", c);
 		else if (map->m[i] & FLOOR)
@@ -576,6 +587,24 @@ void	ft_init_brume(t_max *max)
 		}
 		++c;
 	}
+}
+
+void	ft_init_time(t_max *max)
+{
+	int	i;
+	int	c;
+
+	i = 0;
+	c = 0;
+	while (i < 65536)
+	{
+		if (max->map->m[i] & FLOOR)
+		{
+			++c;
+		}
+		++i;
+	}
+	max->limitms = (c * 100) + 15000;
 }
 
 int	ft_process_file(t_max *max)
@@ -612,6 +641,7 @@ int	ft_process_file(t_max *max)
 	// }
 	//for debugging
 	ft_print_map(map);
+	ft_init_time(max);
 	ft_freemap(map);
 	return (1);
 }

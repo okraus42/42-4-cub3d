@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:48:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/07 15:17:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ void	ft_initbuttons(t_max *max)
 	max->menu.gametypebuttons[TIMETRIAL].group = NEWSELECTION;
 	max->menu.gametypebuttons[TIMETRIAL].up = &max->menu.gametypebuttons[CAMPAIGN];
 	max->menu.gametypebuttons[TIMETRIAL].down = &max->menu.gametypebuttons[ONEMAP];
-	max->menu.gametypebuttons[TIMETRIAL].state = INACTIVE;
+	max->menu.gametypebuttons[TIMETRIAL].state = ACTIVE;
 	max->menu.gametypebuttons[TIMETRIAL].x = 1000;
 	max->menu.gametypebuttons[TIMETRIAL].y = 400;
 	max->menu.gametypebuttons[TIMETRIAL].text.text = S_TIMETRIAL;
