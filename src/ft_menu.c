@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 16:02:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/08 14:01:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ void	ft_draw_menu(t_max *max)
 	//draw selection buttons
 	if (max->menu.current_buttongroup == NEWSELECTION)
 	{
-		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], INACTIVE);
+		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVE);
 		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVE);
 		//maybe if else not needd
 		ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVE);
@@ -816,7 +816,24 @@ void	ft_menu(t_max *max)
 				if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
 				{
 					max->game_type = CAMPAIGN;
-					max->menu.current_buttongroup = NEWLEVEL;
+					max->level = 1;
+					max->gamems = 0;
+					ft_sprintf(max->campaignmap, "./campaign/map%i.cub", max->level);
+					max->map->file = max->campaignmap;
+					if (ft_process_file(max))
+					{
+						printf("gamestart loop starting...\n");
+						max->game_mode = GAMESTART;
+						max->menu.current_button[MAINBUTTONS] = RESUME;
+						max->menu.current_buttongroup = MAINBUTTONS;
+						max->game_in_progress = 0;
+						max->menuscreen->enabled = 0;
+						max->textscreen->enabled = 1;
+					}
+					else
+					{
+						ft_dprintf(2, "Invalid map\n");
+					}
 				}
 				else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
 				{
@@ -881,6 +898,7 @@ void	ft_menu(t_max *max)
 					{
 						printf("gamestart loop starting...\n");
 						max->game_mode = GAMESTART;
+						max->gamems = 0;
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
@@ -906,6 +924,7 @@ void	ft_menu(t_max *max)
 					{
 						printf("gamestart loop starting...\n");
 						max->game_mode = GAMESTART;
+						max->gamems = 0;
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
@@ -1046,6 +1065,7 @@ void	ft_menu(t_max *max)
 					{
 						printf("gamestart loop starting...\n");
 						max->game_mode = GAMESTART;
+						max->gamems = 0;
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;

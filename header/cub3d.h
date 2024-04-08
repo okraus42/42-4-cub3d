@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 15:22:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/08 13:38:05 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -585,6 +585,7 @@ typedef struct s_max
 	unsigned int	framems;
 	unsigned int	limitms;
 	unsigned int	timetriallimitms;
+	char			campaignmap[256];
 	long			frame;
 }	t_max;
 

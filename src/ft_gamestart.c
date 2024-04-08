@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 15:54:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/08 13:53:34 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,36 @@ void	ft_gamewon(t_max *max)
 			}
 			max->keys[MLX_KEY_ENTER] = 0;
 		}
+		if (max->game_type == CAMPAIGN)
+		{
+			++max->level;
+			if (max->level > 4)
+			{
+				max->game_mode = MENU;
+				max->textscreen->enabled = 0;
+				max->game_in_progress = 0;
+				max->gamewon.i = 0;
+				max->gamems = 0;
+				max->keys[MLX_KEY_ENTER] = 0;
+			}
+			ft_sprintf(max->campaignmap, "./campaign/map%i.cub", max->level);
+			max->map->file = max->campaignmap;
+			if (ft_process_file(max))
+			{
+				printf("gamestart loop starting...\n");
+				max->game_mode = GAMESTART;
+				max->menu.current_button[MAINBUTTONS] = RESUME;
+				max->menu.current_buttongroup = MAINBUTTONS;
+				max->game_in_progress = 0;
+				max->menuscreen->enabled = 0;
+				max->textscreen->enabled = 1;
+			}
+			else
+			{
+				ft_dprintf(2, "Invalid map\n");
+			}
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
 	}
 	//launch game
 }
@@ -289,14 +319,12 @@ void	ft_gamelost(t_max *max)
 		max->keys[MLX_KEY_SPACE] = 0;
 	}
 	ft_draw_gametext(&max->gamelost);
-
-	//launch game after user input
-	
 	if (max->keys[MLX_KEY_ENTER])
 	{
 		if (max->game_type == ONEMAP)
 		{
 			max->game_mode = MENU;
+			max->gamems = 0;
 			max->textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamelost.i = 0;
@@ -305,11 +333,20 @@ void	ft_gamelost(t_max *max)
 		if (max->game_type == TIMETRIAL)
 		{
 			max->game_mode = MENU;
+			max->gamems = 0;
+			max->textscreen->enabled = 0;
+			max->game_in_progress = 0;
+			max->gamelost.i = 0;
+			max->keys[MLX_KEY_ENTER] = 0;
+		}
+		if (max->game_type == CAMPAIGN)
+		{
+			max->game_mode = MENU;
+			max->gamems = 0;
 			max->textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamelost.i = 0;
 			max->keys[MLX_KEY_ENTER] = 0;
 		}
 	}
-	//launch game
 }

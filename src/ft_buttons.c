@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 15:17:27 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/08 13:43:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,7 @@ void	ft_initbuttons(t_max *max)
 	max->menu.gametypebuttons[CAMPAIGN].id = CAMPAIGN;
 	max->menu.gametypebuttons[CAMPAIGN].group = NEWSELECTION;
 	max->menu.gametypebuttons[CAMPAIGN].down = &max->menu.gametypebuttons[TIMETRIAL];
-	max->menu.gametypebuttons[CAMPAIGN].state = INACTIVE;
+	max->menu.gametypebuttons[CAMPAIGN].state = ACTIVE;
 	max->menu.gametypebuttons[CAMPAIGN].x = 1000;
 	max->menu.gametypebuttons[CAMPAIGN].y = 200;
 	max->menu.gametypebuttons[CAMPAIGN].text.text = S_CAMPAIGN;
