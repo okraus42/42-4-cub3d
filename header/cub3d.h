@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/08 13:38:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:02:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,13 +390,7 @@ typedef struct s_map
 	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
 
-typedef struct s_highscore
-{
-	char	*name;
-	char	*coalition;
-	int		index;
-	int		score;
-}	t_hs;
+
 
 
 // remove or simplify
@@ -533,6 +527,17 @@ typedef struct s_gametext
 	int				timems;
 }	t_gametext;
 
+typedef struct s_highscore
+{
+	char			name[64];
+	char			coalition[64];
+	char			campus[64];
+	unsigned int	timems;
+	int				index;
+	int				score;
+	int				level;
+}	t_hs;
+
 typedef struct s_max
 {
 	mlx_t			*mlx;
@@ -578,6 +583,7 @@ typedef struct s_max
 	int				mmode;
 	int				ray;
 	int				level;
+	int				score;
 	time_t			oldms;
 	time_t			newms;
 	unsigned int	gamems;
@@ -613,6 +619,11 @@ void	ft_choose_in_listfield(t_max *max, t_listfield *listfield);
 //ft_text.c
 void	ft_draw_text(t_text *text, int state);
 
+//ft_halloffame.c
+int		ft_writescore(t_max *max);
+int		ft_readscore(t_max *max);
+void	ft_halloffame(t_max *max);
+
 //parser.c
 void	ft_init_brume(t_max *max);
 void	ft_print_map(t_map *map);
@@ -628,10 +639,11 @@ int		ft_process_random(t_max *max);
 //ft_game.c
 void	ft_amaze_standard(t_max *max);
 
-//ft_game.c
+//ft_game_bonus.c
 void	ft_amaze_bonus(t_max *max);
 
 //ft_gamestart.c
+void	ft_draw_background(t_max *max);
 void	ft_initgamestart(t_max *max);
 void	ft_gamestart(t_max *max);
 

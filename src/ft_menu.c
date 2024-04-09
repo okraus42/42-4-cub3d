@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/08 14:01:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:34:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	ft_draw_menu(t_max *max)
 	ft_draw_button(&max->menu.mainbuttons[SAVEGAME], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[LOADGAME], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[SETTINGS], INACTIVE);
-	ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], INACTIVE);
+	ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], ACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[QUITGAME], ACTIVE);
 	//draw newwriting buttons
 	if (max->menu.current_buttongroup == NEWWRITING)
@@ -212,6 +212,10 @@ void	ft_draw_menu(t_max *max)
 		ft_draw_button(&max->menu.randomadvancedbuttons[RDEADENDS], ACTIVE);
 		ft_draw_button(&max->menu.randomadvancedbuttons[RRANDOMIZE], ACTIVE);
 		ft_draw_button(&max->menu.randomadvancedbuttons[RPLAY], ACTIVE);
+	}
+	if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
+	{
+		ft_draw_button(&max->menu.halloffamebuttons[HOFBACK], ACTIVE);
 	}
 	//draw optionbuttons
 }
@@ -437,6 +441,10 @@ void	ft_selectbutton(t_max *max)
 		}
 		ft_selectnewbutton(max, &max->menu.randomadvancedbuttons[max->menu.current_button[NEWRANDOMADVANCED]]);
 	}
+	else if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
+	{
+		ft_selectnewbutton(max, &max->menu.halloffamebuttons[max->menu.current_button[HALLOFFAME]]);
+	}
 }
 
 void	ft_draw_mainmenubuttons(t_max *max)
@@ -451,6 +459,13 @@ void	ft_draw_mainmenubuttons(t_max *max)
 			ft_draw_button(&max->menu.mainbuttons[NEWGAME], SELECTED);
 		else
 			ft_draw_button(&max->menu.mainbuttons[NEWGAME], ACTIVATED);
+	}
+	if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
+	{
+		if (max->menu.current_buttongroup == MAINBUTTONS)
+			ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], SELECTED);
+		else
+			ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], ACTIVATED);
 	}
 	if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
 	{
@@ -567,7 +582,7 @@ void	ft_draw_newmapbuttons(t_max *max)
 	}
 	else if (max->menu.current_button[NEWMAP] == MSPLAY)
 	{
-		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
+		//ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
 	}
 }
 
@@ -700,6 +715,15 @@ void	ft_draw_newrandomadvancedbuttons(t_max *max)
 	}
 }
 
+void	ft_draw_halloffamebuttons(t_max *max)
+{
+	//ft_draw_halloffame(max);
+	if (max->menu.current_button[HALLOFFAMEGROUP] == HOFBACK)
+	{
+		ft_draw_button(&max->menu.halloffamebuttons[HOFBACK], SELECTED);
+	}
+}
+
 void	ft_menu(t_max *max)
 {
 	ft_selectbutton(max);
@@ -728,6 +752,10 @@ void	ft_menu(t_max *max)
 	if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
 	{
 		ft_draw_newrandomadvancedbuttons(max);
+	}
+	if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
+	{
+		ft_draw_halloffamebuttons(max);
 	}
 	if (max->keys[MLX_KEY_BACKSPACE])
 	{
@@ -1078,6 +1106,31 @@ void	ft_menu(t_max *max)
 					}
 				}
 			}
+		}
+		if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
+		{
+			//delete the HOF BUTTON and HALLOFFAMEBUTTONGROUP? and related drawing functions
+			
+			if (!ft_readscore(max))
+			{
+				max->game_mode = HOFLOOP;
+				max->textscreen->enabled = 1;
+			}
+			else
+			{
+				ft_dprintf(2, "Error\nFailed to open halloffame.txt\n");
+			}
+			// if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
+			// {
+			// 	if (max->menu.current_button[HALLOFFAMEGROUP] == HOFBACK)
+			// 	{
+			// 		max->menu.current_buttongroup = MAINBUTTONS;
+			// 	}
+			// }
+			// else
+			// {
+			// 	max->menu.current_buttongroup = HALLOFFAMEGROUP;
+			// }
 		}
 		if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
 		{

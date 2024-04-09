@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 13:33:14 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 16:50:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,11 @@ void	ft_gamelosthook(t_max *max)
 	ft_gamelost(max);
 }
 
+void	ft_halloffamehook(t_max *max)
+{
+	ft_halloffame(max);
+}
+
 void	ft_hook(void *param)
 {
 	t_max	*max;
@@ -198,4 +203,6 @@ void	ft_hook(void *param)
 		ft_gamelosthook(max);
 	else if (max->game_mode == GAMEPLAY)
 		ft_gameplayhook(max);
+	else if (max->game_mode == HOFLOOP)
+		ft_halloffamehook(max);
 }

@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/05 11:21:40 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/09 15:32:32 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ SRC_S		=	ft_buttons.c \
 				ft_game_bonus.c \
 				ft_gameplay.c \
 				ft_gamestart.c \
+				ft_halloffame.c \
 				ft_hook.c \
 				ft_keyhook.c \
 				ft_line.c \

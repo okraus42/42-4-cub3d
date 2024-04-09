@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/08 13:53:34 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 16:00:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,8 @@ void	ft_gamelost(t_max *max)
 		if (max->game_type == TIMETRIAL)
 		{
 			max->game_mode = MENU;
+			if (ft_writescore(max))
+				ft_printf("Warning: Could not write the final score\n");
 			max->gamems = 0;
 			max->textscreen->enabled = 0;
 			max->game_in_progress = 0;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/08 13:43:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 16:16:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mainbuttons[HALLOFFAME].group = MAINBUTTONS;
 	max->menu.mainbuttons[HALLOFFAME].up = &max->menu.mainbuttons[SETTINGS];
 	max->menu.mainbuttons[HALLOFFAME].down = &max->menu.mainbuttons[QUITGAME];
+	max->menu.mainbuttons[HALLOFFAME].state = ACTIVE;
 	max->menu.mainbuttons[HALLOFFAME].y = 720;
 	max->menu.mainbuttons[HALLOFFAME].text.text = S_HALLOFFAME;
 	max->menu.mainbuttons[HALLOFFAME].text.sx = max->menu.mainbuttons[HALLOFFAME].x + 40;
@@ -574,6 +575,15 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomadvancedbuttons[RPLAY].text.text = S_PLAY;
 	max->menu.randomadvancedbuttons[RPLAY].text.sx = max->menu.randomadvancedbuttons[RPLAY].x + 40;
 	max->menu.randomadvancedbuttons[RPLAY].text.sy = max->menu.randomadvancedbuttons[RPLAY].y + 40;
+	max->menu.halloffamebuttons[HOFBACK] = button;
+	max->menu.halloffamebuttons[HOFBACK].id = HOFBACK;
+	max->menu.halloffamebuttons[HOFBACK].group = HALLOFFAMEGROUP;
+	max->menu.halloffamebuttons[HOFBACK].state = ACTIVE;
+	max->menu.halloffamebuttons[HOFBACK].x = 1250;
+	max->menu.halloffamebuttons[HOFBACK].y = 860;
+	max->menu.halloffamebuttons[HOFBACK].text.text = S_BACK;
+	max->menu.halloffamebuttons[HOFBACK].text.sx = max->menu.halloffamebuttons[HOFBACK].x + 40;
+	max->menu.halloffamebuttons[HOFBACK].text.sy = max->menu.halloffamebuttons[HOFBACK].y + 40;
 }
 
 void	ft_draw_button(t_button *b, int state)

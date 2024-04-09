@@ -42,3 +42,88 @@ Maze Generation:
 https://en.wikipedia.org/wiki/Maze_generation_algorithm
 https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
+
+Ideas:
+- Difficulty in Hall of fame?
+- Save game
+- 4xresolution (4 pixels instead of one)
+- The style of aMaze42:
+- connected with 42 school thematic 
+- doors could be doors of different campuses(Prague, Berlin, Paris etc), the same for collectibles 
+- text bubbles above sprites
+- staff members could be enemies, chasing player to do proper evaluations
+- black hole sprite/ skybox 
+- levels of game difficulty could be based on the holy graph (starting from piscine (using water textures) up to the transcendence and so on.)
+- score calculation
+
+- scale button size
+- new game
+— game mode selection (one level, campaign, time trial(competition))
+— choose existing map
+— generate random map
+— difficulty selection (void, easy, moderate, hard, nightmare)
+— name, coalition, campus selection 
+- Options
+— Fov (1-720)
+— fish eye correction (limits fov to 179)
+— resolution (takes effect after restart)
+— fullscreen (takes effect after restart)
+— restart option?
+— .ini file with settings preserved
+— controls?
+— sounds?
+- random map generation
+- debugging strings onscreen
+To do list:
+- game menu
+— pause game menu
+— options change
+— inventory?
+— hall of fame?
+— map?
+— save game
+— load game
+— quit game
+- draw string?
+- key hook?
+— name player
+— name coalition
+— name campus
+- map generation (integrate options in menu)
+— save options
+— random options?
+— save seed
+- save game
+— quick save
+— multiple saves
+— name save
+- screen (2d)
+— draws textures on the map
+— moves the map if player is close to the edge of screen but not the edge of the map
+— fills the empty fields
+- screen (3d)
+— first different colour walls
+— then textured walls
+— in the top left corner during game development
+- collectibles
+- score system
+- doors
+- sprites
+- mouse control
+- traps?
+- enemies?
+- autoplay?
+- more advanced map generation?
+- quadrant based calculations ?
+- sounds
+- jumping?
+- look up/down?
+- more code optimisations
+- HUD?
+- textured floor and ceiling
+- skybox?
+- special powers?
+- special effects?
+- portals?
+- level to level transitions?
+- split screen multiplayer (2-4 players)?

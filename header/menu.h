@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 12:22:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:12:27 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define GAMEWON 4
 # define GAMELOST 5
 # define NEXTLEVEL 6
+# define HOFLOOP 7
 
 //buttons
 //mainbuttons
@@ -111,6 +112,10 @@
 # define RPLAY 11
 # define RANDOMADVANCEDBUTTONCOUNT 12
 
+//HALLOFFAME
+# define HOFBACK 0
+# define HALLOFFAMEBUTTONCOUNT 1
+
 # define MAINBUTTONS 0		//resume-quit
 # define NEWWRITING 1		// name, coalition, campus 
 # define NEWDIFFICULTY 2	//easy, medium, hard
@@ -119,7 +124,8 @@
 # define NEWMAP 5			// choose a map from the list
 # define NEWRANDOM 6
 # define NEWRANDOMADVANCED 7		// choose parameters for a random generation
-# define BUTTONGROUPS 8
+# define HALLOFFAMEGROUP 8
+# define BUTTONGROUPS 9
 
 # define S_RESUME "RESUME"
 # define S_SETTINGS "SETTINGS"
@@ -176,7 +182,7 @@ typedef struct s_text
 	mlx_texture_t	*font;
 	mlx_image_t		*image;
 	char			*text;
-	char			str[20];
+	char			str[64];
 	unsigned int	c;
 	unsigned int	cb;
 	int				sx;
@@ -293,7 +299,9 @@ typedef struct s_menu
 	t_button		mapselectionbuttons[MAPSELECTIONBUTTONCOUNT];
 	t_button		randomselectionbuttons[RANDOMSELECTIONBUTTONCOUNT];
 	t_button		randomadvancedbuttons[RANDOMADVANCEDBUTTONCOUNT];
+	t_button		halloffamebuttons[HALLOFFAMEBUTTONCOUNT];
 	t_listfield		custommap;
+	t_text			topten[12];
 }	t_menu;
 
 #endif
