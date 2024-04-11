@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 17:34:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 17:25:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -582,7 +582,7 @@ void	ft_draw_newmapbuttons(t_max *max)
 	}
 	else if (max->menu.current_button[NEWMAP] == MSPLAY)
 	{
-		//ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
+		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
 	}
 }
 
@@ -847,7 +847,7 @@ void	ft_menu(t_max *max)
 					max->level = 1;
 					max->gamems = 0;
 					ft_sprintf(max->campaignmap, "./campaign/map%i.cub", max->level);
-					max->map->file = max->campaignmap;
+					ft_snprintf(max->map->file, 4095, max->campaignmap);
 					if (ft_process_file(max))
 					{
 						printf("gamestart loop starting...\n");
@@ -870,7 +870,7 @@ void	ft_menu(t_max *max)
 					max->gamems = 0;
 					max->timetriallimitms = 30000;
 					ft_inittimetrialmap(&max->menu.rm, max->level);
-					max->map->file = "RANDOM";
+					ft_snprintf(max->map->file, 4095, "RANDOM");
 					if (ft_process_random(max))
 					{
 						printf("gamestart loop starting...\n");
@@ -921,7 +921,8 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWMAP] == MSPLAY)
 				{
-					max->map->file = max->menu.custommap.text[max->menu.custommap.highlight].text;
+					//simplify?
+					ft_snprintf(max->map->file, 4095, max->menu.custommap.text[max->menu.custommap.highlight].text);
 					if (ft_process_file(max))
 					{
 						printf("gamestart loop starting...\n");
@@ -946,7 +947,7 @@ void	ft_menu(t_max *max)
 			{
 				if (max->menu.current_button[NEWRANDOM] == RSPLAY)
 				{
-					max->map->file = "RANDOM";
+					ft_snprintf(max->map->file, 4095, "RANDOM");
 					ft_initrandommapvalues(&max->menu.rm);
 					if (ft_process_random(max))
 					{
@@ -1088,7 +1089,7 @@ void	ft_menu(t_max *max)
 				else if (max->menu.current_button[NEWRANDOMADVANCED] == RPLAY)
 				{
 					//max->menu.current_button[NEWLEVEL] = max->menu.newmap;
-					max->map->file = "RANDOM";
+					ft_snprintf(max->map->file, 4095, "RANDOM");
 					if (ft_process_random(max))
 					{
 						printf("gamestart loop starting...\n");

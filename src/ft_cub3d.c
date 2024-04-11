@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 15:39:29 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 16:51:40 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	ft_cub3d(char *file)
 	max->newms = 0;
 	if (file)
 	{
-		map->file = file;
+		ft_snprintf(map->file, 4095, file);
 		if (ft_process_file(max))
 		{
 			ft_amaze_standard(max);

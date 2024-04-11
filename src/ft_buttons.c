@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 16:16:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 17:22:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -600,6 +600,7 @@ void	ft_draw_button(t_button *b, int state)
 	h = b->button->height;
 	j = 0;
 	//draw button
+	//printf("%i %i\n", b->id, state);
 	while (j < h)
 	{
 		i = 0;

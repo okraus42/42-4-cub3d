@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 16:06:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 17:23:31 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,15 @@ void	ft_draw_text(t_text *text, int state)
 {
 	int				i;
 	unsigned int	oldcb;
+	unsigned int	oldc;
 
+	oldcb = text->cb;
+	oldc = text->c;
 	if (state & INACTIVE)
 		text->c = 0x666666FF;
-	else
-		text->c = 0xFF;
-	oldcb = text->cb;
+	// else
+	// 	text->c = 0xFF;
+	
 	i = 0;
 	text->x = text->sx;
 	text->y = text->sy;
@@ -94,4 +97,5 @@ void	ft_draw_text(t_text *text, int state)
 		++i;
 	}
 	text->cb = oldcb;
+	text->c = oldc;
 }

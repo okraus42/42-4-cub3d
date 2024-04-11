@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 17:02:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 16:49:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,7 @@ typedef struct s_player
 typedef struct s_map
 {
 	unsigned long long	m[65536];		//1d array of map representation
-	char				*file;			//original mapfile string
+	char				file[4096];		//original mapfile string
 	char				*mapstr;		//actual content of the file
 	char				*northtexture;	//path to the north texture
 	char				*southtexture;
@@ -504,7 +504,8 @@ typedef struct s_images
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
 	mlx_image_t		*supermap;
-	mlx_image_t		*str[STRINGS];
+	mlx_image_t		*overlay;		//put text here
+	mlx_image_t		*str[STRINGS];	//strings from MLX
 }	t_images;
 
 typedef struct s_gametext
@@ -644,6 +645,7 @@ void	ft_amaze_bonus(t_max *max);
 
 //ft_gamestart.c
 void	ft_draw_background(t_max *max);
+void	ft_draw_gametext(t_gametext *text);
 void	ft_initgamestart(t_max *max);
 void	ft_gamestart(t_max *max);
 

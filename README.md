@@ -44,8 +44,12 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
 
 Ideas:
+Init when the game starts
+init when the map loads
+init for highscores
+
 - Difficulty in Hall of fame?
-- Save game
+- Save game (reinit all pointers)
 - 4xresolution (4 pixels instead of one)
 - The style of aMaze42:
 - connected with 42 school thematic 

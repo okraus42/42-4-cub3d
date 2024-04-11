@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 15:32:15 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 17:33:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/10 12:35:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,54 @@ int	ft_writescore(t_max *max)
 
 void	ft_copy_score(t_max *max, t_list *lst)
 {
-	(void)max;
+	t_text	text;
 	t_hs	*hs;
+	int		i;
 
-	while (lst)
+	// text.text = text.str;
+	text.font = max->font.asciitest;
+	text.image = max->textscreen;
+	text.c = 0X00FF00FF;
+	text.cb = 0xFF;
+	text.sx = 140;
+	text.sy = 100;
+	text.x = 0;
+	text.y = 0;
+	text.height = 40;
+	text.highlight = -1;
+	
+	max->menu.topten[0] = text;
+	max->menu.topten[0].text = max->menu.topten[0].str;
+	ft_sprintf(max->menu.topten[0].str, "                                                                                  \n                                   HALL OF FAME                                   \n                                                                                  \n\n                                                                                  \n Rank |    Name    |  Coalition  |    Campus    | Level |    Score    |   Time    \n                                                                                  \n");
+	i = 1;
+	text.sy = 380;
+	while (lst && i < 11)
 	{
+		max->menu.topten[i] = text;
+		if (i % 2)
+			max->menu.topten[i].cb = 0x333333FF;
+		max->menu.topten[i].text = max->menu.topten[i].str;
+		text.sy += 40;
 		hs = lst->content;
-		ft_printf("%i   %s:%s:%s:%i:%i:%i\n", hs->index, hs->name, hs->coalition, hs->campus, hs->level, hs->score, hs->timems / 1000);
+		ft_sprintf(max->menu.topten[i].str, " %4i | %10.10s | %11.11s | %12.12s |   %2i  | %10i  | %6i    \n", i, hs->name, hs->coalition, hs->campus, hs->level, hs->score, hs->timems / 1000);
 		lst = lst->next;
+		++i;
 	}
+	while (i < 11)
+	{
+		max->menu.topten[i] = text;
+		if (i % 2)
+			max->menu.topten[i].cb = 0x333333FF;
+		max->menu.topten[i].text = max->menu.topten[i].str;
+		text.sy += 40;
+		ft_sprintf(max->menu.topten[i].str, " %4i |   -------- |   --------- |   ---------- |  ---  |  ---------  |   ----    \n", i);
+		++i;
+	}
+	text.sy = 860;
+	text.height = 40;
+	max->menu.topten[i] = text;
+	max->menu.topten[i].text = max->menu.topten[i].str;
+	ft_sprintf(max->menu.topten[i].str, "                                                                                  \n                       Press BACKSPACE to return to the menu                      \n                                                                                  \n");
 }
 
 int	ft_sortscore(t_list *lst)
@@ -179,7 +218,15 @@ int	ft_readscore(t_max *max)
 
 void	ft_halloffame(t_max *max)
 {
+	int	i;
+
+	i = 0;
 	ft_draw_background(max);
+	while (i < 12)
+	{
+		ft_draw_text(&max->menu.topten[i], 0);
+		++i;
+	}
 	if (max->keys[MLX_KEY_BACKSPACE])
 	{
 		max->keys[MLX_KEY_BACKSPACE] = 0;

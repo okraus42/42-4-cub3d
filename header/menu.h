@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 17:12:27 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/10 12:16:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ typedef struct s_text
 	mlx_texture_t	*font;
 	mlx_image_t		*image;
 	char			*text;
-	char			str[64];
+	char			str[512];
 	unsigned int	c;
 	unsigned int	cb;
 	int				sx;

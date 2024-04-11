@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 16:00:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/11 16:53:10 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ void	ft_gamewon(t_max *max)
 		{
 			++max->level;
 			ft_inittimetrialmap(&max->menu.rm, max->level);
-			max->map->file = "RANDOM";
+			ft_snprintf(max->map->file, 4095, "RANDOM");
 			if (ft_process_random(max))
 			{
 				printf("gamestart loop starting...\n");
@@ -262,7 +262,7 @@ void	ft_gamewon(t_max *max)
 				max->keys[MLX_KEY_ENTER] = 0;
 			}
 			ft_sprintf(max->campaignmap, "./campaign/map%i.cub", max->level);
-			max->map->file = max->campaignmap;
+			ft_snprintf(max->map->file, 4095, max->campaignmap);
 			if (ft_process_file(max))
 			{
 				printf("gamestart loop starting...\n");
