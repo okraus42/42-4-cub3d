@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 11:56:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:41:40 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -505,7 +505,7 @@ typedef struct s_images
 	mlx_image_t		*minimap;
 	mlx_image_t		*supermap;
 	mlx_image_t		*overlay;		//put text here
-	mlx_image_t		*str[STRINGS];	//strings from MLX
+	// mlx_image_t		*str[STRINGS];	//strings from MLX
 }	t_images;
 
 typedef struct s_gametext
@@ -539,6 +539,13 @@ typedef struct s_highscore
 	int				level;
 }	t_hs;
 
+typedef struct s_overlay
+{
+	t_text		basicinfo;
+	t_text		rayinfo;
+}	t_overlay;
+
+
 typedef struct s_max
 {
 	mlx_t			*mlx;
@@ -552,8 +559,9 @@ typedef struct s_max
 	t_gametext		gamewon;
 	t_gametext		gamelost;
 	t_font			font;
-	mlx_image_t		*str[STRINGS];	//replace later with our own thing
-	char			s[STRINGS][256];//replace later with our own thing
+	t_overlay		overlay;
+	// mlx_image_t		*str[STRINGS];	//replace later with our own thing
+	//char			s[STRINGS][256];//replace later with our own thing
 	char			name[20];
 	char			coalition[20];
 	char			campus[20];//make it a list later
@@ -664,6 +672,10 @@ void	ft_menu(t_max *max);
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);
+
+//ft_overlay.c
+void	ft_init_overlay(t_max *max);
+void	ft_clear_overlay(t_max *max);
 
 //ft_saveload.c
 int	ft_savegame(t_max *max);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 11:58:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:47:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1098,6 +1098,7 @@ void	ft_menu(t_max *max)
 						max->game_in_progress = 0;
 						max->i.menuscreen->enabled = 0;
 						max->i.textscreen->enabled = 1;
+						max->i.overlay->enabled = 1;
 					}
 					else
 					{

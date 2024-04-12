@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:36:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:27:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,13 @@ void	ft_init_images(t_max *max)
 		//free everything
 		ft_exit(max, 10);
 	}
+	max->i.overlay = mlx_new_image(max->mlx, WIDTH, HEIGHT);
+	if (!max->i.overlay || (mlx_image_to_window(max->mlx, max->i.overlay, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
 }
 
 void	ft_init_textures(t_max *max)
@@ -94,16 +101,11 @@ void	ft_amaze_bonus(t_max *max)
 	}
 	ft_init_images(max);
 	ft_init_textures(max);
-	// max->mlx = mlx;
-	// max->maximap = maximap;
-	// max->minimap = minimap;
-	// max->screen = screen;
-	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
-	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);
 	ft_initgamestart(max);
 	ft_initgamewon(max);
 	ft_initgamelost(max);
+	ft_init_overlay(max);
 	mlx_key_hook(max->mlx, &ft_keyhook, max);
 	//mlx_mouse_hook(mlx, &ft_mousehook, max);
 	mlx_loop_hook(max->mlx, ft_hook, max);

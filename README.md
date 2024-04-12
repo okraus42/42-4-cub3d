@@ -44,6 +44,7 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
 
 Ideas:
+Random generation check the map is complex enough (distance to exit should be more than x and more floor)
 Saves called AGU or Freeze
 Init when the game starts
 init when the map loads

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 15:32:15 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:18:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:18:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,34 +158,12 @@ void	ft_highscore(t_max *max, int fd)
 			str[zero[j]] = '\0';
 			++j;
 		}
-		// zero[0] = 0;
-		// while(str && str[zero[0]] != 036)
-		// 	zero[0]++;
-		// str[zero[0]] = '\0';
-		// zero[1] = zero[0] + 1;
-		// while(str && str[zero[1]] != 036)
-		// 	zero[1]++;
-		// str[zero[1]] = '\0';
-		// zero[2] = zero[1] + 1;
-		// while(str && str[zero[2]] != 036)
-		// 	zero[2]++;
-		// str[zero[2]] = '\0';
-		// zero[3] = zero[2] + 1;
-		// while(str && str[zero[3]] != '\n')
-		// 	zero[3]++;
-		//str[zero[5]] = '\0';
 		tmp->level = ft_atoi(&str[zero[2] + 1]);
 		tmp->score = ft_atoi(&str[zero[3] + 1]);
 		tmp->timems = ft_atoi(&str[zero[4] + 1]);
-		//tmp->name = ft_stringcopy(str);
 		ft_sprintf(tmp->name, str);
 		ft_sprintf(tmp->coalition, &str[zero[0] + 1]);
 		ft_sprintf(tmp->campus, &str[zero[1] + 1]);
-		// if (!tmp->name)
-		// 	exit(2);
-		// tmp->coalition = ft_stringcopy(&str[zero[0] + 1]);
-		// if (!tmp->coalition)
-		// 	exit(2);
 		leaf = ft_lstnew(tmp);
 		if (!leaf)
 			exit(2); //better exit and free list

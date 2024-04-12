@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/09 16:50:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:39:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ void	ft_hook(void *param)
 	max->newms = ft_get_time_in_ms();
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	max->oldms = max->newms;
+	//ft_clear_overlay(max);
 	if (max->game_mode == MENU)
 		ft_menuhook(max);
 	else if (max->game_mode == GAMESTART)

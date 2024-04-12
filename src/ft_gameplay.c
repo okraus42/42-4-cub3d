@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:12:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:46:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -413,32 +413,21 @@ void	ft_draw_strings(t_max *max)
 			max->ray = 0;
 		if (max->ray < 0)
 			max->ray = RAYS - 1;
-		if (max->kb.caps_lock)
-		{
-			ft_snprintf(max->s[0], 255, "Ray [%4i] ra [%5i] c0[%8x] c1[%8x] length[%Li]", max->ray,
+		ft_snprintf(max->overlay.rayinfo.str, 255, "Ray [%4i] ra [%5i] c0[%8x] c1[%8x] length[%Li]", max->ray,
 				max->map.p.oray[max->ray].ra, max->map.p.oray[max->ray].c[0],
 				max->map.p.oray[max->ray].c[1], max->map.p.oray[max->ray].length);
-		}
-		else
-		{
-			ft_snprintf(max->s[0], 255, "FPS: %3i  Pos [%6x] [%6x]   Orientation [%5i]",
+		ft_snprintf(max->overlay.basicinfo.str, 255, "FPS: %3i  Pos [%6x] [%6x]   Orientation [%5i]",
 				1000 / max->framems, max->map.p.x, max->map.p.y,
 				max->map.p.orientation);
-		}
-		mlx_delete_image(max->mlx, max->str[0]);
-		//mlx_delete_image(max->mlx, max->str[1]);
-		
-		max->str[0] = mlx_put_string(max->mlx, max->s[0], 10, 5);
-		//max->str[1] = mlx_put_string(max->mlx, max->s[1], 10, 35);
 	}
 	else
 	{
-		ft_snprintf(max->s[0], 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
+		ft_snprintf(max->overlay.basicinfo.str, 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
 			1000 / max->framems, max->map.p.x, max->map.p.y,
 			max->map.p.orientation * 360 / MAXDEGREE);
-		mlx_delete_image(max->mlx, max->str[0]);
-		max->str[0] = mlx_put_string(max->mlx, max->s[0], 10, 5);
 	}
+	ft_draw_text(&max->overlay.basicinfo, 0);
+	ft_draw_text(&max->overlay.rayinfo, 0);
 }
 
 // void	ft_debug(t_max *max)
@@ -606,6 +595,7 @@ void	ft_gameplay(t_max *max)
 		max->menu.current_buttongroup = MAINBUTTONS;
 		max->i.menuscreen->enabled = 1;
 		max->i.textscreen->enabled = 1;
+		max->i.overlay->enabled = 0;
 		max->gamems += max->levelms;
 		if (max->game_type == TIMETRIAL)
 			max->timetriallimitms += 15000;
@@ -627,6 +617,7 @@ void	ft_gameplay(t_max *max)
 			max->menu.current_buttongroup = MAINBUTTONS;
 			max->i.menuscreen->enabled = 1;
 			max->i.textscreen->enabled = 1;
+			max->i.overlay->enabled = 0;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
 		}
@@ -641,6 +632,7 @@ void	ft_gameplay(t_max *max)
 			max->menu.current_buttongroup = MAINBUTTONS;
 			max->i.menuscreen->enabled = 1;
 			max->i.textscreen->enabled = 1;
+			max->i.overlay->enabled = 0;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
 		}
@@ -655,6 +647,7 @@ void	ft_gameplay(t_max *max)
 			max->menu.current_buttongroup = MAINBUTTONS;
 			max->i.menuscreen->enabled = 1;
 			max->i.textscreen->enabled = 1;
+			max->i.overlay->enabled = 0;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
 		}

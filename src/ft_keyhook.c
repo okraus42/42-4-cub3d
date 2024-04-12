@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:12:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:44:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 			max->menu.current_button[0] = RESUME;
 			max->menu.current_buttongroup = MAINBUTTONS;
 			max->i.menuscreen->enabled = 1;
+			max->i.overlay->enabled = 0;
 		}
 		else if (max->game_mode == GAMESTART)
 		{
@@ -181,6 +182,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 		{
 			max->game_mode = GAMEPLAY;
 			max->i.menuscreen->enabled = 0;
+			max->i.overlay->enabled = 1;
 		}
 		else
 		{
