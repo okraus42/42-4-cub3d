@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/11 16:49:02 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:40:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,7 +363,7 @@ typedef struct s_player
 	t_oray			oray[RAYS];
 	t_line			miniray[RAYS];
 	t_line			mapray[RAYS];
-	t_oray			screenray[RAYS];
+	//t_oray			screenray[RAYS];
 	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
 
@@ -547,31 +547,18 @@ typedef struct s_max
 	t_controls		key;
 	int				keys[350];
 	t_kb			kb;
-	mlx_image_t		*background;
-	mlx_image_t		*hud;
-	mlx_image_t		*menuscreen;
-	mlx_image_t		*textscreen;
 	t_menu			menu;
 	t_gametext		gamestart;
 	t_gametext		gamewon;
 	t_gametext		gamelost;
 	t_font			font;
-	mlx_image_t		*screen;
-	mlx_image_t		*maximap;
-	mlx_image_t		*minimap;
-	mlx_image_t		*supermap;
-	mlx_image_t		*str[STRINGS];
-	char			s[STRINGS][256];
+	mlx_image_t		*str[STRINGS];	//replace later with our own thing
+	char			s[STRINGS][256];//replace later with our own thing
 	char			name[20];
 	char			coalition[20];
 	char			campus[20];//make it a list later
 	t_textures		t;//not a pointer
 	t_images		i;
-	// t_imgs			*img;
-	// mlx_image_t		*str;
-	// mlx_image_t		*tmp;
-	// char			*player_name;
-	// char			*player_coalition;
 	// int				death;
 	// int				lives;
 	// int				score;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 15:32:15 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/10 12:35:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:18:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_copy_score(t_max *max, t_list *lst)
 
 	// text.text = text.str;
 	text.font = max->font.asciitest;
-	text.image = max->textscreen;
+	text.image = max->i.textscreen;
 	text.c = 0X00FF00FF;
 	text.cb = 0xFF;
 	text.sx = 140;
@@ -232,7 +232,7 @@ void	ft_halloffame(t_max *max)
 		max->keys[MLX_KEY_BACKSPACE] = 0;
 		max->game_mode = MENU;
 		max->menu.current_buttongroup = MAINBUTTONS;
-		max->textscreen->enabled = 0;
+		max->i.textscreen->enabled = 0;
 	}
 }
 

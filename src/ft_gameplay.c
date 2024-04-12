@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/08 13:56:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 10:00:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,23 @@
 // 		return (1);
 // 	return (0);
 // }
-void	ft_erase_map(t_max *max)
-{
-	int	y;
-	int	x;
+// void	ft_erase_map(t_max *max)
+// {
+// 	int	y;
+// 	int	x;
 
-	y = 0;
-	while (y < MAPHEIGHT)
-	{
-		x = 0;
-		while (x < MAPWIDTH)
-		{
-			mlx_put_pixel(max->maximap, x, y, 0x0);
-			++x;
-		}
-		++y;
-	}
-}
+// 	y = 0;
+// 	while (y < MAPHEIGHT)
+// 	{
+// 		x = 0;
+// 		while (x < MAPWIDTH)
+// 		{
+// 			mlx_put_pixel(max->i.maximap, x, y, 0x0);
+// 			++x;
+// 		}
+// 		++y;
+// 	}
+// }
 
 // Weird psychadelich stuff
 // unsigned int	ft_get_colour(int x, int xw, int y, int wh, mlx_texture_t *img)
@@ -475,7 +475,58 @@ void	ft_draw_strings(t_max *max)
 // 		max->ray = 584;
 // 		max->keys[MLX_KEY_KP_8] = 0;
 // 	}
-// }
+//
+
+
+int	ft_savegame(t_max *max)
+{
+	int		fd;
+	//int		i;
+	//char	*byte;
+
+	fd = open("./saves/fakequicksave.ft", O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		ft_dprintf(2, "Error\nFailed to open fakequicksave\n");
+		return (1);
+	}
+	write(fd, &max->map->p, sizeof(max->map->p));
+	// while (i < sizeof(max->map->p))
+	// {
+		
+	// }
+	close(fd);
+	return (0);
+}
+
+int	ft_loadgame(t_max *max)
+{
+	int		fd;
+	//int		i;
+	//char	*byte;
+
+	fd = open("./saves/fakequicksave.ft", O_RDONLY);
+	if (fd < 0)
+	{
+		ft_dprintf(2, "Error\nFailed to open fakequicksave\n");
+		return (1);
+	}
+	read(fd, &max->map->p, sizeof(max->map->p));
+	// while (i < sizeof(max->map->p))
+	// {
+		
+	// }
+	close(fd);
+	return (0);
+}
+
+
+
+
+
+
+
+
 
 void	ft_gameplay(t_max *max)
 {
@@ -600,8 +651,8 @@ void	ft_gameplay(t_max *max)
 		max->game_in_progress = 0;
 		max->menu.current_button[0] = NEWGAME;
 		max->menu.current_buttongroup = MAINBUTTONS;
-		max->menuscreen->enabled = 1;
-		max->textscreen->enabled = 1;
+		max->i.menuscreen->enabled = 1;
+		max->i.textscreen->enabled = 1;
 		max->gamems += max->levelms;
 		if (max->game_type == TIMETRIAL)
 			max->timetriallimitms += 15000;
@@ -621,8 +672,8 @@ void	ft_gameplay(t_max *max)
 			max->game_in_progress = 0;
 			max->menu.current_button[0] = NEWGAME;
 			max->menu.current_buttongroup = MAINBUTTONS;
-			max->menuscreen->enabled = 1;
-			max->textscreen->enabled = 1;
+			max->i.menuscreen->enabled = 1;
+			max->i.textscreen->enabled = 1;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
 		}
@@ -635,8 +686,8 @@ void	ft_gameplay(t_max *max)
 			max->game_in_progress = 0;
 			max->menu.current_button[0] = NEWGAME;
 			max->menu.current_buttongroup = MAINBUTTONS;
-			max->menuscreen->enabled = 1;
-			max->textscreen->enabled = 1;
+			max->i.menuscreen->enabled = 1;
+			max->i.textscreen->enabled = 1;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
 		}
@@ -649,11 +700,25 @@ void	ft_gameplay(t_max *max)
 			max->game_in_progress = 0;
 			max->menu.current_button[0] = NEWGAME;
 			max->menu.current_buttongroup = MAINBUTTONS;
-			max->menuscreen->enabled = 1;
-			max->textscreen->enabled = 1;
+			max->i.menuscreen->enabled = 1;
+			max->i.textscreen->enabled = 1;
 			max->gamems += max->levelms;
 			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
 		}
+	}
+	if (max->keys[MLX_KEY_F1])
+	{
+		printf("fake quicksave\n");
+		if (ft_savegame(max))
+			ft_dprintf(2, "Game was not saved\n");
+		max->keys[MLX_KEY_F1] = 0;
+	}
+	if (max->keys[MLX_KEY_F2])
+	{
+		printf("fake quickload\n");
+		if (ft_loadgame(max))
+			ft_dprintf(2, "Unable to load the game, make sure the safe file exists\n");
+		max->keys[MLX_KEY_F2] = 0;
 	}
 	//ft_draw_screen2d(max);
 	//ft_draw_screen2dquad(max);

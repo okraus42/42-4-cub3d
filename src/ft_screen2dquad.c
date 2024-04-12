@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:38:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 11:34:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:16:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,24 +82,24 @@ void	ft_draw_screen2dquad(t_max *max)
 			{
 				if (ft_is_inside(max->map, 268435456 * 2, (ny << 16) >> s, (nx << 16) >> s))
 				{
-					ft_put_quad_pixel(max->supermap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					ft_put_quad_pixel(max->i.supermap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}
 				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & WALL)
 				{
-					ft_put_quad_pixel(max->supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
 				}
 				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & FLOOR)
 				{
 					//ft_put_quad_pixel(max->supermap, x, y, ((max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32) & TMASK);
-					ft_put_quad_pixel(max->supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
 				}
 				else
 				{
-					ft_put_quad_pixel(max->supermap, x, y, 0x0 & TMASK);
+					ft_put_quad_pixel(max->i.supermap, x, y, 0x0 & TMASK);
 				}
 			}
 			else //outside of map is transparent
-				ft_put_quad_pixel(max->supermap, x, y, 0x0 & TMASK);
+				ft_put_quad_pixel(max->i.supermap, x, y, 0x0 & TMASK);
 			x += 2;
 		}
 		y += 2;
@@ -117,13 +117,13 @@ void	ft_draw_screen2dquad(t_max *max)
 		max->map->p.miniray[r].maxwidth = SUPERMAPWIDTH;
 		max->map->p.miniray[r].c[0] = max->map->p.oray[r].c[0];
 		max->map->p.miniray[r].c[1] = max->map->p.oray[r].c[1];
-		ft_place_line(max->supermap, max->map->p.miniray[r]);
+		ft_place_line(max->i.supermap, max->map->p.miniray[r]);
 		++r;
 	}
 	if (DEBUGGING)
 	{
 		max->map->p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
-		ft_place_line(max->supermap, max->map->p.miniray[max->ray]);
+		ft_place_line(max->i.supermap, max->map->p.miniray[max->ray]);
 	}
 }
 

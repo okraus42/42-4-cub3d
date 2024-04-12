@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 11:07:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:16:15 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,15 @@ void	ft_draw_minimap(t_max *max)
 			{
 				if (ft_is_inside(max->map, 268435456 * 2, (ny << 16) / s, (nx << 16) / s))
 				{
-					mlx_put_pixel(max->minimap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					mlx_put_pixel(max->i.minimap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}
 				else
 				{
-					mlx_put_pixel(max->minimap, x, y, ((max->map->m[(ny / s) * max->map->w + (nx / s)]) >> 32) & TMASK);
+					mlx_put_pixel(max->i.minimap, x, y, ((max->map->m[(ny / s) * max->map->w + (nx / s)]) >> 32) & TMASK);
 				}
 			}
 			else
-				mlx_put_pixel(max->minimap, x, y, 0x808080FF & TMASK);
+				mlx_put_pixel(max->i.minimap, x, y, 0x808080FF & TMASK);
 			++x;
 		}
 		++y;
@@ -74,13 +74,13 @@ void	ft_draw_minimap(t_max *max)
 		max->map->p.miniray[r].maxwidth = MINIWIDTH;
 		max->map->p.miniray[r].c[0] = max->map->p.oray[r].c[0];
 		max->map->p.miniray[r].c[1] = max->map->p.oray[r].c[1];
-		ft_place_line(max->minimap, max->map->p.miniray[r]);
+		ft_place_line(max->i.minimap, max->map->p.miniray[r]);
 		++r;
 	}
 	if (DEBUGGING)
 	{
 		max->map->p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
-		ft_place_line(max->minimap, max->map->p.miniray[max->ray]);
+		ft_place_line(max->i.minimap, max->map->p.miniray[max->ray]);
 	}
 }
 

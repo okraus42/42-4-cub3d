@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/11 17:25:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:36:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,12 @@ void	ft_initrandommapvalues(t_randommap *rm)
 void	ft_initmenu(t_max *max)
 {
 	max->menu.current_button[MAINBUTTONS] = NEWGAME;
-	ft_load_texture("./textures/menu/labyrinth.png", &max->menu.background);
-	ft_load_texture("./textures/menu/button_small.png", &max->menu.button);
-	ft_load_texture("./textures/menu/buttonplus.png", &max->menu.buttonplus);
-	ft_load_texture("./textures/menu/textfield.png", &max->menu.textfield);
-	ft_load_texture("./textures/menu/listfield.png", &max->menu.listfield);
-
-	//fonts
-	ft_load_texture("./textures/fonts/asciitest.png", &max->font.asciitest);
+	max->menu.background = max->t.menubg;
+	max->menu.button = max->t.button;
+	max->menu.buttonplus = max->t.buttonplus;
+	max->menu.textfield = max->t.textfield;
+	max->menu.listfield = max->t.listfield;
+	max->font.asciitest = max->t.font;
 	ft_initrandommapvalues(&max->menu.rm);
 	ft_initbuttons(max);
 	ft_inittextfields(max);
@@ -100,7 +98,7 @@ void	ft_draw_menu(t_max *max)
 				c = (max->menu.background->pixels[a]) << 24 | (max->menu.background->pixels[a + 1]) << 16 | (max->menu.background->pixels[a + 2]) << 8 | 0xFF;
 			else
 				c = 0xFF00FFFF;
-			mlx_put_pixel(max->menuscreen, x, y, c);
+			mlx_put_pixel(max->i.menuscreen, x, y, c);
 			++x;
 		}
 		++y;
@@ -769,7 +767,7 @@ void	ft_menu(t_max *max)
 		if (max->menu.current_button[MAINBUTTONS] == RESUME)
 		{
 			max->game_mode = GAMEPLAY;
-			max->menuscreen->enabled = 0;
+			max->i.menuscreen->enabled = 0;
 		}
 		if (max->menu.current_button[MAINBUTTONS] == NEWGAME)
 		{
@@ -855,8 +853,8 @@ void	ft_menu(t_max *max)
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
-						max->menuscreen->enabled = 0;
-						max->textscreen->enabled = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 1;
 					}
 					else
 					{
@@ -878,8 +876,8 @@ void	ft_menu(t_max *max)
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
-						max->menuscreen->enabled = 0;
-						max->textscreen->enabled = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 1;
 					}
 					else
 					{
@@ -931,8 +929,8 @@ void	ft_menu(t_max *max)
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
-						max->menuscreen->enabled = 0;
-						max->textscreen->enabled = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 1;
 					}
 					else
 					{
@@ -957,8 +955,8 @@ void	ft_menu(t_max *max)
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
-						max->menuscreen->enabled = 0;
-						max->textscreen->enabled = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 1;
 					}
 					else
 					{
@@ -1098,8 +1096,8 @@ void	ft_menu(t_max *max)
 						max->menu.current_button[MAINBUTTONS] = RESUME;
 						max->menu.current_buttongroup = MAINBUTTONS;
 						max->game_in_progress = 0;
-						max->menuscreen->enabled = 0;
-						max->textscreen->enabled = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 1;
 					}
 					else
 					{
@@ -1115,7 +1113,7 @@ void	ft_menu(t_max *max)
 			if (!ft_readscore(max))
 			{
 				max->game_mode = HOFLOOP;
-				max->textscreen->enabled = 1;
+				max->i.textscreen->enabled = 1;
 			}
 			else
 			{

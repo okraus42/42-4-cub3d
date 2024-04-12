@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/11 16:53:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:36:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	ft_initgamestart(t_max *max)
 {
-	ft_load_texture("./textures/woodenboard.png", &max->gamestart.background);
+	max->gamestart.background = max->t.textbg;
 	max->gamestart.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 	max->gamestart.font = max->font.asciitest;
-	max->gamestart.image = max->textscreen;
+	max->gamestart.image = max->i.textscreen;
 	max->gamestart.c = 0XFF;
 	max->gamestart.cb = 0;
 	max->gamestart.sx = 200;
@@ -52,7 +52,7 @@ void	ft_draw_background(t_max *max)
 				c = (max->gamestart.background->pixels[a]) << 24 | (max->gamestart.background->pixels[a + 1]) << 16 | (max->gamestart.background->pixels[a + 2]) << 8 | 0xFF;
 			else
 				c = 0xFF00FFFF;
-			mlx_put_pixel(max->textscreen, x, y, c);
+			mlx_put_pixel(max->i.textscreen, x, y, c);
 			++x;
 		}
 		++y;
@@ -171,7 +171,7 @@ void	ft_gamestart(t_max *max)
 	if (max->keys[MLX_KEY_ENTER])
 	{
 		max->game_mode = GAMEPLAY;
-		max->textscreen->enabled = 0;
+		max->i.textscreen->enabled = 0;
 		max->game_in_progress = 1;
 		max->gamestart.i = 0;
 		max->levelms = 0;
@@ -186,7 +186,7 @@ void	ft_initgamewon(t_max *max)
 	max->gamewon.text = max->gamewon.stats;
 	ft_sprintf(max->gamewon.stats, "You won!\nCongratulations!\n");
 	max->gamewon.font = max->font.asciitest;
-	max->gamewon.image = max->textscreen;
+	max->gamewon.image = max->i.textscreen;
 	max->gamewon.c = 0XFF;
 	max->gamewon.cb = 0;
 	max->gamewon.sx = 200;
@@ -223,7 +223,7 @@ void	ft_gamewon(t_max *max)
 		if (max->game_type == ONEMAP)
 		{
 			max->game_mode = MENU;
-			max->textscreen->enabled = 0;
+			max->i.textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamewon.i = 0;
 			max->keys[MLX_KEY_ENTER] = 0;
@@ -240,8 +240,8 @@ void	ft_gamewon(t_max *max)
 				max->menu.current_button[MAINBUTTONS] = RESUME;
 				max->menu.current_buttongroup = MAINBUTTONS;
 				max->game_in_progress = 0;
-				max->menuscreen->enabled = 0;
-				max->textscreen->enabled = 1;
+				max->i.menuscreen->enabled = 0;
+				max->i.textscreen->enabled = 1;
 			}
 			else
 			{
@@ -255,7 +255,7 @@ void	ft_gamewon(t_max *max)
 			if (max->level > 4)
 			{
 				max->game_mode = MENU;
-				max->textscreen->enabled = 0;
+				max->i.textscreen->enabled = 0;
 				max->game_in_progress = 0;
 				max->gamewon.i = 0;
 				max->gamems = 0;
@@ -270,8 +270,8 @@ void	ft_gamewon(t_max *max)
 				max->menu.current_button[MAINBUTTONS] = RESUME;
 				max->menu.current_buttongroup = MAINBUTTONS;
 				max->game_in_progress = 0;
-				max->menuscreen->enabled = 0;
-				max->textscreen->enabled = 1;
+				max->i.menuscreen->enabled = 0;
+				max->i.textscreen->enabled = 1;
 			}
 			else
 			{
@@ -290,7 +290,7 @@ void	ft_initgamelost(t_max *max)
 	max->gamelost.text = max->gamelost.stats;
 	ft_sprintf(max->gamelost.stats, "You lost:(\n");
 	max->gamelost.font = max->font.asciitest;
-	max->gamelost.image = max->textscreen;
+	max->gamelost.image = max->i.textscreen;
 	max->gamelost.c = 0XFF;
 	max->gamelost.cb = 0;
 	max->gamelost.sx = 200;
@@ -325,7 +325,7 @@ void	ft_gamelost(t_max *max)
 		{
 			max->game_mode = MENU;
 			max->gamems = 0;
-			max->textscreen->enabled = 0;
+			max->i.textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamelost.i = 0;
 			max->keys[MLX_KEY_ENTER] = 0;
@@ -336,7 +336,7 @@ void	ft_gamelost(t_max *max)
 			if (ft_writescore(max))
 				ft_printf("Warning: Could not write the final score\n");
 			max->gamems = 0;
-			max->textscreen->enabled = 0;
+			max->i.textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamelost.i = 0;
 			max->keys[MLX_KEY_ENTER] = 0;
@@ -345,7 +345,7 @@ void	ft_gamelost(t_max *max)
 		{
 			max->game_mode = MENU;
 			max->gamems = 0;
-			max->textscreen->enabled = 0;
+			max->i.textscreen->enabled = 0;
 			max->game_in_progress = 0;
 			max->gamelost.i = 0;
 			max->keys[MLX_KEY_ENTER] = 0;

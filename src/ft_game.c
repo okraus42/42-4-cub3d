@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 12:34:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:12:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,24 @@ void	ft_amaze_standard(t_max *max)
 		//free everything
 		ft_exit(max, 10);
 	}
-	max->menuscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!screen || (mlx_image_to_window(mlx, max->menuscreen, 0, 0) < 0))
+	max->i.menuscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!screen || (mlx_image_to_window(mlx, max->i.menuscreen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
 		ft_exit(max, 10);
 	}
-	max->textscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!max->textscreen || (mlx_image_to_window(mlx, max->textscreen, 0, 0) < 0))
+	max->i.textscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!max->i.textscreen || (mlx_image_to_window(mlx, max->i.textscreen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
 		ft_exit(max, 10);
 	}
 	max->mlx = mlx;
-	max->maximap = maximap;
-	max->minimap = minimap;
-	max->screen = screen;
+	max->i.maximap = maximap;
+	max->i.minimap = minimap;
+	max->i.screen = screen;
 	max->str[0] = mlx_put_string(max->mlx, "", 10, 5);
 	max->str[1] = mlx_put_string(max->mlx, "", 10, 25);
 	ft_initmenu(max);

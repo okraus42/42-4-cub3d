@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/10 12:16:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:33:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ typedef struct s_listfield
 
 typedef struct s_font
 {
-	mlx_texture_t	*asciitest;
+	mlx_texture_t	*asciitest; //rename or remove
 }	t_font;
 
 typedef struct s_menu

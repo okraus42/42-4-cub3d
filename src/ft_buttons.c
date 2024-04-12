@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/11 17:22:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:12:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	ft_initbuttons(t_max *max)
 	ft_bzero(&text, sizeof(text));
 	ft_bzero(&button, sizeof(button));
 	text.font = max->font.asciitest;
-	text.image = max->menuscreen;
+	text.image = max->i.menuscreen;
 	text.text = "VOID";
 	text.c = 0XFF;
 	text.cb = 0;
@@ -64,7 +64,7 @@ void	ft_initbuttons(t_max *max)
 	text.i = 0;
 	text.offset = 0;
 	button.button = max->menu.button;
-	button.image = max->menuscreen;
+	button.image = max->i.menuscreen;
 	button.text = text;
 	button.c = C_INACTIVE;
 	button.x = 200;

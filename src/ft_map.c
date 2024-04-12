@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/05 11:06:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:15:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,15 @@ void	ft_draw_map(t_max *max)
 				if (ft_is_inside(max->map, 268435456 * 2, (y << 16) / s, (x << 16) / s))
 				{
 					//ft_printf("y= %i, x= %i\n", y, x);
-					mlx_put_pixel(max->maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					mlx_put_pixel(max->i.maximap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
 				}
 				else
 				{
-					mlx_put_pixel(max->maximap, x, y, ((max->map->m[(y / s) * max->map->w + (x / s)]) >> 32) & TMASK);
+					mlx_put_pixel(max->i.maximap, x, y, ((max->map->m[(y / s) * max->map->w + (x / s)]) >> 32) & TMASK);
 				}
 			}
 			else
-				mlx_put_pixel(max->maximap, x, y, 0x808080FF & TMASK);
+				mlx_put_pixel(max->i.maximap, x, y, 0x808080FF & TMASK);
 			++x;
 		}
 		++y;
@@ -71,7 +71,7 @@ void	ft_draw_map(t_max *max)
 		max->map->p.mapray[r].c[0] = max->map->p.oray[r].c[0] & TMASK;
 		max->map->p.mapray[r].c[1] = max->map->p.oray[r].c[1] & TMASK;
 		//ft_printf("%x\n", max->map->p.mapray[r].c[0]);
-		ft_place_line(max->maximap, max->map->p.mapray[r]);
+		ft_place_line(max->i.maximap, max->map->p.mapray[r]);
 		++r;
 	}
 	if (DEBUGGING)
@@ -98,15 +98,15 @@ void	ft_draw_map(t_max *max)
 			max->map->p.mapray[max->ray - 7].c[1] = 0X00FFFFFF & TMASK;
 			max->map->p.mapray[max->ray - 8].c[1] = 0X00FFFFFF & TMASK;
 			max->map->p.mapray[max->ray - 9].c[1] = 0X00FFFFFF & TMASK;
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 1]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 2]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 3]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 4]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 5]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 6]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 7]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 8]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray - 9]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 1]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 2]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 3]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 4]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 5]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 6]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 7]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 8]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray - 9]);
 		}
 		if(max->ray < RAYS - 10)
 		{
@@ -128,16 +128,16 @@ void	ft_draw_map(t_max *max)
 			max->map->p.mapray[max->ray + 7].c[1] = 0X0000FFFF & TMASK;
 			max->map->p.mapray[max->ray + 8].c[1] = 0X0000FFFF & TMASK;
 			max->map->p.mapray[max->ray + 9].c[1] = 0X0000FFFF & TMASK;
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 1]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 2]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 3]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 4]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 5]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 6]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 7]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 8]);
-			ft_place_line(max->maximap, max->map->p.mapray[max->ray + 9]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 1]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 2]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 3]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 4]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 5]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 6]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 7]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 8]);
+			ft_place_line(max->i.maximap, max->map->p.mapray[max->ray + 9]);
 		}
-		ft_place_line(max->maximap, max->map->p.mapray[max->ray]);
+		ft_place_line(max->i.maximap, max->map->p.mapray[max->ray]);
 	}
 }

@@ -6,11 +6,75 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 13:33:51 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:36:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
+
+void	ft_init_images(t_max *max)
+{
+	max->i.screen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
+	//if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	if (!max->i.screen || (mlx_image_to_window(max->mlx, max->i.screen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.maximap = mlx_new_image(max->mlx, MAPWIDTH, MAPHEIGHT);
+	if (!max->i.maximap || (mlx_image_to_window(max->mlx, max->i.maximap, (WIDTH - MAPWIDTH) / 2, (HEIGHT - MAPHEIGHT) / 2) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.supermap = mlx_new_image(max->mlx, SUPERMAPWIDTH, SUPERMAPHEIGHT);
+	if (!max->i.supermap || (mlx_image_to_window(max->mlx, max->i.supermap, 0, HEIGHT - SUPERMAPHEIGHT) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.minimap = mlx_new_image(max->mlx, MINIWIDTH, MINIHEIGHT);
+	if (!max->i.minimap || (mlx_image_to_window(max->mlx, max->i.minimap, WIDTH - MINIWIDTH, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.menuscreen = mlx_new_image(max->mlx, WIDTH, HEIGHT);
+	if (!max->i.menuscreen || (mlx_image_to_window(max->mlx, max->i.menuscreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.textscreen = mlx_new_image(max->mlx, WIDTH, HEIGHT);
+	if (!max->i.textscreen || (mlx_image_to_window(max->mlx, max->i.textscreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+}
+
+void	ft_init_textures(t_max *max)
+{
+	ft_load_texture("./textures/map/brick32.png", &max->t.supermapwall);
+	ft_load_texture("./textures/map/floor32.png", &max->t.supermapfloor);
+	ft_load_texture("./textures/menu/labyrinth.png", &max->t.menubg);
+	ft_load_texture("./textures/menu/button_small.png", &max->t.button);
+	ft_load_texture("./textures/menu/buttonplus.png", &max->t.buttonplus);
+	ft_load_texture("./textures/menu/textfield.png", &max->t.textfield);
+	ft_load_texture("./textures/menu/listfield.png", &max->t.listfield);
+
+	//fonts
+	ft_load_texture("./textures/fonts/asciitest.png", &max->t.font);
+
+	//gametext
+	ft_load_texture("./textures/woodenboard.png", &max->t.textbg);
+}
 
 void	ft_amaze_bonus(t_max *max)
 {
@@ -28,53 +92,8 @@ void	ft_amaze_bonus(t_max *max)
 		//free everything
 		ft_exit(max, 9);
 	}
-	max->screen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
-	//if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
-	if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->maximap = mlx_new_image(max->mlx, MAPWIDTH, MAPHEIGHT);
-	if (!max->maximap || (mlx_image_to_window(max->mlx, max->maximap, (WIDTH - MAPWIDTH) / 2, (HEIGHT - MAPHEIGHT) / 2) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->supermap = mlx_new_image(max->mlx, SUPERMAPWIDTH, SUPERMAPHEIGHT);
-	if (!max->supermap || (mlx_image_to_window(max->mlx, max->supermap, 0, HEIGHT - SUPERMAPHEIGHT) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->minimap = mlx_new_image(max->mlx, MINIWIDTH, MINIHEIGHT);
-	if (!max->minimap || (mlx_image_to_window(max->mlx, max->minimap, WIDTH - MINIWIDTH, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->menuscreen = mlx_new_image(max->mlx, WIDTH, HEIGHT);
-	if (!max->menuscreen || (mlx_image_to_window(max->mlx, max->menuscreen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->textscreen = mlx_new_image(max->mlx, WIDTH, HEIGHT);
-	if (!max->textscreen || (mlx_image_to_window(max->mlx, max->textscreen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	// ft_load_texture("./textures/map/brick64.png", &max->t.supermapwall);
-	// ft_load_texture("./textures/map/floor64.png", &max->t.supermapfloor);
-	ft_load_texture("./textures/map/brick32.png", &max->t.supermapwall);
-	ft_load_texture("./textures/map/floor32.png", &max->t.supermapfloor);
+	ft_init_images(max);
+	ft_init_textures(max);
 	// max->mlx = mlx;
 	// max->maximap = maximap;
 	// max->minimap = minimap;

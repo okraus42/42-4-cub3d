@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 11:41:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:17:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void	ft_draw_screen3d(t_max *max)
 				// if (x == 512)
 				// 	ft_get_colour3(max, max->map->c.rgba, y, fake_offset);
 				//mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->c.rgba, y, fake_offset));
-				mlx_put_pixel(max->screen, x, y, max->map->c.rgba);
+				mlx_put_pixel(max->i.screen, x, y, max->map->c.rgba);
 			}
 			else if (y >= offset && y < wall_height + offset)
 			{
@@ -184,26 +184,26 @@ void	ft_draw_screen3d(t_max *max)
 				if (max->map->p.oray[r].wall & NWALL)
 				{
 					//mlx_put_pixel(max->screen, x, y, ft_get_colour(x / 4, 1920 / 4, y - offset, wall_height, max->t->nwall));
-					mlx_put_pixel(max->screen, x, y, NWALLCOLOUR);
+					mlx_put_pixel(max->i.screen, x, y, NWALLCOLOUR);
 				}
 				else if (max->map->p.oray[r].wall & EWALL)
-					mlx_put_pixel(max->screen, x, y, EWALLCOLOUR);
+					mlx_put_pixel(max->i.screen, x, y, EWALLCOLOUR);
 				else if (max->map->p.oray[r].wall & SWALL)
-					mlx_put_pixel(max->screen, x, y, SWALLCOLOUR);
+					mlx_put_pixel(max->i.screen, x, y, SWALLCOLOUR);
 				else if (max->map->p.oray[r].wall & WWALL)
-					mlx_put_pixel(max->screen, x, y, WWALLCOLOUR);
+					mlx_put_pixel(max->i.screen, x, y, WWALLCOLOUR);
 				else
-					mlx_put_pixel(max->screen, x, y, NOWALLCOLOUR);
+					mlx_put_pixel(max->i.screen, x, y, NOWALLCOLOUR);
 			}
 			else if (y < fake_wall_height + fake_offset)
 			{
-				mlx_put_pixel(max->screen, x, y, max->map->b.rgba);
+				mlx_put_pixel(max->i.screen, x, y, max->map->b.rgba);
 			}
 			else
 			{
 				//mlx_put_pixel(max->screen, x, y, 0x000000FF);
 				//mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
-				mlx_put_pixel(max->screen, x, y, max->map->f.rgba);
+				mlx_put_pixel(max->i.screen, x, y, max->map->f.rgba);
 				// mlx_put_pixel(max->screen, x, y, ft_get_colour2(max, max->map->f.rgba, y, fake_offset));
 
 			}

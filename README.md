@@ -44,6 +44,7 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
 
 Ideas:
+Saves called AGU or Freeze
 Init when the game starts
 init when the map loads
 init for highscores

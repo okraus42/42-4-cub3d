@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 13:27:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:20:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 		exit(-4);
 }
 
-int	ft_init_textures(t_max *max)
+int	ft_init_map_textures(t_max *max)
 {
 	ft_load_texture(max->map->northtexture, &max->t.nwall);
 	ft_load_texture(max->map->westtexture, &max->t.wwall);
@@ -623,7 +623,7 @@ int	ft_process_file(t_max *max)
 		ft_freemap(map);
 		return (0);
 	}
-	if (!ft_init_textures(max))
+	if (!ft_init_map_textures(max))
 	{
 		ft_freemap(map);
 		return (0);

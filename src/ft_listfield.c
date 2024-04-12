@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:45:59 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 09:17:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_initlistfields(t_max *max)
 	t_text		text;
 
 	text.font = max->font.asciitest;
-	text.image = max->menuscreen;
+	text.image = max->i.menuscreen;
 	text.text = "";
 	text.c = 0XFF;
 	text.cb = 0;
@@ -31,7 +31,7 @@ void	ft_initlistfields(t_max *max)
 	text.i = 0;
 	text.offset = 0;
 	listfield.listfield = max->menu.listfield;
-	listfield.image = max->menuscreen;
+	listfield.image = max->i.menuscreen;
 	listfield.text[0] = text;
 	listfield.text[1] = text;
 	listfield.text[2] = text;
