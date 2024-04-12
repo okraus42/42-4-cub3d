@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:40:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 11:56:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,7 +542,7 @@ typedef struct s_highscore
 typedef struct s_max
 {
 	mlx_t			*mlx;
-	t_map			*map; //no need for pointer
+	t_map			map; //no need for pointer
 	t_math			*math; //no need for a pointer
 	t_controls		key;
 	int				keys[350];
@@ -664,6 +664,12 @@ void	ft_menu(t_max *max);
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);
+
+//ft_saveload.c
+int	ft_savegame(t_max *max);
+int	ft_loadgame(t_max *max);
+int	ft_quicksave(t_max *max);
+int	ft_quickload(t_max *max);
 
 //ft_screen2d.c
 void	ft_draw_screen2d(t_max *max);

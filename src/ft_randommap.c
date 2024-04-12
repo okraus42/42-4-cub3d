@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/07 15:41:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 12:02:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1318,7 +1318,7 @@ void	ft_random_init(t_max *max)
 
 	seed = time(0);
 	srand(seed);
-	ft_map_init(max->map);
+	ft_map_init(&max->map);
 	map_init(&max->menu.rm, &m);
 	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
 	// 	return (1);
@@ -1340,34 +1340,34 @@ void	ft_random_init(t_max *max)
 	i = 0;
 	p = 1;
 	j = 0;
-	max->map->ww = m.w;
-	max->map->w = 256;
-	max->map->hh = m.h;
-	max->map->h = 256;
+	max->map.ww = m.w;
+	max->map.w = 256;
+	max->map.hh = m.h;
+	max->map.h = 256;
 	while (i < 65536)
 	{
 		if (j < m.s && (i % 256 < m.w))
 		{
 			if (m.map[j] & RWALL)
-				max->map->m[i] = WALL1;
+				max->map.m[i] = WALL1;
 			if ((m.map[j] & CORRIDOR) || (m.map[j] & DOOR) || (m.map[j] & ROOM))
 			{
-				max->map->m[i] = FLOOR1;
+				max->map.m[i] = FLOOR1;
 				if (p)
 				{
-					max->map->p.mx = i % 256;
-					max->map->p.my = i / 256;
-					max->map->p.sx = 0x7f7f;
-					max->map->p.sy = 0x7f7f;
-					max->map->p.smx = i % 256 * 64;
-					max->map->p.smy = i / 256 * 64;
-					if (max->map->p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
-						max->map->p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
-					if (max->map->p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
-						max->map->p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
-					max->map->p.orientation = EAST;
-					max->map->p.unused_x = 0;
-					max->map->p.unused_y = 0;
+					max->map.p.mx = i % 256;
+					max->map.p.my = i / 256;
+					max->map.p.sx = 0x7f7f;
+					max->map.p.sy = 0x7f7f;
+					max->map.p.smx = i % 256 * 64;
+					max->map.p.smy = i / 256 * 64;
+					if (max->map.p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+						max->map.p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+					if (max->map.p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+						max->map.p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
+					max->map.p.orientation = EAST;
+					max->map.p.unused_x = 0;
+					max->map.p.unused_y = 0;
 					p = 0;
 				}
 			}
@@ -1377,7 +1377,7 @@ void	ft_random_init(t_max *max)
 	}
 	while (--i)
 	{
-		if (max->map->m[i] & FLOOR1)
+		if (max->map.m[i] & FLOOR1)
 		{
 			//colour somestuff floor1
 			// 10011101
@@ -1386,7 +1386,7 @@ void	ft_random_init(t_max *max)
 			
 			// 01011110
 			printf("EXIT: x %x y  %x\n", i % 256, i / 256);
-			max->map->m[i] = ((max->map->m[i] & 0xFFFFF0) | EXIT) | 0xFF00FFFF00000000;
+			max->map.m[i] = ((max->map.m[i] & 0xFFFFF0) | EXIT) | 0xFF00FFFF00000000;
 			break ;
 		}
 	}
@@ -1398,7 +1398,7 @@ int	ft_process_random(t_max *max)
 {
 	t_map	*map;
 
-	map = max->map;
+	map = &max->map;
 	ft_random_init(max);
 	// if (!ft_read_map(map))
 	// {
@@ -1418,9 +1418,9 @@ int	ft_process_random(t_max *max)
 	// i = 0;
 	// while (i < 256)
 	// {
-	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
-	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
-	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
+	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map.b.r);
+	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map.b.g);
+	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
 	// 	++i;
 	// }
 	//for debugging

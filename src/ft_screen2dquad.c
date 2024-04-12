@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:38:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:16:45 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 12:02:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,22 @@ void	ft_draw_screen2dquad(t_max *max)
 		x = 0;
 		while (x < SUPERMAPWIDTH)
 		{
-			ny = y + (((int)max->map->p.y << s) >> 16) - max->map->p.smy;
-			nx = x + (((int)max->map->p.x << s) >> 16) - max->map->p.smx;
-			if (ny > 0 && nx > 0 && ny < max->map->h << s && nx < max->map->w << s)
+			ny = y + (((int)max->map.p.y << s) >> 16) - max->map.p.smy;
+			nx = x + (((int)max->map.p.x << s) >> 16) - max->map.p.smx;
+			if (ny > 0 && nx > 0 && ny < max->map.h << s && nx < max->map.w << s)
 			{
-				if (ft_is_inside(max->map, 268435456 * 2, (ny << 16) >> s, (nx << 16) >> s))
+				if (ft_is_inside(&max->map, 268435456 * 2, (ny << 16) >> s, (nx << 16) >> s))
 				{
-					ft_put_quad_pixel(max->i.supermap, x, y, max->map->c.rgba & TMASK);	//player has ceiling colour
+					ft_put_quad_pixel(max->i.supermap, x, y, max->map.c.rgba & TMASK);	//player has ceiling colour
 				}
-				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & WALL)
+				else if (max->map.m[(ny >> s) * max->map.w + (nx >> s)] & WALL)
 				{
-					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_wall_colour(max, ny, nx) | (0xFF & (max->map.m[(ny >> s) * max->map.w + (nx >> s)]) >> 32)) & TMASK);
 				}
-				else if (max->map->m[(ny >> s) * max->map->w + (nx >> s)] & FLOOR)
+				else if (max->map.m[(ny >> s) * max->map.w + (nx >> s)] & FLOOR)
 				{
-					//ft_put_quad_pixel(max->supermap, x, y, ((max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32) & TMASK);
-					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map->m[(ny >> s) * max->map->w + (nx >> s)]) >> 32)) & TMASK);
+					//ft_put_quad_pixel(max->supermap, x, y, ((max->map.m[(ny >> s) * max->map.w + (nx >> s)]) >> 32) & TMASK);
+					ft_put_quad_pixel(max->i.supermap, x, y, (ft_get_floor_colour(max, ny, nx) | (0xFF & (max->map.m[(ny >> s) * max->map.w + (nx >> s)]) >> 32)) & TMASK);
 				}
 				else
 				{
@@ -109,21 +109,21 @@ void	ft_draw_screen2dquad(t_max *max)
 	
 	while (r < RAYS)
 	{
-		max->map->p.miniray[r].x[0] = max->map->p.smx;
-		max->map->p.miniray[r].y[0] = max->map->p.smy;
-		max->map->p.miniray[r].x[1] = max->map->p.smx + ((((max->map->p.oray[r].rx - max->map->p.oray[r].xs)) << s) >> 16);
-		max->map->p.miniray[r].y[1] = max->map->p.smy + ((((max->map->p.oray[r].ry - max->map->p.oray[r].ys)) << s) >> 16);
-		max->map->p.miniray[r].maxheight = SUPERMAPHEIGHT;
-		max->map->p.miniray[r].maxwidth = SUPERMAPWIDTH;
-		max->map->p.miniray[r].c[0] = max->map->p.oray[r].c[0];
-		max->map->p.miniray[r].c[1] = max->map->p.oray[r].c[1];
-		ft_place_line(max->i.supermap, max->map->p.miniray[r]);
+		max->map.p.miniray[r].x[0] = max->map.p.smx;
+		max->map.p.miniray[r].y[0] = max->map.p.smy;
+		max->map.p.miniray[r].x[1] = max->map.p.smx + ((((max->map.p.oray[r].rx - max->map.p.oray[r].xs)) << s) >> 16);
+		max->map.p.miniray[r].y[1] = max->map.p.smy + ((((max->map.p.oray[r].ry - max->map.p.oray[r].ys)) << s) >> 16);
+		max->map.p.miniray[r].maxheight = SUPERMAPHEIGHT;
+		max->map.p.miniray[r].maxwidth = SUPERMAPWIDTH;
+		max->map.p.miniray[r].c[0] = max->map.p.oray[r].c[0];
+		max->map.p.miniray[r].c[1] = max->map.p.oray[r].c[1];
+		ft_place_line(max->i.supermap, max->map.p.miniray[r]);
 		++r;
 	}
 	if (DEBUGGING)
 	{
-		max->map->p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
-		ft_place_line(max->i.supermap, max->map->p.miniray[max->ray]);
+		max->map.p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
+		ft_place_line(max->i.supermap, max->map.p.miniray[max->ray]);
 	}
 }
 

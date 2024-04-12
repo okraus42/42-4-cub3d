@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/09 15:32:32 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/12 11:33:34 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,6 +73,7 @@ SRC_S		=	ft_buttons.c \
 				ft_parser.c \
 				ft_randommap.c \
 				ft_rays.c \
+				ft_saveload.c \
 				ft_screen2d.c \
 				ft_screen2dquad.c \
 				ft_screen3d.c \

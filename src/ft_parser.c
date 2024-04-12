@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:20:45 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 12:02:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 
 int	ft_init_map_textures(t_max *max)
 {
-	ft_load_texture(max->map->northtexture, &max->t.nwall);
-	ft_load_texture(max->map->westtexture, &max->t.wwall);
-	ft_load_texture(max->map->southtexture, &max->t.swall);
-	ft_load_texture(max->map->easttexture, &max->t.ewall);
+	ft_load_texture(max->map.northtexture, &max->t.nwall);
+	ft_load_texture(max->map.westtexture, &max->t.wwall);
+	ft_load_texture(max->map.southtexture, &max->t.swall);
+	ft_load_texture(max->map.easttexture, &max->t.ewall);
 	return (1);
 }
 
@@ -580,9 +580,9 @@ void	ft_init_brume(t_max *max)
 		d = 0;
 		while (d < 256)
 		{
-			max->math->brumered[c][d] = PERCENTIL(c, max->map->b.r, d, 255);
-			max->math->brumegreen[c][d] = PERCENTIL(c, max->map->b.g, d, 255);
-			max->math->brumeblue[c][d] = PERCENTIL(c, max->map->b.b, d, 255);
+			max->math->brumered[c][d] = PERCENTIL(c, max->map.b.r, d, 255);
+			max->math->brumegreen[c][d] = PERCENTIL(c, max->map.b.g, d, 255);
+			max->math->brumeblue[c][d] = PERCENTIL(c, max->map.b.b, d, 255);
 			++d;
 		}
 		++c;
@@ -598,7 +598,7 @@ void	ft_init_time(t_max *max)
 	c = 0;
 	while (i < 65536)
 	{
-		if (max->map->m[i] & FLOOR)
+		if (max->map.m[i] & FLOOR)
 		{
 			++c;
 		}
@@ -611,7 +611,7 @@ int	ft_process_file(t_max *max)
 {
 	t_map	*map;
 
-	map = max->map;
+	map = &max->map;
 	ft_map_init(map);
 	if (!ft_read_map(map))
 	{
@@ -634,9 +634,9 @@ int	ft_process_file(t_max *max)
 	// i = 0;
 	// while (i < 256)
 	// {
-	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
-	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
-	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
+	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map.b.r);
+	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map.b.g);
+	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
 	// 	++i;
 	// }
 	//for debugging

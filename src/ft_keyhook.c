@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:18:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 12:12:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,15 @@
 
 void	ft_clear_keys(t_max *max)
 {
+	int	i;
+
+	i = 0;
 	ft_bzero(&max->key, sizeof(t_controls));
+	while (i < 350)
+	{
+		max->keys[i] = 0;
+		++i;
+	}
 }
 
 void	ft_keyhook(mlx_key_data_t keydata, void *param)

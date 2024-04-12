@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 12:07:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/12 11:58:38 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ void	ft_init_orays(t_max *max)
 		debug = r == max->ray && max->keys[MLX_KEY_4];
 		if (debug)
 			max->keys[MLX_KEY_4] = 0;
-		oray = &max->map->p.oray[r];
-		oray->xs = ((int)max->map->p.x);// * 256;
-		oray->ys = ((int)max->map->p.y);// * 256;
+		oray = &max->map.p.oray[r];
+		oray->xs = ((int)max->map.p.x);// * 256;
+		oray->ys = ((int)max->map.p.y);// * 256;
 		oray->hxo = 65536;
 		oray->hyo = 65536;
 		oray->vxo = 65536;
@@ -133,9 +133,9 @@ void	ft_init_orays(t_max *max)
 		oray->wall = 0;
 		//ft_printf("r0 = %i\n", r);
 		if (NOFISHEYE)
-			oray->ra = max->map->p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
+			oray->ra = max->map.p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
 		else //need check!!!
-			oray->ra = max->map->p.orientation + 2 * max->map->p.fov2 + r * max->map->p.fov * 16384LL / (RAYS - 1) / 360;
+			oray->ra = max->map.p.orientation + 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
 		while (oray->ra < 0)
 			oray->ra += MAXDEGREE; 
 		while (oray->ra >= MAXDEGREE)
@@ -180,14 +180,14 @@ void	ft_init_orays(t_max *max)
 			mp = (my << 8) + mx;
 			if (mp > 0 && mp < 65536)
 			{
-				//max->map->m[mp] |= VISITED;
-				if ((max->map->m[mp]) & WALL)
+				//max->map.m[mp] |= VISITED;
+				if ((max->map.m[mp]) & WALL)
 				{
 					if (oray->ra > WEST || oray->ra < EAST)
 						oray->wall |= NWALL;
 					else if (oray->ra < WEST && oray->ra > EAST)
 						oray->wall |= SWALL;
-					oray->hm = max->map->m[mp];
+					oray->hm = max->map.m[mp];
 					break ;
 				}
 			}
@@ -245,13 +245,13 @@ void	ft_init_orays(t_max *max)
 				ft_printf("VW %x %x\n", mx, my);
 			if (mp > 0 && mp < 65536)
 			{
-				if ((max->map->m[mp]) & WALL)
+				if ((max->map.m[mp]) & WALL)
 				{
 					if (oray->ra < SOUTH && oray->ra > NORTH)
 						oray->wall |= EWALL;
 					else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
 						oray->wall |= WWALL;
-					oray->vm = max->map->m[mp];
+					oray->vm = max->map.m[mp];
 					break ;
 				}
 			}
@@ -342,7 +342,7 @@ void	ft_init_orays(t_max *max)
 			while (oray->tdof >= 0)
 			{
 				//ft_printf("hdof1 = %i\n", oray->hdof);
-				mp = ((max->map->p.oray[r].ty >> 16) << 8) | (max->map->p.oray[r].tx >> 16);
+				mp = ((max->map.p.oray[r].ty >> 16) << 8) | (max->map.p.oray[r].tx >> 16);
 				//ft_printf("tdof2 = %i, mp = %i\n", oray->tdof, mp);
 				// if (mp < 0 || mp > 65536)
 				// {
@@ -354,7 +354,7 @@ void	ft_init_orays(t_max *max)
 				// 	break ;
 				// }
 				if (oray->length2 < MAXDIST)
-					max->map->m[mp] |= VISITED;
+					max->map.m[mp] |= VISITED;
 				//ft_printf("hdof2.5 = %i\n", oray->hdof);
 				oray->length2 -= oray->ldof;
 				//ft_printf("hdof3 = %i\n", oray->hdof);
@@ -373,9 +373,9 @@ void	ft_init_orays(t_max *max)
 			// 		oray->ldof = 1;
 			// 	while (oray->vdof > 0)
 			// 	{
-			// 		mp = ((max->map->p.oray[r].vy[oray->vdof] >> 16) << 8) | (max->map->p.oray[r].vx[oray->vdof] >> 16);
+			// 		mp = ((max->map.p.oray[r].vy[oray->vdof] >> 16) << 8) | (max->map.p.oray[r].vx[oray->vdof] >> 16);
 			// 		if (oray->length2 < MAXDIST)
-			// 			max->map->m[mp] |= VISITED;
+			// 			max->map.m[mp] |= VISITED;
 			// 		oray->length2 -= oray->ldof;
 			// 		oray->vx[oray->vdof] -= oray->vxo;
 			// 		oray->vy[oray->vdof] -= oray->vyo;
@@ -432,9 +432,9 @@ void	ft_init_orays(t_max *max)
 			// oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256;
 			// oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256;
 			// oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256;
-			int	r = max->map->f.r;
-			int	g = max->map->f.g;
-			int	b = max->map->f.b;
+			int	r = max->map.f.r;
+			int	g = max->map.f.g;
+			int	b = max->map.f.b;
 
 			oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256
 				+ r * ((255 * oray->length / maxdist)) / 256;
