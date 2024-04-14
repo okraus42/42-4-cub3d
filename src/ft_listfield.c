@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:17:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:27:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,13 @@ void	ft_initlistfields(t_max *max)
 	max->menu.custommap.state = ACTIVE;
 	max->menu.custommap.x = 600;
 	max->menu.custommap.y = 160;
-	max->menu.custommap.files[0] = "maps/validmap1.cub";
-	max->menu.custommap.files[1] = "maps/validmap2.cub";
-	max->menu.custommap.files[2] = "maps/validmap3.cub";
-	max->menu.custommap.files[3] = "maps/validmap4.cub";
-	max->menu.custommap.files[4] = "maps/validmap5.cub";
+	// max->menu.custommap.files[0] = "maps/validmap1.cub";
+	// max->menu.custommap.files[1] = "maps/validmap2.cub";
+	// max->menu.custommap.files[2] = "maps/validmap3.cub";
+	// max->menu.custommap.files[3] = "maps/validmap4.cub";
+	// max->menu.custommap.files[4] = "maps/validmap5.cub";
+	ft_sprintf(max->menu.custommap.dir, "./maps/");
+	max->menu.custommap.files = ft_readdir(max->menu.custommap.dir, ".cub");
 	max->menu.custommap.text[0].text = max->menu.custommap.files[0];
 	max->menu.custommap.text[0].sx = max->menu.custommap.x + 120;
 	max->menu.custommap.text[0].sy = max->menu.custommap.y + 120;

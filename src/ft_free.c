@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:04:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:00:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:31:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,16 @@ void	ft_free(t_max *max)
 {
 	if (max)
 	{
+		if (max->menu.custommap.files)
+			free (max->menu.custommap.files);
+		max->menu.custommap.files = NULL;
+		if (max->menu.saves.files)
+			free (max->menu.saves.files);
+		max->menu.saves.files = NULL;
 		ft_freemap(&max->map);
 		free(max);
 	}
+	max = NULL;
 }
 
 void	ft_exit(t_max *max, int exitcode)

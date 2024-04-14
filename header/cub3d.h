@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:41:40 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:38:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,6 +542,7 @@ typedef struct s_highscore
 typedef struct s_overlay
 {
 	t_text		basicinfo;
+	t_text		gameplayinfo;
 	t_text		rayinfo;
 }	t_overlay;
 

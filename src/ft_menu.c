@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:47:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:34:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -920,7 +920,7 @@ void	ft_menu(t_max *max)
 				else if (max->menu.current_button[NEWMAP] == MSPLAY)
 				{
 					//simplify?
-					ft_snprintf(max->map.file, 4095, max->menu.custommap.text[max->menu.custommap.highlight].text);
+					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.custommap.dir, max->menu.custommap.text[max->menu.custommap.highlight].text);
 					if (ft_process_file(max))
 					{
 						printf("gamestart loop starting...\n");
@@ -934,7 +934,9 @@ void	ft_menu(t_max *max)
 					}
 					else
 					{
-						ft_dprintf(2, "Invalid map\n");
+						max->menu.current_button[NEWMAP] = CUSTOM;
+						max->menu.cm_state = 1;
+						ft_dprintf(2, "Invalid map %s\n", max->map.file);
 					}
 				}
 			}

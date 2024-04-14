@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:33:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:28:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,9 +255,11 @@ typedef struct s_listfield
 {
 	mlx_texture_t	*listfield;
 	mlx_image_t		*image;
-	t_text			text[5];
-	t_dlist			*texts;
-	char			*files[5]; //temporary before list is working
+	t_text			text[10];
+	char			dir[512];
+	char			**files;
+	int				totalfiles;
+	//char			*files[5]; //temporary before list is working
 	unsigned int	c;
 	int				x;
 	int				y;
@@ -281,6 +283,7 @@ typedef struct s_menu
 	int				newwriting;
 	int				cm_state;
 	int				random_state[RANDOMADVANCEDBUTTONCOUNT];
+	//char			**files; //move to listfield
 	t_randommap		rm;
 	//int			newlevel;
 	mlx_texture_t	*background;
@@ -301,6 +304,7 @@ typedef struct s_menu
 	t_button		randomadvancedbuttons[RANDOMADVANCEDBUTTONCOUNT];
 	t_button		halloffamebuttons[HALLOFFAMEBUTTONCOUNT];
 	t_listfield		custommap;
+	t_listfield		saves;
 	t_text			topten[12];
 }	t_menu;
 

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 15:11:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:40:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 12:40:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	ft_init_overlay(t_max *max)
 	text.sy = 50;
 	max->overlay.rayinfo = text;
 	max->overlay.rayinfo.text = max->overlay.rayinfo.str;
+	text.sy = HEIGHT - 40;
+	max->overlay.gameplayinfo = text;
+	max->overlay.gameplayinfo.text = max->overlay.gameplayinfo.str;
 }
 
 void	ft_clear_overlay(t_max *max)

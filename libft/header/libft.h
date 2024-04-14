@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2024/03/31 14:22:40 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 11:22:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <sys/time.h>
+# include <dirent.h>
+# include <errno.h>
+# include <sys/types.h>
 
 // DEFINITIONS
 
@@ -429,6 +432,9 @@ int				ft_ispunct(int c);
 int				ft_isspace(int c);
 int				ft_isupper(int c);
 int				ft_isxdigit(int c);
+
+//dir stuff
+char			**ft_readdir(const char *path, const char *extension);
 
 // math stuff
 int				ft_abs(int n);

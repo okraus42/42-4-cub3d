@@ -43,12 +43,26 @@ https://en.wikipedia.org/wiki/Maze_generation_algorithm
 https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
 
+Todo today:
+Read all files in directory.
+Sort them alphabetically.
+Get split-like structure.
+
+Display 10 of them?
+Highlight selected one.
+Down arrow moves index down (up arrow up)
+
+
+
+
 Ideas:
+Add autosave
 Random generation check the map is complex enough (distance to exit should be more than x and more floor)
 Saves called AGU or Freeze
 Init when the game starts
 init when the map loads
 init for highscores
+Display warning when trying to open invalid map
 
 - Difficulty in Hall of fame?
 - Save game (reinit all pointers)

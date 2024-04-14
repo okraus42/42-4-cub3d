@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/14 13:43:18 by okraus            #+#    #+#              #
-#    Updated: 2024/03/31 14:23:53 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/14 11:18:16 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -118,6 +118,7 @@ SRC_EX		=	ft_abs.c \
 				ft_print_memory_plus.c \
 				ft_put_split.c \
 				ft_put_strarray.c \
+				ft_readdir.c \
 				ft_readfile.c \
 				ft_split_add.c \
 				ft_split_rm.c \
