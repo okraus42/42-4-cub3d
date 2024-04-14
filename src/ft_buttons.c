@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:12:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 16:18:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -575,6 +575,73 @@ void	ft_initbuttons(t_max *max)
 	max->menu.randomadvancedbuttons[RPLAY].text.text = S_PLAY;
 	max->menu.randomadvancedbuttons[RPLAY].text.sx = max->menu.randomadvancedbuttons[RPLAY].x + 40;
 	max->menu.randomadvancedbuttons[RPLAY].text.sy = max->menu.randomadvancedbuttons[RPLAY].y + 40;
+
+	max->menu.savegamebuttons[CHOOSESAVE] = button;
+	max->menu.savegamebuttons[CHOOSESAVE].id = CHOOSESAVE;
+	max->menu.savegamebuttons[CHOOSESAVE].group = SAVEGROUP;
+	max->menu.savegamebuttons[CHOOSESAVE].down = &max->menu.savegamebuttons[SAVE];
+	max->menu.savegamebuttons[CHOOSESAVE].state = ACTIVE;
+	max->menu.savegamebuttons[CHOOSESAVE].x = 800;
+	max->menu.savegamebuttons[CHOOSESAVE].y = 20;
+	max->menu.savegamebuttons[CHOOSESAVE].text.text = S_CHOOSESAVE;
+	max->menu.savegamebuttons[CHOOSESAVE].text.sx = max->menu.savegamebuttons[CHOOSESAVE].x + 40;
+	max->menu.savegamebuttons[CHOOSESAVE].text.sy = max->menu.savegamebuttons[CHOOSESAVE].y + 40;
+	max->menu.savegamebuttons[DELETE] = button;
+	max->menu.savegamebuttons[DELETE].id = DELETE;
+	max->menu.savegamebuttons[DELETE].group = SAVEGROUP;
+	max->menu.savegamebuttons[DELETE].up = &max->menu.savegamebuttons[CHOOSELEVEL];
+	max->menu.savegamebuttons[DELETE].right = &max->menu.savegamebuttons[SAVE];
+	max->menu.savegamebuttons[DELETE].state = ACTIVE;
+	max->menu.savegamebuttons[DELETE].x = 800;
+	max->menu.savegamebuttons[DELETE].y = 860;
+	max->menu.savegamebuttons[DELETE].text.text = S_DELETE;
+	max->menu.savegamebuttons[DELETE].text.sx = max->menu.savegamebuttons[DELETE].x + 40;
+	max->menu.savegamebuttons[DELETE].text.sy = max->menu.savegamebuttons[DELETE].y + 40;
+	max->menu.savegamebuttons[SAVE] = button;
+	max->menu.savegamebuttons[SAVE].id = SAVE;
+	max->menu.savegamebuttons[SAVE].group = SAVEGROUP;
+	max->menu.savegamebuttons[SAVE].up = &max->menu.savegamebuttons[CHOOSELEVEL];
+	max->menu.savegamebuttons[SAVE].left = &max->menu.savegamebuttons[DELETE];
+	max->menu.savegamebuttons[SAVE].state = ACTIVE;
+	max->menu.savegamebuttons[SAVE].x = 1200;
+	max->menu.savegamebuttons[SAVE].y = 860;
+	max->menu.savegamebuttons[SAVE].text.text = S_SAVE;
+	max->menu.savegamebuttons[SAVE].text.sx = max->menu.savegamebuttons[SAVE].x + 40;
+	max->menu.savegamebuttons[SAVE].text.sy = max->menu.savegamebuttons[SAVE].y + 40;
+
+	max->menu.loadgamebuttons[CHOOSELOAD] = button;
+	max->menu.loadgamebuttons[CHOOSELOAD].id = CHOOSELOAD;
+	max->menu.loadgamebuttons[CHOOSELOAD].group = LOADGROUP;
+	max->menu.loadgamebuttons[CHOOSELOAD].down = &max->menu.loadgamebuttons[LOAD];
+	max->menu.loadgamebuttons[CHOOSELOAD].state = ACTIVE;
+	max->menu.loadgamebuttons[CHOOSELOAD].x = 800;
+	max->menu.loadgamebuttons[CHOOSELOAD].y = 20;
+	max->menu.loadgamebuttons[CHOOSELOAD].text.text = S_CHOOSELOAD;
+	max->menu.loadgamebuttons[CHOOSELOAD].text.sx = max->menu.loadgamebuttons[CHOOSELOAD].x + 40;
+	max->menu.loadgamebuttons[CHOOSELOAD].text.sy = max->menu.loadgamebuttons[CHOOSELOAD].y + 40;
+	max->menu.loadgamebuttons[DELETE] = button;
+	max->menu.loadgamebuttons[DELETE].id = DELETE;
+	max->menu.loadgamebuttons[DELETE].group = LOADGROUP;
+	max->menu.loadgamebuttons[DELETE].up = &max->menu.loadgamebuttons[CHOOSELEVEL];
+	max->menu.loadgamebuttons[DELETE].right = &max->menu.loadgamebuttons[LOAD];
+	max->menu.loadgamebuttons[DELETE].state = ACTIVE;
+	max->menu.loadgamebuttons[DELETE].x = 800;
+	max->menu.loadgamebuttons[DELETE].y = 860;
+	max->menu.loadgamebuttons[DELETE].text.text = S_DELETE;
+	max->menu.loadgamebuttons[DELETE].text.sx = max->menu.loadgamebuttons[DELETE].x + 40;
+	max->menu.loadgamebuttons[DELETE].text.sy = max->menu.loadgamebuttons[DELETE].y + 40;
+	max->menu.loadgamebuttons[LOAD] = button;
+	max->menu.loadgamebuttons[LOAD].id = LOAD;
+	max->menu.loadgamebuttons[LOAD].group = LOADGROUP;
+	max->menu.loadgamebuttons[LOAD].up = &max->menu.loadgamebuttons[CHOOSELEVEL];
+	max->menu.loadgamebuttons[LOAD].left = &max->menu.loadgamebuttons[DELETE];
+	max->menu.loadgamebuttons[LOAD].state = ACTIVE;
+	max->menu.loadgamebuttons[LOAD].x = 1200;
+	max->menu.loadgamebuttons[LOAD].y = 860;
+	max->menu.loadgamebuttons[LOAD].text.text = S_LOAD;
+	max->menu.loadgamebuttons[LOAD].text.sx = max->menu.loadgamebuttons[LOAD].x + 40;
+	max->menu.loadgamebuttons[LOAD].text.sy = max->menu.loadgamebuttons[LOAD].y + 40;
+	
 	max->menu.halloffamebuttons[HOFBACK] = button;
 	max->menu.halloffamebuttons[HOFBACK].id = HOFBACK;
 	max->menu.halloffamebuttons[HOFBACK].group = HALLOFFAMEGROUP;

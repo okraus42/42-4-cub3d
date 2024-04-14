@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:46:02 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 14:02:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -422,12 +422,14 @@ void	ft_draw_strings(t_max *max)
 	}
 	else
 	{
+		//add level
 		ft_snprintf(max->overlay.basicinfo.str, 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
 			1000 / max->framems, max->map.p.x, max->map.p.y,
 			max->map.p.orientation * 360 / MAXDEGREE);
-		ft_snprintf(max->overlay.gameplayinfo.str, 255, "Name [%-10.10s] Coalition [%-10.10s] Campus[%-10.10s] timelvl[%3i/%3i] time game[%3i/%3i]",
+		ft_snprintf(max->overlay.gameplayinfo.str, 255,
+			"Name [%-10.10s] Coalition [%-10.10s] Campus[%-10.10s] Level[%2i] timelvl[%3i/%3i] time game[%3i/%3i]",
 			max->name, max->coalition, max->campus,
-			max->levelms / 1000, max->limitms / 1000, 
+			max->level, max->levelms / 1000, max->limitms / 1000, 
 			(max->gamems + max->levelms) / 1000, max->timetriallimitms / 1000);
 	}
 	ft_draw_text(&max->overlay.basicinfo, 0);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:38:55 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 17:40:10 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -609,7 +609,9 @@ void	ft_inittextfields(t_max *max);
 void	ft_draw_textfield(t_textfield *b, int state);
 void	ft_write_in_textfield(t_max *max, t_textfield *textfield);
 
+//ft_listfield.c
 void	ft_initlistfields(t_max *max);
+void	ft_bigreinitlistfield(t_max *max);
 void	ft_draw_listfield(t_listfield *lf, int state);
 void	ft_choose_in_listfield(t_max *max, t_listfield *listfield);
 
@@ -683,6 +685,9 @@ int	ft_savegame(t_max *max);
 int	ft_loadgame(t_max *max);
 int	ft_quicksave(t_max *max);
 int	ft_quickload(t_max *max);
+int	ft_save(t_max *max, char *path);
+int	ft_load(t_max *max, char *path);
+
 
 //ft_screen2d.c
 void	ft_draw_screen2d(t_max *max);

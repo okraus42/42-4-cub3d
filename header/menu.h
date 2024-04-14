@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:28:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 16:27:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,17 @@
 # define RPLAY 11
 # define RANDOMADVANCEDBUTTONCOUNT 12
 
-//HALLOFFAME
+# define CHOOSESAVE 0
+# define SAVE 1
+# define DELETE 2
+# define SAVEGAMEBUTTONCOUNT 3
+
+# define CHOOSELOAD 0
+# define LOAD 1
+# define DELETE 2
+# define LOADGAMEBUTTONCOUNT 3
+
+//HALLOFFAME - to be deleted or changed to SETTINGS
 # define HOFBACK 0
 # define HALLOFFAMEBUTTONCOUNT 1
 
@@ -124,8 +134,10 @@
 # define NEWMAP 5			// choose a map from the list
 # define NEWRANDOM 6
 # define NEWRANDOMADVANCED 7		// choose parameters for a random generation
-# define HALLOFFAMEGROUP 8
-# define BUTTONGROUPS 9
+# define SAVEGROUP 8
+# define LOADGROUP 9
+# define HALLOFFAMEGROUP 10
+# define BUTTONGROUPS 11
 
 # define S_RESUME "RESUME"
 # define S_SETTINGS "SETTINGS"
@@ -134,6 +146,12 @@
 # define S_QUITGAME "QUIT GAME"
 # define S_SAVEGAME "SAVE GAME"
 # define S_LOADGAME "LOAD GAME"
+
+# define S_CHOOSESAVE "CHOOSE SAVE"
+# define S_CHOOSELOAD "CHOOSE LOAD"
+# define S_SAVE "SAVE"
+# define S_LOAD "LOAD"
+# define S_DELETE "DELETE"
 
 # define S_NAME "NAME"
 # define S_COALITION "COALITION"
@@ -259,6 +277,7 @@ typedef struct s_listfield
 	char			dir[512];
 	char			**files;
 	int				totalfiles;
+	int				topfile;
 	//char			*files[5]; //temporary before list is working
 	unsigned int	c;
 	int				x;
@@ -281,7 +300,7 @@ typedef struct s_menu
 	int				selection;
 	int				newmap;
 	int				newwriting;
-	int				cm_state;
+	int				lf_state;
 	int				random_state[RANDOMADVANCEDBUTTONCOUNT];
 	//char			**files; //move to listfield
 	t_randommap		rm;
@@ -303,8 +322,11 @@ typedef struct s_menu
 	t_button		randomselectionbuttons[RANDOMSELECTIONBUTTONCOUNT];
 	t_button		randomadvancedbuttons[RANDOMADVANCEDBUTTONCOUNT];
 	t_button		halloffamebuttons[HALLOFFAMEBUTTONCOUNT];
+	t_button		savegamebuttons[SAVEGAMEBUTTONCOUNT];
+	t_button		loadgamebuttons[LOADGAMEBUTTONCOUNT];
 	t_listfield		custommap;
 	t_listfield		saves;
+	t_listfield		loads;
 	t_text			topten[12];
 }	t_menu;
 

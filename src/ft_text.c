@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/11 17:23:31 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 14:36:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,23 @@ void	ft_draw_char(t_text *text)
 	while (j < h)
 	{
 		i = 0;
+		//printf("char %i %p\n", j, text->font);
 		while (i < w)
 		{
-			//720 length of png
+			//printf("char %i %i %p %p\n", j, i, text->font);
 			a = (j * (240 / text->height) * 11400 * 4) + ((i * (240 / text->height) + text->offset) * 4);
 			c = (text->font->pixels[a]) << 24 | (text->font->pixels[a + 1]) << 16 | (text->font->pixels[a + 2]) << 8 | (text->font->pixels[a + 3]);
 			if (c < 0x7FFFFFFF)
 			{
+				//printf("chara %i %i\n", j, i);
 				mlx_put_pixel(text->image, i + text->x, j + text->y, text->c);
 			}
 			else if (text->cb)
 			{
+				//printf("charb %i %i\n", j, i);
 				mlx_put_pixel(text->image, i + text->x, j + text->y, text->cb);
 			}
+			//printf("charc %i %i\n", j, i);
 			// (void)colour;
 			// mlx_put_pixel(image, i + x, j + y, c);
 			++i;
@@ -67,8 +71,10 @@ void	ft_draw_text(t_text *text, int state)
 	i = 0;
 	text->x = text->sx;
 	text->y = text->sy;
+	//printf("Hello %s\n", text->text);
 	while (text->text[i])
 	{
+		//printf("Hello %i\n", i);
 		if (i == text->highlight)
 		{
 			text->cb = 0x00FF00FF;
@@ -77,12 +83,15 @@ void	ft_draw_text(t_text *text, int state)
 		{
 			text->cb = oldcb;
 		}
+		//printf("Hello2 %i\n", i);
 		if (ft_isprint(text->text[i]))
 		{
 			text->offset = (text->text[i] - ' ') * 120;
 			// if (text->offset)
 			// 	text->offset -= 2; // add 2 pixels to image
+			//printf("Hello3a %i\n", i);
 			ft_draw_char(text);
+			//printf("Hello3b %i\n", i);
 			text->x += text->height / 2;
 		}
 		else if (text->text[i] == '\t')
@@ -96,6 +105,7 @@ void	ft_draw_text(t_text *text, int state)
 		}
 		++i;
 	}
+	//printf("Farewell\n");
 	text->cb = oldcb;
 	text->c = oldc;
 }

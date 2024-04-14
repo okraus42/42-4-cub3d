@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:34:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/14 17:51:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,11 @@ void	ft_draw_menu(t_max *max)
 	else
 		ft_draw_button(&max->menu.mainbuttons[RESUME], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[NEWGAME], ACTIVE);
-	ft_draw_button(&max->menu.mainbuttons[SAVEGAME], INACTIVE);
-	ft_draw_button(&max->menu.mainbuttons[LOADGAME], INACTIVE);
+	if (max->game_in_progress)
+		ft_draw_button(&max->menu.mainbuttons[SAVEGAME], ACTIVE);
+	else
+		ft_draw_button(&max->menu.mainbuttons[SAVEGAME], INACTIVE);
+	ft_draw_button(&max->menu.mainbuttons[LOADGAME], ACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[SETTINGS], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], ACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[QUITGAME], ACTIVE);
@@ -210,6 +213,30 @@ void	ft_draw_menu(t_max *max)
 		ft_draw_button(&max->menu.randomadvancedbuttons[RDEADENDS], ACTIVE);
 		ft_draw_button(&max->menu.randomadvancedbuttons[RRANDOMIZE], ACTIVE);
 		ft_draw_button(&max->menu.randomadvancedbuttons[RPLAY], ACTIVE);
+	}
+	if (max->menu.current_buttongroup == SAVEGROUP)
+	{
+		ft_draw_button(&max->menu.savegamebuttons[CHOOSESAVE], ACTIVE);
+		ft_draw_button(&max->menu.savegamebuttons[DELETE], ACTIVE);
+		ft_draw_button(&max->menu.savegamebuttons[SAVE], ACTIVE);
+	}
+	//draw newmap listfield
+	if (max->menu.current_buttongroup == SAVEGROUP)
+	{
+		//change if later
+		ft_draw_listfield(&max->menu.saves, ACTIVE);
+	}
+	if (max->menu.current_buttongroup == LOADGROUP)
+	{
+		ft_draw_button(&max->menu.loadgamebuttons[CHOOSELOAD], ACTIVE);
+		ft_draw_button(&max->menu.loadgamebuttons[DELETE], ACTIVE);
+		ft_draw_button(&max->menu.loadgamebuttons[LOAD], ACTIVE);
+	}
+	//draw newmap listfield
+	if (max->menu.current_buttongroup == LOADGROUP)
+	{
+		//change if later
+		ft_draw_listfield(&max->menu.loads, ACTIVE);
 	}
 	if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
 	{
@@ -374,7 +401,7 @@ void	ft_selectbutton(t_max *max)
 	}
 	else if (max->menu.current_buttongroup == NEWMAP)
 	{
-		if (max->menu.cm_state)
+		if (max->menu.lf_state)
 		{
 			ft_choose_in_listfield(max, &max->menu.custommap);
 			return ;
@@ -439,6 +466,24 @@ void	ft_selectbutton(t_max *max)
 		}
 		ft_selectnewbutton(max, &max->menu.randomadvancedbuttons[max->menu.current_button[NEWRANDOMADVANCED]]);
 	}
+	else if (max->menu.current_buttongroup == SAVEGROUP)
+	{
+		if (max->menu.lf_state)
+		{
+			ft_choose_in_listfield(max, &max->menu.saves);
+			return ;
+		}
+		ft_selectnewbutton(max, &max->menu.savegamebuttons[max->menu.current_button[SAVEGROUP]]);
+	}
+	else if (max->menu.current_buttongroup == LOADGROUP)
+	{
+		if (max->menu.lf_state)
+		{
+			ft_choose_in_listfield(max, &max->menu.loads);
+			return ;
+		}
+		ft_selectnewbutton(max, &max->menu.loadgamebuttons[max->menu.current_button[LOADGROUP]]);
+	}
 	else if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
 	{
 		ft_selectnewbutton(max, &max->menu.halloffamebuttons[max->menu.current_button[HALLOFFAME]]);
@@ -457,6 +502,20 @@ void	ft_draw_mainmenubuttons(t_max *max)
 			ft_draw_button(&max->menu.mainbuttons[NEWGAME], SELECTED);
 		else
 			ft_draw_button(&max->menu.mainbuttons[NEWGAME], ACTIVATED);
+	}
+	if (max->menu.current_button[MAINBUTTONS] == SAVEGAME)
+	{
+		if (max->menu.current_buttongroup == MAINBUTTONS)
+			ft_draw_button(&max->menu.mainbuttons[SAVEGAME], SELECTED);
+		else
+			ft_draw_button(&max->menu.mainbuttons[SAVEGAME], ACTIVATED);
+	}
+	if (max->menu.current_button[MAINBUTTONS] == LOADGAME)
+	{
+		if (max->menu.current_buttongroup == MAINBUTTONS)
+			ft_draw_button(&max->menu.mainbuttons[LOADGAME], SELECTED);
+		else
+			ft_draw_button(&max->menu.mainbuttons[LOADGAME], ACTIVATED);
 	}
 	if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
 	{
@@ -573,7 +632,7 @@ void	ft_draw_newmapbuttons(t_max *max)
 {
 	if (max->menu.current_button[NEWMAP] == CHOOSELEVEL)
 	{
-		if (max->menu.cm_state)
+		if (max->menu.lf_state)
 			ft_draw_button(&max->menu.mapselectionbuttons[CHOOSELEVEL], ACTIVATED);
 		else
 			ft_draw_button(&max->menu.mapselectionbuttons[CHOOSELEVEL], SELECTED);
@@ -582,6 +641,14 @@ void	ft_draw_newmapbuttons(t_max *max)
 	{
 		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], SELECTED);
 	}
+}
+
+void	ft_draw_newmaplistfields(t_max *max)
+{
+	if (max->menu.lf_state)
+		ft_draw_listfield(&max->menu.custommap, ACTIVATED);
+	else
+		ft_draw_listfield(&max->menu.custommap, SELECTED);
 }
 
 void	ft_draw_newrandombuttons(t_max *max)
@@ -596,13 +663,7 @@ void	ft_draw_newrandombuttons(t_max *max)
 	}
 }
 
-void	ft_draw_newmaplistfields(t_max *max)
-{
-	if (max->menu.cm_state)
-		ft_draw_listfield(&max->menu.custommap, ACTIVATED);
-	else
-		ft_draw_listfield(&max->menu.custommap, SELECTED);
-}
+
 
 void	ft_updatenewrandomadvancedbuttons(t_max	*max)
 {
@@ -713,6 +774,60 @@ void	ft_draw_newrandomadvancedbuttons(t_max *max)
 	}
 }
 
+void	ft_draw_savebuttons(t_max *max)
+{
+	if (max->menu.current_button[SAVEGROUP] == CHOOSESAVE)
+	{
+		if (max->menu.lf_state)
+			ft_draw_button(&max->menu.savegamebuttons[CHOOSESAVE], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.savegamebuttons[CHOOSESAVE], SELECTED);
+	}
+	else if (max->menu.current_button[SAVEGROUP] == DELETE)
+	{
+		ft_draw_button(&max->menu.savegamebuttons[DELETE], SELECTED);
+	}
+	else if (max->menu.current_button[SAVEGROUP] == SAVE)
+	{
+		ft_draw_button(&max->menu.savegamebuttons[SAVE], SELECTED);
+	}
+}
+
+void	ft_draw_savelistfields(t_max *max)
+{
+	if (max->menu.lf_state)
+		ft_draw_listfield(&max->menu.saves, ACTIVATED);
+	else
+		ft_draw_listfield(&max->menu.saves, SELECTED);
+}
+
+void	ft_draw_loadbuttons(t_max *max)
+{
+	if (max->menu.current_button[LOADGROUP] == CHOOSELOAD)
+	{
+		if (max->menu.lf_state)
+			ft_draw_button(&max->menu.loadgamebuttons[CHOOSELOAD], ACTIVATED);
+		else
+			ft_draw_button(&max->menu.loadgamebuttons[CHOOSELOAD], SELECTED);
+	}
+	else if (max->menu.current_button[LOADGROUP] == DELETE)
+	{
+		ft_draw_button(&max->menu.loadgamebuttons[DELETE], SELECTED);
+	}
+	else if (max->menu.current_button[LOADGROUP] == LOAD)
+	{
+		ft_draw_button(&max->menu.loadgamebuttons[LOAD], SELECTED);
+	}
+}
+
+void	ft_draw_loadlistfields(t_max *max)
+{
+	if (max->menu.lf_state)
+		ft_draw_listfield(&max->menu.loads, ACTIVATED);
+	else
+		ft_draw_listfield(&max->menu.loads, SELECTED);
+}
+
 void	ft_draw_halloffamebuttons(t_max *max)
 {
 	//ft_draw_halloffame(max);
@@ -750,6 +865,16 @@ void	ft_menu(t_max *max)
 	if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
 	{
 		ft_draw_newrandomadvancedbuttons(max);
+	}
+	if (max->menu.current_buttongroup == SAVEGROUP)
+	{
+		ft_draw_savebuttons(max);
+		ft_draw_savelistfields(max);
+	}
+	if (max->menu.current_buttongroup == LOADGROUP)
+	{
+		ft_draw_loadbuttons(max);
+		ft_draw_loadlistfields(max);
 	}
 	if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
 	{
@@ -895,8 +1020,9 @@ void	ft_menu(t_max *max)
 				if (max->menu.current_button[NEWLEVEL] == CUSTOM)
 				{
 					max->menu.current_buttongroup = NEWMAP;
+					ft_bigreinitlistfield(max);
 					max->menu.current_button[NEWMAP] = CUSTOM;
-					max->menu.cm_state = 1;
+					max->menu.lf_state = 1;
 				}
 				else if (max->menu.current_button[NEWLEVEL] == RANDOM)
 				{
@@ -907,14 +1033,14 @@ void	ft_menu(t_max *max)
 			{
 				if (max->menu.current_button[NEWMAP] == CUSTOM)
 				{
-					if (max->menu.cm_state)
+					if (max->menu.lf_state)
 					{
-						max->menu.cm_state = 0;
+						max->menu.lf_state = 0;
 						max->menu.current_button[NEWMAP] = MSPLAY;
 					}
 					else
 					{
-						max->menu.cm_state = 1;
+						max->menu.lf_state = 1;
 					}
 				}
 				else if (max->menu.current_button[NEWMAP] == MSPLAY)
@@ -935,7 +1061,7 @@ void	ft_menu(t_max *max)
 					else
 					{
 						max->menu.current_button[NEWMAP] = CUSTOM;
-						max->menu.cm_state = 1;
+						max->menu.lf_state = 1;
 						ft_dprintf(2, "Invalid map %s\n", max->map.file);
 					}
 				}
@@ -1108,6 +1234,93 @@ void	ft_menu(t_max *max)
 					}
 				}
 			}
+		}
+		if (max->menu.current_button[MAINBUTTONS] == SAVEGAME)
+		{
+			if (max->menu.current_buttongroup == MAINBUTTONS)
+			{
+				max->menu.current_buttongroup = SAVEGROUP;
+				ft_bigreinitlistfield(max);
+				max->menu.lf_state = 1;
+				max->menu.current_button[SAVEGROUP] = CHOOSESAVE;
+			}
+			else if (max->menu.current_buttongroup == SAVEGROUP)
+			{
+				if (max->menu.current_button[SAVEGROUP] == CHOOSESAVE)
+				{
+					if (max->menu.lf_state)
+					{
+						max->menu.lf_state = 0;
+						max->menu.current_button[SAVEGROUP] = SAVE;
+					}
+					else
+					{
+						max->menu.lf_state = 1;
+					}
+				}
+				else if (max->menu.current_button[SAVEGROUP] == SAVE)
+				{
+					//save game
+					if (max->menu.saves.text[max->menu.saves.highlight].text[0] == 'N')
+						ft_snprintf(max->map.file, 4095, "%s%s%03i.ft", max->menu.saves.dir, "save", max->menu.saves.highlight + max->menu.saves.topfile + 1);
+					else
+						ft_snprintf(max->map.file, 4095, "%s%s", max->menu.saves.dir, max->menu.saves.text[max->menu.saves.highlight].text);
+					if (ft_save(max, max->map.file))
+						ft_dprintf(2, "Unable to save the game, make sure the safe file has proper permissions\n");
+					max->menu.current_buttongroup = MAINBUTTONS;
+				}
+				else if (max->menu.current_button[SAVEGROUP] == DELETE)
+				{
+					//delete game
+				}
+			}
+			
+		}
+		if (max->menu.current_button[MAINBUTTONS] == LOADGAME)
+		{
+			if (max->menu.current_buttongroup == MAINBUTTONS)
+			{
+				max->menu.current_buttongroup = LOADGROUP;
+				ft_bigreinitlistfield(max);
+				max->menu.lf_state = 1;
+				max->menu.current_button[LOADGROUP] = CHOOSELOAD;
+			}
+			else if (max->menu.current_buttongroup == LOADGROUP)
+			{
+				if (max->menu.current_button[LOADGROUP] == CHOOSELOAD)
+				{
+					if (max->menu.lf_state)
+					{
+						max->menu.lf_state = 0;
+						max->menu.current_button[LOADGROUP] = LOAD;
+					}
+					else
+					{
+						max->menu.lf_state = 1;
+					}
+				}
+				else if (max->menu.current_button[LOADGROUP] == LOAD)
+				{
+					//load game
+					//ft_snprintf(max->map.file, 4095, "%s%s", max->menu.custommap.dir, max->menu.custommap.text[max->menu.custommap.highlight].text);
+					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.loads.dir, max->menu.loads.text[max->menu.loads.highlight].text);
+					if (ft_load(max, max->map.file))
+						ft_dprintf(2, "Unable to load the game, make sure the safe file exists\n");
+					max->menu.current_buttongroup = MAINBUTTONS;
+					max->game_in_progress = 1;
+					max->i.menuscreen->enabled = 0;
+					max->i.textscreen->enabled = 0;
+					max->game_mode = GAMEPLAY;
+					max->i.overlay->enabled = 1;
+					max->game_in_progress = 1;
+					max->oldms = ft_get_time_in_ms();
+				}
+				else if (max->menu.current_button[LOADGROUP] == DELETE)
+				{
+					//delete game
+				}
+			}
+			
 		}
 		if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
 		{

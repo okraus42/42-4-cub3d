@@ -53,10 +53,12 @@ Highlight selected one.
 Down arrow moves index down (up arrow up)
 
 
-
+!!! Load game free old pointers befre assigning new values !!!
 
 Ideas:
+Refresh available maps
 Add autosave
+Hall of fame listing with arrows or Page up/Down keys?
 Random generation check the map is complex enough (distance to exit should be more than x and more floor)
 Saves called AGU or Freeze
 Init when the game starts
