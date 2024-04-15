@@ -42,6 +42,8 @@ Maze Generation:
 https://en.wikipedia.org/wiki/Maze_generation_algorithm
 https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
+Sprites:
+https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
 Todo today:
 - Options

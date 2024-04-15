@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 13:50:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 17:24:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,44 +107,126 @@ int	ft_capangle(int angle)
 	return (angle);
 }
 
+// h.x = sprite.x - player.x
+// h.y = sprite.y - player.y
+
+// p = atan2(-h.y / h.x) * (180 / PI)
+
+// if p > 360:
+// 	p -= 360
+// if p < 0:
+// 	p += 360
+
+// q = player_rot + (fov / 2) - p
+
+// if player_rot in quadrant 1 and p in quadrant 4:
+// 	q += 360
+// if player_rot in quadrant 4 and p in quadrant 1:
+// 	q -= 360
+
+// sprite_screen.x = q * (projection_plane_width / fov)
+// sprite_screen.y = 100 (projection_plane_height / 2 = 200 / 2 = 100)
+
+int	ft_exit_visible(t_max *max, int r, int direction, int radius, long long distance)
+{
+	int	minangle;
+	int	maxangle;
+
+	minangle = direction - radius;
+	maxangle = direction + radius;
+	// 180 +/- 20
+	// 160 - 200
+	// 10
+	// 350 - 30
+	// 350
+	// 330 - 10
+	if (distance > max->settings.maxdist)
+		return (0);
+	if (distance > max->map.p.oray[r].length)
+		return (0);
+	if (minangle < maxangle)
+	{
+		if (max->map.p.oray[r].ra < minangle || max->map.p.oray[r].ra > maxangle)
+			return (0);
+	}
+	else
+	{
+		if (max->map.p.oray[r].ra < minangle && max->map.p.oray[r].ra > maxangle)
+			return (0);
+	}
+	return (1);
+}
+
 void	ft_draw_exit(t_max *max)
 {
-	long long	spx; //sprite relative position
-	long long	spy;
-	long long	spz;
-	long long	cs;	//cos
-	long long	sn;	//sin
-	long long	scx;	//sprite screen posiiton
-	long long	scy;
-	int			alpha;
+	int	spx; //sprite relative position
+	int	spy;
+	int	spz;
+	// long long	cs;	//cos
+	// long long	sn;	//sin
+	// long long	scx;	//sprite screen posiiton
+	// long long	scy;
+	int			direction;
+	double		distance;
+	int			radius; //angle
+	long long	length;
+	int			sprite_height;
 	int	y;
 	int	x;
+	int	r;
 
 	spx = max->map.exit.x - max->map.p.x;
 	spy = max->map.exit.y - max->map.p.y;
 	spz = max->map.exit.z;
-	ft_printf("\nspx %i, spy %i\n", spx, spy);
-	alpha = max->map.p.orientation;
-	alpha -= MAXDEGREE / 4;
-	if (alpha > MAXDEGREE)
-		alpha -= MAXDEGREE;
-	cs = max->math->cos[alpha];
-	sn = max->math->sin[alpha];
-	scx = spy * cs + spx * sn;
-	scy = spx * cs - spy * sn;
-	ft_printf("scx %i, scy %i\n", scx, scy);
-	scx = (scx * 256 / scy) + (SCREENWIDTH / 2);
-	scy = (spz * 256 / scy) + (SCREENHEIGHT / 2);
-	ft_printf("scx %i, scy %i\n", scx, scy);
-	x = scx;
-	while (x < scx + 20)
+	(void)spz;
+	printf("exit x %i exit y %i\n", max->map.exit.x, max->map.exit.y);
+	printf("player x %i player y %i\n", max->map.p.x, max->map.p.y);
+	printf("spx %i spy %i\n", spx, spy);
+	// ft_printf("\nspx %i, spy %i\n", spx, spy);
+	// direction = max->map.p.orientation;
+	// direction -= MAXDEGREE / 4;
+	// if (direction > MAXDEGREE)
+	// 	direction -= MAXDEGREE;
+	// cs = max->math->cos[direction];
+	// sn = max->math->sin[direction];
+	// scx = spy * cs + spx * sn;
+	// scy = spx * cs - spy * sn;
+	// ft_printf("scx %i, scy %i\n", scx, scy);
+	// scx = (scx * 256 / scy) + (SCREENWIDTH / 2);
+	// scy = (spz * 256 / scy) + (SCREENHEIGHT / 2);
+	// ft_printf("scx %i, scy %i\n", scx, scy);
+	direction = atan2(spx, -spy) * (MAXDEGREE / 2 / M_PI);
+	printf("%f\n", atan2(-spx, spy));
+	if (direction > MAXDEGREE)
+		direction -= MAXDEGREE;
+	else if (direction < 0)
+		direction += MAXDEGREE;
+	distance = sqrt((double)spx * (double)spx + (double)spy * (double)spy);
+	radius = atan(32768 / distance) * (MAXDEGREE / 2 / M_PI); //32768 = 65536/2
+	ft_printf("direction = %i\n", direction);
+	ft_printf("radius = %i\n", radius);
+	x = 0;
+	r = x * RAYS / SCREENWIDTH;
+	length = distance;
+	if (max->settings.fisheyecorrection)
 	{
-		y = scy;
-		while (y < scy + 20)
+		length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
+		length /= 65536;
+	}
+	sprite_height = 65536 * SCREENHEIGHT / length;
+	if (sprite_height > SCREENHEIGHT) //needs offset later
+		sprite_height = SCREENHEIGHT;
+	while (x < SCREENWIDTH)
+	{
+		r = x * RAYS / SCREENWIDTH;
+		y = SCREENHEIGHT / 2 - sprite_height / 2;
+		if (ft_exit_visible(max, r, direction, radius, distance))
 		{
-			if (x >= 0 && x < SCREENWIDTH && y >= 0 && y < SCREENHEIGHT)
-				mlx_put_pixel(max->i.screen, x, y, 0xFF00FFFF);
-			++y;
+			while (y < SCREENHEIGHT / 2 + sprite_height / 2)
+			{
+				mlx_put_pixel(max->i.screen, x, y, ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF);
+				++y;
+			}
 		}
 		++x;
 	}
