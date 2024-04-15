@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/12 15:35:07 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/15 10:52:44 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,6 +78,7 @@ SRC_S		=	ft_buttons.c \
 				ft_screen2d.c \
 				ft_screen2dquad.c \
 				ft_screen3d.c \
+				ft_settings.c \
 				ft_text.c \
 				ft_textfield.c
 

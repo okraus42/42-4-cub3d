@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 17:51:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:44:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,10 @@ void	ft_draw_menu(t_max *max)
 		ft_draw_button(&max->menu.mainbuttons[SAVEGAME], ACTIVE);
 	else
 		ft_draw_button(&max->menu.mainbuttons[SAVEGAME], INACTIVE);
-	ft_draw_button(&max->menu.mainbuttons[LOADGAME], ACTIVE);
+	if (max->menu.loads.files[0])
+		ft_draw_button(&max->menu.mainbuttons[LOADGAME], ACTIVE);
+	else
+		ft_draw_button(&max->menu.mainbuttons[LOADGAME], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[SETTINGS], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], ACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[QUITGAME], ACTIVE);
@@ -1268,6 +1271,7 @@ void	ft_menu(t_max *max)
 					if (ft_save(max, max->map.file))
 						ft_dprintf(2, "Unable to save the game, make sure the safe file has proper permissions\n");
 					max->menu.current_buttongroup = MAINBUTTONS;
+					ft_bigreinitlistfield(max);
 				}
 				else if (max->menu.current_button[SAVEGROUP] == DELETE)
 				{
@@ -1305,15 +1309,21 @@ void	ft_menu(t_max *max)
 					//ft_snprintf(max->map.file, 4095, "%s%s", max->menu.custommap.dir, max->menu.custommap.text[max->menu.custommap.highlight].text);
 					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.loads.dir, max->menu.loads.text[max->menu.loads.highlight].text);
 					if (ft_load(max, max->map.file))
+					{
 						ft_dprintf(2, "Unable to load the game, make sure the safe file exists\n");
-					max->menu.current_buttongroup = MAINBUTTONS;
-					max->game_in_progress = 1;
-					max->i.menuscreen->enabled = 0;
-					max->i.textscreen->enabled = 0;
-					max->game_mode = GAMEPLAY;
-					max->i.overlay->enabled = 1;
-					max->game_in_progress = 1;
-					max->oldms = ft_get_time_in_ms();
+						max->menu.current_buttongroup = MAINBUTTONS;
+					}
+					else
+					{
+						max->menu.current_buttongroup = MAINBUTTONS;
+						max->game_in_progress = 1;
+						max->i.menuscreen->enabled = 0;
+						max->i.textscreen->enabled = 0;
+						max->game_mode = GAMEPLAY;
+						max->i.overlay->enabled = 1;
+						max->game_in_progress = 1;
+						max->oldms = ft_get_time_in_ms();
+					}
 				}
 				else if (max->menu.current_button[LOADGROUP] == DELETE)
 				{

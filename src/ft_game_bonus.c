@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:27:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:17:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	ft_amaze_bonus(t_max *max)
 		//free everything
 		ft_exit(max, 9);
 	}
+	ft_init_settings(max);
 	ft_init_images(max);
 	ft_init_textures(max);
 	ft_initmenu(max);

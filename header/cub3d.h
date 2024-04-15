@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 17:40:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 13:00:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,52 +41,41 @@
 #  define HEIGHT 1080
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
-#  define NOFISHEYE 1
 #  define FULLSCREEN 1
-#  define FOV 90
-#  define DOF 16
-#  define TICK 8
+
+#  define MAXDOF 16
 # elif TESTMODE == 2
 #  define WIDTH 1920
 #  define HEIGHT 1080
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
-#  define NOFISHEYE 0
 #  define FULLSCREEN 0
-#  define FOV 360
-#  define DOF 8
-#  define TICK 8
+0
+#  define MAXDOF 8
 # elif TESTMODE == 3
 #  define WIDTH 960
 #  define HEIGHT 540
 #  define MAPWIDTH 512
 #  define MAPHEIGHT 512
-#  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define FOV 80
-#  define DOF 8
-#  define TICK 8
+
+#  define MAXDOF 8
 # elif TESTMODE == 4
 #  define WIDTH 1920
 #  define HEIGHT 1080
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
-#  define NOFISHEYE 1
 #  define FULLSCREEN 0
-#  define DEBUGGING 0
-#  define FOV 80
-#  define DOF 16
-#  define TICK 8
+
+#  define MAXDOF 16
 # else
 #  define WIDTH 2560
 #  define HEIGHT 1600
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
-#  define NOFISHEYE 1
 #  define FULLSCREEN 1
-#  define FOV 90
-#  define DOF 8
-#  define TICK 8
+
+#  define MAXDOF 8
 # endif
 
 # ifndef DEBUGGING
@@ -106,7 +95,7 @@
 
 
 # define RAYS (SCREENWIDTH) //SCREENWIDTH
-# define MAXDIST (65536 * (DOF)) //play with this formula a bit later
+// # define max->settings.maxdist (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF
 # define UNDISCOVERDFLOOR 0x808080FF
@@ -287,10 +276,10 @@ typedef struct s_oray
 	unsigned long long		hl;
 	long long		xs; //ray starting position 65536 is 1.000
 	long long		ys;
-	long long		hx[DOF + 1];
-	long long		hy[DOF + 1];
-	long long		vx[DOF + 1];
-	long long		vy[DOF + 1];
+	long long		hx[MAXDOF + 1];
+	long long		hy[MAXDOF + 1];
+	long long		vx[MAXDOF + 1];
+	long long		vy[MAXDOF + 1];
 	long long		tx; //test ray x position (for map discovery)
 	long long		ty; //test ray y position (for map discovery)
 	long long		rx;	//ray final position
@@ -367,6 +356,15 @@ typedef struct s_player
 	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
 
+typedef struct s_sprite
+{
+	int	type;
+	int	state;
+	int	texture; //map
+	int	x;
+	int	y;
+	int	z;
+}	t_sprite;
 //add door textures and stuff later
 typedef struct s_map
 {
@@ -386,7 +384,8 @@ typedef struct s_map
 	int					h;				//256
 	int					hh;				//height of actual map
 	t_player			p;				//player pos and orientation
-	unsigned int		e;				//position of exit on map, future stuff
+	//unsigned int		e;				//position of exit on map, future stuff
+	t_sprite			exit;
 	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
 
@@ -546,6 +545,21 @@ typedef struct s_overlay
 	t_text		rayinfo;
 }	t_overlay;
 
+typedef struct s_settings
+{
+	int			fov;
+	int			dof;
+	long long	maxdist;
+	int			tick;
+	// int		width;
+	// int		height;
+	// int		mapwidth;
+	// int		mapheight;
+	// int		miniwidth;
+	// int		miniheight;
+	int			fisheyecorrection;
+	int			debugging;
+}	t_settings;
 
 typedef struct s_max
 {
@@ -561,6 +575,7 @@ typedef struct s_max
 	t_gametext		gamelost;
 	t_font			font;
 	t_overlay		overlay;
+	t_settings		settings;
 	// mlx_image_t		*str[STRINGS];	//replace later with our own thing
 	//char			s[STRINGS][256];//replace later with our own thing
 	char			name[20];
@@ -696,6 +711,9 @@ void	ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);
+
+//ft_settings.c
+void	ft_init_settings(t_max *max);
 
 //ft_keyhook.c
 void	ft_clear_keys(t_max *max);

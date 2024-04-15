@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 14:02:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:35:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,11 @@
 // 	p = w * 4 * (h * y / wh) + (4 * (w * x / xw));
 // 	//ft_printf("%i %i\n",(h * y / wh), (w * x / xw));
 // 	r.rgba = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
-// 	if (length > MAXDIST)
-// 		length = MAXDIST;
-// 	r.r = max->math->brumered[r.r][length * 255LL / MAXDIST];
-// 	r.g = max->math->brumegreen[r.g][length * 255LL / MAXDIST];
-// 	r.b = max->math->brumeblue[r.b][length * 255LL / MAXDIST];
+// 	if (length > max->settings.maxdist)
+// 		length = max->settings.maxdist;
+// 	r.r = max->math->brumered[r.r][length * 255LL / max->settings.maxdist];
+// 	r.g = max->math->brumegreen[r.g][length * 255LL / max->settings.maxdist];
+// 	r.b = max->math->brumeblue[r.b][length * 255LL / max->settings.maxdist];
 // 	return (r.rgba);
 // }
 
@@ -150,8 +150,8 @@
 // 		//ft_printf("new ray\n");
 // 		//ft_printf("%i %i\n", r, x);
 // 		length = max->map.p.ray[r].length;
-// 		fake_length = MAXDIST;
-// 		if (NOFISHEYE)
+// 		fake_length = max->settings.maxdist;
+// 		if (max->settings.fisheyecorrection)
 // 		{
 // 			//ft_printf("L1 %Lx\n", max->map.p.ray[r].length);
 // 			//ft_printf("ANGLE %i\n", (unsigned short)(max->map.p.orientation - max->map.p.ray[r].ra));
@@ -170,7 +170,7 @@
 // 		//ft_printf("c\n");
 // 		// if (wall_height > SCREENHEIGHT)
 // 		// 	wall_height = SCREENHEIGHT;
-// 		if (length > MAXDIST || !max->map.p.ray[r].wall)
+// 		if (length > max->settings.maxdist || !max->map.p.ray[r].wall)
 // 			wall_height = 0;
 // 		offset = SCREENHEIGHT / 2 - wall_height / 2;
 // 		fake_offset = SCREENHEIGHT / 2 - fake_wall_height / 2;
@@ -397,7 +397,7 @@ void	ft_discover_full_map(t_map *map)
 
 void	ft_draw_strings(t_max *max)
 {
-	if (DEBUGGING)
+	if (max->settings.debugging)
 	{
 		if (max->keys[MLX_KEY_2])
 		{
@@ -582,7 +582,7 @@ void	ft_gameplay(t_max *max)
 	}
 	if (max->difficulty == MEDIUM)
 	{
-		if (!(max->frame % TICK))
+		if (!(max->frame % max->settings.tick))
 			ft_revisit_map(&max->map);
 	}
 	else if (max->difficulty == HARD)

@@ -44,14 +44,16 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
 
 Todo today:
-Read all files in directory.
-Sort them alphabetically.
-Get split-like structure.
+- Options
+— Fov (1-720)
+— fish eye correction (limits fov to 179)
+— resolution (takes effect after restart)
+— fullscreen (takes effect after restart)
+— restart option?
+— .ini file with settings preserved
+-- save settings
 
-Display 10 of them?
-Highlight selected one.
-Down arrow moves index down (up arrow up)
-
+--ESC in hall of fame
 
 !!! Load game free old pointers befre assigning new values !!!
 
@@ -67,7 +69,6 @@ init for highscores
 Display warning when trying to open invalid map
 
 - Difficulty in Hall of fame?
-- Save game (reinit all pointers)
 - 4xresolution (4 pixels instead of one)
 - The style of aMaze42:
 - connected with 42 school thematic 
@@ -85,15 +86,7 @@ Display warning when trying to open invalid map
 — generate random map
 — difficulty selection (void, easy, moderate, hard, nightmare)
 — name, coalition, campus selection 
-- Options
-— Fov (1-720)
-— fish eye correction (limits fov to 179)
-— resolution (takes effect after restart)
-— fullscreen (takes effect after restart)
-— restart option?
-— .ini file with settings preserved
-— controls?
-— sounds?
+
 - random map generation
 - debugging strings onscreen
 To do list:
@@ -116,8 +109,6 @@ To do list:
 — random options?
 — save seed
 - save game
-— quick save
-— multiple saves
 — name save
 - screen (2d)
 — draws textures on the map

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:02:57 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 13:04:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_inittimetrialmap(t_randommap *rm, int level)
 		rm->rdeadends.value = 1;
 }
 
-static void	ft_map_init(t_map *map)
+static void	ft_map_init(t_max *max, t_map *map)
 {
 	int	i;
 
@@ -51,7 +51,6 @@ static void	ft_map_init(t_map *map)
 	map->easttexture = NULL;
 	//map->d = NULL;
 	map->valid = 1;
-	map->e = -1;
 	map->p.orientation = -1;
 	map->p.x = 0;
 	map->p.y = 0;
@@ -59,7 +58,7 @@ static void	ft_map_init(t_map *map)
 	map->p.turnspeed = 512;
 	map->p.xspeed = 0;
 	map->p.yspeed = 0;
-	map->p.fov = FOV;
+	map->p.fov = max->settings.fov;
 	map->p.fov2 = map->p.fov * 65536 / 720;
 	map->h = 0;
 	map->w = 0;
@@ -1318,7 +1317,7 @@ void	ft_random_init(t_max *max)
 
 	seed = time(0);
 	srand(seed);
-	ft_map_init(&max->map);
+	ft_map_init(max, &max->map);
 	map_init(&max->menu.rm, &m);
 	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
 	// 	return (1);
@@ -1386,6 +1385,12 @@ void	ft_random_init(t_max *max)
 			
 			// 01011110
 			printf("EXIT: x %x y  %x\n", i % 256, i / 256);
+			max->map.exit.state = 1; //ON
+			max->map.exit.texture = 1; //EXITTEXTURE
+			max->map.exit.type = 1; //EXIT
+			max->map.exit.z = 20;
+			max->map.exit.x = (i % 256) << 16 | 0x7FFF;
+			max->map.exit.y = (i / 256) << 16 | 0x7FFF;
 			max->map.m[i] = ((max->map.m[i] & 0xFFFFF0) | EXIT) | 0xFF00FFFF00000000;
 			break ;
 		}

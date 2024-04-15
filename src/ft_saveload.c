@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 11:32:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 17:25:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 10:50:15 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	ft_reinitmax(t_max *newmax, t_max *oldmax)
 	newmax->font = oldmax->font;
 	newmax->overlay = oldmax->overlay;
 	newmax->key = oldmax->key;
+	newmax->settings = oldmax->settings;
 }
 
 int	ft_quickload(t_max *max)

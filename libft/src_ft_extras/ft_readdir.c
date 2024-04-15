@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 11:15:21 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:06:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:09:31 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	ft_sortlst(t_list **head)
 	{
 		sort = 0;
 		lst = *head;
-		while (lst->next)
+		while (lst && lst->next)
 		{
 			thisfile = lst->content;
 			nextfile = lst->next->content;

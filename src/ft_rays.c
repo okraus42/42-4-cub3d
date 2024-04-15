@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 11:58:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:35:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ void	ft_init_orays(t_max *max)
 	t_oray		*oray;
 
 	pl = 65536 * WIDTH;
-	pd = (pl / 2) / tan((FOV / 2 * 0.01745329));
-	maxdist = MAXDIST;
+	pd = (pl / 2) / tan((max->settings.fov / 2 * 0.01745329));
+	maxdist = max->settings.maxdist;
 	r = 0;
 	//ft_printf("\nNEWNEW\n\n\n");
 	while (r < RAYS)
@@ -132,7 +132,7 @@ void	ft_init_orays(t_max *max)
 		oray->vyo = 65536;
 		oray->wall = 0;
 		//ft_printf("r0 = %i\n", r);
-		if (NOFISHEYE)
+		if (max->settings.fisheyecorrection)
 			oray->ra = max->map.p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
 		else //need check!!!
 			oray->ra = max->map.p.orientation + 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
@@ -171,7 +171,7 @@ void	ft_init_orays(t_max *max)
 			oray->hx[0] = INT_MAX;
 			oray->hdof = -1;
 		}
-		while (oray->hdof > 0 && oray->hdof <= DOF)
+		while (oray->hdof > 0 && oray->hdof <= max->settings.dof)
 		{
 			mx = oray->hx[oray->hdof - 1] >> 16;
 			my = oray->hy[oray->hdof - 1] >> 16;
@@ -193,7 +193,7 @@ void	ft_init_orays(t_max *max)
 			}
 			else
 			{
-				//oray->hdof = DOF;
+				//oray->hdof = max->settings.dof;
 				break ;
 			}
 			oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo;
@@ -235,7 +235,7 @@ void	ft_init_orays(t_max *max)
 			oray->vx[0] = INT_MAX;
 			oray->vdof = -1;
 		}
-		while (oray->vdof > 0 && oray->vdof <= DOF)
+		while (oray->vdof > 0 && oray->vdof <= max->settings.dof)
 		{
 			mx = oray->vx[oray->vdof - 1] >> 16;
 			my = oray->vy[oray->vdof - 1] >> 16;
@@ -257,7 +257,7 @@ void	ft_init_orays(t_max *max)
 			}
 			else
 			{
-				//oray->vdof = DOF;
+				//oray->vdof = max->settings.dof;
 				break ;
 			}
 			oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo;
@@ -295,7 +295,7 @@ void	ft_init_orays(t_max *max)
 		if (!oray->hv)
 		{
 			oray->dof = oray->hdof;
-			// if (oray->dof >= DOF - 1)
+			// if (oray->dof >= max->settings.dof - 1)
 			// 	oray->wall = NOWALL;
 			// else
 			oray->wall &= NSWALL;
@@ -303,7 +303,7 @@ void	ft_init_orays(t_max *max)
 		else
 		{
 			oray->dof = oray->vdof;
-			// if (oray->dof >= DOF - 1)
+			// if (oray->dof >= max->settings.dof - 1)
 			// 	oray->wall = NOWALL;
 			// else
 			oray->wall &= EWWALL;
@@ -353,7 +353,7 @@ void	ft_init_orays(t_max *max)
 				// 	ft_printf("oray->txo %Lx, oray->tyo %Lx, oray->vxo %Lx, oray->vyo %Lx, oray->hxo %Lx, oray->hyo %Lx\n", oray->txo, oray->tyo, oray->vxo, oray->vyo, oray->hxo, oray->hyo);
 				// 	break ;
 				// }
-				if (oray->length2 < MAXDIST)
+				if (oray->length2 < max->settings.maxdist)
 					max->map.m[mp] |= VISITED;
 				//ft_printf("hdof2.5 = %i\n", oray->hdof);
 				oray->length2 -= oray->ldof;
@@ -374,7 +374,7 @@ void	ft_init_orays(t_max *max)
 			// 	while (oray->vdof > 0)
 			// 	{
 			// 		mp = ((max->map.p.oray[r].vy[oray->vdof] >> 16) << 8) | (max->map.p.oray[r].vx[oray->vdof] >> 16);
-			// 		if (oray->length2 < MAXDIST)
+			// 		if (oray->length2 < max->settings.maxdist)
 			// 			max->map.m[mp] |= VISITED;
 			// 		oray->length2 -= oray->ldof;
 			// 		oray->vx[oray->vdof] -= oray->vxo;
@@ -392,20 +392,20 @@ void	ft_init_orays(t_max *max)
 			oray->c[0] = 0xFF0000FF;
 		else
 			oray->c[0] = 0xFFFF00FF;
-		if (oray->length > MAXDIST)
+		if (oray->length > max->settings.maxdist)
 		{
 			//oray->c[0] = 0x00FFFFFF;
 			oray->wall = NOWALL;
-			oray->length = MAXDIST;
+			oray->length = max->settings.maxdist;
 		}
 		
 		if (oray->wall == NOWALL)
 		{
 			// x^2 + y^2 = RADIUS^2
-			// radius == MAXDIST
+			// radius == max->settings.maxdist
 			//oray->c[0] = 0xFF00FFFF;
-			oray->rx = oray->xs + ((MAXDIST) * (long long)(max->math->sin[oray->ra])) / 65536;
-			oray->ry = oray->ys - ((MAXDIST) * (long long)(max->math->cos[oray->ra])) / 65536;
+			oray->rx = oray->xs + ((max->settings.maxdist) * (long long)(max->math->sin[oray->ra])) / 65536;
+			oray->ry = oray->ys - ((max->settings.maxdist) * (long long)(max->math->cos[oray->ra])) / 65536;
 		}
 		//ft_printf("r3 = %i\n", r);
 		// oray->rx = oray->hx;

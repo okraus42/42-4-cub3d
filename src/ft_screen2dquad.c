@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:38:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:02:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:34:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void	ft_draw_screen2dquad(t_max *max)
 		ft_place_line(max->i.supermap, max->map.p.miniray[r]);
 		++r;
 	}
-	if (DEBUGGING)
+	if (max->settings.debugging)
 	{
 		max->map.p.miniray[max->ray].c[0] = 0XFF00FFFF & TMASK;
 		ft_place_line(max->i.supermap, max->map.p.miniray[max->ray]);

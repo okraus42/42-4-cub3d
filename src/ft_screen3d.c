@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 11:58:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 13:50:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@
 // 	p = w * 4 * (h * y / wh) + (4 * (w * x / xw));
 // 	//ft_printf("%i %i\n",(h * y / wh), (w * x / xw));
 // 	r.rgba = (img->pixels[p] << 24) | (img->pixels[p + 1] << 16) | (img->pixels[p + 2] << 8) | 0x0000FF;
-// 	if (length > MAXDIST)
-// 		length = MAXDIST;
-// 	r.r = max->math->brumered[r.r][length * 255LL / MAXDIST];
-// 	r.g = max->math->brumegreen[r.g][length * 255LL / MAXDIST];
-// 	r.b = max->math->brumeblue[r.b][length * 255LL / MAXDIST];
+// 	if (length > max->settings.maxdist)
+// 		length = max->settings.maxdist;
+// 	r.r = max->math->brumered[r.r][length * 255LL / max->settings.maxdist];
+// 	r.g = max->math->brumegreen[r.g][length * 255LL / max->settings.maxdist];
+// 	r.b = max->math->brumeblue[r.b][length * 255LL / max->settings.maxdist];
 // 	return (r.rgba);
 // }
 
@@ -107,6 +107,49 @@ int	ft_capangle(int angle)
 	return (angle);
 }
 
+void	ft_draw_exit(t_max *max)
+{
+	long long	spx; //sprite relative position
+	long long	spy;
+	long long	spz;
+	long long	cs;	//cos
+	long long	sn;	//sin
+	long long	scx;	//sprite screen posiiton
+	long long	scy;
+	int			alpha;
+	int	y;
+	int	x;
+
+	spx = max->map.exit.x - max->map.p.x;
+	spy = max->map.exit.y - max->map.p.y;
+	spz = max->map.exit.z;
+	ft_printf("\nspx %i, spy %i\n", spx, spy);
+	alpha = max->map.p.orientation;
+	alpha -= MAXDEGREE / 4;
+	if (alpha > MAXDEGREE)
+		alpha -= MAXDEGREE;
+	cs = max->math->cos[alpha];
+	sn = max->math->sin[alpha];
+	scx = spy * cs + spx * sn;
+	scy = spx * cs - spy * sn;
+	ft_printf("scx %i, scy %i\n", scx, scy);
+	scx = (scx * 256 / scy) + (SCREENWIDTH / 2);
+	scy = (spz * 256 / scy) + (SCREENHEIGHT / 2);
+	ft_printf("scx %i, scy %i\n", scx, scy);
+	x = scx;
+	while (x < scx + 20)
+	{
+		y = scy;
+		while (y < scy + 20)
+		{
+			if (x >= 0 && x < SCREENWIDTH && y >= 0 && y < SCREENHEIGHT)
+				mlx_put_pixel(max->i.screen, x, y, 0xFF00FFFF);
+			++y;
+		}
+		++x;
+	}
+}
+
 void	ft_draw_screen3d(t_max *max)
 {
 	int	y;
@@ -127,8 +170,8 @@ void	ft_draw_screen3d(t_max *max)
 		//ft_printf("new ray\n");
 		//ft_printf("%i %i\n", r, x);
 		length = max->map.p.oray[r].length;
-		fake_length = MAXDIST;
-		if (NOFISHEYE)
+		fake_length = max->settings.maxdist;
+		if (max->settings.fisheyecorrection)
 		{
 			//ft_printf("L1 %Lx\n", max->map.p.oray[r].length);
 			//ft_printf("ANGLE %i\n", (unsigned short)(max->map.p.orientation - max->map.p.oray[r].ra));
@@ -147,7 +190,7 @@ void	ft_draw_screen3d(t_max *max)
 		//ft_printf("c\n");
 		// if (wall_height > SCREENHEIGHT)
 		// 	wall_height = SCREENHEIGHT;
-		if (length > MAXDIST || !max->map.p.oray[r].wall)
+		if (length > max->settings.maxdist || !max->map.p.oray[r].wall)
 			wall_height = 0;
 		offset = SCREENHEIGHT / 2 - wall_height / 2;
 		fake_offset = SCREENHEIGHT / 2 - fake_wall_height / 2;
@@ -211,4 +254,5 @@ void	ft_draw_screen3d(t_max *max)
 		}
 		++x;
 	}
+	ft_draw_exit(max);
 }

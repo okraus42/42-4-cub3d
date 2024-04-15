@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 12:02:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 13:01:14 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_init_map_textures(t_max *max)
 	return (1);
 }
 
-static void	ft_map_init(t_map *map)
+static void	ft_map_init(t_max *max, t_map *map)
 {
 	int	i;
 
@@ -58,7 +58,6 @@ static void	ft_map_init(t_map *map)
 	map->easttexture = NULL;
 	//map->d = NULL;
 	map->valid = 1;
-	map->e = -1;
 	map->p.orientation = -1;
 	map->p.x = 0;
 	map->p.y = 0;
@@ -66,7 +65,7 @@ static void	ft_map_init(t_map *map)
 	map->p.turnspeed = 512;
 	map->p.xspeed = 0;
 	map->p.yspeed = 0;
-	map->p.fov = FOV;
+	map->p.fov = max->settings.fov;
 	map->p.fov2 = map->p.fov * 65536 / 720;
 	map->h = 0;
 	map->w = 0;
@@ -612,7 +611,7 @@ int	ft_process_file(t_max *max)
 	t_map	*map;
 
 	map = &max->map;
-	ft_map_init(map);
+	ft_map_init(max, map);
 	if (!ft_read_map(map))
 	{
 		ft_freemap(map);

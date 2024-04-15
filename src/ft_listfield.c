@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 18:01:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:16:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ void	ft_initlistfields(t_max *max)
 	ft_sprintf(max->menu.saves.dir, "./saves/");
 	max->menu.saves.files = ft_readdir(max->menu.saves.dir, ".ft");
 	//split rm quicksave rm autosave
-	if (max->menu.saves.files[0][0] == 'f')
+	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'f')
 		ft_split_rm(&max->menu.saves.files, 0);
-	if (max->menu.saves.files[0][0] == 'q')
+	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'q')
 		ft_split_rm(&max->menu.saves.files, 0);
 	ft_split_add(&max->menu.saves.files, "NEW SAVE", ft_splitlen(max->menu.saves.files));
 	//split add new save
@@ -172,9 +172,9 @@ void	ft_bigreinitlistfield(t_max *max)
 	max->menu.saves.text[max->menu.saves.highlight].cb = 0;
 	max->menu.saves.text[max->menu.saves.highlight].c = 0x00FF00FF;
 	max->menu.saves.files = ft_readdir(max->menu.saves.dir, ".ft");
-	if (max->menu.saves.files[0][0] == 'f')
+	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'f')
 		ft_split_rm(&max->menu.saves.files, 0);
-	if (max->menu.saves.files[0][0] == 'q')
+	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'q')
 		ft_split_rm(&max->menu.saves.files, 0);
 	ft_split_add(&max->menu.saves.files, "NEW SAVE", ft_splitlen(max->menu.saves.files));
 	max->menu.saves.highlight = 0;
