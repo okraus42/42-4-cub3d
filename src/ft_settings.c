@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:50:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:37:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 15:50:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_init_settings(t_max *max)
 	default_settings.fov = 80;
 	default_settings.debugging = 0;
 	default_settings.fisheyecorrection = 1;
-	default_settings.dof = 8;
+	default_settings.dof = 32;
 	if (default_settings.dof > MAXDOF)
 		default_settings.dof = MAXDOF;
 	default_settings.maxdist = 65536LL * default_settings.dof;

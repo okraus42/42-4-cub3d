@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:35:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 15:48:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,11 @@ void	ft_init_orays(t_max *max)
 				// 	ft_printf("oray->txo %Lx, oray->tyo %Lx, oray->vxo %Lx, oray->vyo %Lx, oray->hxo %Lx, oray->hyo %Lx\n", oray->txo, oray->tyo, oray->vxo, oray->vyo, oray->hxo, oray->hyo);
 				// 	break ;
 				// }
-				if (oray->length2 < max->settings.maxdist)
+				if (oray->length2 < max->settings.maxdist / 2)
+					max->map.m[mp] |= VISITED / 4;
+				if (oray->length2 < max->settings.maxdist / 4)
+					max->map.m[mp] |= VISITED / 2;
+				if (oray->length2 < max->settings.maxdist / 8)
 					max->map.m[mp] |= VISITED;
 				//ft_printf("hdof2.5 = %i\n", oray->hdof);
 				oray->length2 -= oray->ldof;
@@ -399,13 +403,13 @@ void	ft_init_orays(t_max *max)
 			oray->length = max->settings.maxdist;
 		}
 		
-		if (oray->wall == NOWALL)
+		if (oray->wall == NOWALL || oray->length > max->settings.maxdist / 2)
 		{
 			// x^2 + y^2 = RADIUS^2
 			// radius == max->settings.maxdist
 			//oray->c[0] = 0xFF00FFFF;
-			oray->rx = oray->xs + ((max->settings.maxdist) * (long long)(max->math->sin[oray->ra])) / 65536;
-			oray->ry = oray->ys - ((max->settings.maxdist) * (long long)(max->math->cos[oray->ra])) / 65536;
+			oray->rx = oray->xs + ((max->settings.maxdist / 2) * (long long)(max->math->sin[oray->ra])) / 65536;
+			oray->ry = oray->ys - ((max->settings.maxdist / 2) * (long long)(max->math->cos[oray->ra])) / 65536;
 		}
 		//ft_printf("r3 = %i\n", r);
 		// oray->rx = oray->hx;
@@ -424,8 +428,8 @@ void	ft_init_orays(t_max *max)
 		// {
 		// 	oray->c[0] = 0xFFFF00FF;
 		// }
-		if (oray->length > maxdist)
-			oray->c[1] = 0x000000ff;
+		if (oray->length > maxdist / 2)
+			oray->c[1] = max->map.f.rgba;
 		else
 		{
 			oray->c1a = 0xff;
@@ -436,12 +440,12 @@ void	ft_init_orays(t_max *max)
 			int	g = max->map.f.g;
 			int	b = max->map.f.b;
 
-			oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256
-				+ r * ((255 * oray->length / maxdist)) / 256;
-			oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256
-				+ g * ((255 * oray->length / maxdist)) / 256;
-			oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256
-				+ b * ((255 * oray->length / maxdist)) / 256;
+			oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist * 2)) / 256
+				+ r * ((255 * oray->length / maxdist * 2)) / 256;
+			oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist * 2)) / 256
+				+ g * ((255 * oray->length / maxdist * 2)) / 256;
+			oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist * 2)) / 256
+				+ b * ((255 * oray->length / maxdist * 2)) / 256;
 		}
 		++r;
 	}

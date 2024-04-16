@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 13:10:32 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 15:28:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@
 #  define MAPHEIGHT 1024
 #  define FULLSCREEN 0
 
-#  define MAXDOF 16
+#  define MAXDOF 32
 # else
 #  define WIDTH 2560
 #  define HEIGHT 1600
@@ -719,6 +719,9 @@ void	ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);
+
+//ft_sprite.c
+void	ft_draw_sprites(t_max *max);
 
 //ft_settings.c
 void	ft_init_settings(t_max *max);
