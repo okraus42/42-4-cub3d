@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:17:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 13:11:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@ void	ft_init_images(t_max *max)
 	max->i.screen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
 	//if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
 	if (!max->i.screen || (mlx_image_to_window(max->mlx, max->i.screen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.spritescreen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
+	//if (!max->spritescreen || (mlx_image_to_window(max->mlx, max->spritescreen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	if (!max->i.spritescreen || (mlx_image_to_window(max->mlx, max->i.spritescreen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
@@ -81,6 +89,9 @@ void	ft_init_textures(t_max *max)
 
 	//gametext
 	ft_load_texture("./textures/woodenboard.png", &max->t.textbg);
+
+	//sprites
+	ft_load_texture("./textures/sprites/exit01t.png", &max->t.sprites[SPRITE_EXIT]);
 }
 
 void	ft_amaze_bonus(t_max *max)

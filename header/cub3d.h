@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 13:00:45 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 13:10:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,15 +356,21 @@ typedef struct s_player
 	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
 
+# define SPRITE_EXIT 0
+# define SPRITETYPES 1
+
 typedef struct s_sprite
 {
 	int	type;
 	int	state;
+	int	frame;
+	int	maxframe;
 	int	texture; //map
 	int	x;
 	int	y;
 	int	z;
 }	t_sprite;
+
 //add door textures and stuff later
 typedef struct s_map
 {
@@ -491,6 +497,7 @@ typedef struct s_textures
 	mlx_texture_t	*listfield;
 	mlx_texture_t	*supermapfloor;
 	mlx_texture_t	*supermapwall;
+	mlx_texture_t	*sprites[SPRITETYPES];
 }	t_textures;
 
 typedef struct s_images
@@ -500,6 +507,7 @@ typedef struct s_images
 	mlx_image_t		*menuscreen;
 	mlx_image_t		*textscreen;
 	mlx_image_t		*screen;
+	mlx_image_t		*spritescreen;
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
 	mlx_image_t		*supermap;

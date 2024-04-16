@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 16:06:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 12:23:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,8 +434,10 @@ void	ft_fill_colours_to_map(t_map *map)
 		if (map->m[i] & EXIT)
 		{
 			map->exit.state = 1; //ON
-			map->exit.texture = 1; //EXITTEXTURE
-			map->exit.type = 1; //EXIT
+			map->exit.texture = SPRITE_EXIT; //EXITTEXTURE
+			map->exit.type = SPRITE_EXIT; //EXIT
+			map->exit.frame = 0;
+			map->exit.maxframe = 32;
 			map->exit.z = 20;
 			map->exit.x = (i % 256) << 16 | 0x7FFF;
 			map->exit.y = (i / 256) << 16 | 0x7FFF;

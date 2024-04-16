@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 13:04:51 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/16 12:22:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1386,8 +1386,10 @@ void	ft_random_init(t_max *max)
 			// 01011110
 			printf("EXIT: x %x y  %x\n", i % 256, i / 256);
 			max->map.exit.state = 1; //ON
-			max->map.exit.texture = 1; //EXITTEXTURE
-			max->map.exit.type = 1; //EXIT
+			max->map.exit.texture = SPRITE_EXIT; //EXITTEXTURE
+			max->map.exit.type = SPRITE_EXIT; //EXIT
+			max->map.exit.frame = 0;
+			max->map.exit.maxframe = 32;
 			max->map.exit.z = 20;
 			max->map.exit.x = (i % 256) << 16 | 0x7FFF;
 			max->map.exit.y = (i / 256) << 16 | 0x7FFF;
