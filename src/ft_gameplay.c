@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:35:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 14:02:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -474,11 +474,28 @@ void	ft_draw_strings(t_max *max)
 //
 
 
-
+void	ft_change_light_dist(t_max *max)
+{
+	if (max->keys[MLX_KEY_LEFT_BRACKET])
+	{
+		max->keys[MLX_KEY_LEFT_BRACKET] = 0;
+		max->settings.lightdist -= 65536;
+		if (max->settings.lightdist < 65536)
+			max->settings.lightdist = 65536;
+	}
+	if (max->keys[MLX_KEY_RIGHT_BRACKET])
+	{
+		max->keys[MLX_KEY_RIGHT_BRACKET] = 0;
+		max->settings.lightdist += 65536;
+		if (max->settings.lightdist > max->settings.maxdist)
+			max->settings.lightdist = max->settings.maxdist;
+	}
+}
 
 
 void	ft_gameplay(t_max *max)
 {
+	ft_change_light_dist(max);
 // max->newms = ft_get_time_in_ms();
 	// max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 15:29:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 13:53:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void	ft_draw_screen3d(t_max *max)
 		//ft_printf("c\n");
 		// if (wall_height > SCREENHEIGHT)
 		// 	wall_height = SCREENHEIGHT;
-		if (length > max->settings.maxdist / 2 || !max->map.p.oray[r].wall)
+		if (length > max->settings.lightdist || !max->map.p.oray[r].wall)
 			wall_height = 0;
 		offset = SCREENHEIGHT / 2 - wall_height / 2;
 		fake_offset = SCREENHEIGHT / 2 - fake_wall_height / 2;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:50:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 15:50:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 13:51:44 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_init_settings(t_max *max)
 	if (default_settings.dof > MAXDOF)
 		default_settings.dof = MAXDOF;
 	default_settings.maxdist = 65536LL * default_settings.dof;
+	default_settings.lightdist = default_settings.maxdist / 4;
 	default_settings.tick = 8;
 	max->settings = default_settings;
 	ft_print_settings(max);

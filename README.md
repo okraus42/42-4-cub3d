@@ -45,7 +45,64 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 Sprites:
 https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
-Todo today:
+Updated todo list 2024-04-18:
+- sprites
+- consumables
+- score system
+- doors
+- keys
+- fog
+- textured walls
+- textured floor and ceiling
+- multiple types of walls and floors
+- mouse control in game
+- mouse control in the menu
+- button size adjustable
+- jumping and crouching
+- enemies ?
+- traps ?
+- hints?
+- autoplay?
+- sounds ?
+- skybox?
+- different height walls ?
+- special powers?
+- special effects?
+- portals?
+- level to level transitions?
+- split screen multiplayer (2-4 players)?
+
+- optimisations
+- checks (random map)
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### OLD STUFF #####
+
+
+Draw two textures (standard and glowing)
+- glowing at maximum distance
+
+Drawing sprites
+- sort them by distance
+- discard invisible ones
+
+Doors:
+https://medium.com/@Powersaurus/pico-8-raycaster-doors-cd8de9d943b
+
+
+
+Todo later:
 - Options
 — Fov (1-720)
 — fish eye correction (limits fov to 179)

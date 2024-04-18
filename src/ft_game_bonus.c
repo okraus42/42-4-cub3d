@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 13:11:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 17:01:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,9 @@ void	ft_init_textures(t_max *max)
 	ft_load_texture("./textures/woodenboard.png", &max->t.textbg);
 
 	//sprites
-	ft_load_texture("./textures/sprites/exit01t.png", &max->t.sprites[SPRITE_EXIT]);
+	ft_load_texture("./textures/sprites/exit01t.png", &max->t.sprites[EXIT_GLOW]);
+	ft_load_texture("./textures/sprites/flamingo_normal256.png", &max->t.sprites[FLAMINGO_TEXTURE]);
+	ft_load_texture("./textures/sprites/flamingo_glow256.png", &max->t.sprites[FLAMINGO_GLOW]);
 }
 
 void	ft_amaze_bonus(t_max *max)
@@ -118,6 +120,7 @@ void	ft_amaze_bonus(t_max *max)
 	ft_initgamewon(max);
 	ft_initgamelost(max);
 	ft_init_overlay(max);
+	ft_init_sprites(max);
 	mlx_key_hook(max->mlx, &ft_keyhook, max);
 	//mlx_mouse_hook(mlx, &ft_mousehook, max);
 	mlx_loop_hook(max->mlx, ft_hook, max);

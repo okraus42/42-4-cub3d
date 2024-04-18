@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 15:28:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 17:01:38 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,7 +357,14 @@ typedef struct s_player
 }	t_player;
 
 # define SPRITE_EXIT 0
-# define SPRITETYPES 1
+# define SPRITE_FLAMINGO 1
+# define SPRITETYPES 2
+
+# define EXIT_TEXTURE 0
+# define EXIT_GLOW 1
+# define FLAMINGO_TEXTURE 2
+# define FLAMINGO_GLOW 3
+# define SPRITETEXTURES 4
 
 typedef struct s_sprite
 {
@@ -366,6 +373,7 @@ typedef struct s_sprite
 	int	frame;
 	int	maxframe;
 	int	texture; //map
+	int	glowtexture;
 	int	x;
 	int	y;
 	int	z;
@@ -391,7 +399,9 @@ typedef struct s_map
 	int					hh;				//height of actual map
 	t_player			p;				//player pos and orientation
 	//unsigned int		e;				//position of exit on map, future stuff
-	t_sprite			exit;
+	t_sprite			sprites[256];
+	int					exitcount;
+	int					spritecount;
 	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
 
@@ -497,7 +507,7 @@ typedef struct s_textures
 	mlx_texture_t	*listfield;
 	mlx_texture_t	*supermapfloor;
 	mlx_texture_t	*supermapwall;
-	mlx_texture_t	*sprites[SPRITETYPES];
+	mlx_texture_t	*sprites[SPRITETEXTURES]; // 0 is skipped for checking if texture even exists
 }	t_textures;
 
 typedef struct s_images
@@ -557,6 +567,7 @@ typedef struct s_settings
 {
 	int			fov;
 	int			dof;
+	int			lightdist;
 	long long	maxdist;
 	int			tick;
 	// int		width;
@@ -721,6 +732,8 @@ void	ft_draw_screen2dquad(t_max *max);
 void	ft_draw_screen3d(t_max *max);
 
 //ft_sprite.c
+void	ft_init_sprites_flamingo(t_map *map, int i);
+void	ft_init_sprites(t_max *max);
 void	ft_draw_sprites(t_max *max);
 
 //ft_settings.c

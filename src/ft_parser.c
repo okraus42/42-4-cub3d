@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/16 12:23:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/18 16:43:07 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 		i = 0;
 		while (split[j][i])
 		{
-			if (!ft_strchr(" 01NSEWX", split[j][i]))
+			if (!ft_strchr(" 01NSEWXF", split[j][i]))
 			{
 				ft_free_split(&split);
 				return(ft_puterror("Invalid character in map", 0));
@@ -292,6 +292,13 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 		map->m[y * map->w + x] = WALL1;
 	else if (c == 'X')
 		map->m[y * map->w + x] = EXIT;
+	else if (c == 'F')
+	{
+		map->m[y * map->w + x] = FLOOR1;
+		map->sprites[map->spritecount].x = x << 16 | 0x7FFF;
+		map->sprites[map->spritecount].y = y << 16 | 0x7FFF;
+		ft_init_sprites_flamingo(map, map->spritecount);
+	}
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
 		map->m[y * map->w + x] = FLOOR1;
@@ -433,14 +440,8 @@ void	ft_fill_colours_to_map(t_map *map)
 	{
 		if (map->m[i] & EXIT)
 		{
-			map->exit.state = 1; //ON
-			map->exit.texture = SPRITE_EXIT; //EXITTEXTURE
-			map->exit.type = SPRITE_EXIT; //EXIT
-			map->exit.frame = 0;
-			map->exit.maxframe = 32;
-			map->exit.z = 20;
-			map->exit.x = (i % 256) << 16 | 0x7FFF;
-			map->exit.y = (i / 256) << 16 | 0x7FFF;
+			map->sprites[SPRITE_EXIT].x = (i % 256) << 16 | 0x7FFF;
+			map->sprites[SPRITE_EXIT].y = (i / 256) << 16 | 0x7FFF;
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= 0xFF00FFFF00000000;
 		}
