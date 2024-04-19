@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 14:02:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 09:08:30 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -611,6 +611,11 @@ void	ft_gameplay(t_max *max)
 	ft_draw_map(max);
 	ft_draw_minimap(max);
 	ft_draw_screen3d(max);
+
+	// check win
+
+	//check lose
+	
 	if (max->map.m[((max->map.p.y >> 16) * max->map.w + (max->map.p.x >> 16))] & EXIT)
 	{
 		max->game_mode = GAMEWON;

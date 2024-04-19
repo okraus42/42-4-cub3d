@@ -45,9 +45,21 @@ https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 Sprites:
 https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
+Todo today:
+- get the count of flamingos
+- remove them when they are collected
+- unlock exit when all are collected
+- display them in the map
+- update score
+- sort sprites by distance (quicksort?)
+- game win / lose functions separated
+- generate flamingos in random maps?
+
+
 Updated todo list 2024-04-18:
 - sprites
 - consumables
+- exit unlocks after collectibles are picked up?
 - score system
 - doors
 - keys

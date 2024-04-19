@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 17:01:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 09:29:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,6 +370,7 @@ typedef struct s_sprite
 {
 	int	type;
 	int	state;
+	char	text[16];  //text on sprite e.g. "Libft"
 	int	frame;
 	int	maxframe;
 	int	texture; //map
@@ -401,66 +402,21 @@ typedef struct s_map
 	//unsigned int		e;				//position of exit on map, future stuff
 	t_sprite			sprites[256];
 	int					exitcount;
+	// int					firstflamingo;
+	// int					lastflamingo;
+	int					current_sprite[SPRITETYPES];
+	int					total_sprite[SPRITETYPES];
 	int					spritecount;
 	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
 
 
-
-
 // remove or simplify
 typedef struct s_control
 {
-	int		left_shift;
-	int		right_shift;
+	// int		left_shift;
+	// int		right_shift;
 	int		caps_lock;
-	int		space;
-	int		a;
-	int		b;
-	int		c;
-	int		d;
-	int		e;
-	int		f;
-	int		g;
-	int		h;
-	int		i;
-	int		j;
-	int		k;
-	int		l;
-	int		m;
-	int		n;
-	int		o;
-	int		p;
-	int		q;
-	int		r;
-	int		s;
-	int		t;
-	int		u;
-	int		v;
-	int		w;
-	int		x;
-	int		y;
-	int		z;
-	int		up;
-	int		down;
-	int		left;
-	int		right;
-	int		enter;
-	int		backspace;
-	int		add;
-	int		subtract;
-	int		multiply;
-	int		divide;
-	int		one;
-	int		two;
-	int		three;
-	int		four;
-	int		five;
-	int		six;
-	int		seven;
-	int		eight;
-	int		nine;
-	int		zero;
 }	t_controls;
 
 typedef struct s_keyboard

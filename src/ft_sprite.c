@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 17:06:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 09:32:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,8 @@ void	ft_put_sprite_colour(t_max *max, int startx, int x, int y, int size, t_spri
 	b = max->t.sprites[sprite->texture]->pixels[p + 2];
 	a = max->t.sprites[sprite->texture]->pixels[p + 3];
 	c = r << 24 | g << 16 | b << 8 | a;
-	mlx_put_pixel(max->i.spritescreen, x, y, c);
+	if (a)
+		mlx_put_pixel(max->i.spritescreen, x, y, c);
 }
 
 void	ft_put_sprite_glowcolour(t_max *max, int startx, int x, int y, int size, t_sprite *sprite) //add sprite
