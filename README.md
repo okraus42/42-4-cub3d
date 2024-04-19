@@ -54,8 +54,8 @@ Todo today:
 # - display them in the map
 # - update score
 # - sort sprites by distance (quicksort?)
-? - unlock exit when all are collected
-- game win / lose functions separated ((check status of exit))
+# - unlock exit when all are collected
+# - game win / lose functions separated ((check status of exit))
 -- functions to reset stuff
 --- continue / resume
 --- new map

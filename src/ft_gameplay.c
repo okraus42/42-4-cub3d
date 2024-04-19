@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 12:55:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:16:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -502,6 +502,68 @@ void	ft_change_light_dist(t_max *max)
 	}
 }
 
+void	ft_game_end(t_max *max)
+{
+	max->game_in_progress = 0;
+	max->menu.current_button[0] = NEWGAME;
+	max->menu.current_buttongroup = MAINBUTTONS;
+	max->i.menuscreen->enabled = 1;
+	max->i.textscreen->enabled = 1;
+	max->i.overlay->enabled = 0;
+	max->gamems += max->levelms;
+}
+
+void	ft_game_win(t_max *max)
+{
+	if (max->reachedexit)
+	{
+		max->reachedexit = 0;
+		max->game_mode = GAMEWON;
+		ft_game_end(max);
+		if (max->game_type == TIMETRIAL)
+			max->timetriallimitms += 15000;
+		if (max->game_type == TIMETRIAL)
+			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
+		else if  (max->game_type == ONEMAP)
+			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
+		else if  (max->game_type == CAMPAIGN)
+			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
+		return ;
+	}
+}
+
+void	ft_game_lose(t_max *max)
+{
+	if (!max->game_in_progress)
+		return ;
+	if (max->game_type == TIMETRIAL)
+	{
+		if (max->gamems + max->levelms > max->timetriallimitms)
+		{
+			max->game_mode = GAMELOST;
+			ft_game_end(max);
+			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
+		}
+	}
+	else if (max->game_type == ONEMAP)
+	{
+		if (max->levelms > max->limitms)
+		{
+			max->game_mode = GAMELOST;
+			ft_game_end(max);
+			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
+		}
+	}
+	else if (max->game_type == CAMPAIGN)
+	{
+		if (max->levelms > max->limitms)
+		{
+			max->game_mode = GAMELOST;
+			ft_game_end(max);
+			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
+		}
+	}
+}
 
 void	ft_gameplay(t_max *max)
 {
@@ -627,72 +689,8 @@ void	ft_gameplay(t_max *max)
 	// check win
 
 	//check lose
-	
-	if (max->map.m[((max->map.p.y >> 16) * max->map.w + (max->map.p.x >> 16))] & EXIT)
-	{
-		max->game_mode = GAMEWON;
-		max->game_in_progress = 0;
-		max->menu.current_button[0] = NEWGAME;
-		max->menu.current_buttongroup = MAINBUTTONS;
-		max->i.menuscreen->enabled = 1;
-		max->i.textscreen->enabled = 1;
-		max->i.overlay->enabled = 0;
-		max->gamems += max->levelms;
-		if (max->game_type == TIMETRIAL)
-			max->timetriallimitms += 15000;
-		if (max->game_type == TIMETRIAL)
-			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
-		else if  (max->game_type == ONEMAP)
-			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
-		else if  (max->game_type == CAMPAIGN)
-			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
-		return ;
-	}
-	if (max->game_type == TIMETRIAL)
-	{
-		if (max->gamems + max->levelms > max->timetriallimitms)
-		{
-			max->game_mode = GAMELOST;
-			max->game_in_progress = 0;
-			max->menu.current_button[0] = NEWGAME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.textscreen->enabled = 1;
-			max->i.overlay->enabled = 0;
-			max->gamems += max->levelms;
-			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
-		}
-	}
-	else if (max->game_type == ONEMAP)
-	{
-		if (max->levelms > max->limitms)
-		{
-			max->game_mode = GAMELOST;
-			max->game_in_progress = 0;
-			max->menu.current_button[0] = NEWGAME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.textscreen->enabled = 1;
-			max->i.overlay->enabled = 0;
-			max->gamems += max->levelms;
-			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
-		}
-	}
-	else if (max->game_type == CAMPAIGN)
-	{
-		if (max->levelms > max->limitms)
-		{
-			max->game_mode = GAMELOST;
-			max->game_in_progress = 0;
-			max->menu.current_button[0] = NEWGAME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.textscreen->enabled = 1;
-			max->i.overlay->enabled = 0;
-			max->gamems += max->levelms;
-			ft_sprintf(max->gamelost.stats, "              YOU LOST!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->limitms / 1000);
-		}
-	}
+	ft_game_win(max);
+	ft_game_lose(max);
 	if (max->keys[MLX_KEY_F1])
 	{
 		printf("fake quicksave\n");

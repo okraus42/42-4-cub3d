@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 16:27:26 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:41:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,7 @@ typedef struct s_randommap
 	t_values	rorooms;
 	t_values	rdoors;
 	t_values	rdeadends;
+	t_values	flamingos;
 	int			seed;
 }	t_randommap;
 

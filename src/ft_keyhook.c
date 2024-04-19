@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:57:29 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:21:38 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ void	ft_clear_keys(t_max *max)
 	}
 }
 
+
+// add function to open menu
 void	ft_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_max	*max;
@@ -180,10 +182,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 		}
 		else if (max->game_in_progress)
 		{
-			max->game_mode = GAMEPLAY;
-			max->i.menuscreen->enabled = 0;
-			max->i.textscreen->enabled = 0;
-			max->i.overlay->enabled = 1;
+			ft_resume(max);
 		}
 		else
 		{

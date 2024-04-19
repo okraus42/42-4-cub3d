@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 12:59:57 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:42:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,31 @@ void	ft_initrandommapvalues(t_randommap *rm)
 		rm->rdeadends.value = 0;
 	if (rm->rdeadends.value > 4096)
 		rm->rdeadends.value = 1;
+	rm->flamingos.min = 0;
+	rm->flamingos.max = 64;
+	rm->flamingos.value = (rand() % 64);
+}
+
+void	ft_resume(t_max *max)
+{
+	max->game_mode = GAMEPLAY;
+	max->i.menuscreen->enabled = 0;
+	max->i.textscreen->enabled = 0;
+	max->i.overlay->enabled = 1;
+}
+
+void	ft_newgame(t_max *max)
+{
+	max->game_mode = GAMESTART;
+	max->menu.current_button[MAINBUTTONS] = RESUME;
+	max->menu.current_buttongroup = MAINBUTTONS;
+	max->game_in_progress = 0;
+	max->i.menuscreen->enabled = 0;
+	max->i.textscreen->enabled = 1;
+	max->gamems = 0;
+	max->score = 1000000;
+	//level for campaign and timetrial???
+	// max->i.overlay->enabled = 1;
 }
 
 void	ft_initmenu(t_max *max)
@@ -894,9 +919,7 @@ void	ft_menu(t_max *max)
 		max->keys[MLX_KEY_ENTER] = 0;
 		if (max->menu.current_button[MAINBUTTONS] == RESUME)
 		{
-			max->game_mode = GAMEPLAY;
-			max->i.menuscreen->enabled = 0;
-			max->i.overlay->enabled = 1;
+			ft_resume(max);
 		}
 		if (max->menu.current_button[MAINBUTTONS] == NEWGAME)
 		{
@@ -978,12 +1001,7 @@ void	ft_menu(t_max *max)
 					if (ft_process_file(max))
 					{
 						printf("gamestart loop starting...\n");
-						max->game_mode = GAMESTART;
-						max->menu.current_button[MAINBUTTONS] = RESUME;
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 0;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 1;
+						ft_newgame(max);
 					}
 					else
 					{
@@ -1001,12 +1019,7 @@ void	ft_menu(t_max *max)
 					if (ft_process_random(max))
 					{
 						printf("gamestart loop starting...\n");
-						max->game_mode = GAMESTART;
-						max->menu.current_button[MAINBUTTONS] = RESUME;
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 0;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 1;
+						ft_newgame(max);
 					}
 					else
 					{
@@ -1054,13 +1067,7 @@ void	ft_menu(t_max *max)
 					if (ft_process_file(max))
 					{
 						printf("gamestart loop starting...\n");
-						max->game_mode = GAMESTART;
-						max->gamems = 0;
-						max->menu.current_button[MAINBUTTONS] = RESUME;
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 0;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 1;
+						ft_newgame(max);
 					}
 					else
 					{
@@ -1082,13 +1089,7 @@ void	ft_menu(t_max *max)
 					if (ft_process_random(max))
 					{
 						printf("gamestart loop starting...\n");
-						max->game_mode = GAMESTART;
-						max->gamems = 0;
-						max->menu.current_button[MAINBUTTONS] = RESUME;
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 0;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 1;
+						ft_newgame(max);
 					}
 					else
 					{
@@ -1223,14 +1224,7 @@ void	ft_menu(t_max *max)
 					if (ft_process_random(max))
 					{
 						printf("gamestart loop starting...\n");
-						max->game_mode = GAMESTART;
-						max->gamems = 0;
-						max->menu.current_button[MAINBUTTONS] = RESUME;
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 0;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 1;
-						max->i.overlay->enabled = 1;
+						ft_newgame(max);
 					}
 					else
 					{

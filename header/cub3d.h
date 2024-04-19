@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 12:51:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:20:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -582,6 +582,7 @@ typedef struct s_max
 	int				game_type;		//CAMPAIGN, TIMETRIAL, ONEMAP
 	int				difficulty;		//EASY MEDIUM HARD
 	int				game_in_progress;
+	int				reachedexit;
 	int				mmode;
 	int				ray;
 	int				level;
@@ -677,6 +678,9 @@ void	ft_place_line(mlx_image_t *img, t_line l);
 //ft_menu.c
 void	ft_initmenu(t_max *max);
 void	ft_menu(t_max *max);
+void	ft_resume(t_max *max);
+void	ft_newgame(t_max *max);
+
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);

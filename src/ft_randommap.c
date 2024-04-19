@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 16:09:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:58:14 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ void	ft_inittimetrialmap(t_randommap *rm, int level)
 		rm->rdeadends.value = 0;
 	if (rm->rdeadends.value > 4096)
 		rm->rdeadends.value = 1;
+	if (rm->rdeadends.value != 1)
+		rm->ratiolo.value = rm->ratiode.value + 1;
+	rm->flamingos.value = level;
 }
 
 static void	ft_map_init(t_max *max, t_map *map)
@@ -1384,6 +1387,7 @@ void	ft_random_init(t_max *max)
 			// (10011101 & 0011111) | 0111111
 			
 			// 01011110
+		
 			printf("EXIT: x %x y  %x\n", i % 256, i / 256);
 			max->map.sprites[SPRITE_EXIT].x = (i % 256) << 16 | 0x7FFF;
 			max->map.sprites[SPRITE_EXIT].y = (i / 256) << 16 | 0x7FFF;
@@ -1393,6 +1397,34 @@ void	ft_random_init(t_max *max)
 	}
 }
 
+void	ft_place_sprites(t_max *max)
+{
+	int	i;
+	int	c;
+
+	c = max->menu.rm.flamingos.value;
+	while (c)
+	{
+		i = 0;
+		while (i < 65536)
+		{
+			if (max->map.m[i] & FLOOR1)
+			{
+				if (c && !(rand() % 64))
+				{
+					printf("%Lx\n", max->map.m[i]);
+					max->map.sprites[max->map.spritecount].x = (i % 256) << 16 | 0x7FFF;
+					max->map.sprites[max->map.spritecount].y = (i / 256) << 16 | 0x7FFF;
+					ft_init_sprites_flamingo(&max->map, max->map.spritecount);
+					--c;
+				}
+			}
+			++i;
+		}
+	}
+}
+
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 int	ft_process_random(t_max *max)
@@ -1400,6 +1432,7 @@ int	ft_process_random(t_max *max)
 	t_map	*map;
 
 	map = &max->map;
+	ft_init_sprites(max);
 	ft_random_init(max);
 	// if (!ft_read_map(map))
 	// {
@@ -1424,6 +1457,7 @@ int	ft_process_random(t_max *max)
 	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
 	// 	++i;
 	// }
+	ft_place_sprites(max);
 	//for debugging
 	ft_print_map(map);
 	ft_init_time(max);

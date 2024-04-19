@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 16:43:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:47:05 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -597,6 +597,8 @@ void	ft_init_brume(t_max *max)
 	}
 }
 
+
+
 void	ft_init_time(t_max *max)
 {
 	int	i;
@@ -619,6 +621,7 @@ int	ft_process_file(t_max *max)
 {
 	t_map	*map;
 
+	ft_init_sprites(max);
 	map = &max->map;
 	ft_map_init(max, map);
 	if (!ft_read_map(map))

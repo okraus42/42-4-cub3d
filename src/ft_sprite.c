@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 13:44:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:34:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_init_sprites(t_max *max)
 
 	i = 0;
 	printf("sprite  exit %i init\n", SPRITE_EXIT);
-	max->map.sprites[SPRITE_EXIT].state = 0; //ON
+	max->map.sprites[SPRITE_EXIT].state = 0; //OFF
 	max->map.sprites[SPRITE_EXIT].texture = EXIT_TEXTURE; //EXITTEXTURE
 	max->map.sprites[SPRITE_EXIT].glowtexture = EXIT_GLOW; //EXITT GLOW EXTURE
 	max->map.sprites[SPRITE_EXIT].type = SPRITE_EXIT; //EXIT
@@ -209,6 +209,8 @@ void	ft_check_sprites(t_max *max)
 	while (i < max->map.spritecount)
 	{
 		sprite = &max->map.sprites[i];
+		if (sprite->type == SPRITE_EXIT && !max->map.current_sprite[SPRITE_FLAMINGO])
+			sprite->state = 1;
 		if (!sprite->state)
 		{
 			++i;
@@ -257,6 +259,10 @@ void	ft_check_sprites(t_max *max)
 			--max->map.current_sprite[SPRITE_FLAMINGO];
 			if (!max->map.current_sprite[SPRITE_FLAMINGO])
 				ft_activate_exit(max);
+		}
+		if (sprite->distance < 65536 && sprite->type == SPRITE_EXIT && sprite->state)
+		{
+			max->reachedexit = 1;
 		}
 		if (!(max->frame % 4))
 			if (++sprite->frame == sprite->maxframe)
