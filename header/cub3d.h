@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 09:29:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 12:51:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -378,6 +378,19 @@ typedef struct s_sprite
 	int	x;
 	int	y;
 	int	z;
+	int	spx; //sprite relative position
+	int	spy;
+	int	spz;
+	int			direction;
+	double		distance;
+	int			radius; //angle
+	long long	length;
+	int			sprite_height;
+	int	xpa;
+	int	relativedirection;
+	int sda;
+	int	xstart;
+	int	xend;
 }	t_sprite;
 
 //add door textures and stuff later
@@ -515,7 +528,9 @@ typedef struct s_highscore
 typedef struct s_overlay
 {
 	t_text		basicinfo;
+	t_text		playerinfo;
 	t_text		gameplayinfo;
+	t_text		timeinfo;
 	t_text		rayinfo;
 }	t_overlay;
 
@@ -690,6 +705,7 @@ void	ft_draw_screen3d(t_max *max);
 //ft_sprite.c
 void	ft_init_sprites_flamingo(t_map *map, int i);
 void	ft_init_sprites(t_max *max);
+void	ft_check_sprites(t_max *max);
 void	ft_draw_sprites(t_max *max);
 
 //ft_settings.c

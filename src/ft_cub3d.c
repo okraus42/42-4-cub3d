@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 11:57:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 12:41:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void	ft_cub3d(char *file)
 	max->ray = 0;
 	max->mmode = 0;
 	max->game_mode = MENU;
+	max->score = 1000000;
 	max->oldms = ft_get_time_in_ms();
 	max->newms = 0;
 	if (file)

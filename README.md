@@ -46,15 +46,27 @@ Sprites:
 https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
 Todo today:
-- get the count of flamingos
-- remove them when they are collected
-- unlock exit when all are collected
-- display them in the map
-- update score
-- sort sprites by distance (quicksort?)
-- game win / lose functions separated
+# - get the count of flamingos -ok
+# - remove them when they are collected
+# -- check sprites (calculate distances)
+# -- if distance is small remove
+
+# - display them in the map
+# - update score
+# - sort sprites by distance (quicksort?)
+? - unlock exit when all are collected
+- game win / lose functions separated ((check status of exit))
+-- functions to reset stuff
+--- continue / resume
+--- new map
+--- new game
 - generate flamingos in random maps?
 
+# - resume reset overlay
+- reset score and sprite counters on new game / map
+
+-- draw textures in light dist
+-- draw glowtexture in distance
 
 Updated todo list 2024-04-18:
 - sprites

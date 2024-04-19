@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 09:08:30 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 12:55:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -426,15 +426,25 @@ void	ft_draw_strings(t_max *max)
 		ft_snprintf(max->overlay.basicinfo.str, 255, "FPS: %3i   Pos [%6x] [%6x]   Orientation [%3i]",
 			1000 / max->framems, max->map.p.x, max->map.p.y,
 			max->map.p.orientation * 360 / MAXDEGREE);
+		ft_snprintf(max->overlay.playerinfo.str, 255,
+			"Name [%-10.10s] Coalition [%-10.10s] Campus[%-10.10s]",
+			max->name, max->coalition, max->campus);
 		ft_snprintf(max->overlay.gameplayinfo.str, 255,
-			"Name [%-10.10s] Coalition [%-10.10s] Campus[%-10.10s] Level[%2i] timelvl[%3i/%3i] time game[%3i/%3i]",
-			max->name, max->coalition, max->campus,
-			max->level, max->levelms / 1000, max->limitms / 1000, 
+			"Level[%2i] Score [%10i] Flamingos[%3i/%3i]",
+			max->level, max->score,
+			max->map.total_sprite[SPRITE_FLAMINGO]
+			- max->map.current_sprite[SPRITE_FLAMINGO],
+			max->map.total_sprite[SPRITE_FLAMINGO]);
+		ft_snprintf(max->overlay.timeinfo.str, 255,
+			"timelvl[%3i/%3i] time game[%3i/%3i]",
+			max->levelms / 1000, max->limitms / 1000, 
 			(max->gamems + max->levelms) / 1000, max->timetriallimitms / 1000);
 	}
 	ft_draw_text(&max->overlay.basicinfo, 0);
 	ft_draw_text(&max->overlay.rayinfo, 0);
+	ft_draw_text(&max->overlay.playerinfo, 0);
 	ft_draw_text(&max->overlay.gameplayinfo, 0);
+	ft_draw_text(&max->overlay.timeinfo, 0);
 }
 
 // void	ft_debug(t_max *max)
@@ -500,6 +510,7 @@ void	ft_gameplay(t_max *max)
 	// max->framems = (unsigned int)(max->newms - max->oldms);
 	//ft_printf("framems: %u\n", max->framems);
 	// Add some max speed to prevent running through walls.
+	max->score -= max->framems;
 	max->map.p.turnspeed = max->framems * 8;
 	max->map.p.speed = MIN(4 * 8 * 128, 128 * 8 * max->framems);
 	max->map.p.xspeed = (max->map.p.speed * max->math->cos[max->map.p.orientation]) / 65536;
@@ -608,6 +619,7 @@ void	ft_gameplay(t_max *max)
 			ft_revisit_map(&max->map);
 	}
 	ft_init_orays(max);
+	ft_check_sprites(max);
 	ft_draw_map(max);
 	ft_draw_minimap(max);
 	ft_draw_screen3d(max);

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:34:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 13:35:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,29 @@ static int	ft_is_inside(t_map *map, long long rad2, int y, int x)
 	}
 	return (0);
 }
+// void	ft_put_flamingo_in_map(t_max *max, t_sprite *flamingo)
+// {
+// 	int	x;
+// 	int	y;
+// 	int	i;
+// 	int	j;
+// 	int	s;
+
+// 	s = MIN(MAPWIDTH / max->map.ww, MAPHEIGHT / max->map.hh);
+// 	x = (flamingo->x >> 16) * s - s / 2;
+// 	y = (flamingo->y >> 16) * s - s / 2;
+// 	i = 0;
+// 	while (i < s)
+// 	{
+// 		j = 0;
+// 		while (j < s)
+// 		{
+// 			mlx_put_pixel(max->i.maximap, x + i, y + j, 0xFF80FFFF & TMASK);
+// 			++j;
+// 		}
+// 		++i;
+// 	}
+// }
 
 void	ft_draw_map(t_max *max)
 {
@@ -59,6 +82,17 @@ void	ft_draw_map(t_max *max)
 		}
 		++y;
 	}
+	// int	i;
+	// i = 0;
+	// while (i < max->map.spritecount)
+	// {
+	// 	if (max->map.sprites[i].state)
+	// 	{
+	// 		if (max->map.sprites[i].type == SPRITE_FLAMINGO)
+	// 			ft_put_flamingo_in_map(max, &max->map.sprites[i]);
+	// 	}
+	// 	++i;
+	// }
 	r = 0;
 	while (r < RAYS)
 	{

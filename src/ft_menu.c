@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:44:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 12:59:57 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -896,6 +896,7 @@ void	ft_menu(t_max *max)
 		{
 			max->game_mode = GAMEPLAY;
 			max->i.menuscreen->enabled = 0;
+			max->i.overlay->enabled = 1;
 		}
 		if (max->menu.current_button[MAINBUTTONS] == NEWGAME)
 		{

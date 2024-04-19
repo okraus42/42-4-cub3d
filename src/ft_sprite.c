@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 09:32:58 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/19 13:44:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,18 @@ void	ft_init_sprites_flamingo(t_map *map, int i)
 	map->sprites[i].frame = 0;
 	map->sprites[i].maxframe = 1;
 	map->sprites[i].z = 20;
+	++map->current_sprite[SPRITE_FLAMINGO];
+	++map->total_sprite[SPRITE_FLAMINGO];
 	++map->spritecount;
 }
 
 void	ft_init_sprites(t_max *max)
 {
+	int	i;
+
+	i = 0;
 	printf("sprite  exit %i init\n", SPRITE_EXIT);
-	max->map.sprites[SPRITE_EXIT].state = 1; //ON
+	max->map.sprites[SPRITE_EXIT].state = 0; //ON
 	max->map.sprites[SPRITE_EXIT].texture = EXIT_TEXTURE; //EXITTEXTURE
 	max->map.sprites[SPRITE_EXIT].glowtexture = EXIT_GLOW; //EXITT GLOW EXTURE
 	max->map.sprites[SPRITE_EXIT].type = SPRITE_EXIT; //EXIT
@@ -45,6 +50,12 @@ void	ft_init_sprites(t_max *max)
 	max->map.sprites[SPRITE_EXIT].maxframe = 32;
 	max->map.sprites[SPRITE_EXIT].z = 20;
 	max->map.spritecount = 1;
+	while (i < SPRITETYPES)
+	{
+		max->map.current_sprite[i] = 0;
+		max->map.total_sprite[i] = 0;
+		++i;
+	}
 }
 
 int	ft_sprite_visible(t_max *max, int r, int direction, int radius, long long distance)
@@ -171,19 +182,25 @@ void	ft_put_sprite_glowcolour(t_max *max, int startx, int x, int y, int size, t_
 		mlx_put_pixel(max->i.spritescreen, x, y, c);
 }
 
-void	ft_draw_sprites(t_max *max)
+void	ft_activate_exit(t_max *max)
 {
-	int	spx; //sprite relative position
-	int	spy;
-	int	spz;
-	int			direction;
-	double		distance;
-	int			radius; //angle
-	long long	length;
-	int			sprite_height;
-	int	y;
-	int	x;
+	int	i;
+
+	i = 0;
+	while (i < max->map.spritecount)
+	{
+		if (max->map.sprites[i].type == SPRITE_EXIT)
+			max->map.sprites[i].state = 1;
+		++i;
+	}
+}
+
+void	ft_check_sprites(t_max *max)
+{
+	int	fullangle; //move to settings?
 	int	r;
+	t_sprite	*sprite;
+	t_sprite	tempsprite; //maybe do swapping in separate function
 
 	//move elsewhere later?
 	ft_clean_spritescreen(max);
@@ -191,57 +208,115 @@ void	ft_draw_sprites(t_max *max)
 	i = 0;
 	while (i < max->map.spritecount)
 	{
-		spx = max->map.sprites[i].x - max->map.p.x;
-		spy = max->map.sprites[i].y - max->map.p.y;
-		spz = max->map.sprites[i].z;
-		(void)spz;
-		direction = atan2(spx, -spy) * (MAXDEGREE / 2 / M_PI);
+		sprite = &max->map.sprites[i];
+		if (!sprite->state)
+		{
+			++i;
+			continue ;
+		}
+		max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] &= 0x000000FFFFFFFFFF;
+		max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] |= 0xFF80FF0000000000;
+		sprite->spx = max->map.sprites[i].x - max->map.p.x;
+		sprite->spy = max->map.sprites[i].y - max->map.p.y;
+		sprite->spz = max->map.sprites[i].z;
+		(void)sprite->spz;
+		sprite->direction = atan2(sprite->spx, -sprite->spy) * (MAXDEGREE / 2 / M_PI);
 		//printf("%f\n", atan2(-spx, spy));
-		if (direction > MAXDEGREE)
-			direction -= MAXDEGREE;
-		else if (direction < 0)
-			direction += MAXDEGREE;
-		distance = sqrt((double)spx * (double)spx + (double)spy * (double)spy);
-		if (!distance)
-			distance = 1;
-		radius = atan(32768 / distance) * (MAXDEGREE / 2 / M_PI); //32768 = 65536/2
+		if (sprite->direction > MAXDEGREE)
+			sprite->direction -= MAXDEGREE;
+		else if (sprite->direction < 0)
+			sprite->direction += MAXDEGREE;
+		sprite->distance = sqrt((double)sprite->spx * (double)sprite->spx + (double)sprite->spy * (double)sprite->spy);
+		if (!sprite->distance)
+			sprite->distance = 1;
+		sprite->radius = atan(32768 / sprite->distance) * (MAXDEGREE / 2 / M_PI); //32768 = 65536/2
 		// ft_printf("direction = %i\n", direction);
 		// ft_printf("radius = %i\n", radius);
-		x = 0;
-		r = x * RAYS / SCREENWIDTH;
-		length = distance;
+
+		r = 0;
+		sprite->length = sprite->distance;
 		if (max->settings.fisheyecorrection)
 		{
-			length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
-			length /= 65536;
+			sprite->length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
+			sprite->length /= 65536;
 		}
-		sprite_height = 65536 * SCREENHEIGHT / length;
+		sprite->sprite_height = 65536 * SCREENHEIGHT / sprite->length;
 		// if (sprite_height > SCREENHEIGHT) //needs offset later
 		// 	sprite_height = SCREENHEIGHT;
-		if (distance > max->settings.maxdist)
+		if (sprite->distance > max->settings.maxdist)
 			return ;
+		if (sprite->distance < 65536 && sprite->type == SPRITE_FLAMINGO)
+		{
+			sprite->state = 0;
+			max->score += 25000;
+			max->limitms += 5000;
+			max->timetriallimitms += 5000;
+			max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] &= 0x000000FFFFFFFFFF;
+			max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] |= (((unsigned long long)max->map.f.rgba << 32));
+			printf("Collected flamingo\n");
+			--max->map.current_sprite[SPRITE_FLAMINGO];
+			if (!max->map.current_sprite[SPRITE_FLAMINGO])
+				ft_activate_exit(max);
+		}
 		if (!(max->frame % 4))
-			if (++max->map.sprites[i].frame == max->map.sprites[i].maxframe)
-				max->map.sprites[i].frame = 0;
+			if (++sprite->frame == sprite->maxframe)
+				sprite->frame = 0;
 		//player angle
 		//pa - fov/2 is left edge
 		//pa + fov/2 is right edge
 		//screenwidth = fov
 		//sprite direction
 		// x ~ pa - sprite direction + screenwidth/2
-		int	xpa = SCREENWIDTH / 2;
-		int	fullangle = 360 * SCREENWIDTH / max->settings.fov;
-		int	relativedirection = max->map.p.orientation - direction;
-		if (relativedirection < 0 - MAXDEGREE / 2)
-			relativedirection += MAXDEGREE;
-		if (relativedirection > MAXDEGREE / 2)
-			relativedirection -= MAXDEGREE;
-		//relativedirection is -180 - 180
-		int sda = fullangle * relativedirection / MAXDEGREE;
-		x = xpa - sda - sprite_height / 2;
-		int	xend = x + sprite_height;
 		
-		while (x < xend)
+		sprite->xpa = SCREENWIDTH / 2;
+		fullangle = 360 * SCREENWIDTH / max->settings.fov;
+		sprite->relativedirection = max->map.p.orientation - sprite->direction;
+		if (sprite->relativedirection < 0 - MAXDEGREE / 2)
+			sprite->relativedirection += MAXDEGREE;
+		if (sprite->relativedirection > MAXDEGREE / 2)
+			sprite->relativedirection -= MAXDEGREE;
+		//relativedirection is -180 - 180
+		sprite->sda = fullangle * sprite->relativedirection / MAXDEGREE;
+		sprite->xstart = sprite->xpa - sprite->sda - sprite->sprite_height / 2;
+		sprite->xend = sprite->xstart + sprite->sprite_height;
+		// good enough sort
+		if (i)
+		{
+			if (sprite->distance > max->map.sprites[i - 1].distance)
+			{
+				tempsprite = max->map.sprites[i - 1];
+				max->map.sprites[i - 1] = *sprite;
+				*sprite = tempsprite;
+			}
+		}
+		++i;
+	}
+}
+
+
+void	ft_draw_sprites(t_max *max)
+{
+	int	y;
+	int	x;
+	int	r;
+	t_sprite	*sprite;
+
+	//move elsewhere later?
+	ft_clean_spritescreen(max);
+	int	i;
+	i = 0;
+	while (i < max->map.spritecount)
+	{
+		sprite = &max->map.sprites[i];
+		if (!sprite->state)
+		{
+			++i;
+			continue ;
+		}
+		if (sprite->distance > max->settings.maxdist)
+			return ;
+		x = sprite->xstart;
+		while (x < sprite->xend)
 		{
 			if (x < 0)
 			{
@@ -251,21 +326,21 @@ void	ft_draw_sprites(t_max *max)
 			if (x >= SCREENWIDTH)
 				break ;
 			r = x * RAYS / SCREENWIDTH;
-			y = (SCREENHEIGHT - sprite_height) / 2;
+			y = (SCREENHEIGHT - sprite->sprite_height) / 2;
 			if (y < 0)
 				y = 0;
-			if (ft_sprite_visible(max, r, direction, radius, distance))
+			if (ft_sprite_visible(max, r, sprite->direction, sprite->radius, sprite->distance))
 			{
 				
-				while (y < SCREENHEIGHT / 2 + sprite_height / 2)
+				while (y < SCREENHEIGHT / 2 + sprite->sprite_height / 2)
 				{
 					if (y >= SCREENHEIGHT)
 						break ;
 					//check if any opacity, otherwise not put pixel
-					if (distance < max->settings.lightdist && max->map.sprites[i].texture)
-						ft_put_sprite_colour(max, xpa - sda - sprite_height / 2, x, y, sprite_height, &max->map.sprites[i]);
-					if (max->map.sprites[i].glowtexture)
-						ft_put_sprite_glowcolour(max, xpa - sda - sprite_height / 2, x, y, sprite_height, &max->map.sprites[i]);
+					if (sprite->distance < max->settings.lightdist && sprite->texture)
+						ft_put_sprite_colour(max, sprite->xpa - sprite->sda - sprite->sprite_height / 2, x, y, sprite->sprite_height, sprite);
+					if (sprite->glowtexture)
+						ft_put_sprite_glowcolour(max, sprite->xpa - sprite->sda - sprite->sprite_height / 2, x, y, sprite->sprite_height, sprite);
 					//mlx_put_pixel(max->i.screen, x, y, ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF);
 					++y;
 				}
