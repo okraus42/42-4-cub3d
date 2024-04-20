@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 16:01:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 16:21:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,8 +486,9 @@ typedef struct s_images
 	mlx_image_t		*hud;
 	mlx_image_t		*menuscreen;
 	mlx_image_t		*textscreen;
-	mlx_image_t		*screen;
-	mlx_image_t		*spritescreen;
+	mlx_image_t		*screen;		//3d
+	mlx_image_t		*spritescreen;	//sprites
+	mlx_image_t		*fogscreen;		//fog
 	mlx_image_t		*maximap;
 	mlx_image_t		*minimap;
 	mlx_image_t		*supermap;

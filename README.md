@@ -68,6 +68,12 @@ Todo today:
 -- draw textures in light dist
 -- draw glowtexture in distance
 
+Sunday:
+- fog (brume)
+- random fog colour
+- glow distance
+- fog drawned in separate image
+
 Updated todo list 2024-04-18:
 - sprites
 - consumables
