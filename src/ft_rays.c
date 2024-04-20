@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 14:13:42 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 15:50:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,41 @@ int	ft_otest(t_oray *oray, t_max *max, int r, int debug)
 		}
 		return (0);
 	}
+}
+
+void	ft_visit_neighbours(t_map *map, int mp, unsigned long long visit)
+{
+	unsigned long long	visit2;
+
+	visit2 = (visit >> 1) & VISITED;
+	map->m[mp] |= visit;
+	if ((mp % 256))
+		map->m[mp - 1] |= visit2;
+	if ((mp % 256) < map->hh)
+		map->m[mp + 1] |= visit2;
+	if ((mp / 256))
+		map->m[mp - map->w] |= visit2;
+	if ((mp / 256) < map->ww)
+		map->m[mp + map->w] |= visit2;
+	if ((mp % 256) && (mp / 256))
+		map->m[mp - 1 - map->w] |= visit2;
+	if ((mp % 256) && (mp / 256) < map->ww)
+		map->m[mp -1 + map->w] |= visit2;
+	if ((mp % 256) < map->hh && (mp / 256))
+		map->m[mp + 1 - map->w] |= visit2;
+	if ((mp % 256) < map->hh && (mp / 256) < map->ww)
+		map->m[mp + 1 + map->w] |= visit2;
+	
+}
+
+void	ft_visit_map(t_map *map, long long length, long long dist, int mp)
+{
+	if (length < dist)
+		ft_visit_neighbours(map, mp, (VISITED >> 2) & VISITED);
+	if (length < dist / 2)
+		ft_visit_neighbours(map, mp, (VISITED >> 1) & VISITED);
+	if (length < dist / 4)
+		ft_visit_neighbours(map, mp, VISITED);
 }
 
 void	ft_init_orays(t_max *max)
@@ -355,12 +390,13 @@ void	ft_init_orays(t_max *max)
 				// }
 				if (oray->tdof)
 				{
-					if (oray->length2 < max->settings.lightdist)
-						max->map.m[mp] |= VISITED / 4;
-					if (oray->length2 < max->settings.lightdist / 2)
-						max->map.m[mp] |= VISITED / 2;
-					if (oray->length2 < max->settings.lightdist / 4)
-						max->map.m[mp] |= VISITED;
+					ft_visit_map(&max->map, oray->length2, max->settings.lightdist, mp);
+					// if (oray->length2 < max->settings.lightdist)
+					// 	max->map.m[mp] |= VISITED / 4;
+					// if (oray->length2 < max->settings.lightdist / 2)
+					// 	max->map.m[mp] |= VISITED / 2;
+					// if (oray->length2 < max->settings.lightdist / 4)
+					// 	max->map.m[mp] |= VISITED;
 				}
 				//ft_printf("hdof2.5 = %i\n", oray->hdof);
 				oray->length2 -= oray->ldof;

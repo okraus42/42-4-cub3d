@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:20:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 16:01:47 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@
 
 # define EMPTINESS 0x0			//outside of the playable map
 # define FLOOR1 0x1
+# define FLOORFLAMINGO 0x4
 # define FLOOR 0xFF
 # define FLOORWN 0x10
 # define FLOORWE 0x20
@@ -670,6 +671,7 @@ void	ft_draw_minimap(t_max *max);
 
 //ft_rays.c
 //void	ft_init_rays(t_max *max);
+void	ft_visit_map(t_map *map, long long length, long long dist, int mp);
 void	ft_init_orays(t_max *max);
 
 //ft_line.c

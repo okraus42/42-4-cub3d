@@ -57,13 +57,13 @@ Todo today:
 # - unlock exit when all are collected
 # - game win / lose functions separated ((check status of exit))
 -- functions to reset stuff
---- continue / resume
+# --- continue / resume
 --- new map
---- new game
-- generate flamingos in random maps?
+# --- new game
+# - generate flamingos in random maps?
 
 # - resume reset overlay
-- reset score and sprite counters on new game / map
+# - reset score and sprite counters on new game / map
 
 -- draw textures in light dist
 -- draw glowtexture in distance

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 13:43:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 16:14:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	ft_init_sprites_flamingo(t_map *map, int i)
 	map->sprites[i].frame = 0;
 	map->sprites[i].maxframe = 1;
 	map->sprites[i].z = 20;
-	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] &= 0x000000FFFFFFFFFF;
-	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] |= 0xFF80FF0000000000;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] &= 0x00000000FFFFFFFF;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] |= 0xFF80FFFF00000000;
 	++map->current_sprite[SPRITE_FLAMINGO];
 	++map->total_sprite[SPRITE_FLAMINGO];
 	++map->spritecount;

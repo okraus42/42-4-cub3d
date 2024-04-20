@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:47:05 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 16:09:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,10 +294,8 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 		map->m[y * map->w + x] = EXIT;
 	else if (c == 'F')
 	{
-		map->m[y * map->w + x] = FLOOR1;
-		map->sprites[map->spritecount].x = x << 16 | 0x7FFF;
-		map->sprites[map->spritecount].y = y << 16 | 0x7FFF;
-		ft_init_sprites_flamingo(map, map->spritecount);
+		printf("flamingo11\n");
+		map->m[y * map->w + x] = FLOORFLAMINGO;
 	}
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
@@ -440,15 +438,22 @@ void	ft_fill_colours_to_map(t_map *map)
 	{
 		if (map->m[i] & EXIT)
 		{
-			map->sprites[SPRITE_EXIT].x = (i % 256) << 16 | 0x7FFF;
-			map->sprites[SPRITE_EXIT].y = (i / 256) << 16 | 0x7FFF;
+			map->sprites[SPRITE_EXIT].x = ((i % 256) << 16) | 0x7FFF;
+			map->sprites[SPRITE_EXIT].y = ((i / 256) << 16) | 0x7FFF;
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= 0xFF00FFFF00000000;
 		}
-		else if (map->m[i] & FLOOR)
+		else if (map->m[i] & FLOOR1)
 		{
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+		}
+		else if (map->m[i] & FLOORFLAMINGO)
+		{
+			printf("flamingo22\n");
+			map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			ft_init_sprites_flamingo(map, map->spritecount);
 		}
 		else if (map->m[i] & WALL)
 		{

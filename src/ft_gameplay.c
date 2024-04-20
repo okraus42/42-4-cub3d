@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:16:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 15:55:29 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -653,6 +653,7 @@ void	ft_gameplay(t_max *max)
 	// 		max->mmode = 0;
 	// }
 	//ft_printf("test0\n");
+	ft_visit_map(&max->map, 16, 256, (max->map.p.x >> 16) + ((max->map.p.y >> 16) * max->map.w));
 	if (max->keys[MLX_KEY_SPACE])
 	{
 		max->map.p.reveal = 1;
