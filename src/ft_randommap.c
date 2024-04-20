@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:58:14 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 12:24:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1401,18 +1401,25 @@ void	ft_place_sprites(t_max *max)
 {
 	int	i;
 	int	c;
+	int	canary;
 
+	canary = 4096;
 	c = max->menu.rm.flamingos.value;
-	while (c)
+	while (c || canary)
 	{
 		i = 0;
-		while (i < 65536)
+		while (i < max->map.w * max->map.h)
 		{
-			if (max->map.m[i] & FLOOR1)
+			if (max->map.m[i] & WALL)
+			{
+				++i;
+				continue ;
+			}
+			if ((max->map.m[i] & FLOOR1) && (i != (max->map.p.mx + max->map.p.my * max->map.w)))
 			{
 				if (c && !(rand() % 64))
 				{
-					printf("%Lx\n", max->map.m[i]);
+					printf("x %i y %i map[%i] %Lx\n", (i % 256), (i / 256), i, max->map.m[i] & FLOOR);
 					max->map.sprites[max->map.spritecount].x = (i % 256) << 16 | 0x7FFF;
 					max->map.sprites[max->map.spritecount].y = (i / 256) << 16 | 0x7FFF;
 					ft_init_sprites_flamingo(&max->map, max->map.spritecount);
@@ -1421,6 +1428,7 @@ void	ft_place_sprites(t_max *max)
 			}
 			++i;
 		}
+		--canary;
 	}
 }
 

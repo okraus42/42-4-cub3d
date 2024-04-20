@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:34:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/20 13:43:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	ft_init_sprites_flamingo(t_map *map, int i)
 	map->sprites[i].frame = 0;
 	map->sprites[i].maxframe = 1;
 	map->sprites[i].z = 20;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] &= 0x000000FFFFFFFFFF;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] |= 0xFF80FF0000000000;
 	++map->current_sprite[SPRITE_FLAMINGO];
 	++map->total_sprite[SPRITE_FLAMINGO];
 	++map->spritecount;
@@ -194,32 +196,80 @@ void	ft_activate_exit(t_max *max)
 		++i;
 	}
 }
+void	ft_swap_sprites(t_sprite *a, t_sprite *b)
+{
+	t_sprite	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void	ft_print_sprite_info(t_sprite *sprite)
+{
+	ft_printf("type %i | state %i | frame %i | maxframe %i\n", sprite->type, sprite->state, sprite->frame, sprite->maxframe);
+	// 	int	type;
+	// int	state;
+	// char	text[16];  //text on sprite e.g. "Libft"
+	// int	frame;
+	// int	maxframe;
+	// int	texture; //map
+	// int	glowtexture;
+	// int	x;
+	// int	y;
+	// int	z;
+	ft_printf("x %x, y %x, z %i\n", sprite->x, sprite->y, sprite->z);
+	// int	spx; //sprite relative position
+	// int	spy;
+	// int	spz;
+	ft_printf("spx %x, spy %x, spz %i\n", sprite->spx, sprite->spy, sprite->spz);
+	// int			direction;
+	// double		distance;
+	printf("direction %i | distance %f\n", sprite->direction, sprite->distance);
+	// int			radius; //angle
+	// long long	length;
+	ft_printf("radius %i | length %Li | height %i\n", sprite->radius, sprite->length, sprite->sprite_height);
+	// int			sprite_height;
+	// int	xpa;
+	// int	relativedirection;
+	// int sda;
+	// int	xstart;
+	// int	xend;
+}
 
 void	ft_check_sprites(t_max *max)
 {
 	int	fullangle; //move to settings?
 	int	r;
 	t_sprite	*sprite;
-	t_sprite	tempsprite; //maybe do swapping in separate function
+	
 
 	//move elsewhere later?
 	ft_clean_spritescreen(max);
 	int	i;
+
 	i = 0;
+	if (max->keys[MLX_KEY_H])
+	{
+		max->keys[MLX_KEY_H] = 2;
+		ft_printf("SPRITE INFO:\n", i);
+		ft_printf("px %x py %x\n", max->map.p.x, max->map.p.y);
+		while (i < max->map.spritecount)
+		{
+			sprite = &max->map.sprites[i];
+			ft_printf("SPRITE INFO %i:\n", i);
+			ft_print_sprite_info(sprite);
+			++i;
+		}
+		i = 0;
+	}
 	while (i < max->map.spritecount)
 	{
 		sprite = &max->map.sprites[i];
 		if (sprite->type == SPRITE_EXIT && !max->map.current_sprite[SPRITE_FLAMINGO])
 			sprite->state = 1;
-		if (!sprite->state)
-		{
-			++i;
-			continue ;
-		}
-		max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] &= 0x000000FFFFFFFFFF;
-		max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] |= 0xFF80FF0000000000;
-		sprite->spx = max->map.sprites[i].x - max->map.p.x;
-		sprite->spy = max->map.sprites[i].y - max->map.p.y;
+		sprite->spx = max->map.sprites[i].x - (int)max->map.p.x;
+		sprite->spy = max->map.sprites[i].y - (int)max->map.p.y;
 		sprite->spz = max->map.sprites[i].z;
 		(void)sprite->spz;
 		sprite->direction = atan2(sprite->spx, -sprite->spy) * (MAXDEGREE / 2 / M_PI);
@@ -230,7 +280,22 @@ void	ft_check_sprites(t_max *max)
 			sprite->direction += MAXDEGREE;
 		sprite->distance = sqrt((double)sprite->spx * (double)sprite->spx + (double)sprite->spy * (double)sprite->spy);
 		if (!sprite->distance)
-			sprite->distance = 1;
+			sprite->distance = 1.;
+		// good enough sort
+		if (max->keys[MLX_KEY_H])
+			printf("sprite: %i distance: %f\n", i, sprite->distance);
+		if (i)
+		{
+			if (sprite->distance > max->map.sprites[i - 1].distance)
+			{
+				ft_swap_sprites(&max->map.sprites[i - 1], sprite);
+			}
+		}
+		if (!sprite->state)
+		{
+			++i;
+			continue ;
+		}
 		sprite->radius = atan(32768 / sprite->distance) * (MAXDEGREE / 2 / M_PI); //32768 = 65536/2
 		// ft_printf("direction = %i\n", direction);
 		// ft_printf("radius = %i\n", radius);
@@ -245,8 +310,11 @@ void	ft_check_sprites(t_max *max)
 		sprite->sprite_height = 65536 * SCREENHEIGHT / sprite->length;
 		// if (sprite_height > SCREENHEIGHT) //needs offset later
 		// 	sprite_height = SCREENHEIGHT;
-		if (sprite->distance > max->settings.maxdist)
-			return ;
+		if (sprite->distance > (double)max->settings.maxdist)
+		{
+			++i;
+			continue ;
+		}
 		if (sprite->distance < 65536 && sprite->type == SPRITE_FLAMINGO)
 		{
 			sprite->state = 0;
@@ -285,18 +353,9 @@ void	ft_check_sprites(t_max *max)
 		sprite->sda = fullangle * sprite->relativedirection / MAXDEGREE;
 		sprite->xstart = sprite->xpa - sprite->sda - sprite->sprite_height / 2;
 		sprite->xend = sprite->xstart + sprite->sprite_height;
-		// good enough sort
-		if (i)
-		{
-			if (sprite->distance > max->map.sprites[i - 1].distance)
-			{
-				tempsprite = max->map.sprites[i - 1];
-				max->map.sprites[i - 1] = *sprite;
-				*sprite = tempsprite;
-			}
-		}
 		++i;
 	}
+	max->keys[MLX_KEY_H] = 0;
 }
 
 
@@ -320,7 +379,10 @@ void	ft_draw_sprites(t_max *max)
 			continue ;
 		}
 		if (sprite->distance > max->settings.maxdist)
-			return ;
+		{
+			++i;
+			continue ;
+		}
 		x = sprite->xstart;
 		while (x < sprite->xend)
 		{
