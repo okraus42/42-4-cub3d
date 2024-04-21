@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 16:21:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 15:02:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -598,6 +598,7 @@ typedef struct s_max
 	unsigned int	timetriallimitms;
 	char			campaignmap[256];
 	long			frame;
+	unsigned int	fog[SCREENHEIGHT][SCREENWIDTH];
 }	t_max;
 
 // PROTOTYPES
@@ -684,6 +685,9 @@ void	ft_menu(t_max *max);
 void	ft_resume(t_max *max);
 void	ft_newgame(t_max *max);
 
+//ft_mousehook.c
+void	ft_cursorhook(void *param);
+void	ft_mousehook(void *param);
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);

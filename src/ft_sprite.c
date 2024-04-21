@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 16:14:54 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 14:51:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ void	ft_put_sprite_colour(t_max *max, int startx, int x, int y, int size, t_spri
 	int				p;
 	int				h;
 	int				starty;
+	unsigned int	spritefog;
+	unsigned int	spritefogalpha;
 
 	starty = (SCREENHEIGHT - size) / 2;
 	w = max->t.sprites[sprite->texture]->width;
@@ -143,8 +145,16 @@ void	ft_put_sprite_colour(t_max *max, int startx, int x, int y, int size, t_spri
 	b = max->t.sprites[sprite->texture]->pixels[p + 2];
 	a = max->t.sprites[sprite->texture]->pixels[p + 3];
 	c = r << 24 | g << 16 | b << 8 | a;
-	if (a)
+	spritefog = max->map.b.rgba & 0xFFFFFF00;
+	//BITWISE MAGIC LATER
+	// 900 * 10 / 1000 9
+	// printf("spritefog %8x\n", spritefog);
+	spritefogalpha = (((long long)sprite->distance * 255 / max->settings.lightdist) & 0xFF);
+	if (a > 0x80)
+	{
 		mlx_put_pixel(max->i.spritescreen, x, y, c);
+		mlx_put_pixel(max->i.fogscreen, x, y, spritefog | spritefogalpha);
+	}
 }
 
 void	ft_put_sprite_glowcolour(t_max *max, int startx, int x, int y, int size, t_sprite *sprite) //add sprite
@@ -160,6 +170,8 @@ void	ft_put_sprite_glowcolour(t_max *max, int startx, int x, int y, int size, t_
 	int				p;
 	int				h;
 	int				starty;
+	unsigned int	spritefog;
+	unsigned int	spritefogalpha;
 
 	starty = (SCREENHEIGHT - size) / 2;
 	w = max->t.sprites[sprite->glowtexture]->width;
@@ -180,8 +192,16 @@ void	ft_put_sprite_glowcolour(t_max *max, int startx, int x, int y, int size, t_
 	b = max->t.sprites[sprite->glowtexture]->pixels[p + 2];
 	a = max->t.sprites[sprite->glowtexture]->pixels[p + 3];
 	c = r << 24 | g << 16 | b << 8 | a;
-	if (a)
+	spritefog = max->map.b.rgba & 0xFFFFFF00;
+	//BITWISE MAGIC LATER
+	// 900 * 10 / 1000 9
+	// printf("spritefog %8x\n", spritefog);
+	spritefogalpha = (((long long)sprite->distance * 255 / max->settings.maxdist) & 0xFF);
+	if (a > 0x30)
+	{
 		mlx_put_pixel(max->i.spritescreen, x, y, c);
+		mlx_put_pixel(max->i.fogscreen, x, y, spritefog | spritefogalpha);
+	}
 }
 
 void	ft_activate_exit(t_max *max)

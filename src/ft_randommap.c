@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 12:24:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 14:43:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	ft_map_init(t_max *max, t_map *map)
 	map->w = 0;
 	map->f.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
 	map->c.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
-	map->b.rgba = 0xFF;
+	map->b.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
 	i = 0;
 	while (i < 65536)
 	{

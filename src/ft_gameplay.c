@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/20 15:55:29 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 15:22:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -585,6 +585,17 @@ void	ft_gameplay(t_max *max)
 	// size based on fov... maybe tangens? fov cannot be more than 180
 	max->map.p.cx = max->math->cos[max->map.p.orientation];
 	max->map.p.cy = max->math->sin[max->map.p.orientation];
+	int	x;
+	int	y;
+	int	angle;
+	mlx_get_mouse_pos(max->mlx, &x, &y);
+	angle = (512 - x) * 4;
+	max->map.p.orientation -= angle;
+	if (max->map.p.orientation < 0)
+		max->map.p.orientation += MAXDEGREE;
+	if (max->map.p.orientation >= MAXDEGREE)
+		max->map.p.orientation -= MAXDEGREE;
+	mlx_set_mouse_pos(max->mlx, 512, 512);
 	ft_draw_strings(max);
 	//ft_debug(max);
 	//ft_printf("test\n");

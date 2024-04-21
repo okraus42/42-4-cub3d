@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/19 13:39:15 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/21 14:59:27 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,7 @@ SRC_S		=	ft_buttons.c \
 				ft_map.c \
 				ft_menu.c \
 				ft_minimap.c \
+				ft_mousehook.c \
 				ft_overlay.c \
 				ft_parser.c \
 				ft_randommap.c \

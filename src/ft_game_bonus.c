@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/18 17:01:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 15:20:02 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,14 @@ void	ft_init_images(t_max *max)
 	max->i.spritescreen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
 	//if (!max->spritescreen || (mlx_image_to_window(max->mlx, max->spritescreen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
 	if (!max->i.spritescreen || (mlx_image_to_window(max->mlx, max->i.spritescreen, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
+	max->i.fogscreen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
+	//if (!max->fogscreen || (mlx_image_to_window(max->mlx, max->fogscreen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
+	if (!max->i.fogscreen || (mlx_image_to_window(max->mlx, max->i.fogscreen, 0, 0) < 0))
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
@@ -122,7 +130,8 @@ void	ft_amaze_bonus(t_max *max)
 	ft_init_overlay(max);
 	ft_init_sprites(max);
 	mlx_key_hook(max->mlx, &ft_keyhook, max);
-	//mlx_mouse_hook(mlx, &ft_mousehook, max);
+	// mlx_mouse_hook(max->mlx, &ft_mousehook, max);
+	// mlx_cursor_hook(max->mlx, &ft_cursorhook, max);
 	mlx_loop_hook(max->mlx, ft_hook, max);
 	mlx_loop(max->mlx);
 	/*                         */

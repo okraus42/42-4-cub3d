@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:42:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/21 15:13:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	ft_resume(t_max *max)
 	max->i.menuscreen->enabled = 0;
 	max->i.textscreen->enabled = 0;
 	max->i.overlay->enabled = 1;
+	mlx_set_mouse_pos(max->mlx, 512, 512);
 }
 
 void	ft_newgame(t_max *max)
@@ -76,6 +77,7 @@ void	ft_newgame(t_max *max)
 	max->i.textscreen->enabled = 1;
 	max->gamems = 0;
 	max->score = 1000000;
+	mlx_set_mouse_pos(max->mlx, 512, 512);
 	//level for campaign and timetrial???
 	// max->i.overlay->enabled = 1;
 }

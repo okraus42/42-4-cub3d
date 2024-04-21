@@ -69,24 +69,24 @@ Todo today:
 -- draw glowtexture in distance
 
 Sunday:
-- fog (brume)
-- random fog colour
-- glow distance
-- fog drawned in separate image
+# - fog (brume)
+# - random fog colour
+# - glow distance
+# - fog drawned in separate image
 
 Updated todo list 2024-04-18:
-- sprites
-- consumables
-- exit unlocks after collectibles are picked up?
-- score system
+# - sprites
+# - consumables
+# - exit unlocks after collectibles are picked up?
+# - score system
 - doors
 - keys
-- fog
+# - fog
 - textured walls
 - textured floor and ceiling
-- multiple types of walls and floors
 - mouse control in game
 - mouse control in the menu
+- multiple types of walls and floors and sprites and doors
 - button size adjustable
 - jumping and crouching
 - enemies ?
