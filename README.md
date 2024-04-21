@@ -105,6 +105,8 @@ Updated todo list 2024-04-18:
 - optimisations
 - checks (random map)
 
+- settings
+-- mouse senditivity
 
 
 
