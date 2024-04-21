@@ -106,7 +106,7 @@ Updated todo list 2024-04-18:
 - checks (random map)
 
 - settings
--- mouse senditivity
+-- mouse sensitivity
 
 
 
