@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/24 13:46:22 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/24 17:29:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	ft_init_sprites_flamingo(t_map *map, int i)
 	++map->spritecount;
 }
 
+//east doors
 void	ft_init_sprites_doors(t_map *map, int i, int type)
 {
 	printf("sprite %i, door %i init\n", i, type);
@@ -48,6 +49,10 @@ void	ft_init_sprites_doors(t_map *map, int i, int type)
 	map->sprites[i].frame = 0;
 	map->sprites[i].maxframe = 1;
 	map->sprites[i].z = 20;
+	map->sprites[i].x_left = map->sprites[i].x & 0xFF0000;
+	map->sprites[i].y_left = map->sprites[i].y;
+	map->sprites[i].x_right = map->sprites[i].x | 0xFFFF;
+	map->sprites[i].y_right = map->sprites[i].y;
 	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] &= 0x00000000FFFFFFFF;
 	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] |= 0x53565AFF00000000;
 	(void)type; //type of door
@@ -306,7 +311,7 @@ void	ft_check_sprites(t_max *max)
 	
 
 	//move elsewhere later?
-	printf("checking sprites\n");
+	//printf("checking sprites\n");
 	ft_clean_spritescreen(max);
 	int	i;
 
@@ -426,6 +431,8 @@ void	ft_check_sprites(t_max *max)
 		sprite->sda = fullangle * sprite->relativedirection / MAXDEGREE;
 		sprite->xstart = sprite->xpa - sprite->sda - sprite->sprite_height / 2;
 		sprite->xend = sprite->xstart + sprite->sprite_height;
+		if (sprite->type == SPRITE_DOOR)
+			ft_check_door_sprite(max, i);
 		++i;
 	}
 	max->keys[MLX_KEY_H] = 0;
@@ -458,7 +465,7 @@ void	ft_draw_sprites(t_max *max)
 			++i;
 			continue ;
 		}
-		if (sprite->distance > max->settings.maxdist)
+		if (sprite->distance > max->settings.maxdist || sprite->distance < 4096)
 		{
 			++i;
 			continue ;
@@ -477,9 +484,23 @@ void	ft_draw_sprites(t_max *max)
 			y = (SCREENHEIGHT - sprite->sprite_height) / 2;
 			if (y < 0)
 				y = 0;
-			if (ft_sprite_visible2(max, r, sprite->distance))
+			if (sprite->type != SPRITE_DOOR && ft_sprite_visible2(max, r, sprite->distance))
 			{
-				
+				while (y < SCREENHEIGHT / 2 + sprite->sprite_height / 2)
+				{
+					if (y >= SCREENHEIGHT)
+						break ;
+					//check if any opacity, otherwise not put pixel
+					if (sprite->distance < max->settings.lightdist && sprite->texture)
+						ft_put_sprite_colour(max, sprite->xpa - sprite->sda - sprite->sprite_height / 2, x, y, sprite->sprite_height, sprite);
+					if (sprite->glowtexture)
+						ft_put_sprite_glowcolour(max, sprite->xpa - sprite->sda - sprite->sprite_height / 2, x, y, sprite->sprite_height, sprite);
+					//mlx_put_pixel(max->i.screen, x, y, ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF);
+					++y;
+				}
+			}
+			if (sprite->type == SPRITE_DOOR && ft_sprite_visible2(max, r, sprite->distance_left))
+			{
 				while (y < SCREENHEIGHT / 2 + sprite->sprite_height / 2)
 				{
 					if (y >= SCREENHEIGHT)

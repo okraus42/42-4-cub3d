@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/24 13:15:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/24 17:19:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,19 +385,34 @@ typedef struct s_sprite
 	int	glowtexture;
 	int	x;
 	int	y;
+	int	x_left;
+	int	y_left;
+	int	x_right;
+	int	y_right;
 	int	z;
 	int	spx; //sprite relative position
 	int	spy;
+	int	spx_left; //sprite relative position
+	int	spy_left;
+	int	spx_right; //sprite relative position
+	int	spy_right;
 	int	spz;
 	int			direction;
+	int			direction_left;
+	int			direction_right;
 	double		distance;
+	double		distance_left;
+	double		distance_right;
 	int			radius; //angle
 	long long	length;
 	int			sprite_height;
 	int	xpa;
 	int	relativedirection;
+	int	relativedirection_left;
+	int	relativedirection_right;
 	int sda;
 	int	xstart;
+	int	xmiddle;
 	int	xend;
 }	t_sprite;
 
@@ -727,6 +742,9 @@ void	ft_init_sprites_doors(t_map *map, int i, int type);
 void	ft_init_sprites(t_max *max);
 void	ft_check_sprites(t_max *max);
 void	ft_draw_sprites(t_max *max);
+
+//ft_doors.c
+void	ft_check_door_sprite(t_max *max, int i);
 
 //ft_settings.c
 void	ft_init_settings(t_max *max);

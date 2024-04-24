@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/21 14:59:27 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/24 17:18:53 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,7 @@ SRC_DIR		=	src/
 
 SRC_S		=	ft_buttons.c \
 				ft_cub3d.c \
+				ft_doors.c \
 				ft_free.c \
 				ft_game.c \
 				ft_game_bonus.c \
