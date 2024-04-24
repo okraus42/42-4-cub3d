@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 14:51:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/24 13:46:22 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,24 @@ void	ft_init_sprites_flamingo(t_map *map, int i)
 	++map->spritecount;
 }
 
+void	ft_init_sprites_doors(t_map *map, int i, int type)
+{
+	printf("sprite %i, door %i init\n", i, type);
+	map->sprites[i].state = 1; //ON
+	map->sprites[i].texture = DOOR_TEXTURE; //EXITTEXTURE
+	map->sprites[i].glowtexture = DOOR_GLOW; //EXITT GLOW EXTURE
+	map->sprites[i].type = SPRITE_DOOR; //EXIT
+	map->sprites[i].frame = 0;
+	map->sprites[i].maxframe = 1;
+	map->sprites[i].z = 20;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] &= 0x00000000FFFFFFFF;
+	map->m[(map->sprites[i].y >> 16) * map->w + (map->sprites[i].x >> 16)] |= 0x53565AFF00000000;
+	(void)type; //type of door
+	++map->current_sprite[SPRITE_DOOR];
+	++map->total_sprite[SPRITE_DOOR];
+	++map->spritecount;
+}
+
 void	ft_init_sprites(t_max *max)
 {
 	int	i;
@@ -60,7 +78,9 @@ void	ft_init_sprites(t_max *max)
 	}
 }
 
-int	ft_sprite_visible(t_max *max, int r, int direction, int radius, long long distance)
+
+//if sprite is outsite of field of view, do not draw it
+int	ft_sprite_visible(t_max *max, int direction, int radius)
 {
 	int	minangle;
 	int	maxangle;
@@ -71,24 +91,38 @@ int	ft_sprite_visible(t_max *max, int r, int direction, int radius, long long di
 		minangle += MAXDEGREE;
 	if (maxangle >= MAXDEGREE)
 		maxangle -= MAXDEGREE;
-	// 180 +/- 20
-	// 160 - 200
-	// 10
-	// 350 - 30
-	// 350
-	// 330 - 10
+	if (minangle < maxangle)
+	{
+		if (max->map.p.oray[0].ra < max->map.p.oray[RAYS - 1].ra)
+		{
+			if (max->map.p.oray[RAYS - 1].ra < minangle
+				|| max->map.p.oray[0].ra > maxangle)
+				return (0);
+		}
+		else
+		{
+			if (max->map.p.oray[RAYS - 1].ra < minangle
+				&& max->map.p.oray[0].ra > maxangle)
+				return (0);
+		}
+	}
+	else
+	{
+		if (max->map.p.oray[0].ra < max->map.p.oray[RAYS - 1].ra)
+		{
+			if (max->map.p.oray[RAYS - 1].ra < minangle
+				&& max->map.p.oray[0].ra > maxangle)
+				return (0);
+		}
+	}
+	return (1);
+}
+
+//if sprite is behind a wall, do not draw it
+int	ft_sprite_visible2(t_max *max, int r, long long distance)
+{
 	if (max->map.p.oray[r].wall && distance > max->map.p.oray[r].length)
 		return (0);
-	// if (minangle < maxangle)
-	// {
-	// 	if (max->map.p.oray[r].ra < minangle || max->map.p.oray[r].ra > maxangle)
-	// 		return (0);
-	// }
-	// else
-	// {
-	// 	if (max->map.p.oray[r].ra < minangle && max->map.p.oray[r].ra > maxangle)
-	// 		return (0);
-	// }
 	return (1);
 }
 
@@ -257,14 +291,22 @@ void	ft_print_sprite_info(t_sprite *sprite)
 	// int	xend;
 }
 
+// draw left half and right half of the door
+// calculate left edge and right edge distance from player
+// calculate x start and x end
+
+
+
+
 void	ft_check_sprites(t_max *max)
 {
 	int	fullangle; //move to settings?
-	int	r;
+	//int	r;
 	t_sprite	*sprite;
 	
 
 	//move elsewhere later?
+	printf("checking sprites\n");
 	ft_clean_spritescreen(max);
 	int	i;
 
@@ -285,6 +327,7 @@ void	ft_check_sprites(t_max *max)
 	}
 	while (i < max->map.spritecount)
 	{
+		// printf("%i\n", i);
 		sprite = &max->map.sprites[i];
 		if (sprite->type == SPRITE_EXIT && !max->map.current_sprite[SPRITE_FLAMINGO])
 			sprite->state = 1;
@@ -318,15 +361,25 @@ void	ft_check_sprites(t_max *max)
 		}
 		sprite->radius = atan(32768 / sprite->distance) * (MAXDEGREE / 2 / M_PI); //32768 = 65536/2
 		// ft_printf("direction = %i\n", direction);
-		// ft_printf("radius = %i\n", radius);
+		// ft_printf("radius = %i\n", sprite->radius);
 
-		r = 0;
+		//r = 0;
+		if (!ft_sprite_visible(max, sprite->direction, sprite->radius))
+		{
+			++i;
+			sprite->visible = 0;
+			continue ;
+		}
+		sprite->visible = 1;
 		sprite->length = sprite->distance;
 		if (max->settings.fisheyecorrection)
 		{
-			sprite->length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
+			sprite->length *= max->math->cos[ft_capangle(max->map.p.orientation - sprite->direction)];
 			sprite->length /= 65536;
 		}
+		if (!sprite->length)
+			sprite->length = 1;
+		// ft_printf("length = %i\n", sprite->length);
 		sprite->sprite_height = 65536 * SCREENHEIGHT / sprite->length;
 		// if (sprite_height > SCREENHEIGHT) //needs offset later
 		// 	sprite_height = SCREENHEIGHT;
@@ -361,7 +414,7 @@ void	ft_check_sprites(t_max *max)
 		//screenwidth = fov
 		//sprite direction
 		// x ~ pa - sprite direction + screenwidth/2
-		
+		// ft_printf("bbbbb\n");
 		sprite->xpa = SCREENWIDTH / 2;
 		fullangle = 360 * SCREENWIDTH / max->settings.fov;
 		sprite->relativedirection = max->map.p.orientation - sprite->direction;
@@ -376,6 +429,7 @@ void	ft_check_sprites(t_max *max)
 		++i;
 	}
 	max->keys[MLX_KEY_H] = 0;
+	//printf("sprites checked\n");
 }
 
 
@@ -387,6 +441,7 @@ void	ft_draw_sprites(t_max *max)
 	t_sprite	*sprite;
 
 	//move elsewhere later?
+	// printf("drawing sprites\n");
 	ft_clean_spritescreen(max);
 	int	i;
 	i = 0;
@@ -394,6 +449,11 @@ void	ft_draw_sprites(t_max *max)
 	{
 		sprite = &max->map.sprites[i];
 		if (!sprite->state)
+		{
+			++i;
+			continue ;
+		}
+		if (!sprite->visible)
 		{
 			++i;
 			continue ;
@@ -417,7 +477,7 @@ void	ft_draw_sprites(t_max *max)
 			y = (SCREENHEIGHT - sprite->sprite_height) / 2;
 			if (y < 0)
 				y = 0;
-			if (ft_sprite_visible(max, r, sprite->direction, sprite->radius, sprite->distance))
+			if (ft_sprite_visible2(max, r, sprite->distance))
 			{
 				
 				while (y < SCREENHEIGHT / 2 + sprite->sprite_height / 2)
@@ -437,4 +497,5 @@ void	ft_draw_sprites(t_max *max)
 		}
 		++i;
 	}
+	// printf("sprites drawn\n");
 }

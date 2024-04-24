@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 15:02:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/24 13:15:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,10 @@
 # define FLOOD1 0x10000
 # define FLOOD2 0x20000
 # define EXIT 0x2			//exit behaves like floor
-# define DOOR1 0x1000000
+# define DOOREAST 0x1000000
+# define DOORWEST 0x2000000
+# define DOORSOUTH 0x4000000
+# define DOORNORTH 0x8000000
 # define VISIT 0x100000000
 # define VISITED 0xFF00000000
 
@@ -359,17 +362,21 @@ typedef struct s_player
 
 # define SPRITE_EXIT 0
 # define SPRITE_FLAMINGO 1
-# define SPRITETYPES 2
+# define SPRITE_DOOR 2
+# define SPRITETYPES 3
 
 # define EXIT_TEXTURE 0
 # define EXIT_GLOW 1
 # define FLAMINGO_TEXTURE 2
 # define FLAMINGO_GLOW 3
-# define SPRITETEXTURES 4
+# define DOOR_TEXTURE 4
+# define DOOR_GLOW 0
+# define SPRITETEXTURES 5
 
 typedef struct s_sprite
 {
 	int	type;
+	int	visible;
 	int	state;
 	char	text[16];  //text on sprite e.g. "Libft"
 	int	frame;
@@ -466,6 +473,7 @@ typedef struct s_textures
 	mlx_texture_t	*ewall;
 	mlx_texture_t	*swall;
 	mlx_texture_t	*wwall;
+	mlx_texture_t	*door;
 	mlx_texture_t	*ceiling;
 	mlx_texture_t	*floor;
 	mlx_texture_t	*textbg;
@@ -715,6 +723,7 @@ void	ft_draw_screen3d(t_max *max);
 
 //ft_sprite.c
 void	ft_init_sprites_flamingo(t_map *map, int i);
+void	ft_init_sprites_doors(t_map *map, int i, int type);
 void	ft_init_sprites(t_max *max);
 void	ft_check_sprites(t_max *max);
 void	ft_draw_sprites(t_max *max);
