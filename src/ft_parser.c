@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 11:04:46 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 13:34:10 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 		i = 0;
 		while (split[j][i])
 		{
-			if (!ft_strchr(" 01NSEWXF>", split[j][i]))
+			if (!ft_strchr(" 01NSEWXF><^v", split[j][i]))
 			{
 				ft_free_split(&split);
 				return(ft_puterror("Invalid character in map", 0));
@@ -301,6 +301,21 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 	{
 		printf("dooreast1\n");
 		map->m[y * map->w + x] = DOOREAST;
+	}
+	else if (c == '<')
+	{
+		printf("doorwest1\n");
+		map->m[y * map->w + x] = DOORWEST;
+	}
+	else if (c == '^')
+	{
+		printf("doornorth1\n");
+		map->m[y * map->w + x] = DOORNORTH;
+	}
+	else if (c == 'v')
+	{
+		printf("doorsouth1\n");
+		map->m[y * map->w + x] = DOORSOUTH;
 	}
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
@@ -461,6 +476,36 @@ void	ft_fill_colours_to_map(t_map *map)
 			ft_init_sprites_flamingo(map, map->spritecount);
 		}
 		else if (map->m[i] & DOOREAST)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORWEST)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORNORTH)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORSOUTH)
 		{
 			printf("dooreast\n");
 			map->m[i] &= 0x00000000FFFFFFFF;

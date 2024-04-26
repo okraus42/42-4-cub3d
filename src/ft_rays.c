@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 13:27:27 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 13:54:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ void	ft_init_orays(t_max *max)
 	int			mx;
 	int			my;
 	int			mp;
+	int			mp2;
 	int			r;
 	int			debug;
 	long long	pd;
@@ -229,30 +230,50 @@ void	ft_init_orays(t_max *max)
 				{
 					// if visible part of door
 					// 0000-1111
-					if (max->map.doors[mp] & 0x7F
-						&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= (oray->hx[oray->hdof - 1] & 0xFFFF))
+					mp2 = mp;
+					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
+					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
+					mp = (my << 8) + mx;
+					++oray->hdof;
+					mx = oray->hx[oray->hdof - 1] >> 16;
+					my = oray->hy[oray->hdof - 1] >> 16;
+					if (mp == mp2 && (oray->hy[oray->hdof - 1] & 0xFFFF) <= 0x8000)
 					{
-						if (oray->ra > WEST || oray->ra < EAST)
-							oray->wall |= DOORNORTH; //north side of the door visible
-						else if (oray->ra < WEST && oray->ra > EAST)
-							oray->wall |= DOORSOUTH;
-						oray->hm = max->map.m[mp];
-						break ;
+						if (max->map.doors[mp] & 0x7F
+							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= (oray->hx[oray->hdof - 1] & 0xFFFF))
+						{
+							if (oray->ra > WEST || oray->ra < EAST)
+								oray->wall |= DOORNORTH; //north side of the door visible
+							else if (oray->ra < WEST && oray->ra > EAST)
+								oray->wall |= DOORSOUTH;
+							oray->hm = max->map.m[mp];
+							break ;
+						}
 					}
 				}
 				if ((max->map.m[mp]) & DOOREAST)
 				{
 					// if visible part of door
 					// 00000000-11111111
-					if (max->map.doors[mp] & 0x7F
-						&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= 0xFFFF - (oray->hx[oray->hdof - 1] & 0xFFFF))
+					mp2 = mp;
+					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
+					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
+					mp = (my << 8) + mx;
+					++oray->hdof;
+					mx = oray->hx[oray->hdof - 1] >> 16;
+					my = oray->hy[oray->hdof - 1] >> 16;
+					if (mp == mp2 && (oray->hy[oray->hdof - 1] & 0xFFFF) <= 0x8000)
 					{
-						if (oray->ra > WEST || oray->ra < EAST)
-							oray->wall |= DOORNORTH; //north side of the door visible
-						else if (oray->ra < WEST && oray->ra > EAST)
-							oray->wall |= DOORSOUTH;
-						oray->hm = max->map.m[mp];
-						break ;
+						if (max->map.doors[mp] & 0x7F
+							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= 0xFFFF - (oray->hx[oray->hdof - 1] & 0xFFFF))
+						{
+							if (oray->ra > WEST || oray->ra < EAST)
+								oray->wall |= DOORNORTH; //north side of the door visible
+							else if (oray->ra < WEST && oray->ra > EAST)
+								oray->wall |= DOORSOUTH;
+							oray->hm = max->map.m[mp];
+							break ;
+						}
 					}
 				}
 			}
@@ -318,16 +339,54 @@ void	ft_init_orays(t_max *max)
 					oray->vm = max->map.m[mp];
 					break ;
 				}
-				if ((max->map.m[mp]) & DOOR)
+				if ((max->map.m[mp]) & DOORNORTH)
 				{
-					if (max->map.doors[mp] & 0xFF)
+					// if visible part of door
+					// 0000-1111
+					mp2 = mp;
+					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
+					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
+					mp = (my << 8) + mx;
+					++oray->vdof;
+					mx = oray->vx[oray->vdof - 1] >> 16;
+					my = oray->vy[oray->vdof - 1] >> 16;
+					if (mp == mp2 && (oray->vx[oray->vdof - 1] & 0xFFFF) <= 0x8000)
 					{
-					if (oray->ra < SOUTH && oray->ra > NORTH)
-						oray->wall |= DOOREAST; //east side of door visible
-					else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
-						oray->wall |= DOORWEST;
-					oray->vm = max->map.m[mp];
-					break ;
+						if (max->map.doors[mp] & 0x7F
+							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= (oray->vy[oray->vdof - 1] & 0xFFFF))
+						{
+							if (oray->ra < SOUTH && oray->ra > NORTH)
+								oray->wall |= DOOREAST; //east side of door visible
+							else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
+								oray->wall |= DOORWEST;
+							oray->vm = max->map.m[mp];
+							break ;
+						}
+					}
+				}
+				if ((max->map.m[mp]) & DOORSOUTH)
+				{
+					// if visible part of door
+					// 00000000-11111111
+					mp2 = mp;
+					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
+					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
+					mp = (my << 8) + mx;
+					++oray->vdof;
+					mx = oray->vx[oray->vdof - 1] >> 16;
+					my = oray->vy[oray->vdof - 1] >> 16;
+					if (mp == mp2 && (oray->vx[oray->vdof - 1] & 0xFFFF) <= 0x8000)
+					{
+						if (max->map.doors[mp] & 0x7F
+							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= 0xFFFF - (oray->vy[oray->vdof - 1] & 0xFFFF))
+						{
+							if (oray->ra < SOUTH && oray->ra > NORTH)
+								oray->wall |= DOOREAST; //east side of door visible
+							else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
+								oray->wall |= DOORWEST;
+							oray->vm = max->map.m[mp];
+							break ;
+						}
 					}
 				}
 			}

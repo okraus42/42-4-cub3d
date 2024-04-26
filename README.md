@@ -66,7 +66,7 @@ Todo today:
 # - reset score and sprite counters on new game / map
 
 DOORS
-- interactions
+# - interactions
 - collisions
 - textures
 
