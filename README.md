@@ -65,6 +65,11 @@ Todo today:
 # - resume reset overlay
 # - reset score and sprite counters on new game / map
 
+DOORS
+- interactions
+- collisions
+- textures
+
 -- draw textures in light dist
 -- draw glowtexture in distance
 

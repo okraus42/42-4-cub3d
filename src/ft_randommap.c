@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 14:43:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 10:24:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,9 +227,9 @@ typedef enum e_map_block
 	RWALL_B = 0x20,
 	RWALL_C = 0x40,
 	RWALL_D = 0x80,
-	DOOR_NS = 0x100,
-	DOOR_WE = 0x200,
-	DOOR = 0xF00,
+	RDOOR_NS = 0x100,
+	RDOOR_WE = 0x200,
+	RDOOR = 0xF00,
 	DEADSPOT = 0x10000,
 	CORNER_CORRIDOR = 0x1F000,
 	CORRIDOR = 0x3F000,
@@ -257,9 +257,9 @@ typedef enum e_map_block
 // 	RWALL_B = 0x20,		//RWALL between columns
 // 	RWALL_C = 0x40,		//RWALL between columns between two different areas
 // 	RWALL_D = 0x80,		//RWALL after deadend
-// 	DOOR_NS = 0x100,		// corridor at 
-// 	DOOR_WE = 0x200,
-// 	DOOR = 0xF00,
+// 	RDOOR_NS = 0x100,		// corridor at 
+// 	RDOOR_WE = 0x200,
+// 	RDOOR = 0xF00,
 // 	DEADSPOT = 0x10000,	//surrounded by 4 walls
 // 	CORNER_CORRIDOR = 0x1F000, // corner corridor
 // 	CORRIDOR = 0x3F000,	//any corridor corner stuff
@@ -314,9 +314,9 @@ void	map_print(char *str, t_rmap *m)
 			ft_printf("%^*C  %0C", 0xffffff);
 		else if (m->map[i] == ROOM_B)
 			ft_printf("%^*C  %0C", 0xffeeff);
-		else if (m->map[i] == DOOR_NS)
+		else if (m->map[i] == RDOOR_NS)
 			ft_printf("%.*^*C--%0C", 0, 0xcc9966);
-		else if (m->map[i] == DOOR_WE)
+		else if (m->map[i] == RDOOR_WE)
 			ft_printf("%.*^*C||%0C", 0, 0xcc9966);
 		else if (m->map[i] & FLOOD_A)
 			ft_printf("%^*C  %0C", m->colour);
@@ -367,9 +367,9 @@ void	map_print2(char *str, t_rmap *m)
 			ft_printf("0");
 		else if (m->map[i] == ROOM_B)
 			ft_printf("0");
-		else if (m->map[i] == DOOR_NS)
+		else if (m->map[i] == RDOOR_NS)
 			ft_printf("0");
-		else if (m->map[i] == DOOR_WE)
+		else if (m->map[i] == RDOOR_WE)
 			ft_printf("0");
 		else if (m->map[i] & FLOOD_A)
 			ft_printf("0");
@@ -909,9 +909,9 @@ void	add_wall_c(t_rmap *m)
 void	add_door(t_rmap *m, int i)
 {
 	if (m->map[i + 1] == RWALL_A || m->map[i - 1] == RWALL_A)
-		m->map[i] = DOOR_NS;
+		m->map[i] = RDOOR_NS;
 	else
-		m->map[i] = DOOR_WE;
+		m->map[i] = RDOOR_WE;
 }
 
 void	open_door(t_rmap *m)
@@ -1040,9 +1040,9 @@ void	refill_corridors1(t_rmap *m)
 			if ((m->map[m->i - 1]) == RWALL_B || (m->map[m->i + 1]) == RWALL_B
 				|| (m->map[m->i + m->w]) == RWALL_B
 				|| (m->map[m->i - m->w]) == RWALL_B
-				|| m->map[m->i - 1] == DOOR_WE || m->map[m->i + 1] == DOOR_WE
-				|| (m->map[m->i + m->w]) == DOOR_NS
-				|| (m->map[m->i - m->w]) == DOOR_NS)
+				|| m->map[m->i - 1] == RDOOR_WE || m->map[m->i + 1] == RDOOR_WE
+				|| (m->map[m->i + m->w]) == RDOOR_NS
+				|| (m->map[m->i - m->w]) == RDOOR_NS)
 				m->map[m->i] = CORRIDOR_A;
 		}
 		++(m->i);
@@ -1075,11 +1075,11 @@ void	refill_corridors3(t_rmap *m)
 	m->i = 0;
 	while (m->i < m->s)
 	{
-		if (m->map[m->i] & DOOR_NS
+		if (m->map[m->i] & RDOOR_NS
 			&& m->map[m->i + m->w] == CORRIDOR_A
 			&& m->map[m->i - m->w] == CORRIDOR_A)
 			m->map[m->i] = CORRIDOR_B;
-		else if (m->map[m->i] & DOOR_WE
+		else if (m->map[m->i] & RDOOR_WE
 			&& m->map[m->i - 1] & CORRIDOR_A
 			&& m->map[m->i + 1] & CORRIDOR_A)
 			m->map[m->i] = CORRIDOR_B;
@@ -1244,13 +1244,13 @@ void	rd_east(t_rmap *m)
 
 void	remove_deadend(t_rmap *m)
 {
-	if (m->map[m->d + 1] & (CORRIDOR_B | DOOR))
+	if (m->map[m->d + 1] & (CORRIDOR_B | RDOOR))
 		rd_east(m);
-	else if (m->map[m->d - 1] & (CORRIDOR_B | DOOR))
+	else if (m->map[m->d - 1] & (CORRIDOR_B | RDOOR))
 		rd_west(m);
-	else if (m->map[m->d + (m->w)] & (CORRIDOR_B | DOOR))
+	else if (m->map[m->d + (m->w)] & (CORRIDOR_B | RDOOR))
 		rd_south(m);
-	else if (m->map[m->d - (m->w)] & (CORRIDOR_B | DOOR))
+	else if (m->map[m->d - (m->w)] & (CORRIDOR_B | RDOOR))
 		rd_north(m);
 }
 
@@ -1352,7 +1352,7 @@ void	ft_random_init(t_max *max)
 		{
 			if (m.map[j] & RWALL)
 				max->map.m[i] = WALL1;
-			if ((m.map[j] & CORRIDOR) || (m.map[j] & DOOR) || (m.map[j] & ROOM))
+			if ((m.map[j] & CORRIDOR) || (m.map[j] & RDOOR) || (m.map[j] & ROOM))
 			{
 				max->map.m[i] = FLOOR1;
 				if (p)

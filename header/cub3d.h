@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/24 17:19:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 12:55:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,13 @@
 //	 NORTH    SOUTH     EAST     WEST   WALL
 //
 
+//	00000000 00000000 00000000 00000000
+//	 KEY     TEXTURE    ????   open/close  DOOR
+//	locked					   10010101 - closing
+//							   00111011 - opening
+//							   11111111 - closed
+//							   00000000 - opened
+
 // WALL 0	//perimeter wall separating outside and inside
 // WALL 1	// precalculated columns
 // other types of wall
@@ -146,6 +153,9 @@
 # define DOORWEST 0x2000000
 # define DOORSOUTH 0x4000000
 # define DOORNORTH 0x8000000
+# define DOOR 0xF000000
+# define DOORNS 0xC000000
+# define DOOREW 0x3000000
 # define VISIT 0x100000000
 # define VISITED 0xFF00000000
 
@@ -211,11 +221,12 @@ typedef union u_clr
 #  define WWALLCOLOUR 0x0000AAFF
 #  define NOWALLCOLOUR 0xFFFF00FF
 # else
-#  define NWALLCOLOUR 0x998800FF
-#  define EWALLCOLOUR 0xAA9900FF
-#  define SWALLCOLOUR 0x887700FF
-#  define WWALLCOLOUR 0x776600FF
-#  define NOWALLCOLOUR 0xFFFF00FF
+#  define DOORCOLOUR 0x53565AFFU
+#  define NWALLCOLOUR 0x998800FFU
+#  define EWALLCOLOUR 0xAA9900FFU
+#  define SWALLCOLOUR 0x887700FFU
+#  define WWALLCOLOUR 0x776600FFU
+#  define NOWALLCOLOUR 0xFFFF00FFU
 # endif
 
 
@@ -303,6 +314,7 @@ typedef struct s_oray
 	unsigned long long	vm;
 	unsigned long long	hm;
 	unsigned long long	m;
+	unsigned int		mpos;	//position of ray in the map
 }	t_oray;
 
 typedef struct s_player
@@ -351,6 +363,7 @@ typedef struct s_player
 	int	yc[2];
 	int	xn[2];
 	int	yn[2];
+	
 	int	reveal;			//radius of revealed map
 	//t_oray			ray[RAYS];
 	t_oray			oray[RAYS];
@@ -362,16 +375,13 @@ typedef struct s_player
 
 # define SPRITE_EXIT 0
 # define SPRITE_FLAMINGO 1
-# define SPRITE_DOOR 2
-# define SPRITETYPES 3
+# define SPRITETYPES 2
 
 # define EXIT_TEXTURE 0
 # define EXIT_GLOW 1
 # define FLAMINGO_TEXTURE 2
 # define FLAMINGO_GLOW 3
-# define DOOR_TEXTURE 4
-# define DOOR_GLOW 0
-# define SPRITETEXTURES 5
+# define SPRITETEXTURES 4
 
 typedef struct s_sprite
 {
@@ -385,34 +395,34 @@ typedef struct s_sprite
 	int	glowtexture;
 	int	x;
 	int	y;
-	int	x_left;
-	int	y_left;
-	int	x_right;
-	int	y_right;
+	// int	x_left;
+	// int	y_left;
+	// int	x_right;
+	// int	y_right;
 	int	z;
 	int	spx; //sprite relative position
 	int	spy;
-	int	spx_left; //sprite relative position
-	int	spy_left;
-	int	spx_right; //sprite relative position
-	int	spy_right;
+	// int	spx_left; //sprite relative position
+	// int	spy_left;
+	// int	spx_right; //sprite relative position
+	// int	spy_right;
 	int	spz;
 	int			direction;
-	int			direction_left;
-	int			direction_right;
+	// int			direction_left;
+	// int			direction_right;
 	double		distance;
-	double		distance_left;
-	double		distance_right;
+	// double		distance_left;
+	// double		distance_right;
 	int			radius; //angle
 	long long	length;
 	int			sprite_height;
 	int	xpa;
 	int	relativedirection;
-	int	relativedirection_left;
-	int	relativedirection_right;
+	// int	relativedirection_left;
+	// int	relativedirection_right;
 	int sda;
 	int	xstart;
-	int	xmiddle;
+	// int	xmiddle;
 	int	xend;
 }	t_sprite;
 
@@ -420,6 +430,7 @@ typedef struct s_sprite
 typedef struct s_map
 {
 	unsigned long long	m[65536];		//1d array of map representation
+	unsigned int		doors[65536];	//info about doors
 	char				file[4096];		//original mapfile string
 	char				*mapstr;		//actual content of the file
 	char				*northtexture;	//path to the north texture
@@ -744,7 +755,8 @@ void	ft_check_sprites(t_max *max);
 void	ft_draw_sprites(t_max *max);
 
 //ft_doors.c
-void	ft_check_door_sprite(t_max *max, int i);
+void	ft_interact_door(t_max *max);
+void	ft_check_doors(t_max *max);
 
 //ft_settings.c
 void	ft_init_settings(t_max *max);

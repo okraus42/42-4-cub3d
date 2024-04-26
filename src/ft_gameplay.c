@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 15:22:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 12:47:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -703,6 +703,13 @@ void	ft_gameplay(t_max *max)
 	//check lose
 	ft_game_win(max);
 	ft_game_lose(max);
+	ft_check_doors(max);
+	if (max->keys[MLX_KEY_F])
+	{
+		printf("opening/closing door\n");
+		ft_interact_door(max);
+		max->keys[MLX_KEY_F] = 0;
+	}
 	if (max->keys[MLX_KEY_F1])
 	{
 		printf("fake quicksave\n");

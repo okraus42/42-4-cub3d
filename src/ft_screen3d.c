@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 14:38:35 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 10:25:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,8 @@ void	ft_draw_screen3d(t_max *max)
 					mlx_put_pixel(max->i.screen, x, y, SWALLCOLOUR);
 				else if (max->map.p.oray[r].wall & WWALL)
 					mlx_put_pixel(max->i.screen, x, y, WWALLCOLOUR);
+				else if (max->map.p.oray[r].wall & DOOR)
+					mlx_put_pixel(max->i.screen, x, y, DOORCOLOUR);
 				else
 					mlx_put_pixel(max->i.screen, x, y, NOWALLCOLOUR);
 			}

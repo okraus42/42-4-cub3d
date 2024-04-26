@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/24 12:25:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/26 11:04:46 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -463,9 +463,12 @@ void	ft_fill_colours_to_map(t_map *map)
 		else if (map->m[i] & DOOREAST)
 		{
 			printf("dooreast\n");
-			map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
-			map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
-			ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
 		}
 		else if (map->m[i] & WALL)
 		{
