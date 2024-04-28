@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 11:38:43 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 14:59:15 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,10 +233,10 @@ void	ft_init_orays(t_max *max)
 					mp2 = mp;
 					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
 					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
-					mp = (my << 8) + mx;
 					++oray->hdof;
 					mx = oray->hx[oray->hdof - 1] >> 16;
 					my = oray->hy[oray->hdof - 1] >> 16;
+					mp = (my << 8) + mx;
 					if (mp == mp2 && (oray->hy[oray->hdof - 1] & 0xFFFF) <= 0x8000)
 					{
 						if (max->map.doors[mp] & 0x7F
@@ -259,10 +259,10 @@ void	ft_init_orays(t_max *max)
 					mp2 = mp;
 					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
 					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
-					mp = (my << 8) + mx;
 					++oray->hdof;
 					mx = oray->hx[oray->hdof - 1] >> 16;
 					my = oray->hy[oray->hdof - 1] >> 16;
+					mp = (my << 8) + mx;
 					if (mp == mp2 && (oray->hy[oray->hdof - 1] & 0xFFFF) <= 0x8000)
 					{
 						if (max->map.doors[mp] & 0x7F
@@ -348,10 +348,11 @@ void	ft_init_orays(t_max *max)
 					mp2 = mp;
 					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
 					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
-					mp = (my << 8) + mx;
+	
 					++oray->vdof;
 					mx = oray->vx[oray->vdof - 1] >> 16;
 					my = oray->vy[oray->vdof - 1] >> 16;
+					mp = (my << 8) + mx;
 					if (mp == mp2 && (oray->vx[oray->vdof - 1] & 0xFFFF) <= 0x8000)
 					{
 						if (max->map.doors[mp] & 0x7F
@@ -374,10 +375,10 @@ void	ft_init_orays(t_max *max)
 					mp2 = mp;
 					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
 					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
-					mp = (my << 8) + mx;
 					++oray->vdof;
 					mx = oray->vx[oray->vdof - 1] >> 16;
 					my = oray->vy[oray->vdof - 1] >> 16;
+					mp = (my << 8) + mx;
 					if (mp == mp2 && (oray->vx[oray->vdof - 1] & 0xFFFF) <= 0x8000)
 					{
 						if (max->map.doors[mp] & 0x7F

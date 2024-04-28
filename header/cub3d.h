@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 11:19:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:37:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@
 # define SUPERMAPHEIGHT 1080
 # define SUPERMAPBORDER 256
 
-# define SCREENWIDTH (192 * 2)
-# define SCREENHEIGHT (108 * 2) //- HUD later
+# define SCREENWIDTH (1920)
+# define SCREENHEIGHT (1080) //- HUD later
 # define TMASK 0xFFFFFFFF //
 
 
@@ -235,6 +235,30 @@ typedef union u_clr
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
 
+typedef struct s_wallcheck
+{
+	int	x;
+	int	y;
+	int	ny;
+	int	sy;
+	int	ex;
+	int	wx;
+}	t_wallcheck;
+
+typedef struct s_walltexture
+{
+	int			y;
+	int			x;
+	int			u;
+	int			v;
+	int			r;
+	int			wall_height;
+	int			offset;
+	int			fake_wall_height;
+	int			fake_offset;
+	long long	length;
+	long long	fake_length;
+}	t_walltexture;
 
 typedef struct s_line
 {

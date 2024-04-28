@@ -1,10 +1,10 @@
-NO ./textures/nwall1.png
-SO ./textures/swall1.png
-WE ./textures/wwall1.png
-EA ./textures/ewall1.png
+NO ./textures/poolwallN.png
+SO ./textures/poolwallS.png
+WE ./textures/poolwallW.png
+EA ./textures/poolwallE.png
 
-F 32,64,32
-C 32,128,255
+F 13,116,175
+C 134,193,211
 B 8,32,64
                                                        
   111111111111111111111111111111111111111111111111111111111  

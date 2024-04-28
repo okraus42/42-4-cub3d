@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 11:32:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:40:01 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,16 +220,6 @@
 // 		++x;
 // 	}
 // }
-
-typedef struct s_wallcheck
-{
-	int	x;
-	int	y;
-	int	ny;
-	int	sy;
-	int	ex;
-	int	wx;
-}	t_wallcheck;
 
 void	ft_init_wc(t_wallcheck *wc, int y, int x)
 {
@@ -824,6 +814,11 @@ void	ft_gameplay(t_max *max)
 		printf("quickload\n");
 		if (ft_quickload(max))
 			ft_dprintf(2, "Unable to load the game, make sure the safe file exists\n");
+	}
+	if (max->keys[MLX_KEY_M])
+	{
+		max->keys[MLX_KEY_M] = 0;
+		max->i.maximap->enabled ^= 1;
 	}
 	//ft_draw_screen2d(max);
 	//ft_draw_screen2dquad(max);

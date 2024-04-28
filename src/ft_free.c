@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:04:28 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 12:31:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:34:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	ft_free(t_max *max)
 {
 	if (max)
 	{
+		//DELETE TEXTURES
+		//mlx_delete_texture(max->t.nwall);
 		if (max->menu.custommap.files)
 			free (max->menu.custommap.files);
 		max->menu.custommap.files = NULL;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 09:54:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:35:13 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,11 @@ void	ft_init_textures(t_max *max)
 	ft_load_texture("./textures/sprites/exit01t.png", &max->t.sprites[EXIT_GLOW]);
 	ft_load_texture("./textures/sprites/flamingo_normal256.png", &max->t.sprites[FLAMINGO_TEXTURE]);
 	ft_load_texture("./textures/sprites/flamingo_glow256.png", &max->t.sprites[FLAMINGO_GLOW]);
-	ft_load_texture("./textures/sprites/door512.png", &max->t.door);
+	ft_load_texture("./textures/sprites/dolphins512.png", &max->t.door);
+	ft_load_texture("./textures/poolwallN.png", &max->t.nwall);
+	ft_load_texture("./textures/poolwallW.png", &max->t.wwall);
+	ft_load_texture("./textures/poolwallS.png", &max->t.swall);
+	ft_load_texture("./textures/poolwallE.png", &max->t.ewall);
 }
 
 void	ft_amaze_bonus(t_max *max)

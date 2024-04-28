@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 13:34:10 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:32:09 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,16 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 
 int	ft_init_map_textures(t_max *max)
 {
+
+	//free textures if they exist
+	if (max->t.nwall)
+		mlx_delete_texture(max->t.nwall);
+	if (max->t.swall)
+		mlx_delete_texture(max->t.swall);
+	if (max->t.ewall)
+		mlx_delete_texture(max->t.ewall);
+	if (max->t.wwall)
+		mlx_delete_texture(max->t.wwall);
 	ft_load_texture(max->map.northtexture, &max->t.nwall);
 	ft_load_texture(max->map.westtexture, &max->t.wwall);
 	ft_load_texture(max->map.southtexture, &max->t.swall);
