@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 13:54:51 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 11:38:43 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,7 @@ void	ft_init_orays(t_max *max)
 							oray->hm = max->map.m[mp];
 							break ;
 						}
+						--oray->hdof;
 					}
 				}
 				if ((max->map.m[mp]) & DOOREAST)
@@ -274,6 +275,7 @@ void	ft_init_orays(t_max *max)
 							oray->hm = max->map.m[mp];
 							break ;
 						}
+						--oray->hdof;
 					}
 				}
 			}
@@ -362,6 +364,7 @@ void	ft_init_orays(t_max *max)
 							oray->vm = max->map.m[mp];
 							break ;
 						}
+						--oray->vdof;
 					}
 				}
 				if ((max->map.m[mp]) & DOORSOUTH)
@@ -387,6 +390,7 @@ void	ft_init_orays(t_max *max)
 							oray->vm = max->map.m[mp];
 							break ;
 						}
+						--oray->vdof;
 					}
 				}
 			}

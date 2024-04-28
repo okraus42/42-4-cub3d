@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:31:12 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 13:10:13 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 10:45:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,23 @@ void	ft_interact_door(t_max *max)
 	unsigned short	mp;
 
 	mp = (max->map.p.y >> 16) * max->map.w + (max->map.p.x >> 16);
-	ft_interact_door2(max, mp + 1);
-	ft_interact_door2(max, mp - 1);
-	ft_interact_door2(max, mp + max->map.w);
-	ft_interact_door2(max, mp - max->map.w);
+	printf("oray.wall = %x\n", max->map.p.oray[RAYS / 2].wall);
+	printf("oray.length = %Li\n", max->map.p.oray[RAYS / 2].length);
+	printf("oray.mpos = %x\n", max->map.p.oray[RAYS / 2].mpos);
+	if (max->map.p.oray[RAYS / 2].wall & DOOR && max->map.p.oray[RAYS / 2].length < 0x20000)
+		ft_interact_door2(max, max->map.p.oray[RAYS / 2].mpos);
+	else
+	{
+		ft_interact_door2(max, mp);
+		if (max->map.p.orientation >= 2048 && max->map.p.orientation < 6144)
+			ft_interact_door2(max, mp + 1);
+		if (max->map.p.orientation >= 10240 && max->map.p.orientation < 14336)
+			ft_interact_door2(max, mp - 1);
+		if (max->map.p.orientation >= 6144 && max->map.p.orientation < 10240)
+			ft_interact_door2(max, mp + max->map.w);
+		if (max->map.p.orientation >= 14336 || max->map.p.orientation < 2048)
+			ft_interact_door2(max, mp - max->map.w);
+	}
 }
 
 

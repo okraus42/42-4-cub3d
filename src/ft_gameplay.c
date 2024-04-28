@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 12:47:26 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 11:32:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,46 @@
 // 	}
 // }
 
+typedef struct s_wallcheck
+{
+	int	x;
+	int	y;
+	int	ny;
+	int	sy;
+	int	ex;
+	int	wx;
+}	t_wallcheck;
+
+void	ft_init_wc(t_wallcheck *wc, int y, int x)
+{
+	wc->x = x;
+	wc->y = y;
+	wc->ny = y - WALLDISTANCE;
+	wc->sy = y + WALLDISTANCE;
+	wc->ex = x - WALLDISTANCE;
+	wc->wx = x + WALLDISTANCE;
+}
+
+int	ft_is_wall(t_map *map, int x, int y)
+{
+	int	mx;
+	int	my;
+	int	mp;
+
+	mx = x >> 16;
+	my = y >> 16;
+	mp = my * map->w + mx;
+	if (map->m[mp] & WALL)
+		return (1);
+	return (0);
+}
+
 void	ft_move_player(t_map *map, int y, int x)
 {
 	int	oldy;
 	int	oldx;
+	//int	door;
+	t_wallcheck	wc;
 	//ft_printf ("%x %x %x %x %x\n",y >> 8, x >> 8, map->m[((y >> 8) * map->w + (x >> 8))], WALL);
 	//ft_printf("moving player\n");
 	if (map->m[((y >> 16) * map->w + (x >> 16))] & WALL)
@@ -238,78 +274,128 @@ void	ft_move_player(t_map *map, int y, int x)
 		oldx = map->p.x;
 		map->p.y = y;
 		map->p.x = x;
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+		ft_init_wc(&wc, y, x);
+		if (ft_is_wall(map, wc.x, wc.ny))
+			map->p.sy = WALLDISTANCE;
+		if (ft_is_wall(map, wc.x, wc.sy))
+			map->p.sy = SQUARESIZE - WALLDISTANCE;
+		if (ft_is_wall(map, wc.wx, wc.y))
+			map->p.sx = SQUARESIZE - WALLDISTANCE;
+		if (ft_is_wall(map, wc.ex, wc.y))
+			map->p.sx = WALLDISTANCE;
+		if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOR)
 		{
-			if (y < ((map->p.my << 16) | WALLDISTANCE))
-				map->p.sy = WALLDISTANCE;
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
-		{
-			if (y < ((map->p.my << 16) | WALLDISTANCE)
-				&& x < ((map->p.mx << 16) | WALLDISTANCE))
+			if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOREW)
 			{
-				if ((x & 0xFFFF) <= (y & 0xFFFF))
-					map->p.sy = WALLDISTANCE;
-				if ((y & 0xFFFF) <= (x & 0xFFFF))
-					map->p.sx = WALLDISTANCE;
+				if (map->p.sy < SQUAREHALF)
+				{
+					if ((map->doors[((y >> 16) * map->w + (x >> 16))] & 0x7F) > 0)
+					{
+						map->p.sy = SQUARESIZE - 1;
+						map->p.my -= 1;
+					}
+				}
+				else
+				{
+					if ((map->doors[((y >> 16) * map->w + (x >> 16))] & 0x7F) > 0)
+					{
+						map->p.sy = 0;
+						map->p.my += 1;
+					}
+				}
+			}
+			else if (map->m[((y >> 16) * map->w + (x >> 16))] & DOORNS)
+			{
+				if (map->p.sx < SQUAREHALF)
+				{
+					if ((map->doors[((y >> 16) * map->w + (x >> 16))] & 0x7F) > 0)
+					{
+						map->p.sx = SQUARESIZE - 1;
+						map->p.mx -= 1;
+					}
+				}
+				else
+				{
+					if ((map->doors[((y >> 16) * map->w + (x >> 16))] & 0x7F) > 0)
+					{
+						map->p.sx = 0;
+						map->p.mx += 1;
+					}
+				}
 			}
 		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-		{
-			if (y < ((map->p.my << 16) | WALLDISTANCE)
-				&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
-			{
-				if (((SQUARESIZE - x) & 0xFFFF) <= (y & 0xFFFF))
-					map->p.sy = WALLDISTANCE;
-				if ((y & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
-					map->p.sx = SQUARESIZE - WALLDISTANCE;
-			}
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-		{
-			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE)))
-				map->p.sy = SQUARESIZE - WALLDISTANCE;
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
-		{
-			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
-				&& x < ((map->p.mx << 16) | WALLDISTANCE))
-			{
-				if ((x & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
-					map->p.sy = SQUARESIZE - WALLDISTANCE;
-				if (((SQUARESIZE - y) & 0xFFFF) <= (x & 0xFFFF))
-					map->p.sx = WALLDISTANCE;
-			}
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
-			&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
-		{
-			if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
-				&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
-			{
-				if (((SQUARESIZE - x) & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
-					map->p.sy = SQUARESIZE - WALLDISTANCE;
-				if (((SQUARESIZE - y) & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
-					map->p.sx = SQUARESIZE - WALLDISTANCE;
-			}
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
-		{
-			if (x < ((map->p.mx << 16) | WALLDISTANCE))
-				map->p.sx = WALLDISTANCE;
-		}
-		if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
-		{
-			if (x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
-				map->p.sx = SQUARESIZE - WALLDISTANCE;
-		}
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+		// {
+		// 	if (y < ((map->p.my << 16) | WALLDISTANCE))
+		// 		map->p.sy = WALLDISTANCE;
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNW
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+		// {
+		// 	if (y < ((map->p.my << 16) | WALLDISTANCE)
+		// 		&& x < ((map->p.mx << 16) | WALLDISTANCE))
+		// 	{
+		// 		if ((x & 0xFFFF) <= (y & 0xFFFF))
+		// 			map->p.sy = WALLDISTANCE;
+		// 		if ((y & 0xFFFF) <= (x & 0xFFFF))
+		// 			map->p.sx = WALLDISTANCE;
+		// 	}
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWNE
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWN)
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
+		// {
+		// 	if (y < ((map->p.my << 16) | WALLDISTANCE)
+		// 		&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+		// 	{
+		// 		if (((SQUARESIZE - x) & 0xFFFF) <= (y & 0xFFFF))
+		// 			map->p.sy = WALLDISTANCE;
+		// 		if ((y & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
+		// 			map->p.sx = SQUARESIZE - WALLDISTANCE;
+		// 	}
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+		// {
+		// 	if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE)))
+		// 		map->p.sy = SQUARESIZE - WALLDISTANCE;
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSW
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWW))
+		// {
+		// 	if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
+		// 		&& x < ((map->p.mx << 16) | WALLDISTANCE))
+		// 	{
+		// 		if ((x & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
+		// 			map->p.sy = SQUARESIZE - WALLDISTANCE;
+		// 		if (((SQUARESIZE - y) & 0xFFFF) <= (x & 0xFFFF))
+		// 			map->p.sx = WALLDISTANCE;
+		// 	}
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWSE
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWS)
+		// 	&& !(map->m[map->p.my * map->w + map->p.mx] & FLOORWE))
+		// {
+		// 	if (y > ((map->p.my << 16) | (SQUARESIZE - WALLDISTANCE))
+		// 		&& x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+		// 	{
+		// 		if (((SQUARESIZE - x) & 0xFFFF) <= ((SQUARESIZE - y) & 0xFFFF))
+		// 			map->p.sy = SQUARESIZE - WALLDISTANCE;
+		// 		if (((SQUARESIZE - y) & 0xFFFF) <= ((SQUARESIZE - x) & 0xFFFF))
+		// 			map->p.sx = SQUARESIZE - WALLDISTANCE;
+		// 	}
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWW)
+		// {
+		// 	if (x < ((map->p.mx << 16) | WALLDISTANCE))
+		// 		map->p.sx = WALLDISTANCE;
+		// }
+		// if (map->m[map->p.my * map->w + map->p.mx] & FLOORWE)
+		// {
+		// 	if (x > ((map->p.mx << 16) | (SQUARESIZE - WALLDISTANCE)))
+		// 		map->p.sx = SQUARESIZE - WALLDISTANCE;
+		// }
 		//ft_printf("moved player\n");
 	}
 	map->p.smx += ((int)map->p.x - oldx) / 1024;

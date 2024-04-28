@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 12:55:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/28 11:19:17 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ typedef union u_clr
 
 
 # define SQUARESIZE 65536
+# define SQUAREHALF 32768
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
 

@@ -67,7 +67,9 @@ Todo today:
 
 DOORS
 # - interactions
-- collisions
+# - better location for interaction
+# - 4 point collision check?
+# - collisions
 - textures
 
 -- draw textures in light dist
