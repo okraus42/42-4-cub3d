@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 15:40:01 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:01:34 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -566,8 +566,9 @@ void	ft_change_light_dist(t_max *max)
 	{
 		max->keys[MLX_KEY_LEFT_BRACKET] = 0;
 		max->settings.lightdist -= 65536;
-		if (max->settings.lightdist < 65536)
-			max->settings.lightdist = 65536;
+		if (max->settings.lightdist < 65536 * 2)
+			max->settings.lightdist = 65536 * 2;
+		ft_init_fogscreen(max);
 	}
 	if (max->keys[MLX_KEY_RIGHT_BRACKET])
 	{
@@ -575,6 +576,7 @@ void	ft_change_light_dist(t_max *max)
 		max->settings.lightdist += 65536;
 		if (max->settings.lightdist > max->settings.maxdist)
 			max->settings.lightdist = max->settings.maxdist;
+		ft_init_fogscreen(max);
 	}
 }
 

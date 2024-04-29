@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:45:07 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/29 15:33:50 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void	ft_gamestart(t_max *max)
 	if (max->keys[MLX_KEY_ENTER])
 	{
 		max->game_mode = GAMEPLAY;
+		ft_init_fogscreen(max);
 		max->i.textscreen->enabled = 0;
 		max->i.overlay->enabled = 1;
 		max->game_in_progress = 1;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 15:37:41 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/29 15:45:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@
 # define SUPERMAPBORDER 256
 
 # define SCREENWIDTH (1920)
-# define SCREENHEIGHT (1080) //- HUD later
+# define SCREENHEIGHT (540) //- HUD later
 # define TMASK 0xFFFFFFFF //
 
 
@@ -247,17 +247,19 @@ typedef struct s_wallcheck
 
 typedef struct s_walltexture
 {
-	int			y;
-	int			x;
-	int			u;
-	int			v;
-	int			r;
-	int			wall_height;
-	int			offset;
-	int			fake_wall_height;
-	int			fake_offset;
-	long long	length;
-	long long	fake_length;
+	int				y;
+	int				x;
+	int				u;
+	int				v;
+	int				r;
+	int				wall_height;
+	int				offset;
+	int				fake_wall_height;
+	int				fake_offset;
+	long long		length;
+	long long		fake_length;
+	unsigned int	wallfog;
+	unsigned int	wallfogalpha;
 }	t_walltexture;
 
 typedef struct s_line
@@ -771,6 +773,7 @@ void	ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);
+void	ft_init_fogscreen(t_max *max);
 
 //ft_sprite.c
 void	ft_init_sprites_flamingo(t_map *map, int i);
