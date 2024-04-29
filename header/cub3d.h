@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/29 15:45:20 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:15:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@
 # define SUPERMAPBORDER 256
 
 # define SCREENWIDTH (1920)
-# define SCREENHEIGHT (540) //- HUD later
+# define SCREENHEIGHT (1080) //- HUD later
 # define TMASK 0xFFFFFFFF //
 
 

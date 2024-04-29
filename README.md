@@ -46,6 +46,9 @@ Sprites:
 https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
 Todo today:
+Try Quad/Nine pixel optimisation
+
+
 # - get the count of flamingos -ok
 # - remove them when they are collected
 # -- check sprites (calculate distances)
@@ -70,7 +73,7 @@ DOORS
 # - better location for interaction
 # - 4 point collision check?
 # - collisions
-- textures
+# - textures
 
 -- draw textures in light dist
 -- draw glowtexture in distance
@@ -86,10 +89,10 @@ Updated todo list 2024-04-18:
 # - consumables
 # - exit unlocks after collectibles are picked up?
 # - score system
-- doors
+# - doors
 - keys
 # - fog
-- textured walls
+# - textured walls
 - textured floor and ceiling
 - mouse control in game
 - mouse control in the menu

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/29 15:57:48 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:15:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void	ft_draw_screen3d(t_max *max)
 		// 		mlx_put_pixel(max->i.fogscreen, wt.x, wt.y , max->fog[wt.y][wt.x]);
 		while (wt.y < SCREENHEIGHT)
 		{
-			if (wt.y < wt.offset && wt.y < wt.fake_offset)
+			if (wt.y < wt.offset)
 			{
 				mlx_put_pixel(max->i.screen, wt.x, wt.y, max->map.c.rgba);
 				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, max->fog[wt.y][wt.x]);
