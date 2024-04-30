@@ -46,9 +46,13 @@ Sprites:
 https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
 
 Todo today:
-Try Quad/Nine pixel optimisation
+# Try Quad/Nine pixel optimisation
 Increase score for difficulty
 Increase decrease score for light distance
+Fog initiation not working sometimes?
+Ray optimisation update ray angle offsets only once
+Reset light distance on new game
+Experiment with background pictures for menu, walls and around the game (background frame for the game)
 
 
 # - get the count of flamingos -ok
