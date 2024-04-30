@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/29 16:01:34 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:30:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -599,7 +599,7 @@ void	ft_game_win(t_max *max)
 		max->game_mode = GAMEWON;
 		ft_game_end(max);
 		if (max->game_type == TIMETRIAL)
-			max->timetriallimitms += 15000;
+			max->timetriallimitms += 60000;
 		if (max->game_type == TIMETRIAL)
 			ft_sprintf(max->gamewon.stats, "              YOU WON!\n\nNAME:         COALITION:    CAMPUS:\n%-10.10s    %-10.10s    %-10.10s\n\nTime: %is\nTotal time: %is\nTime limit: %is", max->name, max->coalition, max->campus, max->levelms / 1000, max->gamems / 1000, max->timetriallimitms / 1000);
 		else if  (max->game_type == ONEMAP)

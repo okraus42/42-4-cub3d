@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 15:58:31 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:10:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,16 @@
 # define STRINGS 16
 # define MINIWIDTH 256
 # define MINIHEIGHT 256
-# define SUPERMAPWIDTH 1920
-# define SUPERMAPHEIGHT 1080
-# define SUPERMAPBORDER 256
+# define SUPERMAPWIDTH 960
+# define SUPERMAPHEIGHT 540
+# define SUPERMAPBORDER 128
 
-# define SCREENWIDTH (1920)
-# define SCREENHEIGHT (1080) //- HUD later
+# define SCREENWIDTH (960)
+# define SCREENHEIGHT (540) //- HUD later
 # define TMASK 0xFFFFFFFF //
 
 
-# define RAYS (SCREENWIDTH / 4) //SCREENWIDTH
+# define RAYS (SCREENWIDTH) //SCREENWIDTH
 // # define max->settings.maxdist (65536 * (DOF)) //play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF

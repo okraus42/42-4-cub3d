@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 15:20:50 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 09:55:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:30:23 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,8 +397,8 @@ void	ft_check_sprites(t_max *max)
 		{
 			sprite->state = 0;
 			max->score += 25000;
-			max->limitms += 5000;
-			max->timetriallimitms += 5000;
+			max->limitms += 15000;
+			max->timetriallimitms += 15000;
 			max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] &= 0x000000FFFFFFFFFF;
 			max->map.m[(sprite->y >> 16) * max->map.w + (sprite->x >> 16)] |= (((unsigned long long)max->map.f.rgba << 32));
 			printf("Collected flamingo\n");

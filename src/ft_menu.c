@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 15:13:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:30:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1015,7 +1015,7 @@ void	ft_menu(t_max *max)
 					max->game_type = TIMETRIAL;
 					max->level = 1;
 					max->gamems = 0;
-					max->timetriallimitms = 30000;
+					max->timetriallimitms = 120000;
 					ft_inittimetrialmap(&max->menu.rm, max->level);
 					ft_snprintf(max->map.file, 4095, "RANDOM");
 					if (ft_process_random(max))
