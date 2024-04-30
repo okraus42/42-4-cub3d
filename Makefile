@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/04/24 17:18:53 by okraus           ###   ########.fr        #
+#    Updated: 2024/04/30 16:01:16 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ LIBMLX		=	./.MLX42
 LIBS		=	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LHEADERS	=	-I ./include -I $(LIBMLX)/include
 CC 			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -g
+CFLAGS		=	-Wall -Wextra -Werror -g -O2
 CMFLAGS		=	-DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -B build
 OBJ_DIR		=	objs/
 SLEEP		=	#sleep 0.5
@@ -79,7 +79,7 @@ SRC_S		=	ft_buttons.c \
 				ft_saveload.c \
 				ft_screen2d.c \
 				ft_screen2dquad.c \
-				ft_screen3d.c \
+				ft_screen3dhexdec.c \
 				ft_settings.c \
 				ft_sprite.c \
 				ft_text.c \
