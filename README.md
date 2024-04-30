@@ -47,6 +47,8 @@ https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.
 
 Todo today:
 Try Quad/Nine pixel optimisation
+Increase score for difficulty
+Increase decrease score for light distance
 
 
 # - get the count of flamingos -ok

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 15:47:47 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:37:29 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ void	ft_init_fogscreen(t_max *max)
 			if (max->settings.fisheyecorrection)
 			{
 				length *= 65536;
-				length /= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
+				if (max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))] == 0)
+					length /= 1;
+				else
+					length /= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
 			}
 			foga = ((length * 255 / (max->settings.lightdist - 65536)));
 			if (foga > 0xFF)

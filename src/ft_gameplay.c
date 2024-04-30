@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:30:36 by okraus           ###   ########.fr       */
+/*   Updated: 2024/04/30 16:48:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -684,13 +684,13 @@ void	ft_gameplay(t_max *max)
 	// 	// ft_printf("You have quit the game by pressing ESC.\n");
 	// 	// mlx_close_window(max->mlx);
 	// }
-	if (max->keys[MLX_KEY_SPACE])	//sprinting, faster but slower turns LIMIT STAMINA
-	{
-		//ft_printf("You have pressed space.\n");
-		max->map.p.xspeed *= 2;
-		max->map.p.yspeed *= 2;
-		max->map.p.turnspeed /= 2;
-	}
+	// if (max->keys[MLX_KEY_SPACE])	//sprinting, faster but slower turns LIMIT STAMINA
+	// {
+	// 	//ft_printf("You have pressed space.\n");
+	// 	max->map.p.xspeed *= 2;
+	// 	max->map.p.yspeed *= 2;
+	// 	max->map.p.turnspeed /= 2;
+	// }
 	if (max->keys[MLX_KEY_LEFT_SHIFT])	//sprinting, faster but slower turns LIMIT STAMINA
 	{
 		//ft_printf("You have pressed space.\n");
@@ -746,11 +746,15 @@ void	ft_gameplay(t_max *max)
 	if (max->keys[MLX_KEY_SPACE])
 	{
 		max->map.p.reveal = 1;
+		max->limitms -= 15000;
+		max->timetriallimitms -= 15000;
 		max->keys[MLX_KEY_SPACE] = 0;
 	}
 	if (max->keys[MLX_KEY_TAB])
 	{
 		ft_discover_full_map(&max->map);
+		max->limitms -= 60000;
+		max->timetriallimitms -= 60000;
 		max->keys[MLX_KEY_TAB] = 0;
 	}
 	if (max->map.p.reveal && !(max->frame % 4))
