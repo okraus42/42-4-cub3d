@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:30:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 11:19:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,12 @@ void	ft_newgame(t_max *max)
 	max->i.menuscreen->enabled = 0;
 	max->i.textscreen->enabled = 1;
 	max->gamems = 0;
-	max->score = 1000000;
+	if (max->difficulty == EASY)
+		max->score = 1000000;
+	else if (max->difficulty == MEDIUM)
+		max->score = 1500000;
+	else if (max->difficulty == HARD)
+		max->score = 2000000;
 	mlx_set_mouse_pos(max->mlx, 512, 512);
 	//level for campaign and timetrial???
 	// max->i.overlay->enabled = 1;

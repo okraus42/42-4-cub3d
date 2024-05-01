@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:00:56 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 11:11:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	ft_init_fogscreen(t_max *max)
 	while (x < SCREENWIDTH / 2)
 	{
 		r = x * RAYS / SCREENWIDTH;
-		(void)r;
 		y = 0;
 		while (y < SCREENHEIGHT / 2)
 		{

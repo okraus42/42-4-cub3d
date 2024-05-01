@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:48:12 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 11:43:40 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -596,6 +596,12 @@ void	ft_game_win(t_max *max)
 	if (max->reachedexit)
 	{
 		max->reachedexit = 0;
+		if (max->difficulty == EASY)
+			max->score += 500000;
+		if (max->difficulty == MEDIUM)
+			max->score += 1000000;
+		if (max->difficulty == HARD)
+			max->score += 2000000;
 		max->game_mode = GAMEWON;
 		ft_game_end(max);
 		if (max->game_type == TIMETRIAL)
@@ -656,7 +662,9 @@ void	ft_gameplay(t_max *max)
 	max->map.p.xspeed = (max->map.p.speed * max->math->cos[max->map.p.orientation]) / 65536;
 	max->map.p.yspeed = -(max->map.p.speed * max->math->sin[max->map.p.orientation]) / 65536;
 	++max->frame;
-	max->levelms += max->framems;
+	if (max->i.maximap->enabled)
+		max->levelms += (max->framems);
+	max->levelms += (max->framems * (256ULL * max->settings.lightdist) / (max->settings.maxdist / 4)) / 256ULL;
 	// max->oldms = max->newms;
 	max->map.p.dx = -max->math->sin[max->map.p.orientation];
 	max->map.p.dy = -max->math->cos[max->map.p.orientation];
@@ -825,6 +833,21 @@ void	ft_gameplay(t_max *max)
 	{
 		max->keys[MLX_KEY_M] = 0;
 		max->i.maximap->enabled ^= 1;
+	}
+	if (max->keys[MLX_KEY_KP_3])
+	{
+		max->keys[MLX_KEY_KP_3] = 0;
+		max->i.fogscreen->enabled ^= 1;
+	}
+	if (max->keys[MLX_KEY_KP_1])
+	{
+		max->keys[MLX_KEY_KP_1] = 0;
+		max->i.spritescreen->enabled ^= 1;
+	}
+	if (max->keys[MLX_KEY_KP_2])
+	{
+		max->keys[MLX_KEY_KP_2] = 0;
+		max->i.overlay->enabled ^= 1;
 	}
 	//ft_draw_screen2d(max);
 	//ft_draw_screen2dquad(max);

@@ -47,11 +47,12 @@ https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.
 
 Todo today:
 # Try Quad/Nine pixel optimisation
-Increase score for difficulty
-Increase decrease score for light distance
-Fog initiation not working sometimes?
+# Increase score for difficulty
+# Increase decrease time for light distance
+# Fog initiation not working sometimes?
+# map decreases time
 Ray optimisation update ray angle offsets only once
-Reset light distance on new game
+# Reset light distance on new game
 Experiment with background pictures for menu, walls and around the game (background frame for the game)
 
 

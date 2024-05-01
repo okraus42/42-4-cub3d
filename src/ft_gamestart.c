@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:28:37 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 11:41:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,9 @@ void	ft_gamestart(t_max *max)
 	//launch game after user input
 	if (max->keys[MLX_KEY_ENTER])
 	{
+		max->settings.lightdist = max->settings.maxdist / 4;
 		max->game_mode = GAMEPLAY;
+		ft_init_orays(max);
 		ft_init_fogscreen(max);
 		max->i.textscreen->enabled = 0;
 		max->i.maximap->enabled = 0;
@@ -204,7 +206,6 @@ void	ft_initgamewon(t_max *max)
 void	ft_gamewon(t_max *max)
 {
 	max->gamewon.timems += max->framems;
-
 	ft_draw_background(max);
 	if (max->gamewon.timems >= 25)
 	{
