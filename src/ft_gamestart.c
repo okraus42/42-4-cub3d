@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 11:41:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 15:58:19 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ void	ft_gamestart(t_max *max)
 	{
 		max->settings.lightdist = max->settings.maxdist / 4;
 		max->game_mode = GAMEPLAY;
+		ft_init_rayangles(max);
 		ft_init_orays(max);
 		ft_init_fogscreen(max);
 		max->i.textscreen->enabled = 0;

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 11:03:17 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:29:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -515,7 +515,8 @@ typedef struct s_math
 	unsigned char	brumered[256][256];
 	unsigned char	brumegreen[256][256];
 	unsigned char	brumeblue[256][256];
-	// int		sqr[65536];
+	int				ra[RAYS];
+	int				rafc[RAYS];
 	unsigned char	clog[65536];
 	unsigned char	clin[65536];
 }	t_math;
@@ -538,6 +539,7 @@ typedef struct s_textures
 	mlx_texture_t	*listfield;
 	mlx_texture_t	*supermapfloor;
 	mlx_texture_t	*supermapwall;
+	mlx_texture_t	*pool;
 	mlx_texture_t	*sprites[SPRITETEXTURES]; // 0 is skipped for checking if texture even exists
 }	t_textures;
 
@@ -734,6 +736,7 @@ void	ft_draw_minimap(t_max *max);
 
 //ft_rays.c
 //void	ft_init_rays(t_max *max);
+void	ft_init_rayangles(t_max *max);
 void	ft_visit_map(t_map *map, long long length, long long dist, int mp);
 void	ft_init_orays(t_max *max);
 

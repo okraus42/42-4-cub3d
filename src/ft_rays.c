@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/29 16:11:44 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 15:58:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,25 @@ void	ft_visit_map(t_map *map, long long length, long long dist, int mp)
 		ft_visit_neighbours(map, mp, VISITED);
 }
 
+void	ft_init_rayangles(t_max *max)
+{
+	long long	pd;
+	long long	pl;
+	int			r;
+
+	pl = 65536 * WIDTH;
+	pd = (pl / 2) / tan((max->settings.fov / 2 * 0.01745329));
+	r = 0;
+	while (r < RAYS)
+	{
+		if (max->settings.fisheyecorrection)
+			max->math->rafc[r] = 0 - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
+		else //need check!!!
+			max->math->ra[r] = 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
+		++r;
+	}
+}
+
 void	ft_init_orays(t_max *max)
 {
 	int			mx;
@@ -144,16 +163,17 @@ void	ft_init_orays(t_max *max)
 	int			mp2;
 	int			r;
 	int			debug;
-	long long	pd;
-	long long	pl;
+	// long long	pd;
+	// long long	pl;
 	//long long	maxdist;
 	t_oray		*oray;
 
-	pl = 65536 * WIDTH;
-	pd = (pl / 2) / tan((max->settings.fov / 2 * 0.01745329));
+	// pl = 65536 * WIDTH;
+	// pd = (pl / 2) / tan((max->settings.fov / 2 * 0.01745329));
 	//maxdist = max->settings.maxdist;
 	r = 0;
 	//ft_printf("\nNEWNEW\n\n\n");
+	//ft_init_rayangles(max);
 	while (r < RAYS)
 	{
 		debug = r == max->ray && max->keys[MLX_KEY_4];
@@ -169,9 +189,14 @@ void	ft_init_orays(t_max *max)
 		oray->wall = 0;
 		//ft_printf("r0 = %i\n", r);
 		if (max->settings.fisheyecorrection)
-			oray->ra = max->map.p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
+			oray->ra = max->map.p.orientation + max->math->rafc[r];
 		else //need check!!!
-			oray->ra = max->map.p.orientation + 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
+			oray->ra = max->map.p.orientation + max->math->ra[r];
+		
+		// if (max->settings.fisheyecorrection)
+		// 	oray->ra = max->map.p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
+		// else //need check!!!
+		// 	oray->ra = max->map.p.orientation + 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
 		while (oray->ra < 0)
 			oray->ra += MAXDEGREE; 
 		while (oray->ra >= MAXDEGREE)

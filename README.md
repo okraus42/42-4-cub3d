@@ -51,7 +51,13 @@ Todo today:
 # Increase decrease time for light distance
 # Fog initiation not working sometimes?
 # map decreases time
-Ray optimisation update ray angle offsets only once
+# Ray optimisation update ray angle offsets only once
+Ray - quadrants ?
+Random generate doors
+Fix random map
+
+Game mandatory
+Add check for textures.
 # Reset light distance on new game
 Experiment with background pictures for menu, walls and around the game (background frame for the game)
 

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:16:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 17:01:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 
 void	ft_init_images(t_max *max)
 {
+	max->i.hud = mlx_new_image(max->mlx, WIDTH, HEIGHT);
+	//if (!max->hud || (mlx_image_to_window(max->mlx, max->hud, (WIDTH - hudWIDTH) / 2, (HEIGHT - hudHEIGHT) / 2) < 0))
+	if (!max->i.hud || (mlx_image_to_window(max->mlx, max->i.hud, 0, 0) < 0))
+	{
+		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
+		//free everything
+		ft_exit(max, 10);
+	}
 	max->i.screen = mlx_new_image(max->mlx, SCREENWIDTH, SCREENHEIGHT);
 	//if (!max->screen || (mlx_image_to_window(max->mlx, max->screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
 	if (!max->i.screen || (mlx_image_to_window(max->mlx, max->i.screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
@@ -107,6 +115,36 @@ void	ft_init_textures(t_max *max)
 	ft_load_texture("./textures/poolwallW.png", &max->t.wwall);
 	ft_load_texture("./textures/poolwallS.png", &max->t.swall);
 	ft_load_texture("./textures/poolwallE.png", &max->t.ewall);
+	ft_load_texture("./textures/pool3.png", &max->t.pool);
+}
+
+void	ft_add_pool(t_max* max)
+{
+	int		y;
+	int		x;
+	int		u;
+	int		v;
+	t_clr	c;
+	//p = (wt->v * t->width * 4) + (4 * wt->u);
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		v = y * max->t.pool->width * 4LL * max->t.pool->height / HEIGHT;
+		x = 0;
+		while (x < WIDTH)
+		{
+			u = x * 4 * max->t.pool->width / WIDTH;
+			c.r = max->t.pool->pixels[v + u + 0] / 2;
+			c.g = max->t.pool->pixels[v + u + 1] / 2;
+			c.b = max->t.pool->pixels[v + u + 2] / 2;
+			c.a = 0xFF;
+			mlx_put_pixel(max->i.hud, x, y, c.rgba);
+			++x;
+		}
+		++y;
+	}
+	printf("%i %i\n", max->t.pool->height, HEIGHT);
 }
 
 void	ft_amaze_bonus(t_max *max)
@@ -128,6 +166,7 @@ void	ft_amaze_bonus(t_max *max)
 	ft_init_settings(max);
 	ft_init_images(max);
 	ft_init_textures(max);
+	ft_add_pool(max);
 	ft_initmenu(max);
 	ft_initgamestart(max);
 	ft_initgamewon(max);
