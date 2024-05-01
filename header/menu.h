@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:41:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 17:11:56 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,9 +185,9 @@
 //# define S_ ""
 
 # define C_INACTIVE 0x7F7F7FFF
-# define C_ACTIVE 0X7F007FFF
-# define C_SELECTED 0XFF00FFFF
-# define C_ACTIVATED 0XFF7FFFFF
+# define C_ACTIVE 0X0066DDFF
+# define C_SELECTED 0X88CCFFFF
+# define C_ACTIVATED 0XAAEEFFFF
 
 # define INVISIBLE 0
 # define INACTIVE 1

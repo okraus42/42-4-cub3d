@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 17:01:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 17:04:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	ft_init_textures(t_max *max)
 {
 	ft_load_texture("./textures/map/brick32.png", &max->t.supermapwall);
 	ft_load_texture("./textures/map/floor32.png", &max->t.supermapfloor);
-	ft_load_texture("./textures/menu/labyrinth.png", &max->t.menubg);
+	ft_load_texture("./textures/pool3.png", &max->t.menubg);
 	ft_load_texture("./textures/menu/button_small.png", &max->t.button);
 	ft_load_texture("./textures/menu/buttonplus.png", &max->t.buttonplus);
 	ft_load_texture("./textures/menu/textfield.png", &max->t.textfield);
