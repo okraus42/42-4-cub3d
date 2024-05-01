@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:13:12 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/01 15:49:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,12 @@ void	ft_init_math(t_math *math)
 	while (i < MAXDEGREE)
 	{
 		// not sure if everything needs .9999, but it helps the tan functions
-		math->sin[i] = 65536.9999 * sin(i * M_PI * 2 / MAXDEGREE);
-		math->cos[i] = 65536.9999 * cos(i * M_PI * 2 / MAXDEGREE);
-		math->atan[i] = 65536.9999 / tan(i * M_PI * 2 / MAXDEGREE);
-		math->natan[i] = -65536.9999 / tan(i * M_PI * 2 / MAXDEGREE);
-		math->ntan[i] = (-65536.9999 * (tan(i * M_PI * 2 / MAXDEGREE)));
-		math->tan[i] = (65536.9999 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		math->sin[i] = 65536.0 * sin(i * M_PI * 2 / MAXDEGREE);
+		math->cos[i] = 65536.0 * cos(i * M_PI * 2 / MAXDEGREE);
+		math->atan[i] = 65536.0 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->natan[i] = -65536.0 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->ntan[i] = (-65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		math->tan[i] = (65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
 		if (ABS(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
 			ft_printf("WARNING %i \n", i);
 	++i;
