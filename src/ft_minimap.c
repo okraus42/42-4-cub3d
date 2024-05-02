@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 15:53:41 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:34:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/02 15:47:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_draw_minimap(t_max *max)
 				}
 			}
 			else
-				mlx_put_pixel(max->i.minimap, x, y, 0x808080FF & TMASK);
+				mlx_put_pixel(max->i.minimap, x, y, 0x0 & TMASK);
 			++x;
 		}
 		++y;

@@ -53,13 +53,38 @@ Todo today:
 # map decreases time
 # Ray optimisation update ray angle offsets only once
 Ray - quadrants ?
-Random generate doors
+# Random generate doors
 Fix random map
 
 Game mandatory
 Add check for textures.
+Free textures
+
+Cleaning code
+
+
+regular testing
+MONDAY
+understand the code and plan
+
+TUESDAY
+small norm fixes (tabs, long lines)
+
+WEDNESDAY
+adding structures
+splitting functions (too many lines)
+
+THURSDAY
+splitting files (too many functions)
+
+FRIDAY
+testing and valgrind
+
+WEEKEND
+evaluation!
+
 # Reset light distance on new game
-Experiment with background pictures for menu, walls and around the game (background frame for the game)
+# Experiment with background pictures for menu, walls and around the game (background frame for the game)
 
 
 # - get the count of flamingos -ok

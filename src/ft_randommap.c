@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/26 10:24:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/02 15:21:50 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1075,14 +1075,23 @@ void	refill_corridors3(t_rmap *m)
 	m->i = 0;
 	while (m->i < m->s)
 	{
+		// if (m->map[m->i] & RDOOR_NS
+		// 	&& m->map[m->i + m->w] == CORRIDOR_A
+		// 	&& m->map[m->i - m->w] == CORRIDOR_A)
+		// 	m->map[m->i] = CORRIDOR_B;
+		// else if (m->map[m->i] & RDOOR_WE
+		// 	&& m->map[m->i - 1] & CORRIDOR_A
+		// 	&& m->map[m->i + 1] & CORRIDOR_A)
+		// 	m->map[m->i] = CORRIDOR_B;
+		// ++(m->i);
 		if (m->map[m->i] & RDOOR_NS
 			&& m->map[m->i + m->w] == CORRIDOR_A
 			&& m->map[m->i - m->w] == CORRIDOR_A)
-			m->map[m->i] = CORRIDOR_B;
+			m->map[m->i] = RDOOR_NS;
 		else if (m->map[m->i] & RDOOR_WE
 			&& m->map[m->i - 1] & CORRIDOR_A
 			&& m->map[m->i + 1] & CORRIDOR_A)
-			m->map[m->i] = CORRIDOR_B;
+			m->map[m->i] = RDOOR_WE;
 		++(m->i);
 	}
 }
@@ -1352,7 +1361,21 @@ void	ft_random_init(t_max *max)
 		{
 			if (m.map[j] & RWALL)
 				max->map.m[i] = WALL1;
-			if ((m.map[j] & CORRIDOR) || (m.map[j] & RDOOR) || (m.map[j] & ROOM))
+			else if ((m.map[j] & RDOOR_NS))
+			{
+				if (rand() % 2)
+					max->map.m[i] = DOORWEST;
+				else
+					max->map.m[i] = DOOREAST;
+			}
+			else if ((m.map[j] & RDOOR_WE))
+			{
+				if (rand() % 2)
+					max->map.m[i] = DOORNORTH;
+				else
+					max->map.m[i] = DOORSOUTH;
+			}
+			else if ((m.map[j] & CORRIDOR) || (m.map[j] & RDOOR) || (m.map[j] & ROOM))
 			{
 				max->map.m[i] = FLOOR1;
 				if (p)
@@ -1372,6 +1395,14 @@ void	ft_random_init(t_max *max)
 					max->map.p.unused_y = 0;
 					p = 0;
 				}
+			}
+			else if ((m.map[j] & RDOOR_NS))
+			{
+				max->map.m[i] = DOORNORTH;
+			}
+			else if ((m.map[j] & RDOOR_WE))
+			{
+				max->map.m[i] = DOORWEST;
 			}
 			++j;
 		}

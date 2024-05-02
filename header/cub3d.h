@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 16:29:51 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/02 16:34:00 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,40 +161,6 @@
 
 //	STRUCTURES
 
-typedef union u_clr
-{
-	unsigned int	rgba;
-	struct
-	{
-		unsigned char	a;
-		unsigned char	b;
-		unsigned char	g;
-		unsigned char	r;
-	};
-} t_clr;
-
-// typedef struct s_door
-// {
-// 	int	type;	//different types require different keys
-// 	union		//position on map
-// 	{
-// 		unsigned int	pos;
-// 		struct
-// 		{
-// 			unsigned char	mx;		//0x000000FF & pos; map x pos
-// 			unsigned char	my;		//0x0000FF00 & pos; map y pos
-// 			unsigned char	sx;		//0x00FF0000 & pos; square x pos
-// 			unsigned char	sy;		//0xFF000000 & pos; square y pos
-// 		};
-// 		struct
-// 		{
-// 			unsigned short	mpos;		//0x0000FFFF & pos; map pos
-// 			unsigned short	spos;		//0xFFFF0000 & pos; square pos
-// 		};
-// 	};
-// 	int status; //256 open, 0 closed
-// }	t_door;
-
 # define NORTH 0
 # define EAST 4096			// == 90
 # define SOUTH 8192			// == 180
@@ -235,6 +201,34 @@ typedef union u_clr
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
 //or with low framerate players could go through walls
 
+typedef union u_clr
+{
+	unsigned int	rgba;
+	struct
+	{
+		unsigned char	a;
+		unsigned char	b;
+		unsigned char	g;
+		unsigned char	r;
+	};
+} t_clr;
+
+// typedef struct s_clr
+// {
+// 	int	i;
+// 	union
+// 	{
+// 		unsigned int	rgba;
+// 		struct
+// 		{
+// 			unsigned char	a;
+// 			unsigned char	b;
+// 			unsigned char	g;
+// 			unsigned char	r;
+// 		};
+// 	};
+// } t_clr;
+
 typedef struct s_wallcheck
 {
 	int	x;
@@ -244,6 +238,8 @@ typedef struct s_wallcheck
 	int	ex;
 	int	wx;
 }	t_wallcheck;
+
+
 
 typedef struct s_walltexture
 {
@@ -654,11 +650,11 @@ typedef struct s_max
 	int				score;
 	time_t			oldms;
 	time_t			newms;
-	unsigned int	gamems;
-	unsigned int	levelms;
-	unsigned int	framems;
-	unsigned int	limitms;
-	unsigned int	timetriallimitms;
+	int				gamems;
+	int				levelms;
+	int				framems;
+	int				limitms;
+	int				timetriallimitms;
 	char			campaignmap[256];
 	long			frame;
 	unsigned int	fog[SCREENHEIGHT][SCREENWIDTH];

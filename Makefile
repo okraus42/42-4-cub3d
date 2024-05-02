@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/01 16:50:50 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/02 15:44:35 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRC			=	$(addprefix $(SRC_DIR), $(SRC_S))
 # Source directories
 
 SRC_DIR		=	src/
+HOOK_DIR	=	hooks/
 
 # cub3d functions
 
@@ -64,7 +65,7 @@ SRC_S		=	ft_buttons.c \
 				ft_gameplay.c \
 				ft_gamestart.c \
 				ft_halloffame.c \
-				ft_hook.c \
+				$(HOOK_DIR)ft_hook.c \
 				ft_keyhook.c \
 				ft_line.c \
 				ft_listfield.c \
@@ -141,6 +142,7 @@ libmlx:
 
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)
+				@mkdir -p $(OBJ_DIR)$(HOOK_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)

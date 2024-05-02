@@ -6,11 +6,11 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:39:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/02 15:36:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 void	ft_process_keylocks(t_max *max)
 {
