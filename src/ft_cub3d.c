@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 16:01:52 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:22:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,23 @@ static void	ft_fill_clin(unsigned char clin[65536])
 void	ft_init_math(t_math *math)
 {
 	int		i;
-	double	step;
+	//double	step;
 
-	step = 6.28318531 / 65536;
+	//step = 6.28318531 / MAXDEGREE;
+	//step = 0.0003834951969714103;
 	i = 0;
 	ft_fill_clin(math->clin);
 	ft_fill_clog(math->clog);
-	while (i < 65536)
+	while (i < MAXDEGREE)
 	{
-		math->sin[i] = 65536 * sin(step * i);
-		math->cos[i] = 65536 * cos(step * i);
-		math->atan[i] = -65536 / tan(step * i);
-		math->ntan[i] = (-65536 * (tan(step * i)));
-		if (ABS(tan(step * i)) > 60000)
+		// not sure if everything needs .9999, but it helps the tan functions
+		math->sin[i] = 65536.0 * sin(i * M_PI * 2 / MAXDEGREE);
+		math->cos[i] = 65536.0 * cos(i * M_PI * 2 / MAXDEGREE);
+		math->atan[i] = 65536.0 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->natan[i] = -65536.0 / tan(i * M_PI * 2 / MAXDEGREE);
+		math->ntan[i] = (-65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		math->tan[i] = (65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
+		if (ABS(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
 			ft_printf("WARNING %i \n", i);
 	++i;
 	}
@@ -71,28 +75,41 @@ void	ft_init_math(t_math *math)
 	ft_printf("NTAN 0 %Li 90 %Li  180 %Li 270 %Li\n", math->ntan[NORTH + 2], math->ntan[EAST - 2], math->ntan[SOUTH - 2], math->ntan[WEST - 2]);
 }
 
+//maybe allocate only max
 void	ft_cub3d(char *file)
 {
-	t_map		map;
-	t_max		max;
-	t_math		math;
-	t_textures	t;
+	// t_map		*map;
+	t_max		*max;
+	t_math		*math;
 
-	max.math = &math;
-	ft_init_math(max.math);
-	max.t = &t;
-	max.map = &map;
-	max.mlx = NULL;
-	max.frame = 0;
-	max.mmode = 0;
-	max.oldms = ft_get_time_in_ms();
-	max.newms = 0;
+	max = NULL;
+	max = ft_calloc(sizeof(t_max), 1);
+	if (!max)
+		ft_exit(max, 11);
+	// map = ft_calloc(sizeof(t_map), 1);
+	// if (!map)
+	// 	ft_exit(max, 11);
+	// max->map
+	math = ft_calloc(sizeof(t_math), 1);
+	if (!math)
+		ft_exit(max, 11);
+	max->math = math;
+	ft_init_math(max->math);
+	max->mlx = NULL;
+	max->keys[MLX_KEY_KP_1] = 0;
+	max->frame = 0;
+	max->ray = 0;
+	max->mmode = 0;
+	max->game_mode = MENU;
+	max->score = 1000000;
+	max->oldms = ft_get_time_in_ms();
+	max->newms = 0;
 	if (file)
 	{
-		map.file = file;
-		if (ft_process_file(&max))
+		ft_snprintf(max->map.file, 4095, file);
+		if (ft_process_file(max))
 		{
-			ft_amaze_standard(&max);
+			ft_amaze_standard(max);
 		}
 		else
 		{
@@ -101,8 +118,10 @@ void	ft_cub3d(char *file)
 	}
 	else
 	{
-		ft_printf("Fun stuff happens here, one day.\n");
+		ft_amaze_bonus(max);;
 	}
+	free(max);
+	free(math);
 }
 
 int	main(int ac, char *av[])

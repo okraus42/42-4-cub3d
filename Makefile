@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2023/12/31 13:34:07 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/05 18:50:52 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,15 +19,15 @@ PERC		=	$(shell expr $(HIT_COUNT3) / $(HIT_TOTAL) | bc)
 ECHO		=	echo "[`expr ${HIT_COUNT1} '*' 100 / ${HIT_TOTAL}`%]"
 endif
 
-NAME		=	cub3d
+NAME		=	cub3D
 LIBFT_F		=	libft/
 LIBFT		=	libft.a
-HEADER		=	header/cub3d.h
+HEADER		=	header/cub3d.h header/menu.h
 LIBMLX		=	./.MLX42
 LIBS		=	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LHEADERS	=	-I ./include -I $(LIBMLX)/include
 CC 			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -g -lm
+CFLAGS		=	-Wall -Wextra -Werror -g -O2
 CMFLAGS		=	-DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -B build
 OBJ_DIR		=	objs/
 SLEEP		=	#sleep 0.5
@@ -52,13 +52,39 @@ SRC			=	$(addprefix $(SRC_DIR), $(SRC_S))
 # Source directories
 
 SRC_DIR		=	src/
+HOOK_DIR	=	hooks/
 
 # cub3d functions
 
-SRC_S		=	ft_cub3d.c \
+SRC_S		=	ft_buttons.c \
+				ft_cub3d.c \
+				ft_doors.c \
+				ft_free.c \
 				ft_game.c \
-				ft_hook.c \
-				ft_parser.c
+				ft_game_bonus.c \
+				ft_gameplay.c \
+				ft_gamestart.c \
+				ft_halloffame.c \
+				$(HOOK_DIR)ft_hook.c \
+				ft_keyhook.c \
+				ft_line.c \
+				ft_listfield.c \
+				ft_map.c \
+				ft_menu.c \
+				ft_minimap.c \
+				ft_mousehook.c \
+				ft_overlay.c \
+				ft_parser.c \
+				ft_randommap.c \
+				ft_rays.c \
+				ft_saveload.c \
+				ft_screen2d.c \
+				ft_screen2dquad.c \
+				ft_screen3d.c \
+				ft_settings.c \
+				ft_sprite.c \
+				ft_text.c \
+				ft_textfield.c
 
 # Formating
 
@@ -116,6 +142,7 @@ libmlx:
 
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)
+				@mkdir -p $(OBJ_DIR)$(HOOK_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)
@@ -144,7 +171,7 @@ $(LIBFT):
 
 clean:
 				@rm -rf $(OBJ_DIR)
-				@rm $(LIBFT)
+				@rm -f $(LIBFT)
 				@make fclean -s -C $(LIBFT_F)
 				@rm -rf $(LIBMLX)/build
 				@echo "$(RED)Objects removed!$(NRM_FORMAT)"

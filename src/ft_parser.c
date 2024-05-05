@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/01/10 18:31:33 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:10:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 {
 	if (access(path, R_OK) < 0)
 	{
-		ft_dprintf(2, "Cannot open north texture\n");
+		ft_dprintf(2, "Cannot open texture\n");
 		exit(-3);
 	}
 	*texture = mlx_load_png(path);
@@ -38,16 +38,26 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 		exit(-4);
 }
 
-int	ft_init_textures(t_max *max)
+int	ft_init_map_textures(t_max *max)
 {
-	ft_load_texture(max->map->northtexture, &max->t->nwall);
-	ft_load_texture(max->map->westtexture, &max->t->wwall);
-	ft_load_texture(max->map->southtexture, &max->t->swall);
-	ft_load_texture(max->map->easttexture, &max->t->ewall);
+
+	//free textures if they exist
+	if (max->t.nwall)
+		mlx_delete_texture(max->t.nwall);
+	if (max->t.swall)
+		mlx_delete_texture(max->t.swall);
+	if (max->t.ewall)
+		mlx_delete_texture(max->t.ewall);
+	if (max->t.wwall)
+		mlx_delete_texture(max->t.wwall);
+	ft_load_texture(max->map.northtexture, &max->t.nwall);
+	ft_load_texture(max->map.westtexture, &max->t.wwall);
+	ft_load_texture(max->map.southtexture, &max->t.swall);
+	ft_load_texture(max->map.easttexture, &max->t.ewall);
 	return (1);
 }
 
-void	ft_map_init(t_map *map)
+static void	ft_map_init(t_max *max, t_map *map)
 {
 	int	i;
 
@@ -56,16 +66,16 @@ void	ft_map_init(t_map *map)
 	map->southtexture = NULL;
 	map->westtexture = NULL;
 	map->easttexture = NULL;
-	map->d = NULL;
+	//map->d = NULL;
 	map->valid = 1;
-	map->e = -1;
 	map->p.orientation = -1;
-	map->p.pos = -1;
+	map->p.x = 0;
+	map->p.y = 0;
 	map->p.speed = 16;
 	map->p.turnspeed = 512;
 	map->p.xspeed = 0;
 	map->p.yspeed = 0;
-	map->p.fov = FOV;
+	map->p.fov = max->settings.fov;
 	map->p.fov2 = map->p.fov * 65536 / 720;
 	map->h = 0;
 	map->w = 0;
@@ -88,45 +98,19 @@ int	ft_puterror(char *err, int r)
 	return (r);
 }
 
-void	ft_freemap(t_map *map)
-{
-	if (map->mapstr)
-		free(map->mapstr);
-	map->mapstr = NULL;
-	if (map->northtexture)
-		free(map->northtexture);
-	map->northtexture = NULL;
-	if (map->southtexture)
-		free(map->southtexture);
-	map->southtexture = NULL;
-	if (map->westtexture)
-		free(map->westtexture);
-	map->westtexture = NULL;
-	if (map->easttexture)
-		free(map->easttexture);
-	map->easttexture = NULL;
-	if (map->d)
-		free(map->d); //door need better freeing
-	map->d = NULL;
-}
-
-void	ft_exit(t_max *max, int exitcode)
-{
-	//free map; and all
-	ft_freemap(max->map);
-	exit(exitcode);
-}
 
 int	ft_checkfileextension(char *s)
 {
 	int	l;
 
+	ft_printf("map->file2:%s\n", s);
 	if (!s)
 		return (0);
 	l = ft_strlen(s);
 	if (l < 5)
 		return (0);
 	--l;
+	ft_printf("%s - %c\n", s, s[l]);
 	if (s[l] != 'b' || s[l - 1] != 'u' || s[l - 2] != 'c' || s[l - 3] != '.')
 		return (0);
 	return (1);
@@ -279,7 +263,7 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 		i = 0;
 		while (split[j][i])
 		{
-			if (!ft_strchr(" 01NSEW", split[j][i]))
+			if (!ft_strchr(" 01NSEWXF><^v", split[j][i]))
 			{
 				ft_free_split(&split);
 				return(ft_puterror("Invalid character in map", 0));
@@ -318,15 +302,48 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 		map->m[y * map->w + x] = FLOOR1;
 	else if (c == '1')
 		map->m[y * map->w + x] = WALL1;
+	else if (c == 'X')
+		map->m[y * map->w + x] = EXIT;
+	else if (c == 'F')
+	{
+		printf("flamingo11\n");
+		map->m[y * map->w + x] = FLOORFLAMINGO;
+	}
+	else if (c == '>')
+	{
+		printf("dooreast1\n");
+		map->m[y * map->w + x] = DOOREAST;
+	}
+	else if (c == '<')
+	{
+		printf("doorwest1\n");
+		map->m[y * map->w + x] = DOORWEST;
+	}
+	else if (c == '^')
+	{
+		printf("doornorth1\n");
+		map->m[y * map->w + x] = DOORNORTH;
+	}
+	else if (c == 'v')
+	{
+		printf("doorsouth1\n");
+		map->m[y * map->w + x] = DOORSOUTH;
+	}
 	else if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
 	{
 		map->m[y * map->w + x] = FLOOR1;
-		map->p.pos = y * map->w + x;
-		map->p.pos |= 0x7f7f0000;
-		map->p.mx = map->p.mapx;
-		map->p.sx = map->p.sqrx;
-		map->p.my = map->p.mapy;
-		map->p.sy = map->p.sqry;
+		map->p.mx = x;
+		map->p.my = y;
+		map->p.sx = 0x7f7f;
+		map->p.sy = 0x7f7f;
+		map->p.unused_x = 0;
+		map->p.unused_y = 0;
+		map->p.smx = x * 64;
+		map->p.smy = y * 64;
+		if (map->p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+			map->p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+		if (map->p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+			map->p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
 		if (c == 'N')
 		{
 			map->p.orientation = NORTH;
@@ -405,7 +422,7 @@ int	ft_fill_array2(t_map *map, char **split, int j, int a)
 		}
 		++j;
 	}
-	ft_flood_check(map, map->p.pos & 0x0000FFFF);
+	ft_flood_check(map, map->p.mx + map->p.my * map->w);
 	if (!map->valid)
 	{
 		ft_free_split(&split);
@@ -444,6 +461,83 @@ int	ft_fill_array(t_map *map)
 	return (1);
 }
 
+void	ft_fill_colours_to_map(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while (i < map->h * map->w)
+	{
+		if (map->m[i] & EXIT)
+		{
+			map->sprites[SPRITE_EXIT].x = ((i % 256) << 16) | 0x7FFF;
+			map->sprites[SPRITE_EXIT].y = ((i / 256) << 16) | 0x7FFF;
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= 0xFF00FFFF00000000;
+		}
+		else if (map->m[i] & FLOOR1)
+		{
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+		}
+		else if (map->m[i] & FLOORFLAMINGO)
+		{
+			printf("flamingo22\n");
+			map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			ft_init_sprites_flamingo(map, map->spritecount);
+		}
+		else if (map->m[i] & DOOREAST)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORWEST)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORNORTH)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & DOORSOUTH)
+		{
+			printf("dooreast\n");
+			map->m[i] &= 0x00000000FFFFFFFF;
+		 	map->m[i] |= 0x53565AFF00000000;
+			map->doors[i] = 0x1FF; //closed unlocked door
+			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
+			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
+			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+		}
+		else if (map->m[i] & WALL)
+		{
+			map->m[i] &= 0x00000000FFFFFFFF;
+			map->m[i] |= 0x000000FFFFFFFFFF;
+		}
+		else
+			map->m[i] &= 0x00000000FFFFFFFF;
+		++i;
+	}
+}
+
 int	ft_fill_map(t_map *map)
 {
 	//fill paths to textures
@@ -453,7 +547,8 @@ int	ft_fill_map(t_map *map)
 		return (0);
 	if (!ft_fill_array(map))
 		return (0);
-	//fill colours of floor and ceiling
+	//fill colours in map
+	ft_fill_colours_to_map(map);
 	//fill actual map (get width and height first)
 	return (1);
 }
@@ -486,13 +581,13 @@ void	ft_print_map(t_map *map)
 	ft_printf("E: <%s>\n", map->easttexture);
 	ft_printf("f: %#8x, c: %#8x b: %#8x\n", map->f.rgba, map->c.rgba, map->b.rgba);
 	ft_printf("valid %i, width %4i, height %4i\n", map->valid, map->w, map->h);
-	ft_printf("Player pos %#8x, ori: %5i\n", map->p.pos, map->p.orientation);
+	ft_printf("Player posx %#8x, posy %#8x, ori: %5i\n", map->p.x, map->p.y, map->p.orientation);
 	ft_printf("Player py %4x, px %4x \n", map->p.y, map->p.x);
 	ft_printf("Player my %2x, sy %2x, mx %2x, sx %2x \n", map->p.my, map->p.sy, map->p.mx, map->p.sx);
 	i = 0;
 	while (i < map->h * map->w)
 	{
-		if (i == (map->p.mpos))
+		if (i == (map->p.mx + map->p.my * map->w))
 		{
 			if (map->p.orientation == NORTH)
 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
@@ -507,6 +602,8 @@ void	ft_print_map(t_map *map)
 		}
 		else if (map->m[i] & WALL)
 			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & EXIT)
+			ft_printf("%^*CXX%C", 0xFF00FF);
 		else if (map->m[i] & FLOOR)
 			ft_printf("%^*C  %C", map->f.rgba >> 8);
 		else if ((i & 0xff) < map->ww && ((i & 0xff00) >> 8) < map->hh)
@@ -528,7 +625,7 @@ void	ft_print_map(t_map *map)
 			c &= 0xFFFF80;
 		if (map->m[i] & FLOORWE)
 			c &= 0x40A040;
-		if (i == (map->p.mpos))
+		if (i == (map->p.mx + map->p.my * map->w))
 		{
 			if (map->p.orientation == NORTH)
 				ft_printf("%^*C^^%C", map->c.rgba >> 8);
@@ -543,6 +640,8 @@ void	ft_print_map(t_map *map)
 		}
 		else if (map->m[i] & WALL)
 			ft_printf("%^*C  %C", 0x333333);
+		else if (map->m[i] & EXIT)
+			ft_printf("%^*CXX%C", 0xFF00FF);
 		else if (map->m[i] & FLOORW)
 			ft_printf("%^*C  %C", c);
 		else if (map->m[i] & FLOOR)
@@ -566,21 +665,43 @@ void	ft_init_brume(t_max *max)
 		d = 0;
 		while (d < 256)
 		{
-			max->math->brumered[c][d] = PERCENTIL(c, max->map->b.r, d, 255);
-			max->math->brumegreen[c][d] = PERCENTIL(c, max->map->b.g, d, 255);
-			max->math->brumeblue[c][d] = PERCENTIL(c, max->map->b.b, d, 255);
+			max->math->brumered[c][d] = PERCENTIL(c, max->map.b.r, d, 255);
+			max->math->brumegreen[c][d] = PERCENTIL(c, max->map.b.g, d, 255);
+			max->math->brumeblue[c][d] = PERCENTIL(c, max->map.b.b, d, 255);
 			++d;
 		}
 		++c;
 	}
 }
 
+
+
+void	ft_init_time(t_max *max)
+{
+	int	i;
+	int	c;
+
+	i = 0;
+	c = 0;
+	while (i < 65536)
+	{
+		if (max->map.m[i] & FLOOR)
+		{
+			++c;
+		}
+		++i;
+	}
+	max->limitms = (c * 100) + 15000;
+}
+
 int	ft_process_file(t_max *max)
 {
 	t_map	*map;
 
-	map = max->map;
-	ft_map_init(map);
+	ft_init_sprites(max);
+	map = &max->map;
+	ft_printf("map->file111:%s\n", map->file);
+	ft_map_init(max, map);
 	if (!ft_read_map(map))
 	{
 		ft_freemap(map);
@@ -591,24 +712,25 @@ int	ft_process_file(t_max *max)
 		ft_freemap(map);
 		return (0);
 	}
-	if (!ft_init_textures(max))
+	if (!ft_init_map_textures(max))
 	{
 		ft_freemap(map);
 		return (0);
 	}
 	ft_init_brume(max);
-	int i;
+	// int i;
 
-	i = 0;
-	while (i < 256)
-	{
-		ft_printf("%i %i", max->math->brumered[255][i], max->map->b.r);
-		ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map->b.g);
-		ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map->b.b);
-		++i;
-	}
+	// i = 0;
+	// while (i < 256)
+	// {
+	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map.b.r);
+	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map.b.g);
+	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
+	// 	++i;
+	// }
 	//for debugging
 	ft_print_map(map);
+	ft_init_time(max);
 	ft_freemap(map);
 	return (1);
 }

@@ -1,0 +1,334 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   menu.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/25 12:56:41 by okraus            #+#    #+#             */
+/*   Updated: 2024/05/01 17:11:56 by okraus           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MENU_H
+
+# define MENU_H
+
+# include "../.MLX42/include/MLX42/MLX42.h"
+# include "../libft/header/libft.h"
+
+//keys
+# define ISO_KEY_BACKSLASH 161
+
+//modes
+# define MENU 1
+# define GAMESTART 2
+# define GAMEPLAY 3
+# define GAMEWON 4
+# define GAMELOST 5
+# define NEXTLEVEL 6
+# define HOFLOOP 7
+
+//buttons
+//mainbuttons
+# define RESUME 0
+# define NEWGAME 1
+# define SAVEGAME 2
+# define LOADGAME 3
+# define SETTINGS 4
+# define HALLOFFAME 5
+# define QUITGAME 6
+# define MAINBUTTONSCOUNT 7
+
+//newwriting
+//continue ->confirm
+# define NAME 0
+# define COALITION 1
+# define CAMPUS 2
+# define NWCONFIRM 3
+# define WRITINGBUTTONCOUNT 4
+# define WRITINGTEXTFIELDCOUNT 3
+
+//game difficulty
+# define EASY 0
+# define MEDIUM 1
+# define HARD 2
+// # define GDBACK 3
+// # define GDCONTINUE 4
+# define DIFFICULTYBUTTONCOUNT 3
+
+//game type
+# define CAMPAIGN 0
+# define TIMETRIAL 1
+# define ONEMAP 2
+// # define GTBACK 3
+// # define GTCONTINUE 4
+# define GAMETYPEBUTTONCOUNT 3
+
+//map type
+# define CUSTOM 0
+# define RANDOM 1
+// # define MTBACK 2
+# define MAPTYPEBUTTONCOUNT 2
+
+//map selection
+// # define MSBACK 2
+# define CHOOSELEVEL 0
+# define MSPLAY 1
+# define MAPSELECTIONBUTTONCOUNT 2
+
+//random selection
+// # define MSBACK 2
+# define RSPLAY 0
+# define RSADVANCED 1
+# define RANDOMSELECTIONBUTTONCOUNT 2
+
+// compile with libft.a
+// pass number for
+// width, height, ratio of dead ends, loops, T-intersections, X-intersections
+// notoverlapping room placement attempts, overlapping rooms placement attempts
+// chance to create extra doors (higher is better, 4096 is max)
+// chance to remove deadends 0 keeps deadends, 1 removes dead ends,
+// 2 - 1024 chance to remove percentage of deadends
+// like 52 26 4 5 3 2 20 10 25 512
+//	++ floor colour || ceiling colour || fog colour
+
+//random parametres
+//width || height
+//deadends || loops || T || X
+//rooms not overlapping || rooms overlapping
+// doors || deadends
+# define RWIDTH 0
+# define RHEIGHT 1
+# define RRATIODE 2 //deadends || loops || T || X
+# define RRATIOLO 3
+# define RRATIOTI 4
+# define RRATIOXI 5
+# define RNOROOMS 6
+# define ROROOMS 7
+# define RDOORS 8
+# define RDEADENDS 9
+# define RRANDOMIZE 10
+# define RPLAY 11
+# define RANDOMADVANCEDBUTTONCOUNT 12
+
+# define CHOOSESAVE 0
+# define SAVE 1
+# define DELETE 2
+# define SAVEGAMEBUTTONCOUNT 3
+
+# define CHOOSELOAD 0
+# define LOAD 1
+# define DELETE 2
+# define LOADGAMEBUTTONCOUNT 3
+
+//HALLOFFAME - to be deleted or changed to SETTINGS
+# define HOFBACK 0
+# define HALLOFFAMEBUTTONCOUNT 1
+
+# define MAINBUTTONS 0		//resume-quit
+# define NEWWRITING 1		// name, coalition, campus 
+# define NEWDIFFICULTY 2	//easy, medium, hard
+# define NEWSELECTION 3		// campaign, time, one level
+# define NEWLEVEL 4			// select map || random map
+# define NEWMAP 5			// choose a map from the list
+# define NEWRANDOM 6
+# define NEWRANDOMADVANCED 7		// choose parameters for a random generation
+# define SAVEGROUP 8
+# define LOADGROUP 9
+# define HALLOFFAMEGROUP 10
+# define BUTTONGROUPS 11
+
+# define S_RESUME "RESUME"
+# define S_SETTINGS "SETTINGS"
+# define S_HALLOFFAME "HALL OF\n  FAME"
+# define S_NEWGAME "NEW GAME"
+# define S_QUITGAME "QUIT GAME"
+# define S_SAVEGAME "SAVE GAME"
+# define S_LOADGAME "LOAD GAME"
+
+# define S_CHOOSESAVE "CHOOSE SAVE"
+# define S_CHOOSELOAD "CHOOSE LOAD"
+# define S_SAVE "SAVE"
+# define S_LOAD "LOAD"
+# define S_DELETE "DELETE"
+
+# define S_NAME "NAME"
+# define S_COALITION "COALITION"
+# define S_CAMPUS "CAMPUS"
+# define S_EASY "EASY"
+# define S_MEDIUM "MEDIUM"
+# define S_HARD "HARD"
+# define S_BACK "BACK"
+# define S_CONTINUE "CONTINUE"
+# define S_CONFIRM "CONFIRM"
+# define S_CHOOSELEVEL "CHOOSE LEVEL"
+# define S_PLAY "PLAY"
+# define S_ADVANCED "ADVANCED"
+# define S_CAMPAIGN "CAMPAIGN"
+# define S_TIMETRIAL "TIME TRIAL"
+# define S_ONEMAP "ONE MAP"
+# define S_CUSTOM "CUSTOM"
+# define S_RANDOM "RANDOM"
+# define S_RANDOMIZE "RANDOMIZE"
+# define S_RWIDTH "WIDTH"
+# define S_RHEIGHT "HEIGHT"
+# define S_RRATIODE "RATIODE"
+# define S_RRATIOLO "RATIOLO"
+# define S_RRATIOTI "RATIOTI"
+# define S_RRATIOXI "RATIOXI"
+# define S_RNOROOMS "NO ROOMS"
+# define S_ROROOMS "O ROOMS"
+# define S_RDOORS "DOORS"
+# define S_RDEADENDS "DEAD ENDS"
+
+//# define S_ ""
+
+# define C_INACTIVE 0x7F7F7FFF
+# define C_ACTIVE 0X0066DDFF
+# define C_SELECTED 0X88CCFFFF
+# define C_ACTIVATED 0XAAEEFFFF
+
+# define INVISIBLE 0
+# define INACTIVE 1
+# define ACTIVE 2
+# define SELECTED 4
+# define ACTIVATED 8
+
+typedef struct s_text
+{
+	mlx_texture_t	*font;
+	mlx_image_t		*image;
+	char			*text;
+	char			str[512];
+	unsigned int	c;
+	unsigned int	cb;
+	int				sx;
+	int				sy;
+	int				x;
+	int				y;
+	int				i;
+	int				highlight;
+	int				offset;
+	int				height;
+}	t_text;
+
+typedef struct s_values
+{
+	int				min;
+	int				max;
+	int				value;
+}	t_values;
+
+typedef struct s_randommap
+{
+	t_values	width;
+	t_values	height;
+	t_values	ratiode;
+	t_values	ratiolo;
+	t_values	ratioti;
+	t_values	ratioxi;
+	t_values	rnorooms;
+	t_values	rorooms;
+	t_values	rdoors;
+	t_values	rdeadends;
+	t_values	flamingos;
+	int			seed;
+}	t_randommap;
+
+typedef struct s_button
+{
+	mlx_texture_t	*button;
+	mlx_image_t		*image;
+	t_text			text;
+	unsigned int	c;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				id;
+	int				group;
+	int				state;
+	t_values		*val;
+	char			*str;
+	struct s_button	*up;
+	struct s_button	*down;
+	struct s_button	*left;
+	struct s_button	*right;
+}	t_button;
+
+typedef struct s_textfield
+{
+	mlx_texture_t	*textfield;
+	mlx_image_t		*image;
+	t_text			text;
+	unsigned int	c;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				state;
+}	t_textfield;
+
+typedef struct s_listfield
+{
+	mlx_texture_t	*listfield;
+	mlx_image_t		*image;
+	t_text			text[10];
+	char			dir[512];
+	char			**files;
+	int				totalfiles;
+	int				topfile;
+	//char			*files[5]; //temporary before list is working
+	unsigned int	c;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				highlight;
+	int				state;
+}	t_listfield;
+
+typedef struct s_font
+{
+	mlx_texture_t	*asciitest; //rename or remove
+}	t_font;
+
+typedef struct s_menu
+{
+	int				current_button[BUTTONGROUPS];
+	int				current_buttongroup;
+	int				selection;
+	int				newmap;
+	int				newwriting;
+	int				lf_state;
+	int				random_state[RANDOMADVANCEDBUTTONCOUNT];
+	//char			**files; //move to listfield
+	t_randommap		rm;
+	//int			newlevel;
+	mlx_texture_t	*background;
+	mlx_texture_t	*button;
+	mlx_texture_t	*buttonplus;
+	mlx_texture_t	*textfield;
+	mlx_texture_t	*listfield;
+	// t_button		yes;
+	// t_button		no;
+	t_textfield		newwritingfields[WRITINGTEXTFIELDCOUNT];
+	t_button		mainbuttons[MAINBUTTONSCOUNT];
+	t_button		newwritingbuttons[WRITINGBUTTONCOUNT];
+	t_button		gamedifficultybuttons[DIFFICULTYBUTTONCOUNT];
+	t_button		gametypebuttons[GAMETYPEBUTTONCOUNT];
+	t_button		maptypebuttons[MAPTYPEBUTTONCOUNT];
+	t_button		mapselectionbuttons[MAPSELECTIONBUTTONCOUNT];
+	t_button		randomselectionbuttons[RANDOMSELECTIONBUTTONCOUNT];
+	t_button		randomadvancedbuttons[RANDOMADVANCEDBUTTONCOUNT];
+	t_button		halloffamebuttons[HALLOFFAMEBUTTONCOUNT];
+	t_button		savegamebuttons[SAVEGAMEBUTTONCOUNT];
+	t_button		loadgamebuttons[LOADGAMEBUTTONCOUNT];
+	t_listfield		custommap;
+	t_listfield		saves;
+	t_listfield		loads;
+	t_text			topten[12];
+}	t_menu;
+
+#endif

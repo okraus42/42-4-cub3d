@@ -42,3 +42,240 @@ Maze Generation:
 https://en.wikipedia.org/wiki/Maze_generation_algorithm
 https://www.jamisbuck.org/presentations/rubyconf2011/index.html
 
+Sprites:
+https://wynnliam.github.io/raycaster/news/tutorial/2019/04/03/raycaster-part-02.html
+
+Todo today:
+# Try Quad/Nine pixel optimisation
+# Increase score for difficulty
+# Increase decrease time for light distance
+# Fog initiation not working sometimes?
+# map decreases time
+# Ray optimisation update ray angle offsets only once
+Ray - quadrants ?
+# Random generate doors
+Fix random map
+
+Game mandatory
+Add check for textures.
+Free textures
+
+Cleaning code
+
+
+regular testing
+MONDAY
+understand the code and plan
+
+TUESDAY
+small norm fixes (tabs, long lines)
+
+WEDNESDAY
+adding structures
+splitting functions (too many lines)
+
+THURSDAY
+splitting files (too many functions)
+
+FRIDAY
+testing and valgrind
+
+WEEKEND
+evaluation!
+
+# Reset light distance on new game
+# Experiment with background pictures for menu, walls and around the game (background frame for the game)
+
+
+# - get the count of flamingos -ok
+# - remove them when they are collected
+# -- check sprites (calculate distances)
+# -- if distance is small remove
+
+# - display them in the map
+# - update score
+# - sort sprites by distance (quicksort?)
+# - unlock exit when all are collected
+# - game win / lose functions separated ((check status of exit))
+-- functions to reset stuff
+# --- continue / resume
+--- new map
+# --- new game
+# - generate flamingos in random maps?
+
+# - resume reset overlay
+# - reset score and sprite counters on new game / map
+
+DOORS
+# - interactions
+# - better location for interaction
+# - 4 point collision check?
+# - collisions
+# - textures
+
+-- draw textures in light dist
+-- draw glowtexture in distance
+
+Sunday:
+# - fog (brume)
+# - random fog colour
+# - glow distance
+# - fog drawned in separate image
+
+Updated todo list 2024-04-18:
+# - sprites
+# - consumables
+# - exit unlocks after collectibles are picked up?
+# - score system
+# - doors
+- keys
+# - fog
+# - textured walls
+- textured floor and ceiling
+- mouse control in game
+- mouse control in the menu
+- multiple types of walls and floors and sprites and doors
+- button size adjustable
+- jumping and crouching
+- enemies ?
+- traps ?
+- hints?
+- autoplay?
+- sounds ?
+- skybox?
+- different height walls ?
+- special powers?
+- special effects?
+- portals?
+- level to level transitions?
+- split screen multiplayer (2-4 players)?
+
+- optimisations
+- checks (random map)
+
+- settings
+-- mouse sensitivity
+
+
+
+
+
+
+
+
+
+
+
+
+##### OLD STUFF #####
+
+
+Draw two textures (standard and glowing)
+- glowing at maximum distance
+
+Drawing sprites
+- sort them by distance
+- discard invisible ones
+
+Doors:
+https://medium.com/@Powersaurus/pico-8-raycaster-doors-cd8de9d943b
+
+
+
+Todo later:
+- Options
+— Fov (1-720)
+— fish eye correction (limits fov to 179)
+— resolution (takes effect after restart)
+— fullscreen (takes effect after restart)
+— restart option?
+— .ini file with settings preserved
+-- save settings
+
+--ESC in hall of fame
+
+!!! Load game free old pointers befre assigning new values !!!
+
+Ideas:
+Refresh available maps
+Add autosave
+Hall of fame listing with arrows or Page up/Down keys?
+Random generation check the map is complex enough (distance to exit should be more than x and more floor)
+Saves called AGU or Freeze
+Init when the game starts
+init when the map loads
+init for highscores
+Display warning when trying to open invalid map
+
+- Difficulty in Hall of fame?
+- 4xresolution (4 pixels instead of one)
+- The style of aMaze42:
+- connected with 42 school thematic 
+- doors could be doors of different campuses(Prague, Berlin, Paris etc), the same for collectibles 
+- text bubbles above sprites
+- staff members could be enemies, chasing player to do proper evaluations
+- black hole sprite/ skybox 
+- levels of game difficulty could be based on the holy graph (starting from piscine (using water textures) up to the transcendence and so on.)
+- score calculation
+
+- scale button size
+- new game
+— game mode selection (one level, campaign, time trial(competition))
+— choose existing map
+— generate random map
+— difficulty selection (void, easy, moderate, hard, nightmare)
+— name, coalition, campus selection 
+
+- random map generation
+- debugging strings onscreen
+To do list:
+- game menu
+— pause game menu
+— options change
+— inventory?
+— hall of fame?
+— map?
+— save game
+— load game
+— quit game
+- draw string?
+- key hook?
+— name player
+— name coalition
+— name campus
+- map generation (integrate options in menu)
+— save options
+— random options?
+— save seed
+- save game
+— name save
+- screen (2d)
+— draws textures on the map
+— moves the map if player is close to the edge of screen but not the edge of the map
+— fills the empty fields
+- screen (3d)
+— first different colour walls
+— then textured walls
+— in the top left corner during game development
+- collectibles
+- score system
+- doors
+- sprites
+- mouse control
+- traps?
+- enemies?
+- autoplay?
+- more advanced map generation?
+- quadrant based calculations ?
+- sounds
+- jumping?
+- look up/down?
+- more code optimisations
+- HUD?
+- textured floor and ceiling
+- skybox?
+- special powers?
+- special effects?
+- portals?
+- level to level transitions?
+- split screen multiplayer (2-4 players)?
