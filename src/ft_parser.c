@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/28 15:32:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:10:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,14 @@ int	ft_checkfileextension(char *s)
 {
 	int	l;
 
+	ft_printf("map->file2:%s\n", s);
 	if (!s)
 		return (0);
 	l = ft_strlen(s);
 	if (l < 5)
 		return (0);
 	--l;
+	ft_printf("%s - %c\n", s, s[l]);
 	if (s[l] != 'b' || s[l - 1] != 'u' || s[l - 2] != 'c' || s[l - 3] != '.')
 		return (0);
 	return (1);
@@ -698,6 +700,7 @@ int	ft_process_file(t_max *max)
 
 	ft_init_sprites(max);
 	map = &max->map;
+	ft_printf("map->file111:%s\n", map->file);
 	ft_map_init(max, map);
 	if (!ft_read_map(map))
 	{

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 15:21:38 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:19:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 	max = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
-		if (max->game_mode == GAMEPLAY)
+		if (max->game_mode == GAMEPLAY && max->bonus)
 		{
 			max->game_mode = MENU;
 			max->menu.current_button[0] = RESUME;
@@ -180,7 +180,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 			max->i.menuscreen->enabled = 1;
 			max->i.textscreen->enabled = 0;
 		}
-		else if (max->game_in_progress)
+		else if (max->game_mode == MENU && max->game_in_progress)
 		{
 			ft_resume(max);
 		}

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 11:43:40 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:25:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -589,6 +589,8 @@ void	ft_game_end(t_max *max)
 	max->i.textscreen->enabled = 1;
 	max->i.overlay->enabled = 0;
 	max->gamems += max->levelms;
+	if (!max->bonus)
+		mlx_close_window(max->mlx);
 }
 
 void	ft_game_win(t_max *max)

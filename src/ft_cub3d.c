@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 15:49:28 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:22:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	ft_init_math(t_math *math)
 //maybe allocate only max
 void	ft_cub3d(char *file)
 {
-	t_map		*map;
+	// t_map		*map;
 	t_max		*max;
 	t_math		*math;
 
@@ -86,9 +86,10 @@ void	ft_cub3d(char *file)
 	max = ft_calloc(sizeof(t_max), 1);
 	if (!max)
 		ft_exit(max, 11);
-	map = ft_calloc(sizeof(t_map), 1);
-	if (!map)
-		ft_exit(max, 11);
+	// map = ft_calloc(sizeof(t_map), 1);
+	// if (!map)
+	// 	ft_exit(max, 11);
+	// max->map
 	math = ft_calloc(sizeof(t_math), 1);
 	if (!math)
 		ft_exit(max, 11);
@@ -105,7 +106,7 @@ void	ft_cub3d(char *file)
 	max->newms = 0;
 	if (file)
 	{
-		ft_snprintf(map->file, 4095, file);
+		ft_snprintf(max->map.file, 4095, file);
 		if (ft_process_file(max))
 		{
 			ft_amaze_standard(max);
@@ -121,7 +122,6 @@ void	ft_cub3d(char *file)
 	}
 	free(max);
 	free(math);
-	free(map);
 }
 
 int	main(int ac, char *av[])

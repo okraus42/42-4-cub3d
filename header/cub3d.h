@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/02 16:34:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:28:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@
 #  define HEIGHT 1080
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
-#  define FULLSCREEN 0
+#  define FULLSCREEN 1
 
 #  define MAXDOF 32
 # else
@@ -614,6 +614,7 @@ typedef struct s_settings
 
 typedef struct s_max
 {
+	int				bonus;
 	mlx_t			*mlx;
 	t_map			map; //no need for pointer
 	t_math			*math; //no need for a pointer
@@ -707,6 +708,9 @@ int		ft_process_random(t_max *max);
 void	ft_amaze_standard(t_max *max);
 
 //ft_game_bonus.c
+void	ft_init_images(t_max *max);
+void	ft_init_textures(t_max *max);
+void	ft_add_pool(t_max* max);
 void	ft_amaze_bonus(t_max *max);
 
 //ft_gamestart.c

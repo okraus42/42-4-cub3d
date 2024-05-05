@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 17:04:24 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:27:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	ft_amaze_bonus(t_max *max)
 	// mlx_image_t	*maximap;
 	// mlx_image_t	*minimap;
 	// mlx_image_t	*screen;
-
+	max->bonus = 1;
 	if (FULLSCREEN)
 		mlx_set_setting(MLX_FULLSCREEN, true);
 	max->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);

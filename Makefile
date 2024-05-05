@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/02 15:44:35 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/05 18:50:52 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -171,7 +171,7 @@ $(LIBFT):
 
 clean:
 				@rm -rf $(OBJ_DIR)
-				@rm $(LIBFT)
+				@rm -f $(LIBFT)
 				@make fclean -s -C $(LIBFT_F)
 				@rm -rf $(LIBMLX)/build
 				@echo "$(RED)Objects removed!$(NRM_FORMAT)"

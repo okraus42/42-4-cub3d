@@ -6,85 +6,66 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 15:59:42 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 15:10:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/05 19:23:34 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
 
-//this will need rework later
-//do not change now
 void	ft_amaze_standard(t_max *max)
 {
-	mlx_t		*mlx;
-	mlx_image_t	*maximap;
-	mlx_image_t	*minimap;
-	mlx_image_t	*screen;
-
+	printf("FILENAME %s\n", max->map.file);
+	max->bonus = 0;
 	if (FULLSCREEN)
 		mlx_set_setting(MLX_FULLSCREEN, true);
-	mlx = mlx_init(WIDTH, HEIGHT, "cub3d", true);
-	if (!mlx)
+	max->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	if (!max->mlx)
 	{
 		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
 		//free everything
 		ft_exit(max, 9);
 	}
-	screen = mlx_new_image(mlx, SCREENWIDTH, SCREENHEIGHT);
-	if (!screen || (mlx_image_to_window(mlx, screen, (WIDTH - SCREENWIDTH) / 2, (HEIGHT - SCREENHEIGHT) / 2) < 0))
-	//if (!screen || (mlx_image_to_window(mlx, screen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	maximap = mlx_new_image(mlx, MAPWIDTH, MAPHEIGHT);
-	if (!maximap || (mlx_image_to_window(mlx, maximap, (WIDTH - MAPWIDTH) / 2, (HEIGHT - MAPHEIGHT) / 2) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	minimap = mlx_new_image(mlx, MINIWIDTH, MINIHEIGHT);
-	if (!minimap || (mlx_image_to_window(mlx, minimap, WIDTH - MINIWIDTH, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->i.menuscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!screen || (mlx_image_to_window(mlx, max->i.menuscreen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->i.textscreen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!max->i.textscreen || (mlx_image_to_window(mlx, max->i.textscreen, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->i.overlay = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!max->i.overlay || (mlx_image_to_window(mlx, max->i.overlay, 0, 0) < 0))
-	{
-		ft_dprintf(2, "Error\n%s\n", mlx_strerror(mlx_errno));
-		//free everything
-		ft_exit(max, 10);
-	}
-	max->mlx = mlx;
-	max->i.maximap = maximap;
-	max->i.minimap = minimap;
-	max->i.screen = screen;
+	ft_init_settings(max);
+	ft_init_images(max);
+	ft_init_textures(max);
+	ft_add_pool(max);
 	ft_initmenu(max);
 	ft_initgamestart(max);
 	ft_initgamewon(max);
-	mlx_key_hook(mlx, &ft_keyhook, max);
-	//mlx_mouse_hook(mlx, &mousehook, max);
-	mlx_loop_hook(mlx, ft_hook, max);
-	mlx_loop(mlx);
+	ft_initgamelost(max);
+	ft_init_overlay(max);
+	ft_init_sprites(max);
+	max->i.menuscreen->enabled = 0;
+	printf("FILENAME %s\n", max->map.file);
+	if (ft_process_file(max))
+	{
+		printf("gamestart loop starting...\n");
+		max->settings.lightdist = max->settings.maxdist / 4;
+		
+		ft_init_rayangles(max);
+		ft_init_orays(max);
+		ft_init_fogscreen(max);
+		max->i.textscreen->enabled = 0;
+		max->i.maximap->enabled = 0;
+		max->i.overlay->enabled = 1;
+		max->game_in_progress = 1;
+		max->gamestart.i = 0;
+		max->levelms = 0;
+		max->keys[MLX_KEY_ENTER] = 0;
+		ft_newgame(max);
+		max->game_mode = GAMEPLAY;
+	}
+	else
+	{
+		max->menu.current_button[NEWMAP] = CUSTOM;
+		max->menu.lf_state = 1;
+		ft_dprintf(2, "Invalid map %s\n", max->map.file);
+		ft_exit(max, 1);
+	}
+	mlx_key_hook(max->mlx, &ft_keyhook, max);
+	mlx_loop_hook(max->mlx, ft_hook, max);
+	mlx_loop(max->mlx);
 	if (max->t.nwall)
 		mlx_delete_texture(max->t.nwall);
 	if (max->t.ewall)
@@ -93,5 +74,5 @@ void	ft_amaze_standard(t_max *max)
 		mlx_delete_texture(max->t.swall);
 	if (max->t.wwall)
 		mlx_delete_texture(max->t.wwall);
-	mlx_terminate(mlx);
+	mlx_terminate(max->mlx);
 }
