@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/05 19:28:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/06 15:38:25 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -768,6 +768,8 @@ int	ft_quickload(t_max *max);
 int	ft_save(t_max *max, char *path);
 int	ft_load(t_max *max, char *path);
 
+//ft_cub3d_2.c
+void ft_init_math(t_math *math);
 
 //ft_screen2d.c
 void	ft_draw_screen2d(t_max *max);

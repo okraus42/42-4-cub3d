@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
+#    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/05 18:50:52 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/06 15:39:08 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ HOOK_DIR	=	hooks/
 
 SRC_S		=	ft_buttons.c \
 				ft_cub3d.c \
+				ft_cub3d_2.c \
 				ft_doors.c \
 				ft_free.c \
 				ft_game.c \

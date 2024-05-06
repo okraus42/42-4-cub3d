@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/05 19:10:41 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/06 15:45:57 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
-
-// int	ft_process_file(char *file, unsigned int map[65536])
-// {
-// 	//check file extension
-// 	//count new lines
-// 	//get max line size
-// 	//get map width and height
-// 	//fill map
-// 	//check edges
-// 	//check exit if there even is one
-// }
-
-//add two timing functions to libft
-//add other is functions to libft
 
 void	ft_load_texture(char *path, mlx_texture_t **texture)
 {
@@ -40,8 +26,6 @@ void	ft_load_texture(char *path, mlx_texture_t **texture)
 
 int	ft_init_map_textures(t_max *max)
 {
-
-	//free textures if they exist
 	if (max->t.nwall)
 		mlx_delete_texture(max->t.nwall);
 	if (max->t.swall)
@@ -66,7 +50,6 @@ static void	ft_map_init(t_max *max, t_map *map)
 	map->southtexture = NULL;
 	map->westtexture = NULL;
 	map->easttexture = NULL;
-	//map->d = NULL;
 	map->valid = 1;
 	map->p.orientation = -1;
 	map->p.x = 0;
@@ -140,7 +123,6 @@ int	ft_read_map(t_map *map)
 	return (1);
 }
 
-// need to check for invalid texture paths as well
 int	ft_fill_textures(t_map *map)
 {
 	char	**split;
@@ -363,11 +345,6 @@ void	ft_fill_array3(t_map *map, char c, int y, int x)
 	}
 }
 
-// FLOORWN = 0x10,
-// FLOORWE = 0x20,
-// FLOORWS = 0x40,
-// FLOORWW = 0x80,
-
 void	ft_flood_check(t_map *map, int pos)
 {
 	if (map->m[pos] & FLOOD1)
@@ -492,40 +469,28 @@ void	ft_fill_colours_to_map(t_map *map)
 			printf("dooreast\n");
 			map->m[i] &= 0x00000000FFFFFFFF;
 		 	map->m[i] |= 0x53565AFF00000000;
-			map->doors[i] = 0x1FF; //closed unlocked door
-			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
-			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
-			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+			map->doors[i] = 0x1FF;
 		}
 		else if (map->m[i] & DOORWEST)
 		{
 			printf("dooreast\n");
 			map->m[i] &= 0x00000000FFFFFFFF;
 		 	map->m[i] |= 0x53565AFF00000000;
-			map->doors[i] = 0x1FF; //closed unlocked door
-			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
-			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
-			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+			map->doors[i] = 0x1FF;
 		}
 		else if (map->m[i] & DOORNORTH)
 		{
 			printf("dooreast\n");
 			map->m[i] &= 0x00000000FFFFFFFF;
 		 	map->m[i] |= 0x53565AFF00000000;
-			map->doors[i] = 0x1FF; //closed unlocked door
-			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
-			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
-			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+			map->doors[i] = 0x1FF;
 		}
 		else if (map->m[i] & DOORSOUTH)
 		{
 			printf("dooreast\n");
 			map->m[i] &= 0x00000000FFFFFFFF;
 		 	map->m[i] |= 0x53565AFF00000000;
-			map->doors[i] = 0x1FF; //closed unlocked door
-			// map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
-			// map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
-			// ft_init_sprites_doors(map, map->spritecount, DOOREAST);
+			map->doors[i] = 0x1FF;
 		}
 		else if (map->m[i] & WALL)
 		{
@@ -540,34 +505,15 @@ void	ft_fill_colours_to_map(t_map *map)
 
 int	ft_fill_map(t_map *map)
 {
-	//fill paths to textures
 	if (!ft_fill_textures(map))
 		return (0);
 	if (!ft_fill_colours(map))
 		return (0);
 	if (!ft_fill_array(map))
 		return (0);
-	//fill colours in map
 	ft_fill_colours_to_map(map);
-	//fill actual map (get width and height first)
 	return (1);
 }
-
-	// unsigned int	m[65536];		//1d array of map representation
-	// char			*file;			//original mapfile string
-	// char			*mapstr;		//actual content of the file
-	// char			*northtexture;	//path to the north texture
-	// char			*southtexture;
-	// char			*westtexture;
-	// char			*easttexture;
-	// t_clr			f;			//floor colour
-	// t_clr			c;			//ceiling colour
-	// int				valid;		//1 if valid map
-	// int				w;			//width of map
-	// int				h;			//height of map
-	// t_player		p;			//player pos and orientation
-	// unsigned int	e;			//position of exit on map, future stuff
-	// t_door			**d;		//doors for bonus, NULL terminated array
 
 void	ft_print_map(t_map *map)
 {
@@ -674,8 +620,6 @@ void	ft_init_brume(t_max *max)
 	}
 }
 
-
-
 void	ft_init_time(t_max *max)
 {
 	int	i;
@@ -718,17 +662,6 @@ int	ft_process_file(t_max *max)
 		return (0);
 	}
 	ft_init_brume(max);
-	// int i;
-
-	// i = 0;
-	// while (i < 256)
-	// {
-	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map.b.r);
-	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map.b.g);
-	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
-	// 	++i;
-	// }
-	//for debugging
 	ft_print_map(map);
 	ft_init_time(max);
 	ft_freemap(map);
