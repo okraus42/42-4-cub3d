@@ -6,15 +6,37 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/07 14:15:15 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 19:46:37 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/cub3d.h"
 
+void	ft_initrandommapvalues_2(t_randommap *rm)
+{
+	rm->rnorooms.value = (rm->width.value * rm->height.value / 64 + 1)
+		* (rand() % ((rm->width.value + rm->height.value) / 16))
+		* (rand() % 8 + 1);
+	rm->rorooms.min = 1;
+	rm->rorooms.max = 4096;
+	rm->rorooms.value = (rm->width.value * rm->height.value / 64 + 1)
+		* (rand() % ((rm->width.value + rm->height.value) / 16))
+		* (rand() % 8 + 1);
+	rm->rdoors.min = 0;
+	rm->rdoors.max = 4096;
+	rm->rdoors.value = (rand() % 8) * (rand() % 8) * (rand() % 8);
+	rm->rdeadends.min = 0;
+	rm->rdeadends.max = 4096;
+	rm->rdeadends.value = (rand() % 12288);
+	if (rm->rdeadends.value > 8192)
+		rm->rdeadends.value = 0;
+	if (rm->rdeadends.value > 4096)
+		rm->rdeadends.value = 1;
+	rm->flamingos.min = 0;
+	rm->flamingos.max = 64;
+	rm->flamingos.value = (rand() % 64);
+}
 
-//maybe will need smaller function for initialising menu from the game?
-//maybe define texture path in header
 void	ft_initrandommapvalues(t_randommap *rm)
 {
 	rm->seed = time(0);
@@ -39,23 +61,6 @@ void	ft_initrandommapvalues(t_randommap *rm)
 	rm->ratioxi.value = (rand() % 2) * (rand() % 8 + 1);
 	rm->rnorooms.min = 0;
 	rm->rnorooms.max = 4096;
-	rm->rnorooms.value = (rm->width.value * rm->height.value / 64 + 1) * (rand() % ((rm->width.value + rm->height.value) / 16)) * (rand() % 8 + 1);
-	rm->rorooms.min = 1;
-	rm->rorooms.max = 4096;
-	rm->rorooms.value = (rm->width.value * rm->height.value / 64 + 1) * (rand() % ((rm->width.value + rm->height.value) / 16)) * (rand() % 8 + 1);
-	rm->rdoors.min = 0;
-	rm->rdoors.max = 4096;
-	rm->rdoors.value = (rand() % 8) * (rand() % 8) * (rand() % 8);
-	rm->rdeadends.min = 0;
-	rm->rdeadends.max = 4096;
-	rm->rdeadends.value = (rand() % 12288);
-	if (rm->rdeadends.value > 8192)
-		rm->rdeadends.value = 0;
-	if (rm->rdeadends.value > 4096)
-		rm->rdeadends.value = 1;
-	rm->flamingos.min = 0;
-	rm->flamingos.max = 64;
-	rm->flamingos.value = (rand() % 64);
 }
 
 void	ft_resume(t_max *max)
@@ -83,8 +88,6 @@ void	ft_newgame(t_max *max)
 	else if (max->difficulty == HARD)
 		max->score = 2000000;
 	mlx_set_mouse_pos(max->mlx, 512, 512);
-	//level for campaign and timetrial???
-	// max->i.overlay->enabled = 1;
 }
 
 void	ft_initmenu(t_max *max)
@@ -109,33 +112,30 @@ void	ft_initmenu(t_max *max)
 
 void	ft_draw_menu(t_max *max)
 {
-	int				w;
-	int				h;
-	int				y;
-	int				x;
-	int				a;
-	unsigned int	c;
+	t_dm	dm;
 
-	w = max->menu.background->width;
-	h = max->menu.background->height;
-	y = 0;
-	//draw background
-	while (y < h)
+	dm.w = max->menu.background->width;
+	dm.h = max->menu.background->height;
+	dm.y = 0;
+	while (dm.y < dm.h)
 	{
-		x = 0;
-		while (x < w)
+		dm.x = 0;
+		while (dm.x < dm.w)
 		{
-			a = (y * w * 4) + (x * 4);
-			if (x < w && y < h)
-				c = (max->menu.background->pixels[a]) << 24 | (max->menu.background->pixels[a + 1]) << 16 | (max->menu.background->pixels[a + 2]) << 8 | 0xFF;
+			dm.a = (dm.y * dm.w * 4) + (dm.x * 4);
+			if (dm.x < dm.w && dm.y < dm.h)
+			{
+				dm.c = (max->menu.background->pixels[dm.a]) << 24
+					| (max->menu.background->pixels[dm.a + 1]) << 16
+					| (max->menu.background->pixels[dm.a + 2]) << 8 | 0xFF;
+			}
 			else
-				c = 0xFF00FFFF;
-			mlx_put_pixel(max->i.menuscreen, x, y, c);
-			++x;
+				dm.c = 0xFF00FFFF;
+			mlx_put_pixel(max->i.menuscreen, dm.x, dm.y, dm.c);
+			++dm.x;
 		}
-		++y;
+		++dm.y;
 	}
-	//draw main buttons
 	if (max->game_in_progress)
 		ft_draw_button(&max->menu.mainbuttons[RESUME], ACTIVE);
 	else
@@ -152,7 +152,6 @@ void	ft_draw_menu(t_max *max)
 	ft_draw_button(&max->menu.mainbuttons[SETTINGS], INACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[HALLOFFAME], ACTIVE);
 	ft_draw_button(&max->menu.mainbuttons[QUITGAME], ACTIVE);
-	//draw newwriting buttons
 	if (max->menu.current_buttongroup == NEWWRITING)
 	{
 		if (max->menu.newwriting == NAME)
@@ -167,10 +166,8 @@ void	ft_draw_menu(t_max *max)
 			ft_draw_button(&max->menu.newwritingbuttons[CAMPUS], ACTIVATED);
 		else
 			ft_draw_button(&max->menu.newwritingbuttons[CAMPUS], ACTIVE);
-		// ft_draw_button(&max->menu.newwritingbuttons[NWBACK], ACTIVE);
 		ft_draw_button(&max->menu.newwritingbuttons[NWCONFIRM], ACTIVE);
 	}
-	//draw newwriting textfields
 	if (max->menu.current_buttongroup == NEWWRITING)
 	{
 		if (max->menu.newwriting == NAME)
@@ -178,7 +175,8 @@ void	ft_draw_menu(t_max *max)
 		else
 			ft_draw_textfield(&max->menu.newwritingfields[NAME], ACTIVE);
 		if (max->menu.newwriting == COALITION)
-			ft_draw_textfield(&max->menu.newwritingfields[COALITION], ACTIVATED);
+			ft_draw_textfield(&max->menu.newwritingfields[COALITION],
+				ACTIVATED);
 		else
 			ft_draw_textfield(&max->menu.newwritingfields[COALITION], ACTIVE);
 		if (max->menu.newwriting == CAMPUS)
@@ -186,7 +184,6 @@ void	ft_draw_menu(t_max *max)
 		else
 			ft_draw_textfield(&max->menu.newwritingfields[CAMPUS], ACTIVE);
 	}
-	//draw difficulty buttons
 	if (max->menu.current_buttongroup == NEWDIFFICULTY)
 	{
 		if (max->difficulty == EASY)
@@ -202,33 +199,24 @@ void	ft_draw_menu(t_max *max)
 		else
 			ft_draw_button(&max->menu.gamedifficultybuttons[HARD], ACTIVE);
 	}
-	//draw selection buttons
 	if (max->menu.current_buttongroup == NEWSELECTION)
 	{
 		ft_draw_button(&max->menu.gametypebuttons[CAMPAIGN], ACTIVE);
 		ft_draw_button(&max->menu.gametypebuttons[TIMETRIAL], ACTIVE);
-		//maybe if else not needd
 		ft_draw_button(&max->menu.gametypebuttons[ONEMAP], ACTIVE);
 	}
-	//draw level
 	if (max->menu.current_buttongroup == NEWLEVEL)
 	{
-		//maybe if else not needed
 		ft_draw_button(&max->menu.maptypebuttons[CUSTOM], ACTIVE);
 		ft_draw_button(&max->menu.maptypebuttons[RANDOM], ACTIVE);
 	}
-		//draw newmap buttons
 	if (max->menu.current_buttongroup == NEWMAP)
 	{
 		ft_draw_button(&max->menu.mapselectionbuttons[CHOOSELEVEL], ACTIVE);
 		ft_draw_button(&max->menu.mapselectionbuttons[MSPLAY], ACTIVE);
 	}
-	//draw newmap listfield
 	if (max->menu.current_buttongroup == NEWMAP)
-	{
-		//change if later
 		ft_draw_listfield(&max->menu.custommap, ACTIVE);
-	}
 	if (max->menu.current_buttongroup == NEWRANDOM)
 	{
 		ft_draw_button(&max->menu.randomselectionbuttons[RSPLAY], ACTIVE);
@@ -255,29 +243,18 @@ void	ft_draw_menu(t_max *max)
 		ft_draw_button(&max->menu.savegamebuttons[DELETE], ACTIVE);
 		ft_draw_button(&max->menu.savegamebuttons[SAVE], ACTIVE);
 	}
-	//draw newmap listfield
 	if (max->menu.current_buttongroup == SAVEGROUP)
-	{
-		//change if later
 		ft_draw_listfield(&max->menu.saves, ACTIVE);
-	}
 	if (max->menu.current_buttongroup == LOADGROUP)
 	{
 		ft_draw_button(&max->menu.loadgamebuttons[CHOOSELOAD], ACTIVE);
 		ft_draw_button(&max->menu.loadgamebuttons[DELETE], ACTIVE);
 		ft_draw_button(&max->menu.loadgamebuttons[LOAD], ACTIVE);
 	}
-	//draw newmap listfield
 	if (max->menu.current_buttongroup == LOADGROUP)
-	{
-		//change if later
 		ft_draw_listfield(&max->menu.loads, ACTIVE);
-	}
 	if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
-	{
 		ft_draw_button(&max->menu.halloffamebuttons[HOFBACK], ACTIVE);
-	}
-	//draw optionbuttons
 }
 
 void	ft_selectnewbutton(t_max *max, t_button *button)
@@ -345,18 +322,6 @@ void	ft_selectbutton(t_max *max)
 	else if (max->menu.current_buttongroup == NEWWRITING)
 	{
 		ft_selectnewbutton(max, &max->menu.newwritingbuttons[max->menu.current_button[NEWWRITING]]);
-		// if (max->menu.newwriting == NAME)
-		// {
-		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[NAME]);
-		// }
-		// else if (max->menu.newwriting == COALITION)
-		// {
-		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[COALITION]);
-		// }
-		// else if (max->menu.newwriting == CAMPUS)
-		// {
-		// 	ft_write_in_textfield(max, &max->menu.newwritingfields[CAMPUS]);
-		// }
 		if (max->menu.current_button[NEWWRITING] == NAME)
 		{
 			ft_write_in_textfield(max, &max->menu.newwritingfields[NAME]);
@@ -865,7 +830,6 @@ void	ft_draw_loadlistfields(t_max *max)
 
 void	ft_draw_halloffamebuttons(t_max *max)
 {
-	//ft_draw_halloffame(max);
 	if (max->menu.current_button[HALLOFFAMEGROUP] == HOFBACK)
 	{
 		ft_draw_button(&max->menu.halloffamebuttons[HOFBACK], SELECTED);
@@ -1069,7 +1033,6 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWMAP] == MSPLAY)
 				{
-					//simplify?
 					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.custommap.dir, max->menu.custommap.text[max->menu.custommap.highlight].text);
 					if (ft_process_file(max))
 					{
@@ -1084,9 +1047,6 @@ void	ft_menu(t_max *max)
 					}
 				}
 			}
-			//
-			// THIS NEEDS UPDATES to check which button is pressed and change its state
-			//
 			else if (max->menu.current_buttongroup == NEWRANDOM)
 			{
 				if (max->menu.current_button[NEWRANDOM] == RSPLAY)
@@ -1226,7 +1186,6 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[NEWRANDOMADVANCED] == RPLAY)
 				{
-					//max->menu.current_button[NEWLEVEL] = max->menu.newmap;
 					ft_snprintf(max->map.file, 4095, "RANDOM");
 					if (ft_process_random(max))
 					{
@@ -1265,7 +1224,6 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[SAVEGROUP] == SAVE)
 				{
-					//save game
 					if (max->menu.saves.text[max->menu.saves.highlight].text[0] == 'N')
 						ft_snprintf(max->map.file, 4095, "%s%s%03i.ft", max->menu.saves.dir, "save", max->menu.saves.highlight + max->menu.saves.topfile + 1);
 					else
@@ -1277,7 +1235,7 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[SAVEGROUP] == DELETE)
 				{
-					//delete game
+					ft_dprintf(2, "Functionality not implemented\n");
 				}
 			}
 			
@@ -1307,8 +1265,6 @@ void	ft_menu(t_max *max)
 				}
 				else if (max->menu.current_button[LOADGROUP] == LOAD)
 				{
-					//load game
-					//ft_snprintf(max->map.file, 4095, "%s%s", max->menu.custommap.dir, max->menu.custommap.text[max->menu.custommap.highlight].text);
 					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.loads.dir, max->menu.loads.text[max->menu.loads.highlight].text);
 					if (ft_load(max, max->map.file))
 					{
@@ -1336,8 +1292,6 @@ void	ft_menu(t_max *max)
 		}
 		if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
 		{
-			//delete the HOF BUTTON and HALLOFFAMEBUTTONGROUP? and related drawing functions
-			
 			if (!ft_readscore(max))
 			{
 				max->game_mode = HOFLOOP;
@@ -1347,17 +1301,6 @@ void	ft_menu(t_max *max)
 			{
 				ft_dprintf(2, "Error\nFailed to open halloffame.txt\n");
 			}
-			// if (max->menu.current_buttongroup == HALLOFFAMEGROUP)
-			// {
-			// 	if (max->menu.current_button[HALLOFFAMEGROUP] == HOFBACK)
-			// 	{
-			// 		max->menu.current_buttongroup = MAINBUTTONS;
-			// 	}
-			// }
-			// else
-			// {
-			// 	max->menu.current_buttongroup = HALLOFFAMEGROUP;
-			// }
 		}
 		if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
 		{

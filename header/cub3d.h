@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/07 13:56:49 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 19:35:20 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -660,6 +660,16 @@ typedef struct s_max
 	long			frame;
 	unsigned int	fog[SCREENHEIGHT][SCREENWIDTH];
 }	t_max;
+
+typedef struct s_dm
+{
+	int				w;
+	int				h;
+	int				y;
+	int				x;
+	int				a;
+	unsigned int	c;
+} t_dm;
 
 // PROTOTYPES
 
