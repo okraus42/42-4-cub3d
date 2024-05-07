@@ -6,11 +6,11 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/06 15:41:28 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:07:34 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 void	ft_cub3d_2(char *file, t_max *max)
 {
@@ -53,7 +53,7 @@ void	ft_cub3d(char *file)
 		ft_cub3d_2(file, max);
 	else
 		ft_amaze_bonus(max);
-	free(max);
+	ft_free(max);
 	free(math);
 }
 

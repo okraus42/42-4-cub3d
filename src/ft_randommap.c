@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_randommap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/02 15:21:50 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/07 11:00:48 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1498,7 +1498,6 @@ int	ft_process_random(t_max *max)
 	// }
 	ft_place_sprites(max);
 	//for debugging
-	ft_print_map(map);
 	ft_init_time(max);
 	//ft_freemap(map);
 	return (1);

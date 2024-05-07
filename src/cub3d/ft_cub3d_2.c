@@ -6,11 +6,11 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 15:31:14 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/06 15:42:08 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:07:38 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 static void	ft_fill_clog(unsigned char clog[65536])
 {

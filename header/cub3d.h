@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/06 15:38:25 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:56:49 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -699,6 +699,16 @@ void	ft_fill_colours_to_map(t_map *map);
 void	ft_load_texture(char *path, mlx_texture_t **texture);
 int		ft_process_file(t_max *max);
 void	ft_init_time(t_max *max);
+int		ft_fill_map(t_map *map);
+int		ft_read_map(t_map *map);
+int		ft_checkfileextension(char *s);
+int		ft_fill_textures(t_map *map);
+int		ft_puterror(char *err, int r);
+void	ft_flood_check(t_map *map, int pos);
+int		ft_check_map(t_map *map, char **split, int j, int a);
+int		ft_fill_array(t_map *map);
+int		ft_fill_colours(t_map *map);
+int		ft_fill_colour(int c, char *s, t_map *map, int j);
 
 //ft_random.map.c
 void	ft_inittimetrialmap(t_randommap *rm, int level);

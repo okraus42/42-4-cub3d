@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/06 15:39:08 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/07 14:14:30 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,12 +53,15 @@ SRC			=	$(addprefix $(SRC_DIR), $(SRC_S))
 
 SRC_DIR		=	src/
 HOOK_DIR	=	hooks/
+PARSER_DIR	=	parser/
+CUB3D_DIR	=	cub3d/
+MENU_DIR	=	menu/
 
 # cub3d functions
 
 SRC_S		=	ft_buttons.c \
-				ft_cub3d.c \
-				ft_cub3d_2.c \
+				$(CUB3D_DIR)ft_cub3d.c \
+				$(CUB3D_DIR)ft_cub3d_2.c \
 				ft_doors.c \
 				ft_free.c \
 				ft_game.c \
@@ -71,11 +74,16 @@ SRC_S		=	ft_buttons.c \
 				ft_line.c \
 				ft_listfield.c \
 				ft_map.c \
-				ft_menu.c \
+				$(MENU_DIR)ft_menu.c \
 				ft_minimap.c \
 				ft_mousehook.c \
 				ft_overlay.c \
-				ft_parser.c \
+				$(PARSER_DIR)ft_parser.c \
+				$(PARSER_DIR)ft_parser_2.c \
+				$(PARSER_DIR)ft_parser_3.c \
+				$(PARSER_DIR)ft_parser_4.c \
+				$(PARSER_DIR)ft_parser_5.c \
+				$(PARSER_DIR)ft_parser_6.c \
 				ft_randommap.c \
 				ft_rays.c \
 				ft_saveload.c \
@@ -144,6 +152,9 @@ libmlx:
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)
 				@mkdir -p $(OBJ_DIR)$(HOOK_DIR)
+				@mkdir -p $(OBJ_DIR)$(PARSER_DIR)
+				@mkdir -p $(OBJ_DIR)$(CUB3D_DIR)
+				@mkdir -p $(OBJ_DIR)$(MENU_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)
