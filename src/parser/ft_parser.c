@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:25:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/07 13:58:34 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:46:56 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,14 @@ int	ft_fill_colour(int c, char *s, t_map *map, int j)
 		return (ft_puterror("Malloc error", 0));
 	while (j < 3)
 	{
-		i = 0;
-		while (split[j][i])
+		i = -1;
+		while (split[j][++i])
 		{
 			if (!ft_isdigit(split[j][i]))
 			{
 				ft_free_split(&split);
 				return (ft_puterror("Invalid character in colour", 0));
 			}
-			++i;
 		}
 		if (i > 3 || j > 2 || ft_atoi(split[j]) > 255)
 		{
@@ -67,50 +66,6 @@ int	ft_fill_colour(int c, char *s, t_map *map, int j)
 		++j;
 	}
 	return (ft_fill_colour2(split, c, map));
-}
-
-int	ft_check_map(t_map *map, char **split, int j, int a)
-{
-	int	p;
-	int	i;
-
-	p = 0;
-	while (split[j])
-	{
-		i = 0;
-		while (split[j][i])
-		{
-			if (!ft_strchr(" 01NSEWXF><^v", split[j][i]))
-			{
-				ft_free_split(&split);
-				return (ft_puterror("Invalid character in map", 0));
-			}
-			if (ft_strchr("NSEW", split[j][i]))
-				++p;
-			++i;
-			map->w = MAX(map->w, i);
-		}
-		++j;
-	}
-	map->h = j - a;
-	if (p != 1)
-	{
-		ft_free_split(&split);
-		if (!p)
-			return (ft_puterror("No player location in the map", 0));
-		else
-			return (ft_puterror("Too many player locations in map", 0));
-	}
-	if (map->w < 3 || map->h < 3 || map->w > 256 || map->h > 256)
-	{
-		ft_free_split(&split);
-		return (ft_puterror("Wrong map dimensions, minimum size is 3x3", 0));
-	}
-	map->ww = map->w;
-	map->w = 256;
-	map->hh = map->h;
-	map->h = 256;
-	return (1);
 }
 
 void	ft_flood_check2(t_map *map, int pos)

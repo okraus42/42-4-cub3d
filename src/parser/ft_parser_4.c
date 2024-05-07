@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:16:59 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 13:49:22 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:48:11 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,11 @@ int	ft_fill_array(t_map *map)
 	split = ft_split(map->mapstr, '\n');
 	if (!split)
 		return (ft_puterror("Malloc error", 0));
-	j = 0;
-	while (split[j])
+	j = -1;
+	while (split[++j])
 	{
 		if (ft_strchr(" 01", split[j][0]))
 			break ;
-		++j;
 	}
 	if (!split[j])
 	{
