@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:34:14 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/08 16:32:36 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/08 18:37:04 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1247,6 +1247,325 @@ void	ft_menu_helper_5_1(t_max *max)
 	}
 }
 
+void	ft_menu_helper_6_1(t_max *max)
+{
+	if (max->menu.lf_state)
+	{
+		max->menu.lf_state = 0;
+		max->menu.current_button[NEWMAP] = MSPLAY;
+	}
+	else
+		max->menu.lf_state = 1;
+}
+
+void	ft_menu_helper_6_2(t_max *max)
+{
+	ft_snprintf(max->map.file, 4095, "%s%s", max->menu
+		.custommap.dir, max->menu.custommap.text[max->menu
+		.custommap.highlight].text);
+	if (ft_process_file(max))
+	{
+		printf("gamestart loop starting...\n");
+		ft_newgame(max);
+	}
+	else
+	{
+		max->menu.current_button[NEWMAP] = CUSTOM;
+		max->menu.lf_state = 1;
+		ft_dprintf(2, "Invalid map %s\n", max->map.file);
+	}
+}
+
+void	ft_menu_helper_7_1(t_max *max)
+{
+	if (max->menu.current_button[NEWRANDOM] == RSPLAY)
+	{
+		ft_snprintf(max->map.file, 4095, "RANDOM");
+		ft_initrandommapvalues(&max->menu.rm);
+		if (ft_process_random(max))
+		{
+			printf("gamestart loop starting...\n");
+			ft_newgame(max);
+		}
+		else
+			ft_dprintf(2, "Invalid map\n");
+	}
+	else if (max->menu.current_button[NEWRANDOM] == RSADVANCED)
+	{
+		max->menu.current_buttongroup = NEWRANDOMADVANCED;
+	}
+}
+
+int	ft_menu_helper_8_1(t_max *max)
+{
+	int	r;
+	
+	r = 1;
+	if (max->menu.current_button[NEWRANDOMADVANCED] == RWIDTH)
+		max->menu.random_state[RWIDTH] ^= 1;
+	else if (max->menu.current_button[NEWRANDOMADVANCED] == RHEIGHT)
+		max->menu.random_state[RHEIGHT] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RRATIODE)
+		max->menu.random_state[RRATIODE] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RRATIOLO)
+		max->menu.random_state[RRATIOLO] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RRATIOTI)
+		max->menu.random_state[RRATIOTI] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RRATIOXI)
+		max->menu.random_state[RRATIOXI] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RNOROOMS)
+		max->menu.random_state[RNOROOMS] ^= 1;
+	else
+		r = 0;
+	return (r);
+}
+
+int	ft_menu_helper_8_2(t_max *max)
+{
+	int	r;
+
+	r = 1;
+	if (max->menu.current_button[NEWRANDOMADVANCED] == RDOORS)
+		max->menu.random_state[RDOORS] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RDEADENDS)
+		max->menu.random_state[RDEADENDS] ^= 1;
+	else if (max->menu
+		.current_button[NEWRANDOMADVANCED] == RRANDOMIZE)
+		ft_initrandommapvalues(&max->menu.rm);
+	else if (max->menu.current_button[NEWRANDOMADVANCED] == RPLAY)
+	{
+		ft_snprintf(max->map.file, 4095, "RANDOM");
+		if (ft_process_random(max))
+		{
+			printf("gamestart loop starting...\n");
+			ft_newgame(max);
+		}
+		else
+			ft_dprintf(2, "Invalid map\n");
+	}
+	else
+		r = 0;
+	return (r);
+}
+
+void	ft_menu_helper_9_1(t_max *max)
+{
+	if (max->menu.saves.text[max->menu
+			.saves.highlight].text[0] == 'N')
+	{
+		ft_snprintf(max->map.file, 4095, "%s%s%03i.ft",
+			max->menu.saves.dir, "save", max->menu
+			.saves.highlight + max->menu.saves.topfile + 1);
+	}
+	else
+	{
+		ft_snprintf(max->map.file, 4095, "%s%s", max->menu.saves
+			.dir, max->menu.saves
+			.text[max->menu.saves.highlight].text);
+	}
+	if (ft_save(max, max->map.file))
+		ft_dprintf(2, "Unable to save the game, \
+			make sure the safe file has proper permissions\n");
+	max->menu.current_buttongroup = MAINBUTTONS;
+	ft_bigreinitlistfield(max);
+}
+
+void	ft_menu_helper_9(t_max *max)
+{
+	if (max->menu.current_button[SAVEGROUP] == CHOOSESAVE)
+	{
+		if (max->menu.lf_state)
+		{
+			max->menu.lf_state = 0;
+			max->menu.current_button[SAVEGROUP] = SAVE;
+		}
+		else
+		{
+			max->menu.lf_state = 1;
+		}
+	}
+	else if (max->menu.current_button[SAVEGROUP] == SAVE)
+		ft_menu_helper_9_1(max);
+	else if (max->menu.current_button[SAVEGROUP] == DELETE)
+		ft_dprintf(2, "Functionality not implemented\n");
+}
+
+void	ft_menu_helper_10(t_max *max)
+{
+	ft_snprintf(max->map.file, 4095, "%s%s", max->menu.loads
+		.dir, max->menu.loads.text[max->menu.loads
+		.highlight].text);
+	if (ft_load(max, max->map.file))
+	{
+		ft_dprintf(2, "Unable to load the game, \
+			make sure the safe file exists\n");
+		max->menu.current_buttongroup = MAINBUTTONS;
+	}
+	else
+	{
+		max->menu.current_buttongroup = MAINBUTTONS;
+		max->game_in_progress = 1;
+		max->i.menuscreen->enabled = 0;
+		max->i.textscreen->enabled = 0;
+		max->game_mode = GAMEPLAY;
+		max->i.overlay->enabled = 1;
+		max->game_in_progress = 1;
+		max->oldms = ft_get_time_in_ms();
+	}
+}
+
+void	ft_menu_helper_11(t_max *max)
+{
+	if (max->menu.current_button[LOADGROUP] == CHOOSELOAD)
+	{
+		if (max->menu.lf_state)
+		{
+			max->menu.lf_state = 0;
+			max->menu.current_button[LOADGROUP] = LOAD;
+		}
+		else
+		{
+			max->menu.lf_state = 1;
+		}
+	}
+	else if (max->menu.current_button[LOADGROUP] == LOAD)
+		ft_menu_helper_10(max);
+	else if (max->menu.current_button[LOADGROUP] == DELETE)
+		ft_dprintf(2, "Functionality not implemented\n");
+}
+
+void	ft_menu_helper_12(t_max *max)
+{
+	if (max->menu.current_button[MAINBUTTONS] == SAVEGAME)
+	{
+		if (max->menu.current_buttongroup == MAINBUTTONS)
+		{
+			max->menu.current_buttongroup = SAVEGROUP;
+			ft_bigreinitlistfield(max);
+			max->menu.lf_state = 1;
+			max->menu.current_button[SAVEGROUP] = CHOOSESAVE;
+		}
+		else if (max->menu.current_buttongroup == SAVEGROUP)
+			ft_menu_helper_9(max);
+	}
+	if (max->menu.current_button[MAINBUTTONS] == LOADGAME)
+	{
+		if (max->menu.current_buttongroup == MAINBUTTONS)
+		{
+			max->menu.current_buttongroup = LOADGROUP;
+			ft_bigreinitlistfield(max);
+			max->menu.lf_state = 1;
+			max->menu.current_button[LOADGROUP] = CHOOSELOAD;
+		}
+		else if (max->menu.current_buttongroup == LOADGROUP)
+			ft_menu_helper_11(max);
+	}
+}
+
+void	ft_menu_helper_13(t_max *max)
+{
+	ft_menu_helper_12(max);
+	if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
+	{
+		if (!ft_readscore(max))
+		{
+			max->game_mode = HOFLOOP;
+			max->i.textscreen->enabled = 1;
+		}
+		else
+			ft_dprintf(2, "Error\nFailed to open halloffame.txt\n");
+	}
+	if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
+		mlx_close_window(max->mlx);
+}
+
+int	ft_menu_helper_14(t_max *max)
+{
+	int	r;
+
+	r = 1;
+	if (max->menu.current_buttongroup == MAINBUTTONS)
+		max->menu.current_buttongroup = NEWWRITING;
+	else if (max->menu.current_buttongroup == NEWWRITING)
+	{
+		if (ft_menu_helper(max))
+		{
+		}
+		else if (ft_menu_helper_2(max))
+		{
+		}
+		else if (max->menu.current_button[NEWWRITING] == NWCONFIRM)
+		{
+			max->menu.current_buttongroup = NEWDIFFICULTY;
+			printf("%s\n%s\n%s\n", max->name,
+				max->coalition, max->campus);
+		}
+	}
+	else if (max->menu.current_buttongroup == NEWDIFFICULTY)
+		ft_menu_helper_3(max);
+	else
+		r = 0;
+	return (r);
+}
+
+int	ft_menu_helper_15(t_max *max)
+{
+	int	r;
+
+	r = 1;
+	if (max->menu.current_buttongroup == NEWSELECTION)
+	{
+		if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
+			ft_menu_helper_4_1(max);
+		else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
+			ft_menu_helper_4_2(max);
+		else if (max->menu.current_button[NEWSELECTION] == ONEMAP)
+		{
+			max->game_type = ONEMAP;
+			max->menu.current_buttongroup = NEWLEVEL;
+		}
+	}
+	else if (max->menu.current_buttongroup == NEWMAP)
+	{
+		if (max->menu.current_button[NEWMAP] == CUSTOM)
+			ft_menu_helper_6_1(max);
+		else if (max->menu.current_button[NEWMAP] == MSPLAY)
+			ft_menu_helper_6_2(max);
+	}
+	else
+		r = 0;
+	return (r);
+}
+
+int	ft_menu_helper_16(t_max *max)
+{
+	int	r;
+
+	r = 1;
+	if (max->menu.current_buttongroup == NEWRANDOM)
+		ft_menu_helper_7_1(max);
+	else if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
+	{
+		if (ft_menu_helper_8_1(max))
+		{
+		}
+		else if (max->menu.current_button[NEWRANDOMADVANCED] == ROROOMS)
+			max->menu.random_state[ROROOMS] ^= 1;
+		else if (ft_menu_helper_8_2(max))
+		{
+		}
+	}
+	else
+		r = 0;
+	return (r);
+}
+
 void	ft_menu(t_max *max)
 {
 	ft_menu_2(max);
@@ -1255,350 +1574,21 @@ void	ft_menu(t_max *max)
 	{
 		max->keys[MLX_KEY_ENTER] = 0;
 		if (max->menu.current_button[MAINBUTTONS] == RESUME)
-		{
 			ft_resume(max);
-		}
 		if (max->menu.current_button[MAINBUTTONS] == NEWGAME)
 		{
-			if (max->menu.current_buttongroup == MAINBUTTONS)
-				max->menu.current_buttongroup = NEWWRITING;
-			else if (max->menu.current_buttongroup == NEWWRITING)
+			if (ft_menu_helper_14(max))
 			{
-				if (ft_menu_helper(max))
-				{
-				}
-				else if (ft_menu_helper_2(max))
-				{
-				}
-				else if (max->menu.current_button[NEWWRITING] == NWCONFIRM)
-				{
-					max->menu.current_buttongroup = NEWDIFFICULTY;
-					printf("%s\n%s\n%s\n", max->name,
-						max->coalition, max->campus);
-				}
-			}
-			else if (max->menu.current_buttongroup == NEWDIFFICULTY)
-				ft_menu_helper_3(max);
-			else if (max->menu.current_buttongroup == NEWSELECTION)
-			{
-				if (max->menu.current_button[NEWSELECTION] == CAMPAIGN)
-					ft_menu_helper_4_1(max);
-				else if (max->menu.current_button[NEWSELECTION] == TIMETRIAL)
-					ft_menu_helper_4_2(max);
-				else if (max->menu.current_button[NEWSELECTION] == ONEMAP)
-				{
-					max->game_type = ONEMAP;
-					max->menu.current_buttongroup = NEWLEVEL;
-				}
 			}
 			else if (max->menu.current_buttongroup == NEWLEVEL)
 				ft_menu_helper_5_1(max);
-			else if (max->menu.current_buttongroup == NEWMAP)
+			else if (ft_menu_helper_15(max))
 			{
-				if (max->menu.current_button[NEWMAP] == CUSTOM)
-				{
-					if (max->menu.lf_state)
-					{
-						max->menu.lf_state = 0;
-						max->menu.current_button[NEWMAP] = MSPLAY;
-					}
-					else
-						max->menu.lf_state = 1;
-				}
-				else if (max->menu.current_button[NEWMAP] == MSPLAY)
-				{
-					ft_snprintf(max->map.file, 4095, "%s%s", max->menu
-						.custommap.dir, max->menu.custommap.text[max->menu
-						.custommap.highlight].text);
-					if (ft_process_file(max))
-					{
-						printf("gamestart loop starting...\n");
-						ft_newgame(max);
-					}
-					else
-					{
-						max->menu.current_button[NEWMAP] = CUSTOM;
-						max->menu.lf_state = 1;
-						ft_dprintf(2, "Invalid map %s\n", max->map.file);
-					}
-				}
 			}
-			else if (max->menu.current_buttongroup == NEWRANDOM)
+			else if (ft_menu_helper_16(max))
 			{
-				if (max->menu.current_button[NEWRANDOM] == RSPLAY)
-				{
-					ft_snprintf(max->map.file, 4095, "RANDOM");
-					ft_initrandommapvalues(&max->menu.rm);
-					if (ft_process_random(max))
-					{
-						printf("gamestart loop starting...\n");
-						ft_newgame(max);
-					}
-					else
-					{
-						ft_dprintf(2, "Invalid map\n");
-					}
-				}
-				else if (max->menu.current_button[NEWRANDOM] == RSADVANCED)
-				{
-					max->menu.current_buttongroup = NEWRANDOMADVANCED;
-				}
-			}
-			else if (max->menu.current_buttongroup == NEWRANDOMADVANCED)
-			{
-				if (max->menu.current_button[NEWRANDOMADVANCED] == RWIDTH)
-				{
-					if (max->menu.random_state[RWIDTH])
-					{
-						max->menu.random_state[RWIDTH] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RWIDTH] = 1;
-					}
-				}
-				else if (max->menu.current_button[NEWRANDOMADVANCED] == RHEIGHT)
-				{
-					if (max->menu.random_state[RHEIGHT])
-					{
-						max->menu.random_state[RHEIGHT] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RHEIGHT] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RRATIODE)
-				{
-					if (max->menu.random_state[RRATIODE])
-					{
-						max->menu.random_state[RRATIODE] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RRATIODE] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RRATIOLO)
-				{
-					if (max->menu.random_state[RRATIOLO])
-					{
-						max->menu.random_state[RRATIOLO] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RRATIOLO] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RRATIOTI)
-				{
-					if (max->menu.random_state[RRATIOTI])
-					{
-						max->menu.random_state[RRATIOTI] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RRATIOTI] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RRATIOXI)
-				{
-					if (max->menu.random_state[RRATIOXI])
-					{
-						max->menu.random_state[RRATIOXI] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RRATIOXI] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RNOROOMS)
-				{
-					if (max->menu.random_state[RNOROOMS])
-					{
-						max->menu.random_state[RNOROOMS] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RNOROOMS] = 1;
-					}
-				}
-				else if (max->menu.current_button[NEWRANDOMADVANCED] == ROROOMS)
-				{
-					if (max->menu.random_state[ROROOMS])
-					{
-						max->menu.random_state[ROROOMS] = 0;
-					}
-					else
-					{
-						max->menu.random_state[ROROOMS] = 1;
-					}
-				}
-				else if (max->menu.current_button[NEWRANDOMADVANCED] == RDOORS)
-				{
-					if (max->menu.random_state[RDOORS])
-					{
-						max->menu.random_state[RDOORS] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RDOORS] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RDEADENDS)
-				{
-					if (max->menu.random_state[RDEADENDS])
-					{
-						max->menu.random_state[RDEADENDS] = 0;
-					}
-					else
-					{
-						max->menu.random_state[RDEADENDS] = 1;
-					}
-				}
-				else if (max->menu
-					.current_button[NEWRANDOMADVANCED] == RRANDOMIZE)
-				{
-					ft_initrandommapvalues(&max->menu.rm);
-				}
-				else if (max->menu.current_button[NEWRANDOMADVANCED] == RPLAY)
-				{
-					ft_snprintf(max->map.file, 4095, "RANDOM");
-					if (ft_process_random(max))
-					{
-						printf("gamestart loop starting...\n");
-						ft_newgame(max);
-					}
-					else
-					{
-						ft_dprintf(2, "Invalid map\n");
-					}
-				}
 			}
 		}
-		if (max->menu.current_button[MAINBUTTONS] == SAVEGAME)
-		{
-			if (max->menu.current_buttongroup == MAINBUTTONS)
-			{
-				max->menu.current_buttongroup = SAVEGROUP;
-				ft_bigreinitlistfield(max);
-				max->menu.lf_state = 1;
-				max->menu.current_button[SAVEGROUP] = CHOOSESAVE;
-			}
-			else if (max->menu.current_buttongroup == SAVEGROUP)
-			{
-				if (max->menu.current_button[SAVEGROUP] == CHOOSESAVE)
-				{
-					if (max->menu.lf_state)
-					{
-						max->menu.lf_state = 0;
-						max->menu.current_button[SAVEGROUP] = SAVE;
-					}
-					else
-					{
-						max->menu.lf_state = 1;
-					}
-				}
-				else if (max->menu.current_button[SAVEGROUP] == SAVE)
-				{
-					if (max->menu.saves.text[max->menu
-							.saves.highlight].text[0] == 'N')
-					{
-						ft_snprintf(max->map.file, 4095, "%s%s%03i.ft",
-							max->menu.saves.dir, "save", max->menu
-							.saves.highlight + max->menu.saves.topfile + 1);
-					}
-					else
-					{
-						ft_snprintf(max->map.file, 4095, "%s%s", max->menu.saves
-							.dir, max->menu.saves
-							.text[max->menu.saves.highlight].text);
-					}
-					if (ft_save(max, max->map.file))
-						ft_dprintf(2, "Unable to save the game, \
-							make sure the safe file has proper permissions\n");
-					max->menu.current_buttongroup = MAINBUTTONS;
-					ft_bigreinitlistfield(max);
-				}
-				else if (max->menu.current_button[SAVEGROUP] == DELETE)
-				{
-					ft_dprintf(2, "Functionality not implemented\n");
-				}
-			}
-		}
-		if (max->menu.current_button[MAINBUTTONS] == LOADGAME)
-		{
-			if (max->menu.current_buttongroup == MAINBUTTONS)
-			{
-				max->menu.current_buttongroup = LOADGROUP;
-				ft_bigreinitlistfield(max);
-				max->menu.lf_state = 1;
-				max->menu.current_button[LOADGROUP] = CHOOSELOAD;
-			}
-			else if (max->menu.current_buttongroup == LOADGROUP)
-			{
-				if (max->menu.current_button[LOADGROUP] == CHOOSELOAD)
-				{
-					if (max->menu.lf_state)
-					{
-						max->menu.lf_state = 0;
-						max->menu.current_button[LOADGROUP] = LOAD;
-					}
-					else
-					{
-						max->menu.lf_state = 1;
-					}
-				}
-				else if (max->menu.current_button[LOADGROUP] == LOAD)
-				{
-					ft_snprintf(max->map.file, 4095, "%s%s", max->menu.loads
-						.dir, max->menu.loads.text[max->menu.loads
-						.highlight].text);
-					if (ft_load(max, max->map.file))
-					{
-						ft_dprintf(2, "Unable to load the game, \
-							make sure the safe file exists\n");
-						max->menu.current_buttongroup = MAINBUTTONS;
-					}
-					else
-					{
-						max->menu.current_buttongroup = MAINBUTTONS;
-						max->game_in_progress = 1;
-						max->i.menuscreen->enabled = 0;
-						max->i.textscreen->enabled = 0;
-						max->game_mode = GAMEPLAY;
-						max->i.overlay->enabled = 1;
-						max->game_in_progress = 1;
-						max->oldms = ft_get_time_in_ms();
-					}
-				}
-				else if (max->menu.current_button[LOADGROUP] == DELETE)
-				{
-					ft_dprintf(2, "Functionality not implemented\n");
-				}
-			}
-		}
-		if (max->menu.current_button[MAINBUTTONS] == HALLOFFAME)
-		{
-			if (!ft_readscore(max))
-			{
-				max->game_mode = HOFLOOP;
-				max->i.textscreen->enabled = 1;
-			}
-			else
-			{
-				ft_dprintf(2, "Error\nFailed to open halloffame.txt\n");
-			}
-		}
-		if (max->menu.current_button[MAINBUTTONS] == QUITGAME)
-		{
-			mlx_close_window(max->mlx);
-		}
+		ft_menu_helper_13(max);
 	}
 }
