@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_rays.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:37 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 15:58:04 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/08 14:24:08 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	ft_init_rayangles(t_max *max)
 	{
 		if (max->settings.fisheyecorrection)
 			max->math->rafc[r] = 0 - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
-		else //need check!!!
+		else
 			max->math->ra[r] = 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
 		++r;
 	}
@@ -163,40 +163,26 @@ void	ft_init_orays(t_max *max)
 	int			mp2;
 	int			r;
 	int			debug;
-	// long long	pd;
-	// long long	pl;
-	//long long	maxdist;
 	t_oray		*oray;
 
-	// pl = 65536 * WIDTH;
-	// pd = (pl / 2) / tan((max->settings.fov / 2 * 0.01745329));
-	//maxdist = max->settings.maxdist;
 	r = 0;
-	//ft_printf("\nNEWNEW\n\n\n");
-	//ft_init_rayangles(max);
 	while (r < RAYS)
 	{
 		debug = r == max->ray && max->keys[MLX_KEY_4];
 		if (debug)
 			max->keys[MLX_KEY_4] = 0;
 		oray = &max->map.p.oray[r];
-		oray->xs = ((int)max->map.p.x);// * 256;
-		oray->ys = ((int)max->map.p.y);// * 256;
+		oray->xs = ((int)max->map.p.x);
+		oray->ys = ((int)max->map.p.y);
 		oray->hxo = 65536;
 		oray->hyo = 65536;
 		oray->vxo = 65536;
 		oray->vyo = 65536;
 		oray->wall = 0;
-		//ft_printf("r0 = %i\n", r);
 		if (max->settings.fisheyecorrection)
 			oray->ra = max->map.p.orientation + max->math->rafc[r];
-		else //need check!!!
+		else
 			oray->ra = max->map.p.orientation + max->math->ra[r];
-		
-		// if (max->settings.fisheyecorrection)
-		// 	oray->ra = max->map.p.orientation - atan((double)(pl / RAYS * (RAYS / 2 - r)) / (double)pd) * 16384LL / 6.28318530718;
-		// else //need check!!!
-		// 	oray->ra = max->map.p.orientation + 2 * max->map.p.fov2 + r * max->map.p.fov * 16384LL / (RAYS - 1) / 360;
 		while (oray->ra < 0)
 			oray->ra += MAXDEGREE; 
 		while (oray->ra >= MAXDEGREE)
@@ -241,7 +227,6 @@ void	ft_init_orays(t_max *max)
 			mp = (my << 8) + mx;
 			if (mp > 0 && mp < 65536)
 			{
-				//max->map.m[mp] |= VISITED;
 				if ((max->map.m[mp]) & WALL)
 				{
 					if (oray->ra > WEST || oray->ra < EAST)
@@ -253,8 +238,6 @@ void	ft_init_orays(t_max *max)
 				}
 				if ((max->map.m[mp]) & DOORWEST)
 				{
-					// if visible part of door
-					// 0000-1111
 					mp2 = mp;
 					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
 					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
@@ -268,7 +251,7 @@ void	ft_init_orays(t_max *max)
 							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= (oray->hx[oray->hdof - 1] & 0xFFFF))
 						{
 							if (oray->ra > WEST || oray->ra < EAST)
-								oray->wall |= DOORNORTH; //north side of the door visible
+								oray->wall |= DOORNORTH;
 							else if (oray->ra < WEST && oray->ra > EAST)
 								oray->wall |= DOORSOUTH;
 							oray->hm = max->map.m[mp];
@@ -280,8 +263,6 @@ void	ft_init_orays(t_max *max)
 				}
 				if ((max->map.m[mp]) & DOOREAST)
 				{
-					// if visible part of door
-					// 00000000-11111111
 					mp2 = mp;
 					oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo / 2;
 					oray->hy[oray->hdof] = oray->hy[oray->hdof - 1] + oray->hyo / 2;
@@ -295,7 +276,7 @@ void	ft_init_orays(t_max *max)
 							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= 0xFFFF - (oray->hx[oray->hdof - 1] & 0xFFFF))
 						{
 							if (oray->ra > WEST || oray->ra < EAST)
-								oray->wall |= DOORNORTH; //north side of the door visible
+								oray->wall |= DOORNORTH;
 							else if (oray->ra < WEST && oray->ra > EAST)
 								oray->wall |= DOORSOUTH;
 							oray->hm = max->map.m[mp];
@@ -308,7 +289,6 @@ void	ft_init_orays(t_max *max)
 			}
 			else
 			{
-				//oray->hdof = max->settings.dof;
 				break ;
 			}
 			oray->hx[oray->hdof] = oray->hx[oray->hdof - 1] + oray->hxo;
@@ -317,15 +297,13 @@ void	ft_init_orays(t_max *max)
 				ft_printf("HW %i %x %x\n", oray->hdof, oray->hx[oray->hdof], oray->hy[oray->hdof]);
 			++oray->hdof;
 		}
-		// oray->rx = oray->hx;
-		// oray->ry = oray->hy;
 		oray->vdof = 1;
 		if (oray->ra < SOUTH && oray->ra > NORTH)
 		{
 			oray->vx[0] = ((oray->xs >> 16) << 16) + 65536;
 			oray->vy[0] = (((oray->xs - oray->vx[0]) * max->math->atan[oray->ra]) >> 16) + oray->ys;
 			
-			oray->vxo = 65536;//check where to put minus and bitshifting
+			oray->vxo = 65536;
 			oray->vyo = ((65536 * max->math->natan[oray->ra]) >> 16);
 			if (debug)
 			{
@@ -343,7 +321,6 @@ void	ft_init_orays(t_max *max)
 				ft_printf("EI vx %Lx, vy %Lx, vxo %Lx, vyo %Lx\n", oray->vx[0], oray->vy[0], oray->vxo, oray->vyo);
 			}
 		}
-		//looking up or down
 		else
 		{
 			oray->vy[0] = INT_MAX;
@@ -370,8 +347,6 @@ void	ft_init_orays(t_max *max)
 				}
 				if ((max->map.m[mp]) & DOORNORTH)
 				{
-					// if visible part of door
-					// 0000-1111
 					mp2 = mp;
 					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
 					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
@@ -386,7 +361,7 @@ void	ft_init_orays(t_max *max)
 							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= (oray->vy[oray->vdof - 1] & 0xFFFF))
 						{
 							if (oray->ra < SOUTH && oray->ra > NORTH)
-								oray->wall |= DOOREAST; //east side of door visible
+								oray->wall |= DOOREAST;
 							else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
 								oray->wall |= DOORWEST;
 							oray->vm = max->map.m[mp];
@@ -398,8 +373,6 @@ void	ft_init_orays(t_max *max)
 				}
 				if ((max->map.m[mp]) & DOORSOUTH)
 				{
-					// if visible part of door
-					// 00000000-11111111
 					mp2 = mp;
 					oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo / 2;
 					oray->vy[oray->vdof] = oray->vy[oray->vdof - 1] + oray->vyo / 2;
@@ -413,7 +386,7 @@ void	ft_init_orays(t_max *max)
 							&& (int)(((max->map.doors[mp] & 0x7F) << 9) | 0x1FF) >= 0xFFFF - (oray->vy[oray->vdof - 1] & 0xFFFF))
 						{
 							if (oray->ra < SOUTH && oray->ra > NORTH)
-								oray->wall |= DOOREAST; //east side of door visible
+								oray->wall |= DOOREAST;
 							else if (oray->ra > SOUTH && oray->ra < MAXDEGREE)
 								oray->wall |= DOORWEST;
 							oray->vm = max->map.m[mp];
@@ -425,7 +398,6 @@ void	ft_init_orays(t_max *max)
 			}
 			else
 			{
-				//oray->vdof = max->settings.dof;
 				break ;
 			}
 			oray->vx[oray->vdof] = oray->vx[oray->vdof - 1] + oray->vxo;
@@ -448,8 +420,6 @@ void	ft_init_orays(t_max *max)
 			oray->ry = oray->hy[oray->hdof];
 			oray->m = oray->hm;
 		}
-		// oray->rx = oray->vx;
-		// oray->ry = oray->vy;
 		if (debug)
 		{
 			ft_printf("hx = %Li hy = %Li | ", oray->hx[oray->hdof], oray->hy[oray->hdof]);
@@ -463,105 +433,50 @@ void	ft_init_orays(t_max *max)
 		if (!oray->hv)
 		{
 			oray->dof = oray->hdof;
-			// if (oray->dof >= max->settings.dof - 1)
-			// 	oray->wall = NOWALL;
-			// else
 			oray->wall &= (NSWALL | DOORNS);
 		}
 		else
 		{
 			oray->dof = oray->vdof;
-			// if (oray->dof >= max->settings.dof - 1)
-			// 	oray->wall = NOWALL;
-			// else
 			oray->wall &= (EWWALL | DOOREW);
 		}
 		oray->length2 = oray->length;
-		// ft_printf("r1 = %i\n", r);
-		// ft_printf("hdof = %i\n", oray->hdof);
-		// ft_printf("vdof = %i\n", oray->vdof);
-		if (1)
+		if (!oray->hv)
 		{
-			if (!oray->hv)
-			{
-				if (oray->hdof)
-					oray->ldof = oray->length / oray->hdof;
-				else
-					oray->ldof = 1;
-				oray->tx = oray->hx[oray->hdof];
-				oray->ty = oray->hy[oray->hdof];
-				oray->txo = oray->hxo;
-				oray->tyo = oray->hyo;
-				oray->tdof = oray->hdof;
-			}
+			if (oray->hdof)
+				oray->ldof = oray->length / oray->hdof;
 			else
-			{
-				if (oray->vdof)
-					oray->ldof = oray->length / oray->vdof;
-				else
-					oray->ldof = 1;
-				oray->tx = oray->vx[oray->vdof];
-				oray->ty = oray->vy[oray->vdof];
-				oray->txo = oray->vxo;
-				oray->tyo = oray->vyo;
-				oray->tdof = oray->vdof;
-			}
-			//ft_printf("startloop\n");
-			while (oray->tdof >= 0)
-			{
-				//ft_printf("hdof1 = %i\n", oray->hdof);
-				mp = ((max->map.p.oray[r].ty >> 16) << 8) | (max->map.p.oray[r].tx >> 16);
-				//ft_printf("tdof2 = %i, mp = %i\n", oray->tdof, mp);
-				// if (mp < 0 || mp > 65536)
-				// {
-				// 	ft_printf("%i oray->tdof %i | ", oray->hv, oray->tdof);
-				// 	ft_printf("oray->tx %Lx oray->ty %Lx | ", oray->tx, oray->ty);
-				// 	ft_printf("vx %Lx vy %Lx  hx %Lx  hy %Lx \n", oray->vx[oray->vdof], oray->vy[oray->vdof], oray->hx[oray->hdof], oray->hy[oray->hdof]);
-				// 	ft_printf("oray->vdof %i oray->hdof %i\n", oray->vdof, oray->hdof);
-				// 	ft_printf("oray->txo %Lx, oray->tyo %Lx, oray->vxo %Lx, oray->vyo %Lx, oray->hxo %Lx, oray->hyo %Lx\n", oray->txo, oray->tyo, oray->vxo, oray->vyo, oray->hxo, oray->hyo);
-				// 	break ;
-				// }
-				if (oray->tdof)
-				{
-					ft_visit_map(&max->map, oray->length2, max->settings.lightdist, mp);
-					// if (oray->length2 < max->settings.lightdist)
-					// 	max->map.m[mp] |= VISITED / 4;
-					// if (oray->length2 < max->settings.lightdist / 2)
-					// 	max->map.m[mp] |= VISITED / 2;
-					// if (oray->length2 < max->settings.lightdist / 4)
-					// 	max->map.m[mp] |= VISITED;
-				}
-				//ft_printf("hdof2.5 = %i\n", oray->hdof);
-				oray->length2 -= oray->ldof;
-				//ft_printf("hdof3 = %i\n", oray->hdof);
-				oray->tx -= oray->txo;
-				oray->ty -= oray->tyo;
-				//ft_printf("hdof4 = %i\n", oray->hdof);
-				--oray->tdof;
-				//ft_printf("hdof5 = %i\n", oray->hdof);
-			}
-			//ft_printf("endloop\n");
-			// else
-			// {
-			// 	if (oray->vdof)
-			// 		oray->ldof = oray->length / oray->vdof;
-			// 	else
-			// 		oray->ldof = 1;
-			// 	while (oray->vdof > 0)
-			// 	{
-			// 		mp = ((max->map.p.oray[r].vy[oray->vdof] >> 16) << 8) | (max->map.p.oray[r].vx[oray->vdof] >> 16);
-			// 		if (oray->length2 < max->settings.maxdist)
-			// 			max->map.m[mp] |= VISITED;
-			// 		oray->length2 -= oray->ldof;
-			// 		oray->vx[oray->vdof] -= oray->vxo;
-			// 		oray->vy[oray->vdof] -= oray->vyo;
-			// 		--oray->vdof;
-			// 		//ft_printf("vdof = %i\n", oray->vdof);
-			// 	}
-			// 	//ft_printf("endloop\n");
-			// }
+				oray->ldof = 1;
+			oray->tx = oray->hx[oray->hdof];
+			oray->ty = oray->hy[oray->hdof];
+			oray->txo = oray->hxo;
+			oray->tyo = oray->hyo;
+			oray->tdof = oray->hdof;
 		}
-		//ft_printf("r2 = %i\n", r);
+		else
+		{
+			if (oray->vdof)
+				oray->ldof = oray->length / oray->vdof;
+			else
+				oray->ldof = 1;
+			oray->tx = oray->vx[oray->vdof];
+			oray->ty = oray->vy[oray->vdof];
+			oray->txo = oray->vxo;
+			oray->tyo = oray->vyo;
+			oray->tdof = oray->vdof;
+		}
+		while (oray->tdof >= 0)
+		{
+			mp = ((max->map.p.oray[r].ty >> 16) << 8) | (max->map.p.oray[r].tx >> 16);
+			if (oray->tdof)
+			{
+				ft_visit_map(&max->map, oray->length2, max->settings.lightdist, mp);
+			}
+			oray->length2 -= oray->ldof;
+			oray->tx -= oray->txo;
+			oray->ty -= oray->tyo;
+			--oray->tdof;
+		}
 		if (r == 0)
 			oray->c[0] = 0x00FF00FF;
 		else if (r == RAYS - 1)
@@ -570,46 +485,21 @@ void	ft_init_orays(t_max *max)
 			oray->c[0] = 0xFFFF00FF;
 		if (oray->length > max->settings.maxdist)
 		{
-			//oray->c[0] = 0x00FFFFFF;
 			oray->wall = NOWALL;
 			oray->length = max->settings.maxdist;
 		}
 		
 		if (oray->wall == NOWALL || oray->length > max->settings.lightdist)
 		{
-			// x^2 + y^2 = RADIUS^2
-			// radius == max->settings.maxdist
-			//oray->c[0] = 0xFF00FFFF;
 			oray->rx = oray->xs + ((max->settings.lightdist) * (long long)(max->math->sin[oray->ra])) / 65536;
 			oray->ry = oray->ys - ((max->settings.lightdist) * (long long)(max->math->cos[oray->ra])) / 65536;
 		}
-		//ft_printf("r3 = %i\n", r);
-		// oray->rx = oray->hx;
-		// oray->ry = oray->hy;
-		if (oray->wall == NOWALL)
-			oray->c[0] = NOWALLCOLOUR;
-		else if (oray->wall == WWALL)
-			oray->c[0] = WWALLCOLOUR;
-		else if (oray->wall == EWALL)
-			oray->c[0] = EWALLCOLOUR;
-		else if (oray->wall == NWALL)
-			oray->c[0] = NWALLCOLOUR;
-		else if (oray->wall == SWALL)
-			oray->c[0] = SWALLCOLOUR;
-		else if (oray->wall & DOOR)
-			oray->c[0] = DOORCOLOUR;
-		// else
-		// {
-		// 	oray->c[0] = 0xFFFF00FF;
-		// }
+		oray->c[0] = NOWALLCOLOUR;
 		if (oray->length > max->settings.lightdist)
 			oray->c[1] = max->map.f.rgba;
 		else
 		{
 			oray->c1a = 0xff;
-			// oray->c1b = oray->c0b * (255 - (255 * oray->length / maxdist)) / 256;
-			// oray->c1g = oray->c0g * (255 - (255 * oray->length / maxdist)) / 256;
-			// oray->c1r = oray->c0r * (255 - (255 * oray->length / maxdist)) / 256;
 			int	r = max->map.f.r;
 			int	g = max->map.f.g;
 			int	b = max->map.f.b;

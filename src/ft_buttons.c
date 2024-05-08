@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buttons.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 16:18:39 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/08 11:42:28 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,7 @@ void	ft_initbuttons(t_max *max)
 	max->menu.mapselectionbuttons[CHOOSELEVEL].x = 800;
 	max->menu.mapselectionbuttons[CHOOSELEVEL].y = 20;
 	max->menu.mapselectionbuttons[CHOOSELEVEL].text.text = S_CHOOSELEVEL;
+	max->menu.mapselectionbuttons[CHOOSELEVEL].text.height = 40;
 	max->menu.mapselectionbuttons[CHOOSELEVEL].text.sx = max->menu.mapselectionbuttons[CHOOSELEVEL].x + 40;
 	max->menu.mapselectionbuttons[CHOOSELEVEL].text.sy = max->menu.mapselectionbuttons[CHOOSELEVEL].y + 40;
 	// max->menu.mapselectionbuttons[RANDOM] = button;

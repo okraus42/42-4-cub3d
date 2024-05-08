@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_saveload.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 11:32:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 10:50:15 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/08 11:55:40 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	ft_reinitmax(t_max *newmax, t_max *oldmax)
 	newmax->overlay = oldmax->overlay;
 	newmax->key = oldmax->key;
 	newmax->settings = oldmax->settings;
+	newmax->i.maximap->enabled = 0;
+	ft_init_rayangles(newmax);
 }
 
 int	ft_quickload(t_max *max)

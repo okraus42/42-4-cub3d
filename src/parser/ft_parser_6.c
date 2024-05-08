@@ -6,13 +6,13 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:52:53 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 13:55:56 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/08 12:56:27 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/cub3d.h"
 
-void	ft_fill_colours_to_map2(t_map *map, int i)
+int	ft_fill_colours_to_map2(t_map *map, int i)
 {
 	if (map->m[i] & EXIT)
 	{
@@ -20,46 +20,34 @@ void	ft_fill_colours_to_map2(t_map *map, int i)
 		map->sprites[SPRITE_EXIT].y = ((i / 256) << 16) | 0x7FFF;
 		map->m[i] &= 0x00000000FFFFFFFF;
 		map->m[i] |= 0xFF00FFFF00000000;
+		return (1);
 	}
 	else if (map->m[i] & FLOOR1)
 	{
 		map->m[i] &= 0x00000000FFFFFFFF;
 		map->m[i] |= ((unsigned long long)(map->f.rgba) << 32);
+		return (1);
 	}
 	else if (map->m[i] & FLOORFLAMINGO)
 	{
 		map->sprites[map->spritecount].x = ((i % 256) << 16) | 0x7FFF;
 		map->sprites[map->spritecount].y = ((i / 256) << 16) | 0x7FFF;
 		ft_init_sprites_flamingo(map, map->spritecount);
+		return (1);
 	}
+	return (0);
 }
 
-void	ft_fill_colours_to_map3_d(t_map *map, int i)
+int	ft_fill_colours_to_map3_d(t_map *map, int i)
 {
-	if (map->m[i] & DOOREAST)
+	if (map->m[i] & DOOR)
 	{
 		map->m[i] &= 0x00000000FFFFFFFF;
 		map->m[i] |= 0x53565AFF00000000;
 		map->doors[i] = 0x1FF;
+		return (1);
 	}
-	else if (map->m[i] & DOORWEST)
-	{
-		map->m[i] &= 0x00000000FFFFFFFF;
-		map->m[i] |= 0x53565AFF00000000;
-		map->doors[i] = 0x1FF;
-	}
-	else if (map->m[i] & DOORNORTH)
-	{
-		map->m[i] &= 0x00000000FFFFFFFF;
-		map->m[i] |= 0x53565AFF00000000;
-		map->doors[i] = 0x1FF;
-	}
-	else if (map->m[i] & DOORSOUTH)
-	{
-		map->m[i] &= 0x00000000FFFFFFFF;
-		map->m[i] |= 0x53565AFF00000000;
-		map->doors[i] = 0x1FF;
-	}
+	return (0);
 }
 
 void	ft_fill_colours_to_map(t_map *map)
@@ -69,12 +57,16 @@ void	ft_fill_colours_to_map(t_map *map)
 	i = 0;
 	while (i < map->h * map->w)
 	{
-		ft_fill_colours_to_map2(map, i);
-		ft_fill_colours_to_map3_d(map, i);
 		if (map->m[i] & WALL)
 		{
 			map->m[i] &= 0x00000000FFFFFFFF;
 			map->m[i] |= 0x000000FFFFFFFFFF;
+		}
+		else if (ft_fill_colours_to_map2(map, i))
+		{
+		}
+		else if (ft_fill_colours_to_map3_d(map, i))
+		{
 		}
 		else
 			map->m[i] &= 0x00000000FFFFFFFF;
