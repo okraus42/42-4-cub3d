@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/09 17:18:38 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/09 19:32:52 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,8 @@ PARSER_DIR	=	parser/
 CUB3D_DIR	=	cub3d/
 MENU_DIR	=	menu/
 BUTTONS_DIR =	buttons/
+HOF_DIR		=   hall_of_fame/
+RAYS_DIR	=	rays/
 
 # cub3d functions
 
@@ -79,7 +81,7 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				ft_game_bonus.c \
 				ft_gameplay.c \
 				ft_gamestart.c \
-				ft_halloffame.c \
+				$(HOF_DIR)ft_halloffame.c \
 				$(HOOK_DIR)ft_hook.c \
 				ft_keyhook.c \
 				ft_line.c \
@@ -111,10 +113,12 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(PARSER_DIR)ft_parser_5.c \
 				$(PARSER_DIR)ft_parser_6.c \
 				ft_randommap.c \
-				ft_rays.c \
+				$(RAYS_DIR)ft_rays.c \
+				$(RAYS_DIR)ft_rays_2.c \
+				$(RAYS_DIR)ft_rays_3.c \
+				$(RAYS_DIR)ft_rays_4.c \
+				$(RAYS_DIR)ft_rays_5.c \
 				ft_saveload.c \
-				ft_screen2d.c \
-				ft_screen2dquad.c \
 				ft_screen3d.c \
 				ft_settings.c \
 				ft_sprite.c \
@@ -182,6 +186,8 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)$(CUB3D_DIR)
 				@mkdir -p $(OBJ_DIR)$(MENU_DIR)
 				@mkdir -p $(OBJ_DIR)$(BUTTONS_DIR)
+				@mkdir -p $(OBJ_DIR)$(HOF_DIR)
+				@mkdir -p $(OBJ_DIR)$(RAYS_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)

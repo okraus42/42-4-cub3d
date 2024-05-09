@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 11:22:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/09 18:44:52 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -437,7 +437,7 @@ int				ft_isxdigit(int c);
 char			**ft_readdir(const char *path, const char *extension);
 
 // math stuff
-int				ft_abs(int n);
+int				ft_abs(long long n);
 int				ft_max(int a, int b);
 int				ft_min(int a, int b);
 void			ft_swap(int *a, int *b);

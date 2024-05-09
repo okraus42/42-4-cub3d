@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/09 17:17:22 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/09 19:42:57 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,6 +292,10 @@ typedef struct s_line
 typedef struct s_oray
 {
 	int				ra;
+	int				mx;
+	int				my;
+	int				mp;
+	int				mp2;
 	union
 	{
 		unsigned int	c[2];
@@ -816,6 +820,19 @@ void	ft_draw_minimap(t_max *max);
 void	ft_init_rayangles(t_max *max);
 void	ft_visit_map(t_map *map, long long length, long long dist, int mp);
 void	ft_init_orays(t_max *max);
+int		ft_otest(t_oray *oray, t_max *max);
+void	ft_init_orays_endcolour(t_max *max, t_oray *oray);
+void	ft_init_orays_init_1(t_max *max, t_oray *oray, int r);
+void	ft_init_orays_init_h(t_max *max, t_oray *oray);
+void	ft_init_orays_init_v(t_max *max, t_oray *oray);
+void	ft_init_orays_init_c(t_max *max, t_oray *oray);
+int		ft_init_orays_while_h_breaker_dw(t_max *max, t_oray *oray);
+int		ft_init_orays_while_h_breaker_de(t_max *max, t_oray *oray);
+int		ft_init_orays_while_h_breaker(t_max *max, t_oray *oray);
+void	ft_init_orays_while_h(t_max *max, t_oray *oray);
+int		ft_init_orays_while_h_breaker_dn(t_max *max, t_oray *oray);
+int		ft_init_orays_while_h_breaker_ds(t_max *max, t_oray *oray);
+int		ft_init_orays_while_v_breaker(t_max *max, t_oray *oray);
 
 //ft_line.c
 void	ft_place_line(mlx_image_t *img, t_line l);
@@ -883,9 +900,9 @@ int	ft_load(t_max *max, char *path);
 void ft_init_math(t_math *math);
 
 //ft_screen2d.c
-void	ft_draw_screen2d(t_max *max);
-//ft_screen2d.c
-void	ft_draw_screen2dquad(t_max *max);
+// void	ft_draw_screen2d(t_max *max);
+// //ft_screen2d.c
+// void	ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
 void	ft_draw_screen3d(t_max *max);
