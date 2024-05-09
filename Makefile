@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/09 12:22:19 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/09 17:18:38 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,16 @@ BUTTONS_DIR =	buttons/
 # cub3d functions
 
 SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
+				$(BUTTONS_DIR)ft_buttons_2.c \
+				$(BUTTONS_DIR)ft_buttons_3.c \
+				$(BUTTONS_DIR)ft_buttons_4.c \
+				$(BUTTONS_DIR)ft_buttons_5.c \
+				$(BUTTONS_DIR)ft_buttons_6.c \
+				$(BUTTONS_DIR)ft_buttons_7.c \
+				$(BUTTONS_DIR)ft_buttons_8.c \
+				$(BUTTONS_DIR)ft_buttons_9.c \
+				$(BUTTONS_DIR)ft_buttons_10.c \
+				$(BUTTONS_DIR)ft_buttons_11.c \
 				$(CUB3D_DIR)ft_cub3d.c \
 				$(CUB3D_DIR)ft_cub3d_2.c \
 				ft_doors.c \

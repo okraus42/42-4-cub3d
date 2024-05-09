@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/09 12:49:06 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/09 17:17:22 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -689,9 +689,56 @@ void	ft_exit(t_max *max, int code);
 void	ft_freemap(t_map *map);
 
 //ft_button.c
-void	ft_initbuttons(t_max *max);
-void	ft_draw_button(t_button *b, int state);
-void	ft_choose_in_button(t_max *max, t_button *button);
+void		ft_initbuttons(t_max *max);
+void		ft_draw_button(t_button *b, int state);
+void		ft_choose_in_button(t_max *max, t_button *button);
+t_text		ft_inittext_helper(t_max *max);
+t_button	ft_initbutton_helper(t_max *max);
+void		ft_initbutton_resume(t_max *max);
+void		ft_initbutton_newgame(t_max *max);
+void		ft_initbutton_savegame(t_max *max);
+void		ft_initbutton_loadgame(t_max *max);
+void		ft_initbutton_settings(t_max *max);
+void		ft_initbutton_halloffame(t_max *max);
+void		ft_initbutton_quitgame(t_max *max);
+void		ft_initbutton_name(t_max *max);
+void		ft_initbutton_coalition(t_max *max);
+void		ft_initbutton_campus(t_max *max);
+void		ft_initbutton_nwconfirm(t_max *max);
+void		ft_initbutton_easylvl(t_max *max);
+void		ft_initbutton_mediumlvl(t_max *max);
+void		ft_initbutton_hardlvl(t_max *max);
+void		ft_initbutton_campaign(t_max *max);
+void		ft_initbutton_timetrial(t_max *max);
+void		ft_initbutton_onemap(t_max *max);
+void		ft_initbutton_custom(t_max *max);
+void		ft_initbutton_random(t_max *max);
+void		ft_initbutton_chooselvl(t_max *max);
+void		ft_initbutton_msplay(t_max *max);
+void		ft_initbutton_rsplay(t_max *max);
+void		ft_initbutton_rsadvanced(t_max *max);
+void		ft_initbutton_rwidth(t_max *max, t_button button);
+void		ft_initbutton_rheight(t_max *max, t_button button);
+void		ft_initbutton_rratiode(t_max *max, t_button button);
+void		ft_initbutton_rratiolo(t_max *max, t_button button);
+void		ft_initbutton_rratioti(t_max *max, t_button button);
+void		ft_initbutton_rratioxi(t_max *max, t_button button);
+void		ft_initbutton_rnorooms(t_max *max, t_button button);
+void		ft_initbutton_rorooms(t_max *max, t_button button);
+void		ft_initbutton_rdoors(t_max *max, t_button button);
+void		ft_initbutton_rdeadends(t_max *max, t_button button);
+void		ft_initbutton_rrandomize(t_max *max, t_button button);
+void		ft_initbutton_rplay(t_max *max, t_button button);
+void		ft_initbutton_choosesave(t_max *max, t_button button);
+void		ft_initbutton_delete(t_max *max, t_button button);
+void		ft_initbutton_save(t_max *max, t_button button);
+void		ft_initbutton_chooseload(t_max *max, t_button button);
+void		ft_initbutton_deleteload(t_max *max, t_button button);
+void		ft_initbutton_load(t_max *max, t_button button);
+void		ft_initbutton_hofback(t_max *max, t_button button);
+void		ft_initbuttons_global_helper_2(t_max *max, t_button button);
+void		ft_initbuttons_global_helper(t_max *max);
+void		ft_initbuttons(t_max *max);
 
 //ft_textfield.c
 void	ft_inittextfields(t_max *max);
@@ -812,9 +859,6 @@ void	ft_menu_2(t_max *max);
 void	ft_menu_3(t_max *max);
 void	ft_menu_helper_5_1(t_max *max);
 void	ft_menu_helper_9(t_max *max);
-
-
-
 
 //ft_mousehook.c
 void	ft_cursorhook(void *param);
