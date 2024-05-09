@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/07 19:35:20 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/09 12:08:24 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -768,6 +768,43 @@ void	ft_initmenu(t_max *max);
 void	ft_menu(t_max *max);
 void	ft_resume(t_max *max);
 void	ft_newgame(t_max *max);
+void	ft_initrandommapvalues(t_randommap *rm);
+void	ft_draw_menu(t_max *max);
+void	ft_draw_menu_6(t_max *max);
+void	ft_draw_menu_7(t_max *max);
+void	ft_draw_menu_8(t_max *max);
+void	ft_selectnewbutton(t_max *max, t_button *button);
+void	ft_selectbutton(t_max *max);
+void	ft_selectbutton_helper(t_max *max);
+int		ft_selectbutton_helper_6(t_max *max);
+int		ft_selectbutton_helper_5(t_max *max);
+void	ft_draw_newwritingbuttons(t_max *max);
+void	ft_draw_mainmenubuttons(t_max *max);
+void	ft_draw_newwritingtextfields(t_max *max);
+void	ft_draw_gamedifficultybuttons(t_max *max);
+void	ft_draw_gametypebuttons(t_max *max);
+void	ft_draw_maptypebuttons(t_max *max);
+void	ft_draw_newmapbuttons(t_max *max);
+void	ft_draw_newrandomadvancedbuttons(t_max *max);
+int		ft_draw_newrandomadvancedbuttons_2(t_max *max);
+void	ft_updatenewrandomadvancedbuttons(t_max	*max);
+void	ft_draw_savebuttons(t_max *max);
+void	ft_draw_newmaplistfields(t_max *max);
+void	ft_draw_newrandombuttons(t_max *max);
+void	ft_draw_savelistfields(t_max *max);
+void	ft_draw_loadbuttons(t_max *max);
+void	ft_draw_loadlistfields(t_max *max);
+void	ft_draw_halloffamebuttons(t_max *max);
+int		ft_menu_helper_16(t_max *max);
+int		ft_menu_helper_14(t_max *max);
+int		ft_menu_helper_15(t_max *max);
+void	ft_menu_2(t_max *max);
+void	ft_menu_3(t_max *max);
+void	ft_menu_helper_5_1(t_max *max);
+void	ft_menu_helper_9(t_max *max);
+
+
+
 
 //ft_mousehook.c
 void	ft_cursorhook(void *param);

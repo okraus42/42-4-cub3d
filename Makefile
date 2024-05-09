@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/07 14:14:30 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/09 12:10:53 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,6 +75,21 @@ SRC_S		=	ft_buttons.c \
 				ft_listfield.c \
 				ft_map.c \
 				$(MENU_DIR)ft_menu.c \
+				$(MENU_DIR)ft_menu_2.c \
+				$(MENU_DIR)ft_menu_3.c \
+				$(MENU_DIR)ft_menu_4.c \
+				$(MENU_DIR)ft_menu_5.c \
+				$(MENU_DIR)ft_menu_6.c \
+				$(MENU_DIR)ft_menu_7.c \
+				$(MENU_DIR)ft_menu_8.c \
+				$(MENU_DIR)ft_menu_9.c \
+				$(MENU_DIR)ft_menu_10.c \
+				$(MENU_DIR)ft_menu_11.c \
+				$(MENU_DIR)ft_menu_12.c \
+				$(MENU_DIR)ft_menu_13.c \
+				$(MENU_DIR)ft_menu_14.c \
+				$(MENU_DIR)ft_menu_15.c \
+				$(MENU_DIR)ft_menu_16.c \
 				ft_minimap.c \
 				ft_mousehook.c \
 				ft_overlay.c \
