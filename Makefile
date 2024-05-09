@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/09 12:10:53 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/09 12:22:19 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,10 +56,11 @@ HOOK_DIR	=	hooks/
 PARSER_DIR	=	parser/
 CUB3D_DIR	=	cub3d/
 MENU_DIR	=	menu/
+BUTTONS_DIR =	buttons/
 
 # cub3d functions
 
-SRC_S		=	ft_buttons.c \
+SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(CUB3D_DIR)ft_cub3d.c \
 				$(CUB3D_DIR)ft_cub3d_2.c \
 				ft_doors.c \
@@ -170,6 +171,7 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)$(PARSER_DIR)
 				@mkdir -p $(OBJ_DIR)$(CUB3D_DIR)
 				@mkdir -p $(OBJ_DIR)$(MENU_DIR)
+				@mkdir -p $(OBJ_DIR)$(BUTTONS_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)
