@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_doors.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 15:31:12 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 11:15:47 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:44:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,13 @@ void	ft_check_doors(t_max *max)
 			{
 				++c;
 				c += max->framems >> 4;
-				if (c > 0x7F)
-					c = 0x7F;
+				c = (c > 0x7F) * 0x7F + (c <= 0x7F) * c;
 			}
 			else
 			{
 				--c;
 				c -= max->framems >> 4;
-				if (c < 0)
-					c = 0;
+				c = (c > 0) * c;
 			}
 			max->map.doors[d] &= 0xFFFFFF80;
 			max->map.doors[d] |= c;
