@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_gameplay.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:47:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 13:30:38 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:30:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_gameplay_2(t_max *max)
 {
 	max->score -= max->framems;
 	max->map.p.turnspeed = max->framems * 8;
-	max->map.p.speed = MIN(4 * 8 * 128, 128 * 8 * max->framems);
+	max->map.p.speed = ft_min(4 * 8 * 128, 128 * 8 * max->framems);
 	max->map.p.xspeed = (max->map.p.speed * max->math->cos[max->map.p
 			.orientation]) / 65536;
 	max->map.p.yspeed = -(max->map.p.speed * max->math->sin[max->map.p

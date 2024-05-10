@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_min.c                                           :+:      :+:    :+:   */
+/*   ft_absd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/19 15:43:10 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 16:29:03 by okraus           ###   ########.fr       */
+/*   Created: 2023/03/19 15:42:56 by okraus            #+#    #+#             */
+/*   Updated: 2024/05/10 16:32:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/libft.h"
 
-long long	ft_min(long long a, long long b)
+double	ft_absd(double d)
 {
-	if (a < b)
-		return (a);
+	if (d < 0)
+		return (-d);
 	else
-		return (b);
+		return (d);
 }

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 12:17:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 13:35:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:30:31 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_draw_map(t_max *max)
 	int	r;
 
 
-	s = MIN(MAPWIDTH / max->map.ww, MAPHEIGHT / max->map.hh);
+	s = ft_min(MAPWIDTH / max->map.ww, MAPHEIGHT / max->map.hh);
 	y = 0;
 	while (y < MAPHEIGHT)
 	{

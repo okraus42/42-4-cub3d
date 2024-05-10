@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 10:37:06 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 13:24:15 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:36:37 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ void	ft_init_brume(t_max *max)
 		d = 0;
 		while (d < 256)
 		{
-			max->math->brumered[c][d] = PERCENTIL(c, max->map.b.r, d, 255);
-			max->math->brumegreen[c][d] = PERCENTIL(c, max->map.b.g, d, 255);
-			max->math->brumeblue[c][d] = PERCENTIL(c, max->map.b.b, d, 255);
+			max->math->brumered[c][d] = ft_percentil(c, max->map.b.r, d, 255);
+			max->math->brumegreen[c][d] = ft_percentil(c, max->map.b.g, d, 255);
+			max->math->brumeblue[c][d] = ft_percentil(c, max->map.b.b, d, 255);
 			++d;
 		}
 		++c;

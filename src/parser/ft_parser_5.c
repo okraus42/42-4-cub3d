@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser_5.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:17:08 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 16:47:37 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:31:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_check_map(t_map *map, char **split, int j, int a)
 			if (ft_strchr("NSEW", split[j][i]))
 				++p;
 			++i;
-			map->w = MAX(map->w, i);
+			map->w = ft_max(map->w, i);
 		}
 		++j;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cub3d_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 15:31:14 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 14:07:38 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:26:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_init_math(t_math *math)
 		math->natan[i] = -65536.0 / tan(i * M_PI * 2 / MAXDEGREE);
 		math->ntan[i] = (-65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
 		math->tan[i] = (65536.0 * (tan(i * M_PI * 2 / MAXDEGREE)));
-		if (ABS(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
+		if (ft_absd(tan(i * M_PI * 2 / MAXDEGREE)) > 60000)
 			ft_printf("WARNING %i \n", i);
 		++i;
 	}

@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/14 13:43:18 by okraus            #+#    #+#              #
-#    Updated: 2024/04/14 11:18:16 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/10 16:35:41 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,6 +91,7 @@ SRC_LIB		=	ft_atoi.c \
 # Extra utility functions
 
 SRC_EX		=	ft_abs.c \
+				ft_absd.c \
 				ft_atoi_base.c \
 				ft_copy_split.c \
 				ft_dlstadd.c \
@@ -114,6 +115,7 @@ SRC_EX		=	ft_abs.c \
 				ft_litoa.c \
 				ft_max.c \
 				ft_min.c \
+				ft_percentil.c \
 				ft_print_memory.c \
 				ft_print_memory_plus.c \
 				ft_put_split.c \

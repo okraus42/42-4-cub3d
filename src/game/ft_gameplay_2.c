@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_gameplay_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 13:13:07 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/10 13:18:36 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:21:32 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,34 +43,6 @@ int	ft_move_player_4_1(t_map *map, int y, int x)
 	return (r);
 }
 
-int	ft_move_player_4(t_map *map, int y, int x)
-{
-	int	r;
-
-	r = 1;
-	if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOR)
-	{
-		if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOREW)
-		{
-			if (ft_move_player_4_1(map, y, x))
-			{
-			}
-			else
-			{
-				if ((map->doors[((y >> 16) * map->w + (x >> 16))]
-						& 0x7F) > 0)
-				{
-					map->p.sy = 0;
-					map->p.my += 1;
-				}
-			}
-		}
-	}
-	else
-		r = 0;
-	return (r);
-}
-
 void	ft_move_player_5(t_map *map, int y, int x)
 {
 	if (map->p.sx < SQUAREHALF)
@@ -93,6 +65,35 @@ void	ft_move_player_5(t_map *map, int y, int x)
 	}
 }
 
+int	ft_move_player_4(t_map *map, int y, int x)
+{
+	int	r;
+
+	r = 0;
+	if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOR)
+	{
+		r = 1;
+		if (map->m[((y >> 16) * map->w + (x >> 16))] & DOOREW)
+		{
+			if (ft_move_player_4_1(map, y, x))
+			{
+			}
+			else
+			{
+				if ((map->doors[((y >> 16) * map->w + (x >> 16))]
+						& 0x7F) > 0)
+				{
+					map->p.sy = 0;
+					map->p.my += 1;
+				}
+			}
+		}
+		else if (map->m[((y >> 16) * map->w + (x >> 16))] & DOORNS)
+			ft_move_player_5(map, y, x);
+	}
+	return (r);
+}
+
 void	ft_move_player(t_map *map, int y, int x)
 {
 	int			oldy;
@@ -112,8 +113,6 @@ void	ft_move_player(t_map *map, int y, int x)
 		if (ft_move_player_4(map, y, x))
 		{
 		}
-		else if (map->m[((y >> 16) * map->w + (x >> 16))] & DOORNS)
-			ft_move_player_5(map, y, x);
 	}
 	ft_move_player_2(map, oldx, oldy);
 }
