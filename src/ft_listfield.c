@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/15 11:16:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:23:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,10 @@ void	ft_initlistfields(t_max *max)
 	max->menu.custommap.state = ACTIVE;
 	max->menu.custommap.x = 600;
 	max->menu.custommap.y = 160;
-	// max->menu.custommap.files[0] = "maps/validmap1.cub";
-	// max->menu.custommap.files[1] = "maps/validmap2.cub";
-	// max->menu.custommap.files[2] = "maps/validmap3.cub";
-	// max->menu.custommap.files[3] = "maps/validmap4.cub";
-	// max->menu.custommap.files[4] = "maps/validmap5.cub";
 	ft_sprintf(max->menu.custommap.dir, "./maps/");
 	max->menu.custommap.files = ft_readdir(max->menu.custommap.dir, ".cub");
 	max->menu.custommap.totalfiles = ft_splitlen(max->menu.custommap.files);
 	i = 0;
-	//ft_printf("i %i topfile %i totalfiles %i\n", i, max->menu.custommap.topfile, max->menu.custommap.totalfiles );
 	while (max->menu.custommap.files && max->menu.custommap.files[i] && i < 10)
 	{
 		max->menu.custommap.text[i] = text;
@@ -75,23 +69,18 @@ void	ft_initlistfields(t_max *max)
 	max->menu.saves.state = ACTIVE;
 	max->menu.saves.x = 600;
 	max->menu.saves.y = 160;
-	// max->menu.saves.files[0] = "maps/validmap1.cub";
-	// max->menu.saves.files[1] = "maps/validmap2.cub";
-	// max->menu.saves.files[2] = "maps/validmap3.cub";
-	// max->menu.saves.files[3] = "maps/validmap4.cub";
-	// max->menu.saves.files[4] = "maps/validmap5.cub";
 	ft_sprintf(max->menu.saves.dir, "./saves/");
 	max->menu.saves.files = ft_readdir(max->menu.saves.dir, ".ft");
-	//split rm quicksave rm autosave
-	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'f')
+	if (max->menu.saves.files && max->menu.saves.files[0]
+		&& max->menu.saves.files[0][0] == 'f')
 		ft_split_rm(&max->menu.saves.files, 0);
-	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'q')
+	if (max->menu.saves.files && max->menu.saves.files[0]
+		&& max->menu.saves.files[0][0] == 'q')
 		ft_split_rm(&max->menu.saves.files, 0);
-	ft_split_add(&max->menu.saves.files, "NEW SAVE", ft_splitlen(max->menu.saves.files));
-	//split add new save
+	ft_split_add(&max->menu.saves.files, "NEW SAVE",
+		ft_splitlen(max->menu.saves.files));
 	max->menu.saves.totalfiles = ft_splitlen(max->menu.saves.files);
 	i = 0;
-	//ft_printf("i %i topfile %i totalfiles %i\n", i, max->menu.saves.topfile, max->menu.saves.totalfiles );
 	while (max->menu.saves.files && max->menu.saves.files[i] && i < 10)
 	{
 		max->menu.saves.text[i] = text;
@@ -112,16 +101,10 @@ void	ft_initlistfields(t_max *max)
 	max->menu.loads.state = ACTIVE;
 	max->menu.loads.x = 600;
 	max->menu.loads.y = 160;
-	// max->menu.loads.files[0] = "maps/validmap1.cub";
-	// max->menu.loads.files[1] = "maps/validmap2.cub";
-	// max->menu.loads.files[2] = "maps/validmap3.cub";
-	// max->menu.loads.files[3] = "maps/validmap4.cub";
-	// max->menu.loads.files[4] = "maps/validmap5.cub";
 	ft_sprintf(max->menu.loads.dir, "./saves/");
 	max->menu.loads.files = ft_readdir(max->menu.loads.dir, ".ft");
 	max->menu.loads.totalfiles = ft_splitlen(max->menu.loads.files);
 	i = 0;
-	//ft_printf("i %i topfile %i totalfiles %i\n", i, max->menu.loads.topfile, max->menu.loads.totalfiles );
 	while (max->menu.loads.files && max->menu.loads.files[i] && i < 10)
 	{
 		max->menu.loads.text[i] = text;
@@ -172,11 +155,14 @@ void	ft_bigreinitlistfield(t_max *max)
 	max->menu.saves.text[max->menu.saves.highlight].cb = 0;
 	max->menu.saves.text[max->menu.saves.highlight].c = 0x00FF00FF;
 	max->menu.saves.files = ft_readdir(max->menu.saves.dir, ".ft");
-	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'f')
+	if (max->menu.saves.files && max->menu.saves.files[0]
+		&& max->menu.saves.files[0][0] == 'f')
 		ft_split_rm(&max->menu.saves.files, 0);
-	if (max->menu.saves.files && max->menu.saves.files[0] && max->menu.saves.files[0][0] == 'q')
+	if (max->menu.saves.files && max->menu.saves.files[0]
+		&& max->menu.saves.files[0][0] == 'q')
 		ft_split_rm(&max->menu.saves.files, 0);
-	ft_split_add(&max->menu.saves.files, "NEW SAVE", ft_splitlen(max->menu.saves.files));
+	ft_split_add(&max->menu.saves.files, "NEW SAVE",
+		ft_splitlen(max->menu.saves.files));
 	max->menu.saves.highlight = 0;
 	max->menu.saves.topfile = 0;
 	max->menu.saves.totalfiles = ft_splitlen(max->menu.saves.files);
@@ -219,8 +205,8 @@ void	ft_reinitlistfield(t_listfield	*listfield)
 	int	i;
 
 	i = 0;
-	//ft_printf("i %i topfile %i\n", i, listfield->topfile);
-	while (listfield->files && listfield->files[i + listfield->topfile] && i < 10)
+	while (listfield->files && listfield->files[i + listfield->topfile]
+		&& i < 10)
 	{
 		listfield->text[i].text = listfield->files[i + listfield->topfile];
 		++i;
@@ -246,7 +232,6 @@ void	ft_draw_listfield(t_listfield *lf, int state)
 	h = lf->listfield->height;
 	j = 0;
 	ft_reinitlistfield(lf);
-	//draw listfield
 	while (j < h)
 	{
 		i = 0;
@@ -258,31 +243,19 @@ void	ft_draw_listfield(t_listfield *lf, int state)
 			else
 				c = 0xFF00FFFF;
 			if (c & 0xFFFFFF00)
-			{
-				// if (state & INACTIVE)
-				// 	mlx_put_pixel(lf->image, i + lf->x, j + lf->y, C_INACTIVE);
-				// else if (state & ACTIVE)
-				// 	mlx_put_pixel(lf->image, i + lf->x, j + lf->y, C_ACTIVE);
-				// else if (state & SELECTED)
-				// 	mlx_put_pixel(lf->image, i + lf->x, j + lf->y, C_SELECTED);
-				// else if (state & ACTIVATED)
 				mlx_put_pixel(lf->image, i + lf->x, j + lf->y, 0xFF);
-			}
 			else if ((c & 0xFF) == 0xFF)
 				mlx_put_pixel(lf->image, i + lf->x, j + lf->y, c);
 			++i;
 		}
 		++j;
 	}
-	//draw text
 	lf->text[lf->highlight].c = 0xFF;
 	lf->text[lf->highlight].cb = 0x00FF00FF;
 	i = 0;
 	while (i < 10)
 	{
-		//ft_printf("hi %i\n", i);
 		ft_draw_text(&lf->text[i], state);
-		//ft_printf("bye %i\n", i);
 		++i;
 	}
 }
@@ -290,13 +263,11 @@ void	ft_draw_listfield(t_listfield *lf, int state)
 //topitemnumber
 //total items number
 
-
 void	ft_choose_in_listfield(t_max *max, t_listfield *listfield)
 {
 	int	i;
 
 	i = listfield->highlight;
-	//different for odd and even numbers
 	listfield->text[i].cb = 0;
 	listfield->text[i].c = 0x00FF00FF;
 	if (max->keys[MLX_KEY_UP])

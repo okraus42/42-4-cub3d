@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_randommap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 11:33:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/07 11:00:48 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 18:49:33 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,29 @@
 // colours
 // textures
 
-void	ft_inittimetrialmap(t_randommap *rm, int level)
+void	ft_inittimetrialmap_seedinit(t_randommap *rm)
 {
 	if (!rm->seed)
 	{
 		rm->seed = time(0);
 		srand(rm->seed);
 	}
+}
+
+void	ft_inittimetrialmap(t_randommap *rm, int level)
+{
 	rm->width.value = 10 + 2 * level;
 	rm->height.value = 5 + level;
 	rm->ratiode.value = (rand() % 64) * (rand() % 8 + 1) * (rand() % 8 + 1);
 	rm->ratiolo.value = (rand() % 16) * (rand() % 8 + 1) * (rand() % 4 + 1);
 	rm->ratioti.value = (rand() % 8) * (rand() % 8 + 1);
 	rm->ratioxi.value = (rand() % 2) * (rand() % 8 + 1);
-	rm->rnorooms.value = (rm->width.value * rm->height.value / 64 + 1) * (rand() % ((rm->width.value + rm->height.value) / 16)) * (rand() % 8 + 1);
-	rm->rorooms.value = (rm->width.value * rm->height.value / 64 + 1) * (rand() % ((rm->width.value + rm->height.value) / 16)) * (rand() % 8 + 1);
+	rm->rnorooms.value = (rm->width.value * rm->height.value / 64 + 1)
+		* (rand() % ((rm->width.value + rm->height.value) / 16))
+		* (rand() % 8 + 1);
+	rm->rorooms.value = (rm->width.value * rm->height.value / 64 + 1)
+		* (rand() % ((rm->width.value + rm->height.value) / 16))
+		* (rand() % 8 + 1);
 	rm->rdoors.value = (rand() % 8) * (rand() % 8) * (rand() % 8);
 	rm->rdeadends.value = (rand() % 12288);
 	if (rm->rdeadends.value > 8192)
@@ -52,7 +60,6 @@ static void	ft_map_init(t_max *max, t_map *map)
 	map->southtexture = NULL;
 	map->westtexture = NULL;
 	map->easttexture = NULL;
-	//map->d = NULL;
 	map->valid = 1;
 	map->p.orientation = -1;
 	map->p.x = 0;
@@ -68,12 +75,9 @@ static void	ft_map_init(t_max *max, t_map *map)
 	map->f.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
 	map->c.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
 	map->b.rgba = ((unsigned int)(rand() % 0xFFFFFF) << 8) | 0xFF;
-	i = 0;
-	while (i < 65536)
-	{
+	i = -1;
+	while (++i < 65536)
 		map->m[i] = 0;
-		++i;
-	}
 }
 
 // FLOORWN = 0x10,
@@ -81,18 +85,8 @@ static void	ft_map_init(t_max *max, t_map *map)
 // FLOORWS = 0x40,
 // FLOORWW = 0x80,
 
-void	ft_flood_randomcheck(t_map *map, int pos)
+void	ft_flood_randomcheck_floorinit(t_map *map, int pos)
 {
-	if (map->m[pos] & FLOOD1)
-		return ;
-	if ((map->m[pos] & WALL))
-		return ;
-	if (!(map->m[pos]))
-	{
-		map->valid = 0;
-		return ;
-	}
-	map->m[pos] |= FLOOD1;
 	if (map->m[pos + 1] & WALL)
 		map->m[pos] |= FLOORWE;
 	if (map->m[pos - 1] & WALL)
@@ -109,6 +103,21 @@ void	ft_flood_randomcheck(t_map *map, int pos)
 		map->m[pos] |= FLOORWNE;
 	if (map->m[pos - map->w - 1] & WALL)
 		map->m[pos] |= FLOORWNW;
+}
+
+void	ft_flood_randomcheck(t_map *map, int pos)
+{
+	if (map->m[pos] & FLOOD1)
+		return ;
+	if ((map->m[pos] & WALL))
+		return ;
+	if (!(map->m[pos]))
+	{
+		map->valid = 0;
+		return ;
+	}
+	map->m[pos] |= FLOOD1;
+	ft_flood_randomcheck_floorinit(map, pos);
 	if (pos < map->w || pos > (map->h - 1) * map->w || !(pos % map->w)
 		|| pos % map->w == map->w - 1)
 	{
@@ -127,155 +136,34 @@ void	ft_fill_randommap(t_map *map)
 	ft_fill_colours_to_map(map);
 }
 
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-
-// compile with libft.a
-// pass number for
-// width, height, ratio of dead ends, loops, T-intersections, X-intersections
-// notoverlapping room placement attempts, overlapping rooms placement attempts
-// chance to create extra doors (higher is better, 4096 is max)
-// chance to remove deadends 0 keeps deadends, 1 removes dead ends,
-// 2 - 1024 chance to remove percentage of deadends
-// like 52 26 4 5 3 2 20 10 25 512
-
-typedef struct s_rmap
+void	map_print_inner(t_rmap *m, int i)
 {
-	int				width;
-	int				height;
-	int				w;
-	int				h;
-	int				s;
-	int				i;
-	int				d;
-	int				p;
-	int				walls;
-	int				ends;
-	int				e;
-	int				l;
-	int				ll;
-	int				t;
-	int				tt;	
-	int				x;
-	int				xx;
-	int				rn;
-	int				ro;
-	int				rw;
-	int				rh;
-	int				ed;
-	int				dr;
-	int				loops;
-	int				wall_c;
-	int				cw;
-	unsigned int	red;
-	unsigned int	green;
-	unsigned int	blue;
-	unsigned int	colour;
-	t_list			*lst;
-	t_list			*ltemp;
-	int				*temp;
-	unsigned int	map[65536];
-}	t_rmap;
-
-// typedef struct s_map
-// {
-// 	int				width;		//input weight
-// 	int				height;		//input heightH
-// 	int				w;			//actual map width
-// 	int				h;			//actual map height
-// 	int				s;			//size, stop w*h
-// 	int				i;			//iterating
-// 	int				d;			//temp value
-// 	int				p;			//actual position?
-// 	int				walls;		//how many walls around actual position
-// 	int				ends;		//how many dead ends in the maze originally
-// 	int				e;			//how many dead ends left
-// 	int				l;			//how many basic loops
-// 	int				ll;
-// 	int				t;			//how many t intersections from dead end
-// 	int				tt;	
-// 	int				x;			//how many x intersections from dead end
-// 	int				xx;
-// 	int				rn;		//how many attempts to build not an overlapping room
-// 	int				ro;			//how many attempts to build an overlapping room
-// 	int				rw;			//room width
-// 	int				rh;			//room height
-// 	int				ed;			//extra door probability
-// 	int				dr;	//dead end removal (0 - keep de, 1 - remove de,
-//						//n - remove n corridors from de)
-// 	int				loops;		//how many dead ends were changed int loops
-// 	int				wall_c;		//number of wall c
-// 	int				cw;			// % to close wall c
-// 	unsigned int	red;
-// 	unsigned int	green;
-// 	unsigned int	blue;
-// 	unsigned int	colour;
-// 	t_list			*lst;		//stack of visited positions (with neighbours?)
-// 	t_list			*ltemp;		//temporaty list
-// 	int				*temp;		//temporary value of position in the map
-// 	unsigned int	map[65536];	//map up to 256*256
-// } t_rmap;
-
-// BETTER SOLUTION
-// Do EDGES 2 walls thick
-typedef enum e_map_block
-{
-	EDGE = 0x0,
-	RWALL = 0xF0,
-	RWALL_A = 0x10,
-	RWALL_B = 0x20,
-	RWALL_C = 0x40,
-	RWALL_D = 0x80,
-	RDOOR_NS = 0x100,
-	RDOOR_WE = 0x200,
-	RDOOR = 0xF00,
-	DEADSPOT = 0x10000,
-	CORNER_CORRIDOR = 0x1F000,
-	CORRIDOR = 0x3F000,
-	DEADEND = 0x1000,
-	CORRIDOR_A = 0x2000,
-	T_JUNCTION = 0x4000,
-	X_JUNCTION = 0x8000,
-	CORRIDOR_B = 0x20000,
-	ROOM_A = 0x100000,
-	ROOM_B = 0x200000,
-	ROOM_C = 0x400000,
-	ROOM = 0xF00000,
-	CORRIDORROOM = 0xFFF000,
-	FLOOD_A = 0x1000000,
-	FLOOD_B = 0x2000000	
-}	t_rmap_block;
-
-// BETTER SOLUTION
-// Do EDGES 2 walls thick
-// typedef enum e_map_block
-// {
-// 	EDGE = 0x0,
-// 	RWALL = 0xF0,
-// 	RWALL_A = 0x10,		//RWALL COLUMN, permanent wall except for 
-// 	RWALL_B = 0x20,		//RWALL between columns
-// 	RWALL_C = 0x40,		//RWALL between columns between two different areas
-// 	RWALL_D = 0x80,		//RWALL after deadend
-// 	RDOOR_NS = 0x100,		// corridor at 
-// 	RDOOR_WE = 0x200,
-// 	RDOOR = 0xF00,
-// 	DEADSPOT = 0x10000,	//surrounded by 4 walls
-// 	CORNER_CORRIDOR = 0x1F000, // corner corridor
-// 	CORRIDOR = 0x3F000,	//any corridor corner stuff
-// 	DEADEND = 0x1000,
-// 	CORRIDOR_A = 0x2000,	// corridor at junction place
-// 	T_JUNCTION = 0x4000,
-// 	X_JUNCTION = 0x8000,
-// 	CORRIDOR_B = 0x20000,	// corridor between two permawalls
-// 	ROOM_A = 0x100000,
-// 	ROOM_B = 0x200000,		//room 4
-// 	ROOM_C = 0x400000,
-// 	ROOM = 0xF00000,
-// 	CORRIDORROOM = 0xFFF000,
-// 	FLOOD_A = 0x1000000,		//flood to index different areas
-// 	FLOOD_B = 0x2000000		//flood to connect different areas
-// }	t_rmap_block;
+	if (m->map[i] == EDGE)
+		ft_printf("%^*C  %0C", 0x000000);
+	else if (m->map[i] == RWALL_A)
+		ft_printf("%^*C  %0C", 0x002222);
+	else if (m->map[i] == RWALL_B)
+		ft_printf("%^*C  %0C", 0x444400);
+	else if (m->map[i] == RWALL_C || m->map[i] == RWALL_D)
+		ft_printf("%^*C  %0C", 0x330033);
+	else if (m->map[i] == CORRIDOR_A)
+		ft_printf("%^*C  %0C", 0x999999);
+	else if (m->map[i] == T_JUNCTION || m->map[i] == X_JUNCTION
+		|| m->map[i] == DEADEND)
+		ft_printf("%^*C  %0C", 0xaaffaa);
+	else if (m->map[i] == CORRIDOR_B)
+		ft_printf("%^*C  %0C", 0xdddddd);
+	else if (m->map[i] == ROOM_A || m->map[i] == ROOM_B)
+		ft_printf("%^*C  %0C", 0xffeeff);
+	else if (m->map[i] == RDOOR_NS || m->map[i] == RDOOR_WE)
+		ft_printf("%.*^*C--%0C", 0, 0xcc9966);
+	else if (m->map[i] & FLOOD_A)
+		ft_printf("%^*C  %0C", m->colour);
+	else if (m->map[i] & FLOOD_B)
+		ft_printf("%^*C  %0C", 0xff0000);
+	else
+		ft_printf("%^*C  %0C", 0x222277);
+}
 
 void	map_print(char *str, t_rmap *m)
 {
@@ -290,40 +178,7 @@ void	map_print(char *str, t_rmap *m)
 		m->green = (32 + (m->map[i] / 4) + 34 * m->map[i]) % 64 + 192;
 		m->blue = ((m->map[i] / 4) + m->map[i] * 16) % 64 + 192;
 		m->colour = m->red << 16 | m->green << 8 | m->blue;
-		if (m->map[i] == EDGE)
-			ft_printf("%^*C  %0C", 0x000000);
-		else if (m->map[i] == RWALL_A)
-			ft_printf("%^*C  %0C", 0x002222);
-		else if (m->map[i] == RWALL_B)
-			ft_printf("%^*C  %0C", 0x444400);
-		else if (m->map[i] == RWALL_C)
-			ft_printf("%^*C  %0C", 0x660066);
-		else if (m->map[i] == RWALL_D)
-			ft_printf("%^*C  %0C", 0x330033);
-		else if (m->map[i] == DEADEND)
-			ft_printf("%^*C  %0C", 0xff8888);
-		else if (m->map[i] == CORRIDOR_A)
-			ft_printf("%^*C  %0C", 0x999999);
-		else if (m->map[i] == T_JUNCTION)
-			ft_printf("%^*C  %0C", 0xaaffaa);
-		else if (m->map[i] == X_JUNCTION)
-			ft_printf("%^*C  %0C", 0xbbbbff);
-		else if (m->map[i] == CORRIDOR_B)
-			ft_printf("%^*C  %0C", 0xdddddd);
-		else if (m->map[i] == ROOM_A)
-			ft_printf("%^*C  %0C", 0xffffff);
-		else if (m->map[i] == ROOM_B)
-			ft_printf("%^*C  %0C", 0xffeeff);
-		else if (m->map[i] == RDOOR_NS)
-			ft_printf("%.*^*C--%0C", 0, 0xcc9966);
-		else if (m->map[i] == RDOOR_WE)
-			ft_printf("%.*^*C||%0C", 0, 0xcc9966);
-		else if (m->map[i] & FLOOD_A)
-			ft_printf("%^*C  %0C", m->colour);
-		else if (m->map[i] & FLOOD_B)
-			ft_printf("%^*C  %0C", 0xff0000);
-		else
-			ft_printf("%^*C  %0C", 0x222277);
+		map_print_inner(m, i);
 		++(i);
 		if (i % m->w == 0)
 			ft_printf("\n");
@@ -345,36 +200,9 @@ void	map_print2(char *str, t_rmap *m)
 		m->colour = m->red << 16 | m->green << 8 | m->blue;
 		if (m->map[i] == EDGE)
 			ft_printf(" ");
-		else if (m->map[i] == RWALL_A)
+		else if (m->map[i] == RWALL_A || m->map[i] == RWALL_B
+			|| m->map[i] == RWALL_C || m->map[i] == RWALL_D)
 			ft_printf("1");
-		else if (m->map[i] == RWALL_B)
-			ft_printf("1");
-		else if (m->map[i] == RWALL_C)
-			ft_printf("1");
-		else if (m->map[i] == RWALL_D)
-			ft_printf("1");
-		else if (m->map[i] == DEADEND)
-			ft_printf("0");
-		else if (m->map[i] == CORRIDOR_A)
-			ft_printf("0");
-		else if (m->map[i] == T_JUNCTION)
-			ft_printf("0");
-		else if (m->map[i] == X_JUNCTION)
-			ft_printf("0");
-		else if (m->map[i] == CORRIDOR_B)
-			ft_printf("0");
-		else if (m->map[i] == ROOM_A)
-			ft_printf("0");
-		else if (m->map[i] == ROOM_B)
-			ft_printf("0");
-		else if (m->map[i] == RDOOR_NS)
-			ft_printf("0");
-		else if (m->map[i] == RDOOR_WE)
-			ft_printf("0");
-		else if (m->map[i] & FLOOD_A)
-			ft_printf("0");
-		else if (m->map[i] & FLOOD_B)
-			ft_printf("0");
 		else
 			ft_printf("0");
 		++(i);
@@ -629,9 +457,9 @@ void	wallbreaker4(t_rmap *m)
 	}
 }
 
+//might loop forever sometimes?
 void	map_loops4(t_rmap *m)
 {
-	//might loop forever sometimes
 	int	i;
 
 	i = 0;
@@ -1075,15 +903,6 @@ void	refill_corridors3(t_rmap *m)
 	m->i = 0;
 	while (m->i < m->s)
 	{
-		// if (m->map[m->i] & RDOOR_NS
-		// 	&& m->map[m->i + m->w] == CORRIDOR_A
-		// 	&& m->map[m->i - m->w] == CORRIDOR_A)
-		// 	m->map[m->i] = CORRIDOR_B;
-		// else if (m->map[m->i] & RDOOR_WE
-		// 	&& m->map[m->i - 1] & CORRIDOR_A
-		// 	&& m->map[m->i + 1] & CORRIDOR_A)
-		// 	m->map[m->i] = CORRIDOR_B;
-		// ++(m->i);
 		if (m->map[m->i] & RDOOR_NS
 			&& m->map[m->i + m->w] == CORRIDOR_A
 			&& m->map[m->i - m->w] == CORRIDOR_A)
@@ -1319,112 +1138,136 @@ void	map_init(t_randommap *rm, t_rmap *m)
 	m->s = m->w * m->h;
 }
 
-void	ft_random_init(t_max *max)
+void	ft_random_init_loop_putplayer(t_max *max, t_rmap *m, int i)
 {
-	t_rmap	m;
-	int		i;
-	int		j;
-	int		p;
+	max->map.p.mx = i % 256;
+	max->map.p.my = i / 256;
+	max->map.p.sx = 0x7f7f;
+	max->map.p.sy = 0x7f7f;
+	max->map.p.smx = i % 256 * 64;
+	max->map.p.smy = i / 256 * 64;
+	if (max->map.p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
+		max->map.p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
+	if (max->map.p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
+		max->map.p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
+	max->map.p.orientation = EAST;
+	max->map.p.unused_x = 0;
+	max->map.p.unused_y = 0;
+	m->pp = 0;
+}
+
+void	ft_random_init_loop(t_max *max, t_rmap *m, int j, int i)
+{
+	if (m->map[j] & RWALL)
+		max->map.m[i] = WALL1;
+	else if ((m->map[j] & RDOOR_NS))
+	{
+		if (rand() % 2)
+			max->map.m[i] = DOORWEST;
+		else
+			max->map.m[i] = DOOREAST;
+	}
+	else if ((m->map[j] & RDOOR_WE))
+	{
+		if (rand() % 2)
+			max->map.m[i] = DOORNORTH;
+		else
+			max->map.m[i] = DOORSOUTH;
+	}
+	else if ((m->map[j] & CORRIDOR)
+		|| (m->map[j] & RDOOR) || (m->map[j] & ROOM))
+	{
+		max->map.m[i] = FLOOR1;
+		if (m->pp)
+			ft_random_init_loop_putplayer(max, m, i);
+	}
+}
+
+void	ft_random_init_inits(t_max *max, t_rmap *m)
+{
 	unsigned int	seed;
 
 	seed = time(0);
 	srand(seed);
 	ft_map_init(max, &max->map);
-	map_init(&max->menu.rm, &m);
-	// if (m.width < 3 || m.height < 3 || m.width > 125 || m.height > 125)
-	// 	return (1);
-	// if (m.x < 0 || m.l < 0 || m.t < 0 || m.e < 0 || m.rn < 0 || m.ro < 0
-	// 	|| m.cw < 0 || m.dr < 0)
-	// 	return (4);
-	map_prefill2(&m);
-	map_print("prefilled map", &m);
-	maze_gen2(&m);
-	maze_mod4(&m);
-	map_print("indexed map", &m);
-	add_rooms6(&m);
-	map_print("added and opened rooms", &m);
-	trim_deadends(&m);
-	map_print("???trimmed deadeneds???", &m);
-	map_refill42(&m);
-	map_print("FINAL MAP", &m);
-	map_print2("copy map", &m);
-	i = 0;
-	p = 1;
-	j = 0;
-	max->map.ww = m.w;
+	map_init(&max->menu.rm, m);
+	map_prefill2(m);
+	map_print("prefilled map", m);
+	maze_gen2(m);
+	maze_mod4(m);
+	map_print("indexed map", m);
+	add_rooms6(m);
+	map_print("added and opened rooms", m);
+	trim_deadends(m);
+	map_print("???trimmed deadeneds???", m);
+	map_refill42(m);
+	map_print("FINAL MAP", m);
+	map_print2("copy map", m);
+	m->pp = 1;
+	max->map.ww = m->w;
 	max->map.w = 256;
-	max->map.hh = m.h;
+	max->map.hh = m->h;
 	max->map.h = 256;
-	while (i < 65536)
+}
+
+void	ft_random_init_exit(t_max *max, int i)
+{
+	ft_printf("EXIT: x %x y  %x\n", i % 256, i / 256);
+	max->map.sprites[SPRITE_EXIT].x = (i % 256) << 16 | 0x7FFF;
+	max->map.sprites[SPRITE_EXIT].y = (i / 256) << 16 | 0x7FFF;
+	max->map.m[i] = ((max->map.m[i] & 0xFFFFF0) | EXIT) | 0xFF00FFFF00000000;
+}
+
+void	ft_random_init(t_max *max)
+{
+	t_rmap			m;
+	int				i;
+	int				j;
+
+	i = -1;
+	j = 0;
+	ft_random_init_inits(max, &m);
+	while (++i < 65536)
 	{
 		if (j < m.s && (i % 256 < m.w))
 		{
-			if (m.map[j] & RWALL)
-				max->map.m[i] = WALL1;
-			else if ((m.map[j] & RDOOR_NS))
-			{
-				if (rand() % 2)
-					max->map.m[i] = DOORWEST;
-				else
-					max->map.m[i] = DOOREAST;
-			}
-			else if ((m.map[j] & RDOOR_WE))
-			{
-				if (rand() % 2)
-					max->map.m[i] = DOORNORTH;
-				else
-					max->map.m[i] = DOORSOUTH;
-			}
-			else if ((m.map[j] & CORRIDOR) || (m.map[j] & RDOOR) || (m.map[j] & ROOM))
-			{
-				max->map.m[i] = FLOOR1;
-				if (p)
-				{
-					max->map.p.mx = i % 256;
-					max->map.p.my = i / 256;
-					max->map.p.sx = 0x7f7f;
-					max->map.p.sy = 0x7f7f;
-					max->map.p.smx = i % 256 * 64;
-					max->map.p.smy = i / 256 * 64;
-					if (max->map.p.smx > SUPERMAPWIDTH - SUPERMAPBORDER)
-						max->map.p.smx = SUPERMAPWIDTH - SUPERMAPBORDER;
-					if (max->map.p.smy > SUPERMAPHEIGHT - SUPERMAPBORDER)
-						max->map.p.smy = SUPERMAPHEIGHT - SUPERMAPBORDER;
-					max->map.p.orientation = EAST;
-					max->map.p.unused_x = 0;
-					max->map.p.unused_y = 0;
-					p = 0;
-				}
-			}
-			else if ((m.map[j] & RDOOR_NS))
-			{
-				max->map.m[i] = DOORNORTH;
-			}
-			else if ((m.map[j] & RDOOR_WE))
-			{
-				max->map.m[i] = DOORWEST;
-			}
+			ft_random_init_loop(max, &m, j, i);
 			++j;
 		}
-		++i;
 	}
 	while (--i)
 	{
 		if (max->map.m[i] & FLOOR1)
 		{
-			//colour somestuff floor1
-			// 10011101
-
-			// (10011101 & 0011111) | 0111111
-			
-			// 01011110
-		
-			printf("EXIT: x %x y  %x\n", i % 256, i / 256);
-			max->map.sprites[SPRITE_EXIT].x = (i % 256) << 16 | 0x7FFF;
-			max->map.sprites[SPRITE_EXIT].y = (i / 256) << 16 | 0x7FFF;
-			max->map.m[i] = ((max->map.m[i] & 0xFFFFF0) | EXIT) | 0xFF00FFFF00000000;
+			ft_random_init_exit(max, i);
 			break ;
 		}
+	}
+}
+
+void	ft_place_sprites_inner(t_max *max, int i, int *c)
+{
+	while (i < max->map.w * max->map.h)
+	{
+		if (max->map.m[i] & WALL)
+		{
+			++i;
+			continue ;
+		}
+		if ((max->map.m[i] & FLOOR1)
+			&& (i != (max->map.p.mx + max->map.p.my * max->map.w)))
+		{
+			if (*c && !(rand() % 64))
+			{
+				max->map.sprites[max->map.spritecount].x = (i % 256)
+					<< 16 | 0x7FFF;
+				max->map.sprites[max->map.spritecount].y = (i / 256)
+					<< 16 | 0x7FFF;
+				ft_init_sprites_flamingo(&max->map, max->map.spritecount);
+				--(*c);
+			}
+		}
+		++i;
 	}
 }
 
@@ -1439,30 +1282,10 @@ void	ft_place_sprites(t_max *max)
 	while (c || canary)
 	{
 		i = 0;
-		while (i < max->map.w * max->map.h)
-		{
-			if (max->map.m[i] & WALL)
-			{
-				++i;
-				continue ;
-			}
-			if ((max->map.m[i] & FLOOR1) && (i != (max->map.p.mx + max->map.p.my * max->map.w)))
-			{
-				if (c && !(rand() % 64))
-				{
-					printf("x %i y %i map[%i] %Lx\n", (i % 256), (i / 256), i, max->map.m[i] & FLOOR);
-					max->map.sprites[max->map.spritecount].x = (i % 256) << 16 | 0x7FFF;
-					max->map.sprites[max->map.spritecount].y = (i / 256) << 16 | 0x7FFF;
-					ft_init_sprites_flamingo(&max->map, max->map.spritecount);
-					--c;
-				}
-			}
-			++i;
-		}
+		ft_place_sprites_inner(max, i, &c);
 		--canary;
 	}
 }
-
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -1473,32 +1296,9 @@ int	ft_process_random(t_max *max)
 	map = &max->map;
 	ft_init_sprites(max);
 	ft_random_init(max);
-	// if (!ft_read_map(map))
-	// {
-	// 	ft_freemap(map);
-	// 	return (0);
-	// }
 	ft_fill_randommap(map);
-	//no textures now
-	// if (!ft_init_textures(max))
-	// {
-	// 	ft_freemap(map);
-	// 	return (0);
-	// }
 	ft_init_brume(max);
-	// int i;
-
-	// i = 0;
-	// while (i < 256)
-	// {
-	// 	ft_printf("%i %i", max->math->brumered[255][i], max->map.b.r);
-	// 	ft_printf(" %i %i ", max->math->brumegreen[0][i], max->map.b.g);
-	// 	ft_printf("%i %i\n", max->math->brumeblue[128][i], max->map.b.b);
-	// 	++i;
-	// }
 	ft_place_sprites(max);
-	//for debugging
 	ft_init_time(max);
-	//ft_freemap(map);
 	return (1);
 }

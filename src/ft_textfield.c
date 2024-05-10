@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:33:59 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/12 09:17:12 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:17:21 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,28 @@ void	ft_inittextfields(t_max *max)
 	max->menu.newwritingfields[NAME].x = 600;
 	max->menu.newwritingfields[NAME].y = 160;
 	max->menu.newwritingfields[NAME].text.text = max->name;
-	max->menu.newwritingfields[NAME].text.sx = max->menu.newwritingfields[NAME].x + 80;
-	max->menu.newwritingfields[NAME].text.sy = max->menu.newwritingfields[NAME].y + 50;
+	max->menu.newwritingfields[NAME].text.sx
+		= max->menu.newwritingfields[NAME].x + 80;
+	max->menu.newwritingfields[NAME].text.sy
+		= max->menu.newwritingfields[NAME].y + 50;
 	max->menu.newwritingfields[COALITION] = textfield;
 	max->menu.newwritingfields[COALITION].state = ACTIVE;
 	max->menu.newwritingfields[COALITION].x = 600;
 	max->menu.newwritingfields[COALITION].y = 440;
 	max->menu.newwritingfields[COALITION].text.text = max->coalition;
-	max->menu.newwritingfields[COALITION].text.sx = max->menu.newwritingfields[COALITION].x + 80;
-	max->menu.newwritingfields[COALITION].text.sy = max->menu.newwritingfields[COALITION].y + 50;
+	max->menu.newwritingfields[COALITION].text.sx
+		= max->menu.newwritingfields[COALITION].x + 80;
+	max->menu.newwritingfields[COALITION].text.sy
+		= max->menu.newwritingfields[COALITION].y + 50;
 	max->menu.newwritingfields[CAMPUS] = textfield;
 	max->menu.newwritingfields[CAMPUS].state = ACTIVE;
 	max->menu.newwritingfields[CAMPUS].x = 600;
 	max->menu.newwritingfields[CAMPUS].y = 720;
 	max->menu.newwritingfields[CAMPUS].text.text = max->campus;
-	max->menu.newwritingfields[CAMPUS].text.sx = max->menu.newwritingfields[CAMPUS].x + 80;
-	max->menu.newwritingfields[CAMPUS].text.sy = max->menu.newwritingfields[CAMPUS].y + 50;
+	max->menu.newwritingfields[CAMPUS].text.sx
+		= max->menu.newwritingfields[CAMPUS].x + 80;
+	max->menu.newwritingfields[CAMPUS].text.sy
+		= max->menu.newwritingfields[CAMPUS].y + 50;
 }
 
 void	ft_draw_textfield(t_textfield *tf, int state)
@@ -75,7 +81,6 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 	w = tf->textfield->width;
 	h = tf->textfield->height;
 	j = 0;
-	//draw textfield
 	while (j < h)
 	{
 		i = 0;
@@ -83,7 +88,10 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 		{
 			a = (j * w * 4) + (i * 4);
 			if (i < w && j < h)
-				c = (tf->textfield->pixels[a]) << 24 | (tf->textfield->pixels[a + 1]) << 16 | (tf->textfield->pixels[a + 2]) << 8 | (tf->textfield->pixels[a + 3]);
+				c = (tf->textfield->pixels[a]) << 24
+					| (tf->textfield->pixels[a + 1]) << 16
+					| (tf->textfield->pixels[a + 2]) << 8
+					| (tf->textfield->pixels[a + 3]);
 			else
 				c = 0xFF00FFFF;
 			if (c & 0xFFFFFF00)
@@ -103,19 +111,13 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 		}
 		++j;
 	}
-	//draw text
 	ft_draw_text(&tf->text, state);
 }
 
 void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 {
 	int	i;
-	//int	c;
-	// int	shift;
 
-	// shift = 0;
-	// if (max->keys[MLX_KEY_LEFT_SHIFT] || max->keys[MLX_KEY_RIGHT_SHIFT])
-	// 	shift = -32;
 	i = textfield->text.highlight;
 	if (i < 0)
 	{
@@ -128,27 +130,6 @@ void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 	if (i > 15)
 		i = 15;
 	textfield->text.text[i] = ' ';
-	// if (max->keys[MLX_KEY_LEFT])
-	// {
-	// 	textfield->text.text[i] = '\0';
-	// 	--i;
-	// 	max->keys[MLX_KEY_LEFT] = 0;
-	// }
-	// if (max->keys[MLX_KEY_RIGHT])
-	// {
-	// 	++i;
-	// 	max->keys[MLX_KEY_RIGHT] = 0;
-	// }
-	// if (max->keys[MLX_KEY_UP] && textfield->text.text[i] > ' ')
-	// {
-	// 	--textfield->text.text[i];
-	// 	max->keys[MLX_KEY_UP] = 0;
-	// }
-	// if (max->keys[MLX_KEY_DOWN] && textfield->text.text[i] < '~')
-	// {
-	// 	++textfield->text.text[i];
-	// 	max->keys[MLX_KEY_DOWN] = 0;
-	// }
 	if (max->keys[MLX_KEY_BACKSPACE])
 	{
 		textfield->text.text[i] = '\0';
@@ -157,23 +138,6 @@ void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 		max->keys[MLX_KEY_BACKSPACE] = 0;
 		--i;
 	}
-	// c = 32;
-	// while (c <= 126)
-	// {
-	// 	// if (max->keys[c])
-	// 	// {
-	// 	// 	textfield->text.text[i] = c;
-	// 	// 	if (ft_isupper(c))
-	// 	// 	{
-	// 	// 		textfield->text.text[i] = 32 + c + shift;
-	// 	// 	}
-	// 	// 	if (c == MLX_KEY_MINUS && shift)
-	// 	// 		textfield->text.text[i] = '_';
-	// 	// 	max->keys[c] = 0;
-	// 		++i;
-	// 	}
-	// 	++c;
-	// }
 	if (max->kb.character)
 	{
 		textfield->text.text[i] = max->kb.character;

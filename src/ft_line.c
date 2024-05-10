@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 16:22:39 by okraus            #+#    #+#             */
-/*   Updated: 2024/02/11 16:25:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:15:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ static void	ft_plot_line_low(mlx_image_t *img, t_line l)
 	l.y[2] = l.y[0];
 	while (l.x[2] <= l.x[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
+		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0
+			&& l.y[2] < l.maxheight)
 			mlx_put_pixel(img, l.x[2], l.y[2], ft_mix_colour(l.x, l.y, l.c));
 		if (l.d > 0)
 		{
@@ -103,8 +104,9 @@ static void	ft_plot_line_high(mlx_image_t *img, t_line l)
 	l.y[2] = l.y[0];
 	while (l.y[2] <= l.y[1])
 	{
-		if (l.x[2] > 0 && l.x[2] < l.maxwidth && l.y[2] > 0 && l.y[2] < l.maxheight)
-			mlx_put_pixel(img, l.x[2], l.y[2],ft_mix_colour(l.x, l.y, l.c));
+		if (l.x[2] > 0 && l.x[2] < l.maxwidth
+			&& l.y[2] > 0 && l.y[2] < l.maxheight)
+			mlx_put_pixel(img, l.x[2], l.y[2], ft_mix_colour(l.x, l.y, l.c));
 		if (l.d > 0)
 		{
 			l.x[2] = l.x[2] + l.xi;

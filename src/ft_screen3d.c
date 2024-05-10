@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 10:38:24 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/30 16:37:29 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:39:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static int	ft_capangle(int angle)
 {
 	while (angle < 0)
-			angle += MAXDEGREE; 
+		angle += MAXDEGREE;
 	while (angle >= MAXDEGREE)
-			angle -= MAXDEGREE;
+		angle -= MAXDEGREE;
 	return (angle);
 }
 
@@ -43,21 +43,18 @@ static int	ft_capangle(int angle)
 
 void	ft_init_fogscreen(t_max *max)
 {
-	int	y;
-	int	x;
-	int	r;
+	int				y;
+	int				x;
+	int				r;
 	unsigned int	fogc;
 	unsigned int	foga;
 	long long		length;
 
-		// fake_wall_height = 65536 * SCREENHEIGHT / fake_length;
-	
 	fogc = max->map.b.rgba & 0xFFFFFF00;
 	x = 0;
 	while (x < SCREENWIDTH / 2)
 	{
 		r = x * RAYS / SCREENWIDTH;
-		(void)r;
 		y = 0;
 		while (y < SCREENHEIGHT / 2)
 		{
@@ -65,10 +62,12 @@ void	ft_init_fogscreen(t_max *max)
 			if (max->settings.fisheyecorrection)
 			{
 				length *= 65536;
-				if (max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))] == 0)
+				if (max->math->cos[ft_capangle((max->map.p.orientation
+								- max->map.p.oray[r].ra))] == 0)
 					length /= 1;
 				else
-					length /= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
+					length /= max->math->cos[ft_capangle((max->map.p.orientation
+								- max->map.p.oray[r].ra))];
 			}
 			foga = ((length * 255 / (max->settings.lightdist - 65536)));
 			if (foga > 0xFF)
@@ -82,7 +81,6 @@ void	ft_init_fogscreen(t_max *max)
 		++x;
 	}
 }
-// fake_length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[r].ra))];
 
 static void	ft_put_wall(t_max *max, t_walltexture *wt, mlx_texture_t *t)
 {
@@ -90,18 +88,13 @@ static void	ft_put_wall(t_max *max, t_walltexture *wt, mlx_texture_t *t)
 	int				p;
 
 	wt->v = (t->height * (wt->y - wt->offset) / wt->wall_height);
-	//wt->v = ((t->height * (wt->y - wt->offset)) >> 9);
 	p = (wt->v * t->width * 4) + (4 * wt->u);
 	r.r = t->pixels[p];
 	r.g = t->pixels[p + 1];
 	r.b = t->pixels[p + 2];
 	r.a = 0x0000FF;
 	mlx_put_pixel(max->i.screen, wt->x, wt->y, r.rgba);
-	// (void)t;
-	// (void)x;
-	// mlx_put_pixel(max->i.screen, wt->x, wt->y, 0xFF00FFFF);
 }
-
 
 static void	ft_put_door(t_max *max, t_walltexture *wt, mlx_texture_t *t)
 {
@@ -109,43 +102,13 @@ static void	ft_put_door(t_max *max, t_walltexture *wt, mlx_texture_t *t)
 	int				p;
 
 	wt->v = (t->height * (wt->y - wt->offset) / wt->wall_height);
-	//wt->v = ((t->height * (wt->y - wt->offset)) >> 9);
 	p = (wt->v * t->width * 4) + (4 * wt->u);
 	r.r = t->pixels[p];
 	r.g = t->pixels[p + 1];
 	r.b = t->pixels[p + 2];
 	r.a = 0x0000FF;
 	mlx_put_pixel(max->i.screen, wt->x, wt->y, r.rgba);
-	// (void)t;
-	// (void)x;
-	// mlx_put_pixel(max->i.screen, wt->x, wt->y, 0xFF00FFFF);
 }
-
-// static void	ft_put_inverse_wall(t_max *max, t_walltexture *wt, mlx_texture_t *t, int x)
-// {
-// 	t_clr			r;
-// 	int				h;
-// 	int				w;
-// 	int				p;
-// 	int				xw;
-
-// 	xw = 65536;
-// 	w = t->width;
-// 	h = t->height;
-// 	wt->u = (w * x / xw);
-// 	wt->v = (h * (wt->y - wt->offset) / wt->wall_height);
-// 	p = (wt->v * w * 4) + (4 * wt->u);
-// 	//ft_printf("%i %i\n",(h * y / wh), (w * x / xw));
-// 	r.r = t->pixels[p];
-// 	r.g = t->pixels[p + 1];
-// 	r.b = t->pixels[p + 2];
-// 	r.a = 0x0000FF;
-// 	//r.rgba = () | () | () | ;
-// 	mlx_put_pixel(max->i.screen, wt->x, wt->y, r.rgba);
-// }
-
-// p = w * 4 * (h * y / wh) + (4 * (w * x / xw));
-
 
 void	ft_draw_screen3d(t_max *max)
 {
@@ -158,21 +121,21 @@ void	ft_draw_screen3d(t_max *max)
 	{
 		wt.y = 0;
 		wt.r = wt.x * RAYS / SCREENWIDTH;
-
 		wt.length = max->map.p.oray[wt.r].length;
 		if (max->settings.fisheyecorrection)
 		{
-
-			wt.length *= max->math->cos[ft_capangle((max->map.p.orientation - max->map.p.oray[wt.r].ra))];
+			wt.length *= max->math->cos[ft_capangle((max->map.p.orientation
+						- max->map.p.oray[wt.r].ra))];
 			wt.length /= 65536;
 		}
 		wt.wall_height = 65536 * SCREENHEIGHT / wt.length;
-		if (wt.length > (max->settings.lightdist - 65536) || !max->map.p.oray[wt.r].wall)
+		if (wt.length > (max->settings.lightdist - 65536)
+			|| !max->map.p.oray[wt.r].wall)
 			wt.wall_height = 0;
 		wt.offset = SCREENHEIGHT / 2 - wt.wall_height / 2;
 		wt.wallfog = max->map.b.rgba & 0xFFFFFF00;
-		//BITWISE MAGIC LATER
-		wt.wallfogalpha = ((wt.length * 255 / (max->settings.lightdist - 65536)) & 0xFF);
+		wt.wallfogalpha = ((wt.length * 255 / (max->settings.lightdist - 65536))
+				& 0xFF);
 		while (wt.y < wt.offset)
 		{
 			mlx_put_pixel(max->i.screen, wt.x, wt.y, max->map.c.rgba);
@@ -189,8 +152,9 @@ void	ft_draw_screen3d(t_max *max)
 			while (wt.y < stop)
 			{
 				ft_put_wall(max, &wt, max->t.nwall);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
-				++wt.y;;
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
+				++wt.y;
 			}
 		}
 		else if (max->map.p.oray[wt.r].wall & EWALL)
@@ -200,8 +164,9 @@ void	ft_draw_screen3d(t_max *max)
 			while (wt.y < stop)
 			{
 				ft_put_wall(max, &wt, max->t.ewall);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
-				++wt.y;;
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
+				++wt.y;
 			}
 		}
 		else if (max->map.p.oray[wt.r].wall & SWALL)
@@ -211,8 +176,9 @@ void	ft_draw_screen3d(t_max *max)
 			while (wt.y < stop)
 			{
 				ft_put_wall(max, &wt, max->t.swall);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
-				++wt.y;;
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
+				++wt.y;
 			}
 		}
 		else if (max->map.p.oray[wt.r].wall & WWALL)
@@ -222,8 +188,9 @@ void	ft_draw_screen3d(t_max *max)
 			while (wt.y < stop)
 			{
 				ft_put_wall(max, &wt, max->t.wwall);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
-				++wt.y;;
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
+				++wt.y;
 			}
 		}
 		else if (max->map.p.oray[wt.r].wall & DOORNORTH)
@@ -231,12 +198,14 @@ void	ft_draw_screen3d(t_max *max)
 			x = max->map.p.oray[wt.r].rx % 65536;
 			if (max->map.m[max->map.p.oray[wt.r].mpos] & (DOOREAST | DOORSOUTH))
 				x = 65535 - x;
-			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos] & 0x7F) << 9) | 0x1FF;
+			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos]
+						& 0x7F) << 9) | 0x1FF;
 			wt.u = ((max->t.door->width * x) >> 16);
 			while (wt.y < stop)
 			{
 				ft_put_door(max, &wt, max->t.door);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
 				++wt.y;
 			}
 		}
@@ -245,12 +214,14 @@ void	ft_draw_screen3d(t_max *max)
 			x = max->map.p.oray[wt.r].rx % 65536;
 			if (max->map.m[max->map.p.oray[wt.r].mpos] & (DOOREAST | DOORSOUTH))
 				x = 65535 - x;
-			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos] & 0x7F) << 9) | 0x1FF;
+			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos]
+						& 0x7F) << 9) | 0x1FF;
 			wt.u = ((max->t.door->width * x) >> 16);
 			while (wt.y < stop)
 			{
 				ft_put_door(max, &wt, max->t.door);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
 				++wt.y;
 			}
 		}
@@ -259,12 +230,14 @@ void	ft_draw_screen3d(t_max *max)
 			x = max->map.p.oray[wt.r].ry % 65536;
 			if (max->map.m[max->map.p.oray[wt.r].mpos] & (DOOREAST | DOORSOUTH))
 				x = 65535 - x;
-			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos] & 0x7F) << 9) | 0x1FF;
+			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos]
+						& 0x7F) << 9) | 0x1FF;
 			wt.u = ((max->t.door->width * x) >> 16);
 			while (wt.y < stop)
 			{
 				ft_put_door(max, &wt, max->t.door);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y,
+					wt.wallfog | wt.wallfogalpha);
 				++wt.y;
 			}
 		}
@@ -273,19 +246,21 @@ void	ft_draw_screen3d(t_max *max)
 			x = max->map.p.oray[wt.r].ry % 65536;
 			if (max->map.m[max->map.p.oray[wt.r].mpos] & (DOOREAST | DOORSOUTH))
 				x = 65535 - x;
-			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos] & 0x7F) << 9) | 0x1FF;
+			x += 65535 - ((max->map.doors[max->map.p.oray[wt.r].mpos]
+						& 0x7F) << 9) | 0x1FF;
 			wt.u = ((max->t.door->width * x) >> 16);
 			while (wt.y < stop)
 			{
 				ft_put_door(max, &wt, max->t.door);
-				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog | wt.wallfogalpha);
+				mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, wt.wallfog
+					| wt.wallfogalpha);
 				++wt.y;
 			}
 		}
 		while (wt.y < SCREENHEIGHT)
 		{
 			mlx_put_pixel(max->i.screen, wt.x, wt.y, max->map.f.rgba);
-			mlx_put_pixel(max->i.fogscreen, wt.x, wt.y , max->fog[wt.y][wt.x]);
+			mlx_put_pixel(max->i.fogscreen, wt.x, wt.y, max->fog[wt.y][wt.x]);
 			++wt.y;
 		}
 		++wt.x;

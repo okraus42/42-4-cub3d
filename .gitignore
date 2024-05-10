@@ -56,3 +56,4 @@ dkms.conf
 .MLX42/build/
 .vscode/
 cub3D
+*.swp

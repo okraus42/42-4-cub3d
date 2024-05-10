@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 15:11:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/19 12:52:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:25:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,6 @@ void	ft_init_overlay(t_max *max)
 
 void	ft_clear_overlay(t_max *max)
 {
-	ft_bzero(max->i.overlay->pixels, max->i.overlay->width * max->i.overlay->height * 4);
+	ft_bzero(max->i.overlay->pixels,
+		max->i.overlay->width * max->i.overlay->height * 4);
 }
