@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/09 19:42:57 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 13:29:39 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -883,6 +883,20 @@ void	ft_mousehook(void *param);
 
 //ft_gameplay.c
 void	ft_gameplay(t_max *max);
+void	ft_move_player(t_map *map, int y, int x);
+void	ft_move_player_2(t_map *map, int oldx, int oldy);
+void	ft_init_wc(t_wallcheck *wc, int y, int x);
+int		ft_is_wall(t_map *map, int x, int y);
+void	ft_revisit_map(t_map *map);
+void	ft_discover_full_map(t_map *map);
+void	ft_draw_strings(t_max *max);
+void	ft_discover_map(t_map *map);
+void	ft_game_win(t_max *max);
+void	ft_game_lose(t_max *max);
+void	ft_gameplay_2(t_max *max);
+void	ft_gameplay_3(t_max *max);
+void	ft_gameplay_4(t_max *max);
+void	ft_change_light_dist(t_max *max);
 
 //ft_overlay.c
 void	ft_init_overlay(t_max *max);

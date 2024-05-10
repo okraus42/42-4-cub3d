@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/09 19:32:52 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/10 13:31:44 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,10 @@ MENU_DIR	=	menu/
 BUTTONS_DIR =	buttons/
 HOF_DIR		=   hall_of_fame/
 RAYS_DIR	=	rays/
+DOORS_DIR	=	doors/
+GAME_DIR	=	game/
+GAMEB_DIR	=	game_bonus/
+MINMAP_DIR	=	minimap/
 
 # cub3d functions
 
@@ -75,12 +79,17 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(BUTTONS_DIR)ft_buttons_11.c \
 				$(CUB3D_DIR)ft_cub3d.c \
 				$(CUB3D_DIR)ft_cub3d_2.c \
-				ft_doors.c \
+				$(DOORS_DIR)ft_doors.c \
 				ft_free.c \
-				ft_game.c \
-				ft_game_bonus.c \
-				ft_gameplay.c \
-				ft_gamestart.c \
+				$(GAME_DIR)ft_game.c \
+				$(GAMEB_DIR)ft_game_bonus.c \
+				$(GAME_DIR)ft_gameplay.c \
+				$(GAME_DIR)ft_gameplay_2.c \
+				$(GAME_DIR)ft_gameplay_3.c \
+				$(GAME_DIR)ft_gameplay_4.c \
+				$(GAME_DIR)ft_gameplay_5.c \
+				$(GAME_DIR)ft_gameplay_6.c \
+				$(GAME_DIR)ft_gamestart.c \
 				$(HOF_DIR)ft_halloffame.c \
 				$(HOOK_DIR)ft_hook.c \
 				ft_keyhook.c \
@@ -103,7 +112,7 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(MENU_DIR)ft_menu_14.c \
 				$(MENU_DIR)ft_menu_15.c \
 				$(MENU_DIR)ft_menu_16.c \
-				ft_minimap.c \
+				$(MINMAP_DIR)ft_minimap.c \
 				ft_mousehook.c \
 				ft_overlay.c \
 				$(PARSER_DIR)ft_parser.c \
@@ -188,6 +197,10 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)$(BUTTONS_DIR)
 				@mkdir -p $(OBJ_DIR)$(HOF_DIR)
 				@mkdir -p $(OBJ_DIR)$(RAYS_DIR)
+				@mkdir -p $(OBJ_DIR)$(DOORS_DIR)
+				@mkdir -p $(OBJ_DIR)$(GAME_DIR)
+				@mkdir -p $(OBJ_DIR)$(GAMEB_DIR)
+				@mkdir -p $(OBJ_DIR)$(MINMAP_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)

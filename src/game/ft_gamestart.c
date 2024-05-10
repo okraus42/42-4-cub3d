@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_gamestart.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/01 15:58:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:33:41 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 void	ft_initgamestart(t_max *max)
 {
@@ -41,7 +41,6 @@ void	ft_draw_background(t_max *max)
 	w = max->gamestart.background->width;
 	h = max->gamestart.background->height;
 	y = 0;
-	//draw background
 	while (y < h)
 	{
 		x = 0;
@@ -71,13 +70,11 @@ void	ft_draw_gamechar(t_gametext *text)
 	w = text->height / 2;
 	h = text->height;
 	j = 0;
-	//draw letter
 	while (j < h)
 	{
 		i = 0;
 		while (i < w)
 		{
-			//720 length of png
 			a = (j * (240 / text->height) * 11400 * 4) + ((i * (240 / text->height) + text->offset) * 4);
 			c = (text->font->pixels[a]) << 24 | (text->font->pixels[a + 1]) << 16 | (text->font->pixels[a + 2]) << 8 | (text->font->pixels[a + 3]);
 			if (c < 0x7FFFFFFF)
@@ -88,15 +85,12 @@ void	ft_draw_gamechar(t_gametext *text)
 			{
 				mlx_put_pixel(text->image, i + text->x, j + text->y, text->cb);
 			}
-			// (void)colour;
-			// mlx_put_pixel(image, i + x, j + y, c);
 			++i;
 		}
 		++j;
 	}
 }
 
-//(120) for the width of the character in the font.png
 void	ft_draw_gametext(t_gametext *text)
 {
 	int				i;
@@ -131,7 +125,7 @@ void	ft_draw_gametext(t_gametext *text)
 		{
 			text->offset = (text->text[i] - ' ') * 120;
 			if (text->offset)
-				text->offset -= 2; // add 2 pixels to image
+				text->offset -= 2;
 			ft_draw_gamechar(text);
 			text->x += text->height / 2;
 		}
@@ -166,8 +160,6 @@ void	ft_gamestart(t_max *max)
 		max->keys[MLX_KEY_SPACE] = 0;
 	}
 	ft_draw_gametext(&max->gamestart);
-
-	//launch game after user input
 	if (max->keys[MLX_KEY_ENTER])
 	{
 		max->settings.lightdist = max->settings.maxdist / 4;
@@ -183,7 +175,6 @@ void	ft_gamestart(t_max *max)
 		max->levelms = 0;
 		max->keys[MLX_KEY_ENTER] = 0;
 	}
-	//launch game
 }
 
 void	ft_initgamewon(t_max *max)
@@ -220,9 +211,6 @@ void	ft_gamewon(t_max *max)
 		max->keys[MLX_KEY_SPACE] = 0;
 	}
 	ft_draw_gametext(&max->gamewon);
-
-	//launch game after user input
-	
 	if (max->keys[MLX_KEY_ENTER])
 	{
 		if (max->game_type == ONEMAP)
@@ -285,7 +273,6 @@ void	ft_gamewon(t_max *max)
 			max->keys[MLX_KEY_ENTER] = 0;
 		}
 	}
-	//launch game
 }
 
 
