@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 10:57:06 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 13:33:41 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 17:55:38 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 void	ft_initgamestart(t_max *max)
 {
 	max->gamestart.background = max->t.textbg;
-	max->gamestart.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+	max->gamestart.text = "Lorem ipsum dolor sit amet,\
+	consectetur adipiscing elit, sed do eiusmod tempor incididunt\
+	ut labore et dolore magna aliqua.";
 	max->gamestart.font = max->font.asciitest;
 	max->gamestart.image = max->i.textscreen;
 	max->gamestart.c = 0XFF;
@@ -31,63 +33,82 @@ void	ft_initgamestart(t_max *max)
 
 void	ft_draw_background(t_max *max)
 {
-	int				w;
-	int				h;
-	int				y;
-	int				x;
-	int				a;
-	unsigned int	c;
+	t_dbgs	dbgs;
 
-	w = max->gamestart.background->width;
-	h = max->gamestart.background->height;
-	y = 0;
-	while (y < h)
+	dbgs.w = max->gamestart.background->width;
+	dbgs.h = max->gamestart.background->height;
+	dbgs.y = 0;
+	while (dbgs.y < dbgs.h)
 	{
-		x = 0;
-		while (x < w)
+		dbgs.x = 0;
+		while (dbgs.x < dbgs.w)
 		{
-			a = (y * w * 4) + (x * 4);
-			if (x < w && y < h)
-				c = (max->gamestart.background->pixels[a]) << 24 | (max->gamestart.background->pixels[a + 1]) << 16 | (max->gamestart.background->pixels[a + 2]) << 8 | 0xFF;
+			dbgs.a = (dbgs.y * dbgs.w * 4) + (dbgs.x * 4);
+			if (dbgs.x < dbgs.w && dbgs.y < dbgs.h)
+				dbgs.c = (max->gamestart.background->pixels[dbgs.a]) << 24
+					| (max->gamestart.background->pixels[dbgs.a + 1]) << 16
+					| (max->gamestart.background->pixels[dbgs.a + 2]) << 8
+					| 0xFF;
 			else
-				c = 0xFF00FFFF;
-			mlx_put_pixel(max->i.textscreen, x, y, c);
-			++x;
+				dbgs.c = 0xFF00FFFF;
+			mlx_put_pixel(max->i.textscreen, dbgs.x, dbgs.y, dbgs.c);
+			++dbgs.x;
 		}
-		++y;
+		++dbgs.y;
 	}
+}
+
+void	ft_draw_gamechar_2(t_gametext *text, t_db *db)
+{
+	db->a = (db->j * (240 / text->height) * 11400 * 4)
+		+ ((db->i * (240 / text->height) + text->offset) * 4);
+	db->c = (text->font->pixels[db->a]) << 24
+		| (text->font->pixels[db->a + 1]) << 16
+		| (text->font->pixels[db->a + 2]) << 8
+		| (text->font->pixels[db->a + 3]);
 }
 
 void	ft_draw_gamechar(t_gametext *text)
 {
-	int				w;
-	int				h;
-	int				j;
-	int				i;
-	int				a;
-	unsigned int	c;
+	t_db	db;
 
-	w = text->height / 2;
-	h = text->height;
-	j = 0;
-	while (j < h)
+	db.w = text->height / 2;
+	db.h = text->height;
+	db.j = 0;
+	while (db.j < db.h)
 	{
-		i = 0;
-		while (i < w)
+		db.i = 0;
+		while (db.i < db.w)
 		{
-			a = (j * (240 / text->height) * 11400 * 4) + ((i * (240 / text->height) + text->offset) * 4);
-			c = (text->font->pixels[a]) << 24 | (text->font->pixels[a + 1]) << 16 | (text->font->pixels[a + 2]) << 8 | (text->font->pixels[a + 3]);
-			if (c < 0x7FFFFFFF)
-			{
-				mlx_put_pixel(text->image, i + text->x, j + text->y, text->c);
-			}
+			ft_draw_gamechar_2(text, &db);
+			if (db.c < 0x7FFFFFFF)
+				mlx_put_pixel(text->image, db.i + text->x, db.j
+					+ text->y, text->c);
 			else if (text->cb)
-			{
-				mlx_put_pixel(text->image, i + text->x, j + text->y, text->cb);
-			}
-			++i;
+				mlx_put_pixel(text->image, db.i + text->x, db.j
+					+ text->y, text->cb);
+			++db.i;
 		}
-		++j;
+		++db.j;
+	}
+}
+
+void	ft_draw_gametext_2(t_gametext *text, int i)
+{
+	if (ft_isprint(text->text[i]))
+	{
+		text->offset = (text->text[i] - ' ') * 120;
+		if (text->offset)
+			text->offset -= 2;
+		ft_draw_gamechar(text);
+		text->x += text->height / 2;
+	}
+	else if (text->text[i] == '\t')
+		text->x += text->height * 2;
+	else if (text->text[i] == '\n')
+	{
+		text->y += text->height;
+		text->x = text->sx;
 	}
 }
 
@@ -102,14 +123,9 @@ void	ft_draw_gametext(t_gametext *text)
 	text->y = text->sy;
 	while (text->text[i])
 	{
+		text->cb = oldcb;
 		if (i == text->highlight)
-		{
 			text->cb = 0x00FF00FF;
-		}
-		else
-		{
-			text->cb = oldcb;
-		}
 		if (i > text->i)
 			return ;
 		if (text->x > 1920 - 200 - text->height / 2)
@@ -118,35 +134,32 @@ void	ft_draw_gametext(t_gametext *text)
 			text->x = text->sx;
 		}
 		if (text->y > 1080 - 100 - text->height)
-		{
 			return ;
-		}
-		if (ft_isprint(text->text[i]))
-		{
-			text->offset = (text->text[i] - ' ') * 120;
-			if (text->offset)
-				text->offset -= 2;
-			ft_draw_gamechar(text);
-			text->x += text->height / 2;
-		}
-		else if (text->text[i] == '\t')
-		{
-			text->x += text->height * 2;
-		}
-		else if (text->text[i] == '\n')
-		{
-			text->y += text->height;
-			text->x = text->sx;
-		}
+		ft_draw_gametext_2(text, i);
 		++i;
 	}
 	text->cb = oldcb;
 }
 
+void	ft_gamestart_2(t_max *max)
+{
+	max->settings.lightdist = max->settings.maxdist / 4;
+	max->game_mode = GAMEPLAY;
+	ft_init_rayangles(max);
+	ft_init_orays(max);
+	ft_init_fogscreen(max);
+	max->i.textscreen->enabled = 0;
+	max->i.maximap->enabled = 0;
+	max->i.overlay->enabled = 1;
+	max->game_in_progress = 1;
+	max->gamestart.i = 0;
+	max->levelms = 0;
+	max->keys[MLX_KEY_ENTER] = 0;
+}
+
 void	ft_gamestart(t_max *max)
 {
 	max->gamestart.timems += max->framems;
-
 	ft_draw_background(max);
 	if (max->gamestart.timems >= 25)
 	{
@@ -161,20 +174,7 @@ void	ft_gamestart(t_max *max)
 	}
 	ft_draw_gametext(&max->gamestart);
 	if (max->keys[MLX_KEY_ENTER])
-	{
-		max->settings.lightdist = max->settings.maxdist / 4;
-		max->game_mode = GAMEPLAY;
-		ft_init_rayangles(max);
-		ft_init_orays(max);
-		ft_init_fogscreen(max);
-		max->i.textscreen->enabled = 0;
-		max->i.maximap->enabled = 0;
-		max->i.overlay->enabled = 1;
-		max->game_in_progress = 1;
-		max->gamestart.i = 0;
-		max->levelms = 0;
-		max->keys[MLX_KEY_ENTER] = 0;
-	}
+		ft_gamestart_2(max);
 }
 
 void	ft_initgamewon(t_max *max)
@@ -275,7 +275,6 @@ void	ft_gamewon(t_max *max)
 	}
 }
 
-
 void	ft_initgamelost(t_max *max)
 {
 	max->gamelost.background = max->gamestart.background;
@@ -297,7 +296,6 @@ void	ft_initgamelost(t_max *max)
 void	ft_gamelost(t_max *max)
 {
 	max->gamelost.timems += max->framems;
-
 	ft_draw_background(max);
 	if (max->gamelost.timems >= 25)
 	{

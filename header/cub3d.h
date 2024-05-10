@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 13:29:39 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/10 17:33:10 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -684,6 +684,17 @@ typedef struct s_db
 	int				a;
 	unsigned int	c;
 } t_db;
+
+typedef	struct	s_dbgs
+{
+	int				w;
+	int				h;
+	int				y;
+	int				x;
+	int				a;
+	unsigned int	c;
+} t_dbgs;
+
 
 // PROTOTYPES
 
