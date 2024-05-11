@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 16:25:26 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 16:53:53 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,16 @@ typedef struct s_wallcheck
 	int	ex;
 	int	wx;
 }	t_wallcheck;
+
+typedef struct s_fogscreen
+{
+	int				y;
+	int				x;
+	int				r;
+	unsigned int	fogc;
+	unsigned int	foga;
+	long long		length;
+}	t_fs;
 
 typedef struct s_walltexture
 {
@@ -852,7 +862,7 @@ typedef struct s_dbgs
 	unsigned int	c;
 }	t_dbgs;
 
-typedef	struct s_dminmap
+typedef struct s_dminmap
 {
 	int	y;
 	int	x;
@@ -1045,7 +1055,6 @@ void		ft_draw_gamechar(t_gametext *text);
 void		ft_gamestart(t_max *max);
 void		ft_gamewon_init(t_max *max);
 void		ft_gamewon_timetrial(t_max *max);
-
 
 //ft_hook.c
 void		ft_hook(void *param);

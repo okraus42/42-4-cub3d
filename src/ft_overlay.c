@@ -6,26 +6,31 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 15:11:48 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:25:25 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 17:20:42 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/cub3d.h"
 
+void	ft_init_overlay_text(t_max *max, t_text *text)
+{
+	text->font = max->t.font;
+	text->image = max->i.overlay;
+	text->c = 0XFFFFFFFF;
+	text->cb = 0x7F;
+	text->sx = 10;
+	text->sy = 10;
+	text->x = 0;
+	text->y = 0;
+	text->height = 30;
+	text->highlight = -1;
+}
+
 void	ft_init_overlay(t_max *max)
 {
 	t_text	text;
 
-	text.font = max->t.font;
-	text.image = max->i.overlay;
-	text.c = 0XFFFFFFFF;
-	text.cb = 0x7F;
-	text.sx = 10;
-	text.sy = 10;
-	text.x = 0;
-	text.y = 0;
-	text.height = 30;
-	text.highlight = -1;
+	ft_init_overlay_text(max, &text);
 	max->overlay.basicinfo = text;
 	max->overlay.basicinfo.text = max->overlay.basicinfo.str;
 	text.sy = 50;

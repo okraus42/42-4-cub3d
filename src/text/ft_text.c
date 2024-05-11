@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_text.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 15:32:06 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 16:52:08 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,29 @@
 
 void	ft_draw_char(t_text *text)
 {
-	int				w;
-	int				h;
-	int				j;
-	int				i;
-	int				a;
-	unsigned int	c;
+	t_db	dc;
 
-	w = text->height / 2;
-	h = text->height;
-	j = 0;
-	while (j < h)
+	dc.w = text->height / 2;
+	dc.h = text->height;
+	dc.j = 0;
+	while (dc.j < dc.h)
 	{
-		i = 0;
-		while (i < w)
+		dc.i = 0;
+		while (dc.i < dc.w)
 		{
-			a = (j * (240 / text->height) * 11400 * 4)
-				+ ((i * (240 / text->height) + text->offset) * 4);
-			c = (text->font->pixels[a]) << 24
-				| (text->font->pixels[a + 1]) << 16
-				| (text->font->pixels[a + 2]) << 8
-				| (text->font->pixels[a + 3]);
-			if (c < 0x7FFFFFFF)
-				mlx_put_pixel(text->image, i + text->x, j + text->y, text->c);
+			dc.a = (dc.j * (240 / text->height) * 11400 * 4)
+				+ ((dc.i * (240 / text->height) + text->offset) * 4);
+			dc.c = (text->font->pixels[dc.a]) << 24
+				| (text->font->pixels[dc.a + 1]) << 16
+				| (text->font->pixels[dc.a + 2]) << 8
+				| (text->font->pixels[dc.a + 3]);
+			if (dc.c < 0x7FFFFFFF)
+				mlx_put_pixel(text->image, dc.i + text->x, dc.j + text->y, text->c);
 			else if (text->cb)
-				mlx_put_pixel(text->image, i + text->x, j + text->y, text->cb);
-			++i;
+				mlx_put_pixel(text->image, dc.i + text->x, dc.j + text->y, text->cb);
+			++dc.i;
 		}
-		++j;
+		++dc.j;
 	}
 }
 

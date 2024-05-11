@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 13:06:49 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 17:50:43 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,87 +19,62 @@ void	ft_process_keylocks(t_max *max)
 
 // ft process modifiers? 
 
-void	ft_process_input(t_max *max)
+void	ft_process_input_shift_2(t_max *max, int c)
+{
+	if (c == MLX_KEY_5)
+		max->kb.character = '%';
+	else if (c == MLX_KEY_6)
+		max->kb.character = '^';
+	else if (c == MLX_KEY_7)
+		max->kb.character = '&';
+	else if (c == MLX_KEY_8)
+		max->kb.character = '*';
+	else if (c == MLX_KEY_9)
+		max->kb.character = '(';
+	else if (c == MLX_KEY_SEMICOLON)
+		max->kb.character = ':';
+	else if (c == MLX_KEY_EQUAL)
+		max->kb.character = '+';
+	else if (c == MLX_KEY_LEFT_BRACKET)
+		max->kb.character = '{';
+	else if (c == MLX_KEY_BACKSLASH)
+		max->kb.character = '|';
+	else if (c == MLX_KEY_RIGHT_BRACKET)
+		max->kb.character = '}';
+	else if (c == MLX_KEY_GRAVE_ACCENT)
+		max->kb.character = '~';
+}
+
+void	ft_process_input_shift(t_max *max, int c)
+{
+	if (c == MLX_KEY_APOSTROPHE)
+		max->kb.character = '"';
+	else if (c == MLX_KEY_COMMA)
+		max->kb.character = '<';
+	else if (c == MLX_KEY_MINUS)
+		max->kb.character = '_';
+	else if (c == MLX_KEY_PERIOD)
+		max->kb.character = '>';
+	else if (c == MLX_KEY_SLASH)
+		max->kb.character = '?';
+	else if (c == MLX_KEY_0)
+		max->kb.character = ')';
+	else if (c == MLX_KEY_1)
+		max->kb.character = '!';
+	else if (c == MLX_KEY_2)
+		max->kb.character = '@';
+	else if (c == MLX_KEY_3)
+		max->kb.character = '#';
+	else if (c == MLX_KEY_4)
+		max->kb.character = '$';
+	else
+		ft_process_input_shift_2(max, c);
+}
+
+void	ft_process_input_numpad_2(t_max *max)
 {
 	int	c;
 
-	max->kb.character = 0;
-	if (max->keys[MLX_KEY_LEFT_SHIFT] | max->keys[MLX_KEY_RIGHT_SHIFT])
-		max->kb.shift = 1;
-	else
-		max->kb.shift = 0;
-	c = ' ';
-	while (c <= 126 && !(max->kb.character))
-	{
-		if (max->keys[c])
-		{
-			max->kb.character = c;
-			if (ft_isupper(c))
-			{
-				if (max->kb.shift)
-					max->kb.character = c;
-				else
-					max->kb.character = 32 | c;
-				if (max->kb.caps_lock)
-					max->kb.character ^= 32;
-			}
-			else if (max->kb.shift)
-			{
-				if (c == MLX_KEY_APOSTROPHE)
-					max->kb.character = '"';
-				else if (c == MLX_KEY_COMMA)
-					max->kb.character = '<';
-				else if (c == MLX_KEY_MINUS)
-					max->kb.character = '_';
-				else if (c == MLX_KEY_PERIOD)
-					max->kb.character = '>';
-				else if (c == MLX_KEY_SLASH)
-					max->kb.character = '?';
-				else if (c == MLX_KEY_0)
-					max->kb.character = ')';
-				else if (c == MLX_KEY_1)
-					max->kb.character = '!';
-				else if (c == MLX_KEY_2)
-					max->kb.character = '@';
-				else if (c == MLX_KEY_3)
-					max->kb.character = '#';
-				else if (c == MLX_KEY_4)
-					max->kb.character = '$';
-				else if (c == MLX_KEY_5)
-					max->kb.character = '%';
-				else if (c == MLX_KEY_6)
-					max->kb.character = '^';
-				else if (c == MLX_KEY_7)
-					max->kb.character = '&';
-				else if (c == MLX_KEY_8)
-					max->kb.character = '*';
-				else if (c == MLX_KEY_9)
-					max->kb.character = '(';
-				else if (c == MLX_KEY_SEMICOLON)
-					max->kb.character = ':';
-				else if (c == MLX_KEY_EQUAL)
-					max->kb.character = '+';
-				else if (c == MLX_KEY_LEFT_BRACKET)
-					max->kb.character = '{';
-				else if (c == MLX_KEY_BACKSLASH)
-					max->kb.character = '|';
-				else if (c == MLX_KEY_RIGHT_BRACKET)
-					max->kb.character = '}';
-				else if (c == MLX_KEY_GRAVE_ACCENT)
-					max->kb.character = '~';
-			}
-			max->keys[c] = 0;
-		}
-		++c;
-	}
-	if (max->keys[ISO_KEY_BACKSLASH] && !(max->kb.character))
-	{
-		if (max->kb.shift)
-			max->kb.character = '|';
-		else
-			max->kb.character = '\\';
-		max->keys[ISO_KEY_BACKSLASH] = 0;
-	}
 	c = 320;
 	while (c <= 329 && !(max->kb.character) && !(max->kb.character))
 	{
@@ -120,6 +95,11 @@ void	ft_process_input(t_max *max)
 		max->kb.character = '/';
 		max->keys[MLX_KEY_KP_DIVIDE] = 0;
 	}
+}
+
+void	ft_process_input_numpad(t_max *max)
+{
+	ft_process_input_numpad_2(max);
 	if (max->keys[MLX_KEY_KP_MULTIPLY] && !(max->kb.character))
 	{
 		max->kb.character = '*';
@@ -140,6 +120,52 @@ void	ft_process_input(t_max *max)
 		max->kb.character = '=';
 		max->keys[MLX_KEY_KP_EQUAL] = 0;
 	}
+}
+
+void	ft_process_input_loop(t_max *max)
+{
+	int	c;
+
+	c = ' ';
+	while (c <= 126 && !(max->kb.character))
+	{
+		if (max->keys[c])
+		{
+			max->kb.character = c;
+			if (ft_isupper(c))
+			{
+				if (max->kb.shift)
+					max->kb.character = c;
+				else
+					max->kb.character = 32 | c;
+				if (max->kb.caps_lock)
+					max->kb.character ^= 32;
+			}
+			else if (max->kb.shift)
+				ft_process_input_shift(max, c);
+			max->keys[c] = 0;
+		}
+		++c;
+	}
+}
+
+void	ft_process_input(t_max *max)
+{
+	max->kb.character = 0;
+	if (max->keys[MLX_KEY_LEFT_SHIFT] | max->keys[MLX_KEY_RIGHT_SHIFT])
+		max->kb.shift = 1;
+	else
+		max->kb.shift = 0;
+	ft_process_input_loop(max);
+	if (max->keys[ISO_KEY_BACKSLASH] && !(max->kb.character))
+	{
+		if (max->kb.shift)
+			max->kb.character = '|';
+		else
+			max->kb.character = '\\';
+		max->keys[ISO_KEY_BACKSLASH] = 0;
+	}
+	ft_process_input_numpad(max);
 }
 
 void	ft_menuhook(t_max *max)

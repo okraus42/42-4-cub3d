@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 12:34:36 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:21:09 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 16:43:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,30 @@ void	ft_clear_keys(t_max *max)
 	}
 }
 
+void	ft_esc_handler(t_max *max)
+{
+	if (max->game_mode == GAMEPLAY && max->bonus)
+	{
+		max->game_mode = MENU;
+		max->menu.current_button[0] = RESUME;
+		max->menu.current_buttongroup = MAINBUTTONS;
+		max->i.menuscreen->enabled = 1;
+		max->i.overlay->enabled = 0;
+	}
+	else if (max->game_mode == GAMESTART || max->game_mode == GAMEWON)
+	{
+		max->game_mode = MENU;
+		max->menu.current_button[0] = NEWGAME;
+		max->menu.current_buttongroup = MAINBUTTONS;
+		max->i.menuscreen->enabled = 1;
+		max->i.textscreen->enabled = 0;
+	}
+	else if (max->game_mode == MENU && max->game_in_progress)
+		ft_resume(max);
+	else
+		mlx_close_window(max->mlx);
+}
+
 // add function to open menu
 void	ft_keyhook(mlx_key_data_t keydata, void *param)
 {
@@ -155,34 +179,7 @@ void	ft_keyhook(mlx_key_data_t keydata, void *param)
 	max = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
-		if (max->game_mode == GAMEPLAY && max->bonus)
-		{
-			max->game_mode = MENU;
-			max->menu.current_button[0] = RESUME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.overlay->enabled = 0;
-		}
-		else if (max->game_mode == GAMESTART)
-		{
-			max->game_mode = MENU;
-			max->menu.current_button[0] = NEWGAME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.textscreen->enabled = 0;
-		}
-		else if (max->game_mode == GAMEWON)
-		{
-			max->game_mode = MENU;
-			max->menu.current_button[0] = NEWGAME;
-			max->menu.current_buttongroup = MAINBUTTONS;
-			max->i.menuscreen->enabled = 1;
-			max->i.textscreen->enabled = 0;
-		}
-		else if (max->game_mode == MENU && max->game_in_progress)
-			ft_resume(max);
-		else
-			mlx_close_window(max->mlx);
+		ft_esc_handler(max);
 	}
 	if (keydata.key < 350 && keydata.action == MLX_PRESS)
 		max->keys[keydata.key] = 1;

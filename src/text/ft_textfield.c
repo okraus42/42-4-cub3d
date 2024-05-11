@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_textfield.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:33:59 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 15:32:09 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 16:52:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,46 +70,41 @@ void	ft_inittextfields(t_max *max)
 
 void	ft_draw_textfield(t_textfield *tf, int state)
 {
-	int				w;
-	int				h;
-	int				j;
-	int				i;
-	int				a;
-	unsigned int	c;
+	t_db	dt;
 
 	tf->state = state;
-	w = tf->textfield->width;
-	h = tf->textfield->height;
-	j = 0;
-	while (j < h)
+	dt.w = tf->textfield->width;
+	dt.h = tf->textfield->height;
+	dt.j = 0;
+	while (dt.j < dt.h)
 	{
-		i = 0;
-		while (i < w)
+		dt.i = 0;
+		while (dt.i < dt.w)
 		{
-			a = (j * w * 4) + (i * 4);
-			if (i < w && j < h)
-				c = (tf->textfield->pixels[a]) << 24
-					| (tf->textfield->pixels[a + 1]) << 16
-					| (tf->textfield->pixels[a + 2]) << 8
-					| (tf->textfield->pixels[a + 3]);
+			dt.a = (dt.j * dt.w * 4) + (dt.i * 4);
+			if (dt.i < dt.w && dt.j < dt.h)
+				dt.c = (tf->textfield->pixels[dt.a]) << 24
+					| (tf->textfield->pixels[dt.a + 1]) << 16
+					| (tf->textfield->pixels[dt.a + 2]) << 8
+					| (tf->textfield->pixels[dt.a + 3]);
 			else
-				c = 0xFF00FFFF;
-			if (c & 0xFFFFFF00)
+				dt.c = 0xFF00FFFF;
+			if (dt.c & 0xFFFFFF00)
 			{
 				if (state & INACTIVE)
-					mlx_put_pixel(tf->image, i + tf->x, j + tf->y, C_INACTIVE);
+					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_INACTIVE);
 				else if (state & ACTIVE)
-					mlx_put_pixel(tf->image, i + tf->x, j + tf->y, C_ACTIVE);
+					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVE);
 				else if (state & SELECTED)
-					mlx_put_pixel(tf->image, i + tf->x, j + tf->y, C_SELECTED);
+					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_SELECTED);
 				else if (state & ACTIVATED)
-					mlx_put_pixel(tf->image, i + tf->x, j + tf->y, C_ACTIVATED);
+					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVATED);
 			}
-			else if ((c & 0xFF) == 0xFF)
-				mlx_put_pixel(tf->image, i + tf->x, j + tf->y, c);
-			++i;
+			else if ((dt.c & 0xFF) == 0xFF)
+				mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, dt.c);
+			++dt.i;
 		}
-		++j;
+		++dt.j;
 	}
 	ft_draw_text(&tf->text, state);
 }
