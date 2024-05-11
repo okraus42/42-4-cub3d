@@ -6,40 +6,41 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:33:59 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 16:52:06 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 19:32:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/cub3d.h"
 
-void	ft_inittextfields(t_max *max)
+void	ft_inittextfields_init(t_max *max, t_textfield *textfield, t_text *text)
 {
-	t_textfield	textfield;
-	t_text		text;
+	text->font = max->font.asciitest;
+	text->image = max->i.menuscreen;
+	text->text = "";
+	text->c = 0XFF;
+	text->cb = 0;
+	text->sx = 0;
+	text->sy = 0;
+	text->x = 0;
+	text->y = 0;
+	text->height = 60;
+	text->highlight = -1;
+	text->i = 0;
+	text->offset = 0;
+	textfield->textfield = max->menu.textfield;
+	textfield->image = max->i.menuscreen;
+	textfield->text = *text;
+	textfield->c = C_INACTIVE;
+	textfield->x = 200;
+	textfield->y = 0;
+	textfield->w = 350;
+	textfield->h = 150;
+	textfield->state = INACTIVE;
+}
 
-	text.font = max->font.asciitest;
-	text.image = max->i.menuscreen;
-	text.text = "";
-	text.c = 0XFF;
-	text.cb = 0;
-	text.sx = 0;
-	text.sy = 0;
-	text.x = 0;
-	text.y = 0;
-	text.height = 60;
-	text.highlight = -1;
-	text.i = 0;
-	text.offset = 0;
-	textfield.textfield = max->menu.textfield;
-	textfield.image = max->i.menuscreen;
-	textfield.text = text;
-	textfield.c = C_INACTIVE;
-	textfield.x = 200;
-	textfield.y = 0;
-	textfield.w = 350;
-	textfield.h = 150;
-	textfield.state = INACTIVE;
-	max->menu.newwritingfields[NAME] = textfield;
+void	ft_inittextfields_init_name(t_max *max, t_textfield *textfield)
+{
+	max->menu.newwritingfields[NAME] = *textfield;
 	max->menu.newwritingfields[NAME].state = ACTIVE;
 	max->menu.newwritingfields[NAME].x = 600;
 	max->menu.newwritingfields[NAME].y = 160;
@@ -48,6 +49,15 @@ void	ft_inittextfields(t_max *max)
 		= max->menu.newwritingfields[NAME].x + 80;
 	max->menu.newwritingfields[NAME].text.sy
 		= max->menu.newwritingfields[NAME].y + 50;
+}
+
+void	ft_inittextfields(t_max *max)
+{
+	t_textfield	textfield;
+	t_text		text;
+
+	ft_inittextfields_init(max, &textfield, &text);
+	ft_inittextfields_init_name(max, &textfield);
 	max->menu.newwritingfields[COALITION] = textfield;
 	max->menu.newwritingfields[COALITION].state = ACTIVE;
 	max->menu.newwritingfields[COALITION].x = 600;
@@ -68,6 +78,31 @@ void	ft_inittextfields(t_max *max)
 		= max->menu.newwritingfields[CAMPUS].y + 50;
 }
 
+void	ft_draw_textfield_inner(t_textfield *tf, int state, t_db dt)
+{
+	dt.a = (dt.j * dt.w * 4) + (dt.i * 4);
+	if (dt.i < dt.w && dt.j < dt.h)
+		dt.c = (tf->textfield->pixels[dt.a]) << 24
+			| (tf->textfield->pixels[dt.a + 1]) << 16
+			| (tf->textfield->pixels[dt.a + 2]) << 8
+			| (tf->textfield->pixels[dt.a + 3]);
+	else
+		dt.c = 0xFF00FFFF;
+	if (dt.c & 0xFFFFFF00)
+	{
+		if (state & INACTIVE)
+			mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_INACTIVE);
+		else if (state & ACTIVE)
+			mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVE);
+		else if (state & SELECTED)
+			mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_SELECTED);
+		else if (state & ACTIVATED)
+			mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVATED);
+	}
+	else if ((dt.c & 0xFF) == 0xFF)
+		mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, dt.c);
+}
+
 void	ft_draw_textfield(t_textfield *tf, int state)
 {
 	t_db	dt;
@@ -81,27 +116,7 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 		dt.i = 0;
 		while (dt.i < dt.w)
 		{
-			dt.a = (dt.j * dt.w * 4) + (dt.i * 4);
-			if (dt.i < dt.w && dt.j < dt.h)
-				dt.c = (tf->textfield->pixels[dt.a]) << 24
-					| (tf->textfield->pixels[dt.a + 1]) << 16
-					| (tf->textfield->pixels[dt.a + 2]) << 8
-					| (tf->textfield->pixels[dt.a + 3]);
-			else
-				dt.c = 0xFF00FFFF;
-			if (dt.c & 0xFFFFFF00)
-			{
-				if (state & INACTIVE)
-					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_INACTIVE);
-				else if (state & ACTIVE)
-					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVE);
-				else if (state & SELECTED)
-					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_SELECTED);
-				else if (state & ACTIVATED)
-					mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, C_ACTIVATED);
-			}
-			else if ((dt.c & 0xFF) == 0xFF)
-				mlx_put_pixel(tf->image, dt.i + tf->x, dt.j + tf->y, dt.c);
+			ft_draw_textfield_inner(tf, state, dt);
 			++dt.i;
 		}
 		++dt.j;
@@ -109,21 +124,26 @@ void	ft_draw_textfield(t_textfield *tf, int state)
 	ft_draw_text(&tf->text, state);
 }
 
+void	ft_write_in_textfield_init(t_textfield *textfield, int *i)
+{
+	if (*i < 0)
+	{
+		*i = 0;
+		while (textfield->text.text[*i])
+			++*i;
+	}
+	if (*i < 0)
+		*i = 0;
+	if (*i > 15)
+		*i = 15;
+}
+
 void	ft_write_in_textfield(t_max *max, t_textfield *textfield)
 {
 	int	i;
 
 	i = textfield->text.highlight;
-	if (i < 0)
-	{
-		i = 0;
-		while (textfield->text.text[i])
-			++i;
-	}
-	if (i < 0)
-		i = 0;
-	if (i > 15)
-		i = 15;
+	ft_write_in_textfield_init(textfield, &i);
 	textfield->text.text[i] = ' ';
 	if (max->keys[MLX_KEY_BACKSPACE])
 	{

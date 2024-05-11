@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 16:52:08 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 19:20:18 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void	ft_draw_char(t_text *text)
 
 	dc.w = text->height / 2;
 	dc.h = text->height;
-	dc.j = 0;
-	while (dc.j < dc.h)
+	dc.j = -1;
+	while (++dc.j < dc.h)
 	{
-		dc.i = 0;
-		while (dc.i < dc.w)
+		dc.i = -1;
+		while (++dc.i < dc.w)
 		{
 			dc.a = (dc.j * (240 / text->height) * 11400 * 4)
 				+ ((dc.i * (240 / text->height) + text->offset) * 4);
@@ -31,28 +31,20 @@ void	ft_draw_char(t_text *text)
 				| (text->font->pixels[dc.a + 2]) << 8
 				| (text->font->pixels[dc.a + 3]);
 			if (dc.c < 0x7FFFFFFF)
-				mlx_put_pixel(text->image, dc.i + text->x, dc.j + text->y, text->c);
+				mlx_put_pixel(text->image,
+					dc.i + text->x, dc.j + text->y, text->c);
 			else if (text->cb)
-				mlx_put_pixel(text->image, dc.i + text->x, dc.j + text->y, text->cb);
-			++dc.i;
+				mlx_put_pixel(text->image,
+					dc.i + text->x, dc.j + text->y, text->cb);
 		}
-		++dc.j;
 	}
 }
 
-void	ft_draw_text(t_text *text, int state)
+void	ft_draw_text_loop(t_text *text, unsigned int oldcb)
 {
-	int				i;
-	unsigned int	oldcb;
-	unsigned int	oldc;
+	int	i;
 
-	oldcb = text->cb;
-	oldc = text->c;
-	if (state & INACTIVE)
-		text->c = 0x666666FF;
 	i = 0;
-	text->x = text->sx;
-	text->y = text->sy;
 	while (text->text[i])
 	{
 		if (i == text->highlight)
@@ -74,6 +66,20 @@ void	ft_draw_text(t_text *text, int state)
 		}
 		++i;
 	}
+}
+
+void	ft_draw_text(t_text *text, int state)
+{
+	unsigned int	oldcb;
+	unsigned int	oldc;
+
+	oldcb = text->cb;
+	oldc = text->c;
+	if (state & INACTIVE)
+		text->c = 0x666666FF;
+	text->x = text->sx;
+	text->y = text->sy;
+	ft_draw_text_loop(text, oldcb);
 	text->cb = oldcb;
 	text->c = oldc;
 }
