@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_game_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 14:36:00 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 11:24:49 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 10:21:55 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,15 +181,16 @@ void	ft_amaze_bonus(t_max *max)
 	/*                         */
 	/* MOVE OR COPY TO FT EXIT */
 	/* vvvvvvvvvvvvvvvvvvvvvvv */
-	if (max->t.nwall)
-		mlx_delete_texture(max->t.nwall);
-	if (max->t.ewall)
-		mlx_delete_texture(max->t.ewall);
-	if (max->t.swall)
-		mlx_delete_texture(max->t.swall);
-	if (max->t.wwall)
-		mlx_delete_texture(max->t.wwall);
-	mlx_terminate(max->mlx);
+	// if (max->t.nwall)
+	// 	mlx_delete_texture(max->t.nwall);
+	// if (max->t.ewall)
+	// 	mlx_delete_texture(max->t.ewall);
+	// if (max->t.swall)
+	// 	mlx_delete_texture(max->t.swall);
+	// if (max->t.wwall)
+	// 	mlx_delete_texture(max->t.wwall);
+	// mlx_terminate(max->mlx);
+	ft_exit(max, 0);
 	/* ^^^^^^^^^^^^^^^^^^^^^^^ */
 	/* MOVE OR COPY TO FT EXIT */
 	/*                         */

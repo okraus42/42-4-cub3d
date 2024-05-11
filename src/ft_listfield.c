@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:23:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 10:31:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,7 @@ void	ft_bigreinitlistfield(t_max *max)
 	max->menu.custommap.text[max->menu.custommap.highlight].cb = 0;
 	max->menu.custommap.text[max->menu.custommap.highlight].c = 0x00FF00FF;
 	if (max->menu.custommap.files)
-	{
 		ft_free_split(&max->menu.custommap.files);
-	}
 	max->menu.custommap.files = ft_readdir(max->menu.custommap.dir, ".cub");
 	max->menu.custommap.highlight = 0;
 	max->menu.custommap.topfile = 0;
@@ -149,9 +147,7 @@ void	ft_bigreinitlistfield(t_max *max)
 		++i;
 	}
 	if (max->menu.saves.files)
-	{
 		ft_free_split(&max->menu.saves.files);
-	}
 	max->menu.saves.text[max->menu.saves.highlight].cb = 0;
 	max->menu.saves.text[max->menu.saves.highlight].c = 0x00FF00FF;
 	max->menu.saves.files = ft_readdir(max->menu.saves.dir, ".ft");
@@ -178,9 +174,7 @@ void	ft_bigreinitlistfield(t_max *max)
 		++i;
 	}
 	if (max->menu.loads.files)
-	{
 		ft_free_split(&max->menu.loads.files);
-	}
 	max->menu.loads.text[max->menu.loads.highlight].cb = 0;
 	max->menu.loads.text[max->menu.loads.highlight].c = 0x00FF00FF;
 	max->menu.loads.files = ft_readdir(max->menu.loads.dir, ".ft");
