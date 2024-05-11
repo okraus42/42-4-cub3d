@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:08:20 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:40:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 13:06:49 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_process_input(t_max *max)
 		max->kb.shift = 1;
 	else
 		max->kb.shift = 0;
-	//ditto ctrl alt
 	c = ' ';
 	while (c <= 126 && !(max->kb.character))
 	{
@@ -145,14 +144,6 @@ void	ft_process_input(t_max *max)
 
 void	ft_menuhook(t_max *max)
 {
-	
-	// if (mlx_is_key_down(max->mlx, MLX_KEY_ESCAPE))
-	// {
-	// 	max->game_mode = GAMEPLAY;
-	// 	max->menuscreen->enabled = 0;
-	// 	// ft_printf("You have quit the game by pressing ESC.\n");
-	// 	// mlx_close_window(max->mlx);
-	// }
 	ft_process_keylocks(max);
 	if (max->menu.current_buttongroup == NEWWRITING)
 		ft_process_input(max);
@@ -193,7 +184,6 @@ void	ft_hook(void *param)
 	max->newms = ft_get_time_in_ms();
 	max->framems = (unsigned int)(max->newms - max->oldms);
 	max->oldms = max->newms;
-	//ft_clear_overlay(max);
 	if (max->game_mode == MENU)
 		ft_menuhook(max);
 	else if (max->game_mode == GAMESTART)

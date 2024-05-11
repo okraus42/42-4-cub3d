@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:00:54 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 10:31:11 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 13:22:41 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,10 @@ void	ft_draw_listfield(t_listfield *lf, int state)
 		{
 			a = (j * w * 4) + (i * 4);
 			if (i < w && j < h)
-				c = (lf->listfield->pixels[a]) << 24 | (lf->listfield->pixels[a + 1]) << 16 | (lf->listfield->pixels[a + 2]) << 8 | (lf->listfield->pixels[a + 3]);
+				c = (lf->listfield->pixels[a]) << 24
+					| (lf->listfield->pixels[a + 1]) << 16
+					| (lf->listfield->pixels[a + 2]) << 8
+					| (lf->listfield->pixels[a + 3]);
 			else
 				c = 0xFF00FFFF;
 			if (c & 0xFFFFFF00)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_halloffame.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 15:32:15 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/09 17:37:03 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 13:54:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,64 @@ int	ft_writescore(t_max *max)
 	return (0);
 }
 
+void	ft_copy_score_top(t_max *max, t_text *text)
+{
+	text->font = max->font.asciitest;
+	text->image = max->i.textscreen;
+	text->c = 0X00FF00FF;
+	text->cb = 0xFF;
+	text->sx = 140;
+	text->sy = 100;
+	text->x = 0;
+	text->y = 0;
+	text->height = 40;
+	text->highlight = -1;
+	max->menu.topten[0] = *text;
+	max->menu.topten[0].text = max->menu.topten[0].str;
+	ft_sprintf(max->menu.topten[0].str, "                                      \
+                                            \n                             \
+      HALL OF FAME                                   \n                    \
+                                                              \n\n   \
+                                                                        \
+       \n Rank |    Name    |  Coalition  |    Campus    | Level |    Score\
+    |   Time    \n                                                      \
+                            \n");
+}
+
+void	ft_copy_score_filler(t_max *max, t_text *text, int i)
+{
+	while (i < 11)
+	{
+		max->menu.topten[i] = *text;
+		if (i % 2)
+			max->menu.topten[i].cb = 0x333333FF;
+		max->menu.topten[i].text = max->menu.topten[i].str;
+		text->sy += 40;
+		ft_sprintf(max->menu.topten[i].str, " %4i |   -------- |   --------- | \
+  ---------- |  ---  |  ---------  |   ----    \n", i);
+		++i;
+	}
+}
+
+void	ft_copy_score_bottom(t_max *max, t_text *text)
+{
+	text->sy = 860;
+	text->height = 40;
+	max->menu.topten[11] = *text;
+	max->menu.topten[11].text = max->menu.topten[11].str;
+	ft_sprintf(max->menu.topten[11].str, "                                      \
+                                            \n                       Press \
+BACKSPACE to return to the menu                      \n                    \
+                                                              \n");
+}
+
 void	ft_copy_score(t_max *max, t_list *lst)
 {
 	t_text	text;
 	t_hs	*hs;
 	int		i;
 
-	text.font = max->font.asciitest;
-	text.image = max->i.textscreen;
-	text.c = 0X00FF00FF;
-	text.cb = 0xFF;
-	text.sx = 140;
-	text.sy = 100;
-	text.x = 0;
-	text.y = 0;
-	text.height = 40;
-	text.highlight = -1;
-	max->menu.topten[0] = text;
-	max->menu.topten[0].text = max->menu.topten[0].str;
-	ft_sprintf(max->menu.topten[0].str, "                                                                                  \n                                   HALL OF FAME                                   \n                                                                                  \n\n                                                                                  \n Rank |    Name    |  Coalition  |    Campus    | Level |    Score    |   Time    \n                                                                                  \n");
+	ft_copy_score_top(max, &text);
 	i = 1;
 	text.sy = 380;
 	while (lst && i < 11)
@@ -66,21 +105,8 @@ void	ft_copy_score(t_max *max, t_list *lst)
 		lst = lst->next;
 		++i;
 	}
-	while (i < 11)
-	{
-		max->menu.topten[i] = text;
-		if (i % 2)
-			max->menu.topten[i].cb = 0x333333FF;
-		max->menu.topten[i].text = max->menu.topten[i].str;
-		text.sy += 40;
-		ft_sprintf(max->menu.topten[i].str, " %4i |   -------- |   --------- |   ---------- |  ---  |  ---------  |   ----    \n", i);
-		++i;
-	}
-	text.sy = 860;
-	text.height = 40;
-	max->menu.topten[i] = text;
-	max->menu.topten[i].text = max->menu.topten[i].str;
-	ft_sprintf(max->menu.topten[i].str, "                                                                                  \n                       Press BACKSPACE to return to the menu                      \n                                                                                  \n");
+	ft_copy_score_filler(max, &text, i);
+	ft_copy_score_bottom(max, &text);
 }
 
 int	ft_sortscore(t_list *lst)
@@ -113,54 +139,66 @@ void	ft_free_hs(void *content)
 	free(tmp);
 }
 
-void	ft_highscore(t_max *max, int fd)
+void	ft_highscore_sort_loop_2(char *str, t_hs *tmp)
 {
-	t_hs	*tmp;
-	t_list	*head;
-	t_list	*leaf;
-	char	*str;
+	int	j;
+	int	zero[6];
+
+	j = 0;
+	while (j < 6)
+	{
+		zero[j] = 0;
+		if (j)
+			zero[j] = zero[j - 1] + 1;
+		while (str && str[zero[j]] && str[zero[j]] != 036
+			&& str[zero[j]] != '\n')
+			zero[j]++;
+		str[zero[j]] = '\0';
+		++j;
+	}
+	tmp->level = ft_atoi(&str[zero[2] + 1]);
+	tmp->score = ft_atoi(&str[zero[3] + 1]);
+	tmp->timems = ft_atoi(&str[zero[4] + 1]);
+	ft_sprintf(tmp->name, str);
+	ft_sprintf(tmp->coalition, &str[zero[0] + 1]);
+	ft_sprintf(tmp->campus, &str[zero[1] + 1]);
+}
+
+void	ft_highscore_sort_loop(t_max *max, int fd, char *str, t_list **head)
+{
 	int		i;
-	int		j;
-	int		zero[6];
+	t_hs	*tmp;
+	t_list	*leaf;
 
 	i = 0;
-
-	head = NULL;
-	str = get_next_line(fd);
 	while (str)
 	{
 		tmp = ft_calloc(sizeof(t_hs), 1);
 		if (!tmp)
-			exit(2);
+			ft_exit(max, 2);
 		tmp->index = i;
-		j = 0;
-		while (j < 6)
-		{
-			zero[j] = 0;
-			if (j)
-				zero[j] = zero[j - 1] + 1;
-			while(str && str[zero[j]] && str[zero[j]] != 036 && str[zero[j]] != '\n')
-				zero[j]++;
-			str[zero[j]] = '\0';
-			++j;
-		}
-		tmp->level = ft_atoi(&str[zero[2] + 1]);
-		tmp->score = ft_atoi(&str[zero[3] + 1]);
-		tmp->timems = ft_atoi(&str[zero[4] + 1]);
-		ft_sprintf(tmp->name, str);
-		ft_sprintf(tmp->coalition, &str[zero[0] + 1]);
-		ft_sprintf(tmp->campus, &str[zero[1] + 1]);
+		ft_highscore_sort_loop_2(str, tmp);
 		leaf = ft_lstnew(tmp);
 		if (!leaf)
-			exit(2);
-		ft_lstadd_back(&head, leaf);
+			ft_exit(max, 2);
+		ft_lstadd_back(head, leaf);
 		i++;
 		free(str);
 		str = NULL;
 		str = get_next_line(fd);
 	}
+}
+
+void	ft_highscore(t_max *max, int fd)
+{
+	t_list	*head;
+	char	*str;
+
+	head = NULL;
+	str = get_next_line(fd);
+	ft_highscore_sort_loop(max, fd, str, &head);
 	while (ft_sortscore(head))
-		continue;
+		continue ;
 	ft_copy_score(max, head);
 	ft_lstclear(&head, ft_free_hs);
 }
