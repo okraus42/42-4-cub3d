@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/11 19:09:20 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/11 19:44:08 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -171,7 +171,8 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(SPRITE_DIR)ft_sprite_3.c \
 				$(SPRITE_DIR)ft_sprite_4.c \
 				$(TEXT_DIR)ft_text.c \
-				$(TEXT_DIR)ft_textfield.c
+				$(TEXT_DIR)ft_textfield.c \
+				$(TEXT_DIR)ft_textfield_2.c \
 
 # Formating
 

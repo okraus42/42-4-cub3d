@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 19:15:14 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 19:47:48 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -955,6 +955,9 @@ void		ft_bigreinitlistfield(t_max *max);
 
 //ft_text.c
 void		ft_draw_text(t_text *text, int state);
+void		ft_inittextfields_init(t_max *max, t_textfield *textfield,
+				t_text *text);
+void		ft_inittextfields_init_name(t_max *max, t_textfield *textfield);
 
 //ft_halloffame.c
 int			ft_writescore(t_max *max);
