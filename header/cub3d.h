@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 19:47:48 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 20:22:34 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -971,6 +971,7 @@ int			ft_sortscore(t_list *lst);
 void		ft_free_hs(void *content);
 
 //parser.c
+char		*ft_strdup2(char *str, char c);
 void		ft_init_brume(t_max *max);
 void		ft_print_map(t_map *map);
 void		ft_fill_colours_to_map(t_map *map);

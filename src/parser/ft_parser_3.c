@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 13:16:47 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/07 13:30:16 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 20:19:36 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,13 @@ int	ft_fill_textures(t_map *map)
 	while (split[j])
 	{
 		if (!ft_strncmp(split[j], "NO ", 3))
-			map->northtexture = ft_strdup(&split[j][3]);
+			map->northtexture = ft_strdup2(&split[j][3], ' ');
 		if (!ft_strncmp(split[j], "SO ", 3))
-			map->southtexture = ft_strdup(&split[j][3]);
+			map->southtexture = ft_strdup2(&split[j][3], ' ');
 		if (!ft_strncmp(split[j], "WE ", 3))
-			map->westtexture = ft_strdup(&split[j][3]);
+			map->westtexture = ft_strdup2(&split[j][3], ' ');
 		if (!ft_strncmp(split[j], "EA ", 3))
-			map->easttexture = ft_strdup(&split[j][3]);
+			map->easttexture = ft_strdup2(&split[j][3], ' ');
 		++j;
 	}
 	ft_free_split(&split);
