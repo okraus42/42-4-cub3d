@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 19:30:43 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 16:25:26 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -852,6 +852,16 @@ typedef struct s_dbgs
 	unsigned int	c;
 }	t_dbgs;
 
+typedef	struct s_dminmap
+{
+	int	y;
+	int	x;
+	int	ny;
+	int	nx;
+	int	s;
+	int	r;
+}	t_dminmap;
+
 // PROTOTYPES
 
 //ft_free.c
@@ -951,6 +961,65 @@ int			ft_fill_colour(int c, char *s, t_map *map, int j);
 //ft_random.map.c
 void		ft_inittimetrialmap(t_randommap *rm, int level);
 int			ft_process_random(t_max *max);
+void		ft_inittimetrialmap_seedinit(t_randommap *rm);
+void		ft_inittimetrialmap(t_randommap *rm, int level);
+void		ft_flood_randomcheck_floorinit(t_map *map, int pos);
+void		ft_flood_randomcheck(t_map *map, int pos);
+void		ft_fill_randommap(t_map *map);
+void		map_print_inner(t_rmap *m, int i);
+void		map_print(char *str, t_rmap *m);
+void		map_print2(char *str, t_rmap *m);
+void		map_prefill2(t_rmap *m);
+int			mg_north2(t_rmap *m);
+int			mg_south2(t_rmap *m);
+int			mg_east2(t_rmap *m);
+int			mg_west2(t_rmap *m);
+int			check_unvisited_neighbours2(t_rmap *m);
+int			maze_expand(t_rmap *m);
+void		maze_list(t_rmap *m);
+int			maze_gen2(t_rmap *m);
+void		map_refill4(t_rmap *m);
+void		map_calculate4(t_rmap *m);
+void		breakwall4(t_rmap *m, int counter);
+void		wallbreaker4(t_rmap *m);
+void		map_loops4(t_rmap *m);
+void		map_outerwall(t_rmap *m);
+void		map_refill5(t_rmap *m);
+void		maze_mod4(t_rmap *m);
+int			check_room_overlap6(t_rmap *m, int x, int y);
+int			check_room_nooverlap6(t_rmap *m, int x, int y);
+void		add_room6(t_rmap *m, int x, int y);
+void		add_rooms_overlap6(t_rmap *m);
+void		add_rooms_nooverlap6(t_rmap *m);
+void		add_room_walls6(t_rmap *m);
+void		keep_flooding6(t_rmap *m, int i, unsigned int flood_value);
+void		start_flooding6(t_rmap *m);
+void		keep_flooding_26(t_rmap *m, int i, unsigned int flood_value);
+int			flood_check(t_rmap *m);
+void		add_wall_c(t_rmap *m);
+void		add_door(t_rmap *m, int i);
+void		open_door(t_rmap *m);
+void		close_wall_c(t_rmap *m);
+void		flooding_loop(t_rmap *m);
+void		list_deadends(t_rmap	*m);
+void		map_refill999(t_rmap *m);
+void		floodfill_room(t_rmap *m, int i);
+void		remove_deadend(t_rmap *m);
+void		connect_rooms6(t_rmap *m);
+void		add_rooms6(t_rmap *m);
+void		floodfill_room(t_rmap *m, int i);
+void		rd_north(t_rmap *m);
+void		rd_south(t_rmap *m);
+void		rd_west(t_rmap *m);
+void		rd_east(t_rmap *m);
+void		remove_deadend(t_rmap *m);
+void		process_deadends(t_rmap	*m);
+void		trim_deadends(t_rmap *m);
+void		map_refill42(t_rmap *m);
+void		map_init(t_randommap *rm, t_rmap *m);
+void		ft_random_init_loop_putplayer(t_max *max, t_rmap *m, int i);
+void		ft_random_init_loop(t_max *max, t_rmap *m, int j, int i);
+void		ft_random_init_inits(t_max *max, t_rmap *m);
 
 //ft_game.c
 void		ft_amaze_standard(t_max *max);
@@ -972,6 +1041,11 @@ void		ft_gamewon(t_max *max);
 
 void		ft_initgamelost(t_max *max);
 void		ft_gamelost(t_max *max);
+void		ft_draw_gamechar(t_gametext *text);
+void		ft_gamestart(t_max *max);
+void		ft_gamewon_init(t_max *max);
+void		ft_gamewon_timetrial(t_max *max);
+
 
 //ft_hook.c
 void		ft_hook(void *param);

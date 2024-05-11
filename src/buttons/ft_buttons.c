@@ -6,7 +6,7 @@
 /*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:42:26 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/09 17:19:22 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 16:18:52 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,30 +64,30 @@ void	ft_initbuttons(t_max *max)
 	ft_initbuttons_global_helper_2(max, button);
 }
 
-void	ft_choose_in_button_2(t_max *max, int i)
+void	ft_choose_in_button_2(t_max *max, int *i)
 {
 	if (max->keys[MLX_KEY_KP_ADD] || max->keys[MLX_KEY_RIGHT])
 	{
-		++i;
+		++(*i);
 		max->keys[MLX_KEY_KP_ADD] = 0;
 		max->keys[MLX_KEY_UP] = 0;
 		max->keys[MLX_KEY_RIGHT] = 0;
 	}
 	if (max->keys[MLX_KEY_KP_SUBTRACT] || max->keys[MLX_KEY_LEFT])
 	{
-		--i;
+		--(*i);
 		max->keys[MLX_KEY_KP_SUBTRACT] = 0;
 		max->keys[MLX_KEY_DOWN] = 0;
 		max->keys[MLX_KEY_LEFT] = 0;
 	}
 	if (max->keys[MLX_KEY_KP_MULTIPLY])
 	{
-		i *= 2;
+		(*i) *= 2;
 		max->keys[MLX_KEY_KP_MULTIPLY] = 0;
 	}
 	if (max->keys[MLX_KEY_KP_DIVIDE])
 	{
-		i /= 2;
+		(*i) /= 2;
 		max->keys[MLX_KEY_KP_DIVIDE] = 0;
 	}
 }
@@ -97,7 +97,7 @@ void	ft_choose_in_button(t_max *max, t_button *button)
 	int	i;
 
 	i = button->val->value;
-	ft_choose_in_button_2(max, i);
+	ft_choose_in_button_2(max, &i);
 	if (max->keys[MLX_KEY_UP])
 	{
 		i += 10;

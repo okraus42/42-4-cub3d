@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_text.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 10:43:02 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:20:19 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 15:32:06 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 void	ft_draw_char(t_text *text)
 {

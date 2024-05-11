@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_textfield.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 12:33:59 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 20:17:21 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 15:32:09 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 void	ft_inittextfields(t_max *max)
 {

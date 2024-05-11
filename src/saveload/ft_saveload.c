@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_saveload.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 11:32:52 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/10 19:16:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 15:31:59 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/cub3d.h"
+#include "../../header/cub3d.h"
 
 int	ft_savegame(t_max *max)
 {

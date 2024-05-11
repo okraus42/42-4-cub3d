@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/10 13:31:44 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/11 16:30:22 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,9 @@ DOORS_DIR	=	doors/
 GAME_DIR	=	game/
 GAMEB_DIR	=	game_bonus/
 MINMAP_DIR	=	minimap/
+TEXT_DIR	=	text/
+RDMAP_DIR	=	randommap/
+SVLD_DIR	=	saveload/
 
 # cub3d functions
 
@@ -83,6 +86,7 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				ft_free.c \
 				$(GAME_DIR)ft_game.c \
 				$(GAMEB_DIR)ft_game_bonus.c \
+				$(GAMEB_DIR)ft_game_bonus_2.c \
 				$(GAME_DIR)ft_gameplay.c \
 				$(GAME_DIR)ft_gameplay_2.c \
 				$(GAME_DIR)ft_gameplay_3.c \
@@ -90,6 +94,9 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(GAME_DIR)ft_gameplay_5.c \
 				$(GAME_DIR)ft_gameplay_6.c \
 				$(GAME_DIR)ft_gamestart.c \
+				$(GAME_DIR)ft_gamestart_2.c \
+				$(GAME_DIR)ft_gamestart_3.c \
+				$(GAME_DIR)ft_gamestart_4.c \
 				$(HOF_DIR)ft_halloffame.c \
 				$(HOOK_DIR)ft_hook.c \
 				ft_keyhook.c \
@@ -121,18 +128,31 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(PARSER_DIR)ft_parser_4.c \
 				$(PARSER_DIR)ft_parser_5.c \
 				$(PARSER_DIR)ft_parser_6.c \
-				ft_randommap.c \
+				$(RDMAP_DIR)ft_randommap.c \
+				$(RDMAP_DIR)ft_randommap_2.c \
+				$(RDMAP_DIR)ft_randommap_3.c \
+				$(RDMAP_DIR)ft_randommap_4.c \
+				$(RDMAP_DIR)ft_randommap_5.c \
+				$(RDMAP_DIR)ft_randommap_6.c \
+				$(RDMAP_DIR)ft_randommap_7.c \
+				$(RDMAP_DIR)ft_randommap_8.c \
+				$(RDMAP_DIR)ft_randommap_9.c \
+				$(RDMAP_DIR)ft_randommap_10.c \
+				$(RDMAP_DIR)ft_randommap_11.c \
+				$(RDMAP_DIR)ft_randommap_12.c \
+				$(RDMAP_DIR)ft_randommap_13.c \
+				$(RDMAP_DIR)ft_randommap_14.c \
 				$(RAYS_DIR)ft_rays.c \
 				$(RAYS_DIR)ft_rays_2.c \
 				$(RAYS_DIR)ft_rays_3.c \
 				$(RAYS_DIR)ft_rays_4.c \
 				$(RAYS_DIR)ft_rays_5.c \
-				ft_saveload.c \
+				$(SVLD_DIR)ft_saveload.c \
 				ft_screen3d.c \
 				ft_settings.c \
 				ft_sprite.c \
-				ft_text.c \
-				ft_textfield.c
+				$(TEXT_DIR)ft_text.c \
+				$(TEXT_DIR)ft_textfield.c
 
 # Formating
 
@@ -201,6 +221,9 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)$(GAME_DIR)
 				@mkdir -p $(OBJ_DIR)$(GAMEB_DIR)
 				@mkdir -p $(OBJ_DIR)$(MINMAP_DIR)
+				@mkdir -p $(OBJ_DIR)$(TEXT_DIR)
+				@mkdir -p $(OBJ_DIR)$(SVLD_DIR)
+				@mkdir -p $(OBJ_DIR)$(RDMAP_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)
