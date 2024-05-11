@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 16:53:53 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 19:15:14 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -941,6 +941,17 @@ void		ft_initlistfields(t_max *max);
 void		ft_bigreinitlistfield(t_max *max);
 void		ft_draw_listfield(t_listfield *lf, int state);
 void		ft_choose_in_listfield(t_max *max, t_listfield *listfield);
+void		ft_initlistfields_init_text(t_max *max, t_text *text);
+void		ft_initlistfields_init_lf(t_max *max, t_listfield *listfield);
+void		ft_initlistfields_init_cm(t_max *max, t_text text);
+void		ft_initlistfields_init_saves1(t_max *max, t_listfield listfield);
+void		ft_initlistfields_init_saves2(t_max *max, t_text text);
+void		ft_initlistfields_init_loads(t_max *max, t_text text);
+void		ft_initlistfields(t_max *max);
+void		ft_bigreinitlistfield_cm(t_max *max);
+void		ft_bigreinitlistfield_saves(t_max *max);
+void		ft_bigreinitlistfield_loads(t_max *max);
+void		ft_bigreinitlistfield(t_max *max);
 
 //ft_text.c
 void		ft_draw_text(t_text *text, int state);
@@ -949,6 +960,12 @@ void		ft_draw_text(t_text *text, int state);
 int			ft_writescore(t_max *max);
 int			ft_readscore(t_max *max);
 void		ft_halloffame(t_max *max);
+void		ft_copy_score_top(t_max *max, t_text *text);
+void		ft_copy_score_filler(t_max *max, t_text *text, int i);
+void		ft_copy_score_bottom(t_max *max, t_text *text);
+void		ft_copy_score(t_max *max, t_list *lst);
+int			ft_sortscore(t_list *lst);
+void		ft_free_hs(void *content);
 
 //parser.c
 void		ft_init_brume(t_max *max);
@@ -1058,6 +1075,14 @@ void		ft_gamewon_timetrial(t_max *max);
 
 //ft_hook.c
 void		ft_hook(void *param);
+void		ft_process_input_numpad(t_max *max);
+void		ft_process_input_shift(t_max *max, int c);
+void		ft_process_keylocks(t_max *max);
+void		ft_process_input_loop(t_max *max);
+void		ft_process_input(t_max *max);
+void		ft_menuhook(t_max *max);
+void		ft_gameplayhook(t_max *max);
+void		ft_gamestarthook(t_max *max);
 
 //ft_map.c
 void		ft_draw_map(t_max *max);
@@ -1086,6 +1111,7 @@ int			ft_init_orays_while_v_breaker(t_max *max, t_oray *oray);
 
 //ft_line.c
 void		ft_place_line(mlx_image_t *img, t_line l);
+void		ft_plot_line_high(mlx_image_t *img, t_line l);
 
 //ft_menu.c
 void		ft_initmenu(t_max *max);
@@ -1159,6 +1185,8 @@ int			ft_quicksave(t_max *max);
 int			ft_quickload(t_max *max);
 int			ft_save(t_max *max, char *path);
 int			ft_load(t_max *max, char *path);
+int			ft_savegame(t_max *max);
+int			ft_loadgame(t_max *max);
 
 //ft_cub3d_2.c
 void		ft_init_math(t_math *math);
@@ -1171,6 +1199,17 @@ void		ft_init_math(t_math *math);
 //ft_screen3d.c
 void		ft_draw_screen3d(t_max *max);
 void		ft_init_fogscreen(t_max *max);
+void		ft_draw_screen3d_init(t_max *max, t_walltexture *wt);
+void		ft_init_fogscreen(t_max *max);
+void		ft_init_fogscreen_inner(t_max *max, t_fs *fs);
+void		ft_draw_screen3d_ww(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_ew(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_sw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_nw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_de(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_dw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_dn(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_ds(t_max *max, t_walltexture *wt, int stop);
 
 //ft_sprite.c
 void		ft_init_sprites_flamingo(t_map *map, int i);
@@ -1178,6 +1217,19 @@ void		ft_init_sprites_doors(t_map *map, int i, int type); //???not found?
 void		ft_init_sprites(t_max *max);
 void		ft_check_sprites(t_max *max);
 void		ft_draw_sprites(t_max *max);
+int			ft_sprite_visible_check(t_max *max, int minangle, int maxangle);
+int			ft_sprite_visible(t_max *max, int direction, int radius);
+int			ft_sprite_visible2(t_max *max, int r, long long distance);
+void		ft_clean_spritescreen(t_max *max);
+void		ft_put_sprite_colour(t_max *max, t_sprite *sprite, t_sp *sp);
+void		ft_put_sprite_glowcolour(t_max *max, t_sprite *sprite, t_sp *sp);
+void		ft_activate_exit(t_max *max);
+void		ft_swap_sprites(t_sprite *a, t_sprite *b);
+void		ft_print_sprite_info(t_sprite *sprite);
+void		ft_check_sprites_debug(t_max *max);
+void		ft_check_sprites_1(t_max *max, t_sprite *sprite, int i);
+void		ft_check_sprites_2(t_max *max, t_sprite *sprite);
+void		ft_check_sprites_exit(t_max *max, t_sprite *sprite);
 
 //ft_doors.c
 void		ft_interact_door(t_max *max);

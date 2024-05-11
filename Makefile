@@ -6,7 +6,7 @@
 #    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/11 16:30:22 by tlukanie         ###   ########.fr        #
+#    Updated: 2024/05/11 19:09:20 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,10 @@ MINMAP_DIR	=	minimap/
 TEXT_DIR	=	text/
 RDMAP_DIR	=	randommap/
 SVLD_DIR	=	saveload/
+SPRITE_DIR	=	sprite/
+LSTFLD_DIR	=	listfield/
+SCRN3D_DIR	=	screen3d/
+LINE_DIR	=	line/
 
 # cub3d functions
 
@@ -98,10 +102,18 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(GAME_DIR)ft_gamestart_3.c \
 				$(GAME_DIR)ft_gamestart_4.c \
 				$(HOF_DIR)ft_halloffame.c \
+				$(HOF_DIR)ft_halloffame_2.c \
+				$(HOF_DIR)ft_halloffame_3.c \
 				$(HOOK_DIR)ft_hook.c \
+				$(HOOK_DIR)ft_hook_2.c \
+				$(HOOK_DIR)ft_hook_3.c \
 				ft_keyhook.c \
-				ft_line.c \
-				ft_listfield.c \
+				$(LINE_DIR)ft_line.c \
+				$(LINE_DIR)ft_line_2.c \
+				$(LSTFLD_DIR)ft_listfield.c \
+				$(LSTFLD_DIR)ft_listfield_2.c \
+				$(LSTFLD_DIR)ft_listfield_3.c \
+				$(LSTFLD_DIR)ft_listfield_4.c \
 				ft_map.c \
 				$(MENU_DIR)ft_menu.c \
 				$(MENU_DIR)ft_menu_2.c \
@@ -148,9 +160,16 @@ SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
 				$(RAYS_DIR)ft_rays_4.c \
 				$(RAYS_DIR)ft_rays_5.c \
 				$(SVLD_DIR)ft_saveload.c \
-				ft_screen3d.c \
+				$(SVLD_DIR)ft_saveload_2.c \
+				$(SCRN3D_DIR)ft_screen3d.c \
+				$(SCRN3D_DIR)ft_screen3d_2.c \
+				$(SCRN3D_DIR)ft_screen3d_3.c \
+				$(SCRN3D_DIR)ft_screen3d_4.c \
 				ft_settings.c \
-				ft_sprite.c \
+				$(SPRITE_DIR)ft_sprite.c \
+				$(SPRITE_DIR)ft_sprite_2.c \
+				$(SPRITE_DIR)ft_sprite_3.c \
+				$(SPRITE_DIR)ft_sprite_4.c \
 				$(TEXT_DIR)ft_text.c \
 				$(TEXT_DIR)ft_textfield.c
 
@@ -224,6 +243,10 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)$(TEXT_DIR)
 				@mkdir -p $(OBJ_DIR)$(SVLD_DIR)
 				@mkdir -p $(OBJ_DIR)$(RDMAP_DIR)
+				@mkdir -p $(OBJ_DIR)$(SPRITE_DIR)
+				@mkdir -p $(OBJ_DIR)$(LSTFLD_DIR)
+				@mkdir -p $(OBJ_DIR)$(LINE_DIR)
+				@mkdir -p $(OBJ_DIR)$(SCRN3D_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)
