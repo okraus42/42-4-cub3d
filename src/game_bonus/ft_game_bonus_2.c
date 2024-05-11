@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_game_bonus_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
+/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:00:06 by tlukanie          #+#    #+#             */
-/*   Updated: 2024/05/11 15:01:03 by tlukanie         ###   ########.fr       */
+/*   Updated: 2024/05/11 19:40:51 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_init_textures(t_max *max)
 	ft_load_texture("./textures/menu/textfield.png", &max->t.textfield);
 	ft_load_texture("./textures/menu/listfield.png", &max->t.listfield);
 	ft_load_texture("./textures/fonts/asciitest.png", &max->t.font);
-	ft_load_texture("./textures/woodenboard.png", &max->t.textbg);
+	ft_load_texture("./textures/best_texture.png", &max->t.textbg);
 	ft_load_texture("./textures/sprites/exit01t.png",
 		&max->t.sprites[EXIT_GLOW]);
 	ft_load_texture("./textures/sprites/flamingo_normal256.png",
