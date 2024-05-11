@@ -6,20 +6,11 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:40:49 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/11 10:46:18 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 11:38:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/cub3d.h"
-
-void	ft_cub3d_2(char *file, t_max *max)
-{
-	ft_snprintf(max->map.file, 4095, file);
-	if (ft_process_file(max))
-		ft_amaze_standard(max);
-	else
-		ft_dprintf(2, "Aborting: invalid map.\n");
-}
 
 void	ft_cub3d_init(t_max *max)
 {
@@ -50,7 +41,10 @@ void	ft_cub3d(char *file)
 	ft_init_math(max->math);
 	ft_cub3d_init(max);
 	if (file)
-		ft_cub3d_2(file, max);
+	{
+		ft_snprintf(max->map.file, 4095, file);
+		ft_amaze_standard(max);
+	}
 	else
 		ft_amaze_bonus(max);
 	ft_free(max);
