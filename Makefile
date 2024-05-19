@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
+#    By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2024/05/05 18:50:52 by okraus           ###   ########.fr        #
+#    Updated: 2024/05/11 19:44:08 by tlukanie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,38 +53,126 @@ SRC			=	$(addprefix $(SRC_DIR), $(SRC_S))
 
 SRC_DIR		=	src/
 HOOK_DIR	=	hooks/
+PARSER_DIR	=	parser/
+CUB3D_DIR	=	cub3d/
+MENU_DIR	=	menu/
+BUTTONS_DIR =	buttons/
+HOF_DIR		=   hall_of_fame/
+RAYS_DIR	=	rays/
+DOORS_DIR	=	doors/
+GAME_DIR	=	game/
+GAMEB_DIR	=	game_bonus/
+MINMAP_DIR	=	minimap/
+TEXT_DIR	=	text/
+RDMAP_DIR	=	randommap/
+SVLD_DIR	=	saveload/
+SPRITE_DIR	=	sprite/
+LSTFLD_DIR	=	listfield/
+SCRN3D_DIR	=	screen3d/
+LINE_DIR	=	line/
 
 # cub3d functions
 
-SRC_S		=	ft_buttons.c \
-				ft_cub3d.c \
-				ft_doors.c \
+SRC_S		=	$(BUTTONS_DIR)ft_buttons.c \
+				$(BUTTONS_DIR)ft_buttons_2.c \
+				$(BUTTONS_DIR)ft_buttons_3.c \
+				$(BUTTONS_DIR)ft_buttons_4.c \
+				$(BUTTONS_DIR)ft_buttons_5.c \
+				$(BUTTONS_DIR)ft_buttons_6.c \
+				$(BUTTONS_DIR)ft_buttons_7.c \
+				$(BUTTONS_DIR)ft_buttons_8.c \
+				$(BUTTONS_DIR)ft_buttons_9.c \
+				$(BUTTONS_DIR)ft_buttons_10.c \
+				$(BUTTONS_DIR)ft_buttons_11.c \
+				$(CUB3D_DIR)ft_cub3d.c \
+				$(CUB3D_DIR)ft_cub3d_2.c \
+				$(DOORS_DIR)ft_doors.c \
 				ft_free.c \
-				ft_game.c \
-				ft_game_bonus.c \
-				ft_gameplay.c \
-				ft_gamestart.c \
-				ft_halloffame.c \
+				$(GAME_DIR)ft_game.c \
+				$(GAMEB_DIR)ft_game_bonus.c \
+				$(GAMEB_DIR)ft_game_bonus_2.c \
+				$(GAME_DIR)ft_gameplay.c \
+				$(GAME_DIR)ft_gameplay_2.c \
+				$(GAME_DIR)ft_gameplay_3.c \
+				$(GAME_DIR)ft_gameplay_4.c \
+				$(GAME_DIR)ft_gameplay_5.c \
+				$(GAME_DIR)ft_gameplay_6.c \
+				$(GAME_DIR)ft_gamestart.c \
+				$(GAME_DIR)ft_gamestart_2.c \
+				$(GAME_DIR)ft_gamestart_3.c \
+				$(GAME_DIR)ft_gamestart_4.c \
+				$(HOF_DIR)ft_halloffame.c \
+				$(HOF_DIR)ft_halloffame_2.c \
+				$(HOF_DIR)ft_halloffame_3.c \
 				$(HOOK_DIR)ft_hook.c \
+				$(HOOK_DIR)ft_hook_2.c \
+				$(HOOK_DIR)ft_hook_3.c \
 				ft_keyhook.c \
-				ft_line.c \
-				ft_listfield.c \
+				$(LINE_DIR)ft_line.c \
+				$(LINE_DIR)ft_line_2.c \
+				$(LSTFLD_DIR)ft_listfield.c \
+				$(LSTFLD_DIR)ft_listfield_2.c \
+				$(LSTFLD_DIR)ft_listfield_3.c \
+				$(LSTFLD_DIR)ft_listfield_4.c \
 				ft_map.c \
-				ft_menu.c \
-				ft_minimap.c \
+				$(MENU_DIR)ft_menu.c \
+				$(MENU_DIR)ft_menu_2.c \
+				$(MENU_DIR)ft_menu_3.c \
+				$(MENU_DIR)ft_menu_4.c \
+				$(MENU_DIR)ft_menu_5.c \
+				$(MENU_DIR)ft_menu_6.c \
+				$(MENU_DIR)ft_menu_7.c \
+				$(MENU_DIR)ft_menu_8.c \
+				$(MENU_DIR)ft_menu_9.c \
+				$(MENU_DIR)ft_menu_10.c \
+				$(MENU_DIR)ft_menu_11.c \
+				$(MENU_DIR)ft_menu_12.c \
+				$(MENU_DIR)ft_menu_13.c \
+				$(MENU_DIR)ft_menu_14.c \
+				$(MENU_DIR)ft_menu_15.c \
+				$(MENU_DIR)ft_menu_16.c \
+				$(MINMAP_DIR)ft_minimap.c \
 				ft_mousehook.c \
 				ft_overlay.c \
-				ft_parser.c \
-				ft_randommap.c \
-				ft_rays.c \
-				ft_saveload.c \
-				ft_screen2d.c \
-				ft_screen2dquad.c \
-				ft_screen3d.c \
+				$(PARSER_DIR)ft_parser.c \
+				$(PARSER_DIR)ft_parser_2.c \
+				$(PARSER_DIR)ft_parser_3.c \
+				$(PARSER_DIR)ft_parser_4.c \
+				$(PARSER_DIR)ft_parser_5.c \
+				$(PARSER_DIR)ft_parser_6.c \
+				$(RDMAP_DIR)ft_randommap.c \
+				$(RDMAP_DIR)ft_randommap_2.c \
+				$(RDMAP_DIR)ft_randommap_3.c \
+				$(RDMAP_DIR)ft_randommap_4.c \
+				$(RDMAP_DIR)ft_randommap_5.c \
+				$(RDMAP_DIR)ft_randommap_6.c \
+				$(RDMAP_DIR)ft_randommap_7.c \
+				$(RDMAP_DIR)ft_randommap_8.c \
+				$(RDMAP_DIR)ft_randommap_9.c \
+				$(RDMAP_DIR)ft_randommap_10.c \
+				$(RDMAP_DIR)ft_randommap_11.c \
+				$(RDMAP_DIR)ft_randommap_12.c \
+				$(RDMAP_DIR)ft_randommap_13.c \
+				$(RDMAP_DIR)ft_randommap_14.c \
+				$(RAYS_DIR)ft_rays.c \
+				$(RAYS_DIR)ft_rays_2.c \
+				$(RAYS_DIR)ft_rays_3.c \
+				$(RAYS_DIR)ft_rays_4.c \
+				$(RAYS_DIR)ft_rays_5.c \
+				$(SVLD_DIR)ft_saveload.c \
+				$(SVLD_DIR)ft_saveload_2.c \
+				$(SCRN3D_DIR)ft_screen3d.c \
+				$(SCRN3D_DIR)ft_screen3d_2.c \
+				$(SCRN3D_DIR)ft_screen3d_3.c \
+				$(SCRN3D_DIR)ft_screen3d_4.c \
 				ft_settings.c \
-				ft_sprite.c \
-				ft_text.c \
-				ft_textfield.c
+				$(SPRITE_DIR)ft_sprite.c \
+				$(SPRITE_DIR)ft_sprite_2.c \
+				$(SPRITE_DIR)ft_sprite_3.c \
+				$(SPRITE_DIR)ft_sprite_4.c \
+				$(TEXT_DIR)ft_text.c \
+				$(TEXT_DIR)ft_textfield.c \
+				$(TEXT_DIR)ft_textfield_2.c \
 
 # Formating
 
@@ -143,6 +231,23 @@ libmlx:
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADER)
 				@mkdir -p $(OBJ_DIR)
 				@mkdir -p $(OBJ_DIR)$(HOOK_DIR)
+				@mkdir -p $(OBJ_DIR)$(PARSER_DIR)
+				@mkdir -p $(OBJ_DIR)$(CUB3D_DIR)
+				@mkdir -p $(OBJ_DIR)$(MENU_DIR)
+				@mkdir -p $(OBJ_DIR)$(BUTTONS_DIR)
+				@mkdir -p $(OBJ_DIR)$(HOF_DIR)
+				@mkdir -p $(OBJ_DIR)$(RAYS_DIR)
+				@mkdir -p $(OBJ_DIR)$(DOORS_DIR)
+				@mkdir -p $(OBJ_DIR)$(GAME_DIR)
+				@mkdir -p $(OBJ_DIR)$(GAMEB_DIR)
+				@mkdir -p $(OBJ_DIR)$(MINMAP_DIR)
+				@mkdir -p $(OBJ_DIR)$(TEXT_DIR)
+				@mkdir -p $(OBJ_DIR)$(SVLD_DIR)
+				@mkdir -p $(OBJ_DIR)$(RDMAP_DIR)
+				@mkdir -p $(OBJ_DIR)$(SPRITE_DIR)
+				@mkdir -p $(OBJ_DIR)$(LSTFLD_DIR)
+				@mkdir -p $(OBJ_DIR)$(LINE_DIR)
+				@mkdir -p $(OBJ_DIR)$(SCRN3D_DIR)
 				@$(SLEEP)
 				@echo "$(RETURN)$(RETURN)$(YELLOW)Compiling CUB3D: $< $(NRM_FORMAT)"
 				@$(PRINT2)

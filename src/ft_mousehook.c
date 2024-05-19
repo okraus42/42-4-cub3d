@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 14:58:09 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/21 15:21:14 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 20:17:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,6 @@ void	ft_mousehook(void *param)
 
 	max = param;
 	(void)max;
-// 	void mlx_get_mouse_pos(mlx_t* mlx, int32_t* x, int32_t* y);
-
-// /**
-//  * Sets the mouse position.
-//  * 
-//  * @param[in] mlx The MLX instance handle. 
-//  * @param[in] pos The position.
-//  */
-// void mlx_set_mouse_pos(mlx_t* mlx, int32_t x, int32_t y);
 }
 
 void	ft_cursorhook(void *param)

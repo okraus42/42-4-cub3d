@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 15:57:11 by okraus            #+#    #+#             */
-/*   Updated: 2023/07/16 13:04:00 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 10:42:59 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	ft_split_rm2(char **oldsplit, char **newsplit, int l, int n)
 		newsplit[i] = oldsplit[i];
 		i++;
 	}
+	free(oldsplit[i]);
 	while (i < l)
 	{
 		newsplit[i] = oldsplit[i + 1];

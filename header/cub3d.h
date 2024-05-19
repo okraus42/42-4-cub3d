@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tlukanie <tlukanie@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2024/05/05 19:28:16 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/11 20:22:34 by tlukanie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@
 #  define MAPWIDTH 1024
 #  define MAPHEIGHT 1024
 #  define FULLSCREEN 0
-0
+
 #  define MAXDOF 8
 # elif TESTMODE == 3
 #  define WIDTH 960
@@ -89,13 +89,13 @@
 # define SUPERMAPHEIGHT 540
 # define SUPERMAPBORDER 128
 
-# define SCREENWIDTH (960)
-# define SCREENHEIGHT (520) //- HUD later
+# define SCREENWIDTH 960
+# define SCREENHEIGHT 520 //- HUD later
 # define TMASK 0xFFFFFFFF //
 
-
-# define RAYS (SCREENWIDTH) //SCREENWIDTH
-// # define max->settings.maxdist (65536 * (DOF)) //play with this formula a bit later
+# define RAYS SCREENWIDTH //SCREENWIDTH
+// # define max->settings.maxdist (65536 * (DOF))
+//play with this formula a bit later
 
 # define UNDISCOVERDWALL 0x808080FF
 # define UNDISCOVERDFLOOR 0x808080FF
@@ -195,7 +195,6 @@
 #  define NOWALLCOLOUR 0xFFFF00FFU
 # endif
 
-
 # define SQUARESIZE 65536
 # define SQUAREHALF 32768
 # define WALLDISTANCE 16384 //it is important it is bigger than actual speed 
@@ -211,7 +210,7 @@ typedef union u_clr
 		unsigned char	g;
 		unsigned char	r;
 	};
-} t_clr;
+}	t_clr;
 
 // typedef struct s_clr
 // {
@@ -227,7 +226,7 @@ typedef union u_clr
 // 			unsigned char	r;
 // 		};
 // 	};
-// } t_clr;
+// }	t_clr;
 
 typedef struct s_wallcheck
 {
@@ -239,7 +238,15 @@ typedef struct s_wallcheck
 	int	wx;
 }	t_wallcheck;
 
-
+typedef struct s_fogscreen
+{
+	int				y;
+	int				x;
+	int				r;
+	unsigned int	fogc;
+	unsigned int	foga;
+	long long		length;
+}	t_fs;
 
 typedef struct s_walltexture
 {
@@ -267,14 +274,14 @@ typedef struct s_line
 		unsigned int	c[2];
 		struct
 		{
-			unsigned char c0a;
-			unsigned char c0b;
-			unsigned char c0g;
-			unsigned char c0r;
-			unsigned char c1a;
-			unsigned char c1b;
-			unsigned char c1g;
-			unsigned char c1r;
+			unsigned char	c0a;
+			unsigned char	c0b;
+			unsigned char	c0g;
+			unsigned char	c0r;
+			unsigned char	c1a;
+			unsigned char	c1b;
+			unsigned char	c1g;
+			unsigned char	c1r;
 		};
 	};
 	int				maxwidth;
@@ -291,53 +298,57 @@ typedef struct s_line
 
 typedef struct s_oray
 {
-	int				ra;
+	int						ra;
+	int						mx;
+	int						my;
+	int						mp;
+	int						mp2;
 	union
 	{
 		unsigned int	c[2];
 		struct
 		{
-			unsigned char c0a;
-			unsigned char c0b;
-			unsigned char c0g;
-			unsigned char c0r;
-			unsigned char c1a;
-			unsigned char c1b;
-			unsigned char c1g;
-			unsigned char c1r;
+			unsigned char	c0a;
+			unsigned char	c0b;
+			unsigned char	c0g;
+			unsigned char	c0r;
+			unsigned char	c1a;
+			unsigned char	c1b;
+			unsigned char	c1g;
+			unsigned char	c1r;
 		};
 	};
-	long long		length;
-	long long		length2;
-	long long		ldof;
+	long long				length;
+	long long				length2;
+	long long				ldof;
 	unsigned long long		vl;
 	unsigned long long		hl;
-	long long		xs; //ray starting position 65536 is 1.000
-	long long		ys;
-	long long		hx[MAXDOF + 1];
-	long long		hy[MAXDOF + 1];
-	long long		vx[MAXDOF + 1];
-	long long		vy[MAXDOF + 1];
-	long long		tx; //test ray x position (for map discovery)
-	long long		ty; //test ray y position (for map discovery)
-	long long		rx;	//ray final position
-	long long		ry;
-	long long		hxo;	//x and y offset
-	long long		hyo;
-	long long		vxo;	//x and y offset
-	long long		vyo;
-	long long		txo;	//x and y offset
-	long long		tyo;
-	int				hdof;
-	int				vdof;
-	int				tdof;
-	int				dof;
-	int				hv;		//which ray is shorter (for backtracking)
-	int				wall; //which wall was found (south north east west)
-	unsigned long long	vm;
-	unsigned long long	hm;
-	unsigned long long	m;
-	unsigned int		mpos;	//position of ray in the map
+	long long				xs; //ray starting position 65536 is 1.000
+	long long				ys;
+	long long				hx[MAXDOF + 1];
+	long long				hy[MAXDOF + 1];
+	long long				vx[MAXDOF + 1];
+	long long				vy[MAXDOF + 1];
+	long long				tx; //test ray x position (for map discovery)
+	long long				ty; //test ray y position (for map discovery)
+	long long				rx;	//ray final position
+	long long				ry;
+	long long				hxo;	//x and y offset
+	long long				hyo;
+	long long				vxo;	//x and y offset
+	long long				vyo;
+	long long				txo;	//x and y offset
+	long long				tyo;
+	int						hdof;
+	int						vdof;
+	int						tdof;
+	int						dof;
+	int						hv;		//which ray is shorter (for backtracking)
+	int						wall; //which wall was found (south north east west)
+	unsigned long long		vm;
+	unsigned long long		hm;
+	unsigned long long		m;
+	unsigned int			mpos;	//position of ray in the map
 }	t_oray;
 
 typedef struct s_player
@@ -362,36 +373,35 @@ typedef struct s_player
 			unsigned char	unused_y;
 		};
 	};
-	int	smx;	//x position on supermap
-	int	smy;	//y position on supermap
-	int	xx[2];	//x screen position and point ahead
-	int	yy[2];	//y screen position and point ahaed
-	int fov;
-	int	fov2;
-	int	xl[2]; //left ray
-	int	yl[2];
-	int	xr[2]; //right ray
-	int	yr[2];
-	int	speed;
-	int	turnspeed;
-	int	xspeed;
-	int	yspeed;
-	int	dx;	//direction vector x
-	int	dy;
-	int	xd[2];
-	int	yd[2];
-	int	cx;	//camera plane vector
-	int	cy;
-	int	xc[2];
-	int	yc[2];
-	int	xn[2];
-	int	yn[2];
-	
-	int	reveal;			//radius of revealed map
+	int		smx;	//x position on supermap
+	int		smy;	//y position on supermap
+	int		xx[2];	//x screen position and point ahead
+	int		yy[2];	//y screen position and point ahaed
+	int		fov;
+	int		fov2;
+	int		xl[2]; //left ray
+	int		yl[2];
+	int		xr[2]; //right ray
+	int		yr[2];
+	int		speed;
+	int		turnspeed;
+	int		xspeed;
+	int		yspeed;
+	int		dx;	//direction vector x
+	int		dy;
+	int		xd[2];
+	int		yd[2];
+	int		cx;	//camera plane vector
+	int		cy;
+	int		xc[2];
+	int		yc[2];
+	int		xn[2];
+	int		yn[2];
+	int		reveal;			//radius of revealed map
 	//t_oray			ray[RAYS];
-	t_oray			oray[RAYS];
-	t_line			miniray[RAYS];
-	t_line			mapray[RAYS];
+	t_oray	oray[RAYS];
+	t_line	miniray[RAYS];
+	t_line	mapray[RAYS];
 	//t_oray			screenray[RAYS];
 	int		orientation; //0 facing north 4096*4 angles
 }	t_player;
@@ -406,48 +416,209 @@ typedef struct s_player
 # define FLAMINGO_GLOW 3
 # define SPRITETEXTURES 4
 
+typedef struct s_sprite_placer
+{
+	int				y;
+	int				x;
+	int				ray;
+	unsigned int	c;
+	unsigned char	r;
+	unsigned char	g;
+	unsigned char	b;
+	unsigned char	a;
+	int				u;
+	int				v;
+	int				w;
+	int				p;
+	int				h;
+	int				starty;
+	unsigned int	spritefog;
+	unsigned int	spritefogalpha;
+	int				startx;
+	int				size;	
+}	t_sp;
+
 typedef struct s_sprite
 {
-	int	type;
-	int	visible;
-	int	state;
-	char	text[16];  //text on sprite e.g. "Libft"
-	int	frame;
-	int	maxframe;
-	int	texture; //map
-	int	glowtexture;
-	int	x;
-	int	y;
-	// int	x_left;
-	// int	y_left;
-	// int	x_right;
-	// int	y_right;
-	int	z;
-	int	spx; //sprite relative position
-	int	spy;
-	// int	spx_left; //sprite relative position
-	// int	spy_left;
-	// int	spx_right; //sprite relative position
-	// int	spy_right;
-	int	spz;
+	int			type;
+	int			visible;
+	int			state;
+	char		text[16];	//text on sprite e.g. "Libft"
+	int			frame;
+	int			maxframe;
+	int			texture; //map
+	int			glowtexture;
+	int			x;
+	int			y;
+	// int			x_left;
+	// int			y_left;
+	// int			x_right;
+	// int			y_right;
+	int			z;
+	int			spx; //sprite relative position
+	int			spy;
+	// int			spx_left; //sprite relative position
+	// int			spy_left;
+	// int			spx_right; //sprite relative position
+	// int			spy_right;
+	int			spz;
 	int			direction;
-	// int			direction_left;
-	// int			direction_right;
+	// int					direction_left;
+	// int					direction_right;
 	double		distance;
 	// double		distance_left;
 	// double		distance_right;
 	int			radius; //angle
 	long long	length;
 	int			sprite_height;
-	int	xpa;
-	int	relativedirection;
-	// int	relativedirection_left;
-	// int	relativedirection_right;
-	int sda;
-	int	xstart;
-	// int	xmiddle;
-	int	xend;
+	int			xpa;
+	int			relativedirection;
+	// int			relativedirection_left;
+	// int			relativedirection_right;
+	int			sda;
+	int			xstart;
+	// int			xmiddle;
+	int			xend;
 }	t_sprite;
+
+typedef struct s_rmap
+{
+	int				width;
+	int				height;
+	int				w;
+	int				h;
+	int				s;
+	int				i;
+	int				d;
+	int				p;
+	int				pp;
+	int				walls;
+	int				ends;
+	int				e;
+	int				l;
+	int				ll;
+	int				t;
+	int				tt;	
+	int				x;
+	int				xx;
+	int				rn;
+	int				ro;
+	int				rw;
+	int				rh;
+	int				ed;
+	int				dr;
+	int				loops;
+	int				wall_c;
+	int				cw;
+	unsigned int	red;
+	unsigned int	green;
+	unsigned int	blue;
+	unsigned int	colour;
+	t_list			*lst;
+	t_list			*ltemp;
+	int				*temp;
+	unsigned int	map[65536];
+}	t_rmap;
+
+typedef enum e_map_block
+{
+	EDGE = 0x0,
+	RWALL = 0xF0,
+	RWALL_A = 0x10,
+	RWALL_B = 0x20,
+	RWALL_C = 0x40,
+	RWALL_D = 0x80,
+	RDOOR_NS = 0x100,
+	RDOOR_WE = 0x200,
+	RDOOR = 0xF00,
+	DEADSPOT = 0x10000,
+	CORNER_CORRIDOR = 0x1F000,
+	CORRIDOR = 0x3F000,
+	DEADEND = 0x1000,
+	CORRIDOR_A = 0x2000,
+	T_JUNCTION = 0x4000,
+	X_JUNCTION = 0x8000,
+	CORRIDOR_B = 0x20000,
+	ROOM_A = 0x100000,
+	ROOM_B = 0x200000,
+	ROOM_C = 0x400000,
+	ROOM = 0xF00000,
+	CORRIDORROOM = 0xFFF000,
+	FLOOD_A = 0x1000000,
+	FLOOD_B = 0x2000000	
+}	t_rmap_block;
+
+// typedef struct s_map
+// {
+// 	int				width;		//input weight
+// 	int				height;		//input heightH
+// 	int				w;			//actual map width
+// 	int				h;			//actual map height
+// 	int				s;			//size, stop w*h
+// 	int				i;			//iterating
+// 	int				d;			//temp value
+// 	int				p;			//actual position?
+// 	int				walls;		//how many walls around actual position
+// 	int				ends;		//how many dead ends in the maze originally
+// 	int				e;			//how many dead ends left
+// 	int				l;			//how many basic loops
+// 	int				ll;
+// 	int				t;			//how many t intersections from dead end
+// 	int				tt;	
+// 	int				x;			//how many x intersections from dead end
+// 	int				xx;
+// 	int				rn;		//how many attempts to build not an overlapping room
+// 	int				ro;			//how many attempts to build an overlapping room
+// 	int				rw;			//room width
+// 	int				rh;			//room height
+// 	int				ed;			//extra door probability
+// 	int				dr;	//dead end removal (0 - keep de, 1 - remove de,
+//						//n - remove n corridors from de)
+// 	int				loops;		//how many dead ends were changed int loops
+// 	int				wall_c;		//number of wall c
+// 	int				cw;			// % to close wall c
+// 	unsigned int	red;
+// 	unsigned int	green;
+// 	unsigned int	blue;
+// 	unsigned int	colour;
+// 	t_list			*lst;		//stack of visited positions (with neighbours?)
+// 	t_list			*ltemp;		//temporaty list
+// 	int				*temp;		//temporary value of position in the map
+// 	unsigned int	map[65536];	//map up to 256*256
+// }	t_rmap;
+
+// BETTER SOLUTION
+// Do EDGES 2 walls thick
+
+// BETTER SOLUTION
+// Do EDGES 2 walls thick
+// typedef enum e_map_block
+// {
+// 	EDGE = 0x0,
+// 	RWALL = 0xF0,
+// 	RWALL_A = 0x10,		//RWALL COLUMN, permanent wall except for 
+// 	RWALL_B = 0x20,		//RWALL between columns
+// 	RWALL_C = 0x40,		//RWALL between columns between two different areas
+// 	RWALL_D = 0x80,		//RWALL after deadend
+// 	RDOOR_NS = 0x100,		// corridor at 
+// 	RDOOR_WE = 0x200,
+// 	RDOOR = 0xF00,
+// 	DEADSPOT = 0x10000,	//surrounded by 4 walls
+// 	CORNER_CORRIDOR = 0x1F000, // corner corridor
+// 	CORRIDOR = 0x3F000,	//any corridor corner stuff
+// 	DEADEND = 0x1000,
+// 	CORRIDOR_A = 0x2000,	// corridor at junction place
+// 	T_JUNCTION = 0x4000,
+// 	X_JUNCTION = 0x8000,
+// 	CORRIDOR_B = 0x20000,	// corridor between two permawalls
+// 	ROOM_A = 0x100000,
+// 	ROOM_B = 0x200000,		//room 4
+// 	ROOM_C = 0x400000,
+// 	ROOM = 0xF00000,
+// 	CORRIDORROOM = 0xFFF000,
+// 	FLOOD_A = 0x1000000,		//flood to index different areas
+// 	FLOOD_B = 0x2000000		//flood to connect different areas
+// }	t_rmap_block;
 
 //add door textures and stuff later
 typedef struct s_map
@@ -479,7 +650,6 @@ typedef struct s_map
 	int					spritecount;
 	//t_door			**d;			//doors for bonus, NULL terminated array
 }	t_map;
-
 
 // remove or simplify
 typedef struct s_control
@@ -536,7 +706,8 @@ typedef struct s_textures
 	mlx_texture_t	*supermapfloor;
 	mlx_texture_t	*supermapwall;
 	mlx_texture_t	*pool;
-	mlx_texture_t	*sprites[SPRITETEXTURES]; // 0 is skipped for checking if texture even exists
+	mlx_texture_t	*sprites[SPRITETEXTURES];
+	// 0 is skipped for checking if texture even exists
 }	t_textures;
 
 typedef struct s_images
@@ -661,139 +832,418 @@ typedef struct s_max
 	unsigned int	fog[SCREENHEIGHT][SCREENWIDTH];
 }	t_max;
 
+typedef struct s_dm
+{
+	int				w;
+	int				h;
+	int				y;
+	int				x;
+	int				a;
+	unsigned int	c;
+}	t_dm;
+
+typedef struct s_db
+{
+	int				w;
+	int				h;
+	int				j;
+	int				i;
+	int				a;
+	unsigned int	c;
+}	t_db;
+
+typedef struct s_dbgs
+{
+	int				w;
+	int				h;
+	int				y;
+	int				x;
+	int				a;
+	unsigned int	c;
+}	t_dbgs;
+
+typedef struct s_dminmap
+{
+	int	y;
+	int	x;
+	int	ny;
+	int	nx;
+	int	s;
+	int	r;
+}	t_dminmap;
+
 // PROTOTYPES
 
 //ft_free.c
-void	ft_free(t_max *max);
-void	ft_exit(t_max *max, int code);
-void	ft_freemap(t_map *map);
+void		ft_free(t_max *max);
+void		ft_exit(t_max *max, int code);
+void		ft_freemap(t_map *map);
 
 //ft_button.c
-void	ft_initbuttons(t_max *max);
-void	ft_draw_button(t_button *b, int state);
-void	ft_choose_in_button(t_max *max, t_button *button);
+void		ft_initbuttons(t_max *max);
+void		ft_draw_button(t_button *b, int state);
+void		ft_choose_in_button(t_max *max, t_button *button);
+t_text		ft_inittext_helper(t_max *max);
+t_button	ft_initbutton_helper(t_max *max);
+void		ft_initbutton_resume(t_max *max);
+void		ft_initbutton_newgame(t_max *max);
+void		ft_initbutton_savegame(t_max *max);
+void		ft_initbutton_loadgame(t_max *max);
+void		ft_initbutton_settings(t_max *max);
+void		ft_initbutton_halloffame(t_max *max);
+void		ft_initbutton_quitgame(t_max *max);
+void		ft_initbutton_name(t_max *max);
+void		ft_initbutton_coalition(t_max *max);
+void		ft_initbutton_campus(t_max *max);
+void		ft_initbutton_nwconfirm(t_max *max);
+void		ft_initbutton_easylvl(t_max *max);
+void		ft_initbutton_mediumlvl(t_max *max);
+void		ft_initbutton_hardlvl(t_max *max);
+void		ft_initbutton_campaign(t_max *max);
+void		ft_initbutton_timetrial(t_max *max);
+void		ft_initbutton_onemap(t_max *max);
+void		ft_initbutton_custom(t_max *max);
+void		ft_initbutton_random(t_max *max);
+void		ft_initbutton_chooselvl(t_max *max);
+void		ft_initbutton_msplay(t_max *max);
+void		ft_initbutton_rsplay(t_max *max);
+void		ft_initbutton_rsadvanced(t_max *max);
+void		ft_initbutton_rwidth(t_max *max, t_button button);
+void		ft_initbutton_rheight(t_max *max, t_button button);
+void		ft_initbutton_rratiode(t_max *max, t_button button);
+void		ft_initbutton_rratiolo(t_max *max, t_button button);
+void		ft_initbutton_rratioti(t_max *max, t_button button);
+void		ft_initbutton_rratioxi(t_max *max, t_button button);
+void		ft_initbutton_rnorooms(t_max *max, t_button button);
+void		ft_initbutton_rorooms(t_max *max, t_button button);
+void		ft_initbutton_rdoors(t_max *max, t_button button);
+void		ft_initbutton_rdeadends(t_max *max, t_button button);
+void		ft_initbutton_rrandomize(t_max *max, t_button button);
+void		ft_initbutton_rplay(t_max *max, t_button button);
+void		ft_initbutton_choosesave(t_max *max, t_button button);
+void		ft_initbutton_delete(t_max *max, t_button button);
+void		ft_initbutton_save(t_max *max, t_button button);
+void		ft_initbutton_chooseload(t_max *max, t_button button);
+void		ft_initbutton_deleteload(t_max *max, t_button button);
+void		ft_initbutton_load(t_max *max, t_button button);
+void		ft_initbutton_hofback(t_max *max, t_button button);
+void		ft_initbuttons_global_helper_2(t_max *max, t_button button);
+void		ft_initbuttons_global_helper(t_max *max);
+void		ft_initbuttons(t_max *max);
 
 //ft_textfield.c
-void	ft_inittextfields(t_max *max);
-void	ft_draw_textfield(t_textfield *b, int state);
-void	ft_write_in_textfield(t_max *max, t_textfield *textfield);
+void		ft_inittextfields(t_max *max);
+void		ft_draw_textfield(t_textfield *b, int state);
+void		ft_write_in_textfield(t_max *max, t_textfield *textfield);
 
 //ft_listfield.c
-void	ft_initlistfields(t_max *max);
-void	ft_bigreinitlistfield(t_max *max);
-void	ft_draw_listfield(t_listfield *lf, int state);
-void	ft_choose_in_listfield(t_max *max, t_listfield *listfield);
+void		ft_initlistfields(t_max *max);
+void		ft_bigreinitlistfield(t_max *max);
+void		ft_draw_listfield(t_listfield *lf, int state);
+void		ft_choose_in_listfield(t_max *max, t_listfield *listfield);
+void		ft_initlistfields_init_text(t_max *max, t_text *text);
+void		ft_initlistfields_init_lf(t_max *max, t_listfield *listfield);
+void		ft_initlistfields_init_cm(t_max *max, t_text text);
+void		ft_initlistfields_init_saves1(t_max *max, t_listfield listfield);
+void		ft_initlistfields_init_saves2(t_max *max, t_text text);
+void		ft_initlistfields_init_loads(t_max *max, t_text text);
+void		ft_initlistfields(t_max *max);
+void		ft_bigreinitlistfield_cm(t_max *max);
+void		ft_bigreinitlistfield_saves(t_max *max);
+void		ft_bigreinitlistfield_loads(t_max *max);
+void		ft_bigreinitlistfield(t_max *max);
 
 //ft_text.c
-void	ft_draw_text(t_text *text, int state);
+void		ft_draw_text(t_text *text, int state);
+void		ft_inittextfields_init(t_max *max, t_textfield *textfield,
+				t_text *text);
+void		ft_inittextfields_init_name(t_max *max, t_textfield *textfield);
 
 //ft_halloffame.c
-int		ft_writescore(t_max *max);
-int		ft_readscore(t_max *max);
-void	ft_halloffame(t_max *max);
+int			ft_writescore(t_max *max);
+int			ft_readscore(t_max *max);
+void		ft_halloffame(t_max *max);
+void		ft_copy_score_top(t_max *max, t_text *text);
+void		ft_copy_score_filler(t_max *max, t_text *text, int i);
+void		ft_copy_score_bottom(t_max *max, t_text *text);
+void		ft_copy_score(t_max *max, t_list *lst);
+int			ft_sortscore(t_list *lst);
+void		ft_free_hs(void *content);
 
 //parser.c
-void	ft_init_brume(t_max *max);
-void	ft_print_map(t_map *map);
-void	ft_fill_colours_to_map(t_map *map);
-void	ft_load_texture(char *path, mlx_texture_t **texture);
-int		ft_process_file(t_max *max);
-void	ft_init_time(t_max *max);
+char		*ft_strdup2(char *str, char c);
+void		ft_init_brume(t_max *max);
+void		ft_print_map(t_map *map);
+void		ft_fill_colours_to_map(t_map *map);
+void		ft_load_texture(char *path, mlx_texture_t **texture);
+int			ft_process_file(t_max *max);
+void		ft_init_time(t_max *max);
+int			ft_fill_map(t_map *map);
+int			ft_read_map(t_map *map);
+int			ft_checkfileextension(char *s);
+int			ft_fill_textures(t_map *map);
+int			ft_puterror(char *err, int r);
+void		ft_flood_check(t_map *map, int pos);
+int			ft_check_map(t_map *map, char **split, int j, int a);
+int			ft_fill_array(t_map *map);
+int			ft_fill_colours(t_map *map);
+int			ft_fill_colour(int c, char *s, t_map *map, int j);
 
 //ft_random.map.c
-void	ft_inittimetrialmap(t_randommap *rm, int level);
-int		ft_process_random(t_max *max);
+void		ft_inittimetrialmap(t_randommap *rm, int level);
+int			ft_process_random(t_max *max);
+void		ft_inittimetrialmap_seedinit(t_randommap *rm);
+void		ft_inittimetrialmap(t_randommap *rm, int level);
+void		ft_flood_randomcheck_floorinit(t_map *map, int pos);
+void		ft_flood_randomcheck(t_map *map, int pos);
+void		ft_fill_randommap(t_map *map);
+void		map_print_inner(t_rmap *m, int i);
+void		map_print(char *str, t_rmap *m);
+void		map_print2(char *str, t_rmap *m);
+void		map_prefill2(t_rmap *m);
+int			mg_north2(t_rmap *m);
+int			mg_south2(t_rmap *m);
+int			mg_east2(t_rmap *m);
+int			mg_west2(t_rmap *m);
+int			check_unvisited_neighbours2(t_rmap *m);
+int			maze_expand(t_rmap *m);
+void		maze_list(t_rmap *m);
+int			maze_gen2(t_rmap *m);
+void		map_refill4(t_rmap *m);
+void		map_calculate4(t_rmap *m);
+void		breakwall4(t_rmap *m, int counter);
+void		wallbreaker4(t_rmap *m);
+void		map_loops4(t_rmap *m);
+void		map_outerwall(t_rmap *m);
+void		map_refill5(t_rmap *m);
+void		maze_mod4(t_rmap *m);
+int			check_room_overlap6(t_rmap *m, int x, int y);
+int			check_room_nooverlap6(t_rmap *m, int x, int y);
+void		add_room6(t_rmap *m, int x, int y);
+void		add_rooms_overlap6(t_rmap *m);
+void		add_rooms_nooverlap6(t_rmap *m);
+void		add_room_walls6(t_rmap *m);
+void		keep_flooding6(t_rmap *m, int i, unsigned int flood_value);
+void		start_flooding6(t_rmap *m);
+void		keep_flooding_26(t_rmap *m, int i, unsigned int flood_value);
+int			flood_check(t_rmap *m);
+void		add_wall_c(t_rmap *m);
+void		add_door(t_rmap *m, int i);
+void		open_door(t_rmap *m);
+void		close_wall_c(t_rmap *m);
+void		flooding_loop(t_rmap *m);
+void		list_deadends(t_rmap	*m);
+void		map_refill999(t_rmap *m);
+void		floodfill_room(t_rmap *m, int i);
+void		remove_deadend(t_rmap *m);
+void		connect_rooms6(t_rmap *m);
+void		add_rooms6(t_rmap *m);
+void		floodfill_room(t_rmap *m, int i);
+void		rd_north(t_rmap *m);
+void		rd_south(t_rmap *m);
+void		rd_west(t_rmap *m);
+void		rd_east(t_rmap *m);
+void		remove_deadend(t_rmap *m);
+void		process_deadends(t_rmap	*m);
+void		trim_deadends(t_rmap *m);
+void		map_refill42(t_rmap *m);
+void		map_init(t_randommap *rm, t_rmap *m);
+void		ft_random_init_loop_putplayer(t_max *max, t_rmap *m, int i);
+void		ft_random_init_loop(t_max *max, t_rmap *m, int j, int i);
+void		ft_random_init_inits(t_max *max, t_rmap *m);
 
 //ft_game.c
-void	ft_amaze_standard(t_max *max);
+void		ft_amaze_standard(t_max *max);
 
 //ft_game_bonus.c
-void	ft_init_images(t_max *max);
-void	ft_init_textures(t_max *max);
-void	ft_add_pool(t_max* max);
-void	ft_amaze_bonus(t_max *max);
+void		ft_init_images(t_max *max);
+void		ft_init_textures(t_max *max);
+void		ft_add_pool(t_max *max);
+void		ft_amaze_bonus(t_max *max);
 
 //ft_gamestart.c
-void	ft_draw_background(t_max *max);
-void	ft_draw_gametext(t_gametext *text);
-void	ft_initgamestart(t_max *max);
-void	ft_gamestart(t_max *max);
+void		ft_draw_background(t_max *max);
+void		ft_draw_gametext(t_gametext *text);
+void		ft_initgamestart(t_max *max);
+void		ft_gamestart(t_max *max);
 
-void	ft_initgamewon(t_max *max);
-void	ft_gamewon(t_max *max);
+void		ft_initgamewon(t_max *max);
+void		ft_gamewon(t_max *max);
 
-void	ft_initgamelost(t_max *max);
-void	ft_gamelost(t_max *max);
+void		ft_initgamelost(t_max *max);
+void		ft_gamelost(t_max *max);
+void		ft_draw_gamechar(t_gametext *text);
+void		ft_gamestart(t_max *max);
+void		ft_gamewon_init(t_max *max);
+void		ft_gamewon_timetrial(t_max *max);
 
 //ft_hook.c
-void	ft_hook(void *param);
+void		ft_hook(void *param);
+void		ft_process_input_numpad(t_max *max);
+void		ft_process_input_shift(t_max *max, int c);
+void		ft_process_keylocks(t_max *max);
+void		ft_process_input_loop(t_max *max);
+void		ft_process_input(t_max *max);
+void		ft_menuhook(t_max *max);
+void		ft_gameplayhook(t_max *max);
+void		ft_gamestarthook(t_max *max);
 
 //ft_map.c
-void	ft_draw_map(t_max *max);
+void		ft_draw_map(t_max *max);
 
 //ft_minimap.c
-void	ft_draw_minimap(t_max *max);
+void		ft_draw_minimap(t_max *max);
 
 //ft_rays.c
-//void	ft_init_rays(t_max *max);
-void	ft_init_rayangles(t_max *max);
-void	ft_visit_map(t_map *map, long long length, long long dist, int mp);
-void	ft_init_orays(t_max *max);
+//void		ft_init_rays(t_max *max);
+void		ft_init_rayangles(t_max *max);
+void		ft_visit_map(t_map *map, long long length, long long dist, int mp);
+void		ft_init_orays(t_max *max);
+int			ft_otest(t_oray *oray, t_max *max);
+void		ft_init_orays_endcolour(t_max *max, t_oray *oray);
+void		ft_init_orays_init_1(t_max *max, t_oray *oray, int r);
+void		ft_init_orays_init_h(t_max *max, t_oray *oray);
+void		ft_init_orays_init_v(t_max *max, t_oray *oray);
+void		ft_init_orays_init_c(t_max *max, t_oray *oray);
+int			ft_init_orays_while_h_breaker_dw(t_max *max, t_oray *oray);
+int			ft_init_orays_while_h_breaker_de(t_max *max, t_oray *oray);
+int			ft_init_orays_while_h_breaker(t_max *max, t_oray *oray);
+void		ft_init_orays_while_h(t_max *max, t_oray *oray);
+int			ft_init_orays_while_h_breaker_dn(t_max *max, t_oray *oray);
+int			ft_init_orays_while_h_breaker_ds(t_max *max, t_oray *oray);
+int			ft_init_orays_while_v_breaker(t_max *max, t_oray *oray);
 
 //ft_line.c
-void	ft_place_line(mlx_image_t *img, t_line l);
+void		ft_place_line(mlx_image_t *img, t_line l);
+void		ft_plot_line_high(mlx_image_t *img, t_line l);
 
 //ft_menu.c
-void	ft_initmenu(t_max *max);
-void	ft_menu(t_max *max);
-void	ft_resume(t_max *max);
-void	ft_newgame(t_max *max);
+void		ft_initmenu(t_max *max);
+void		ft_menu(t_max *max);
+void		ft_resume(t_max *max);
+void		ft_newgame(t_max *max);
+void		ft_initrandommapvalues(t_randommap *rm);
+void		ft_draw_menu(t_max *max);
+void		ft_draw_menu_6(t_max *max);
+void		ft_draw_menu_7(t_max *max);
+void		ft_draw_menu_8(t_max *max);
+void		ft_selectnewbutton(t_max *max, t_button *button);
+void		ft_selectbutton(t_max *max);
+void		ft_selectbutton_helper(t_max *max);
+int			ft_selectbutton_helper_6(t_max *max);
+int			ft_selectbutton_helper_5(t_max *max);
+void		ft_draw_newwritingbuttons(t_max *max);
+void		ft_draw_mainmenubuttons(t_max *max);
+void		ft_draw_newwritingtextfields(t_max *max);
+void		ft_draw_gamedifficultybuttons(t_max *max);
+void		ft_draw_gametypebuttons(t_max *max);
+void		ft_draw_maptypebuttons(t_max *max);
+void		ft_draw_newmapbuttons(t_max *max);
+void		ft_draw_newrandomadvancedbuttons(t_max *max);
+int			ft_draw_newrandomadvancedbuttons_2(t_max *max);
+void		ft_updatenewrandomadvancedbuttons(t_max	*max);
+void		ft_draw_savebuttons(t_max *max);
+void		ft_draw_newmaplistfields(t_max *max);
+void		ft_draw_newrandombuttons(t_max *max);
+void		ft_draw_savelistfields(t_max *max);
+void		ft_draw_loadbuttons(t_max *max);
+void		ft_draw_loadlistfields(t_max *max);
+void		ft_draw_halloffamebuttons(t_max *max);
+int			ft_menu_helper_16(t_max *max);
+int			ft_menu_helper_14(t_max *max);
+int			ft_menu_helper_15(t_max *max);
+void		ft_menu_2(t_max *max);
+void		ft_menu_3(t_max *max);
+void		ft_menu_helper_5_1(t_max *max);
+void		ft_menu_helper_9(t_max *max);
 
 //ft_mousehook.c
-void	ft_cursorhook(void *param);
-void	ft_mousehook(void *param);
+void		ft_cursorhook(void *param);
+void		ft_mousehook(void *param);
 
 //ft_gameplay.c
-void	ft_gameplay(t_max *max);
+void		ft_gameplay(t_max *max);
+void		ft_move_player(t_map *map, int y, int x);
+void		ft_move_player_2(t_map *map, int oldx, int oldy);
+void		ft_init_wc(t_wallcheck *wc, int y, int x);
+int			ft_is_wall(t_map *map, int x, int y);
+void		ft_revisit_map(t_map *map);
+void		ft_discover_full_map(t_map *map);
+void		ft_draw_strings(t_max *max);
+void		ft_discover_map(t_map *map);
+void		ft_game_win(t_max *max);
+void		ft_game_lose(t_max *max);
+void		ft_gameplay_2(t_max *max);
+void		ft_gameplay_3(t_max *max);
+void		ft_gameplay_4(t_max *max);
+void		ft_change_light_dist(t_max *max);
 
 //ft_overlay.c
-void	ft_init_overlay(t_max *max);
-void	ft_clear_overlay(t_max *max);
+void		ft_init_overlay(t_max *max);
+void		ft_clear_overlay(t_max *max);
 
 //ft_saveload.c
-int	ft_savegame(t_max *max);
-int	ft_loadgame(t_max *max);
-int	ft_quicksave(t_max *max);
-int	ft_quickload(t_max *max);
-int	ft_save(t_max *max, char *path);
-int	ft_load(t_max *max, char *path);
+int			ft_savegame(t_max *max);
+int			ft_loadgame(t_max *max);
+int			ft_quicksave(t_max *max);
+int			ft_quickload(t_max *max);
+int			ft_save(t_max *max, char *path);
+int			ft_load(t_max *max, char *path);
+int			ft_savegame(t_max *max);
+int			ft_loadgame(t_max *max);
 
+//ft_cub3d_2.c
+void		ft_init_math(t_math *math);
 
 //ft_screen2d.c
-void	ft_draw_screen2d(t_max *max);
-//ft_screen2d.c
-void	ft_draw_screen2dquad(t_max *max);
+// void		ft_draw_screen2d(t_max *max);
+// //ft_screen2d.c
+// void		ft_draw_screen2dquad(t_max *max);
 
 //ft_screen3d.c
-void	ft_draw_screen3d(t_max *max);
-void	ft_init_fogscreen(t_max *max);
+void		ft_draw_screen3d(t_max *max);
+void		ft_init_fogscreen(t_max *max);
+void		ft_draw_screen3d_init(t_max *max, t_walltexture *wt);
+void		ft_init_fogscreen(t_max *max);
+void		ft_init_fogscreen_inner(t_max *max, t_fs *fs);
+void		ft_draw_screen3d_ww(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_ew(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_sw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_nw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_de(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_dw(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_dn(t_max *max, t_walltexture *wt, int stop);
+void		ft_draw_screen3d_ds(t_max *max, t_walltexture *wt, int stop);
 
 //ft_sprite.c
-void	ft_init_sprites_flamingo(t_map *map, int i);
-void	ft_init_sprites_doors(t_map *map, int i, int type);
-void	ft_init_sprites(t_max *max);
-void	ft_check_sprites(t_max *max);
-void	ft_draw_sprites(t_max *max);
+void		ft_init_sprites_flamingo(t_map *map, int i);
+void		ft_init_sprites_doors(t_map *map, int i, int type); //???not found?
+void		ft_init_sprites(t_max *max);
+void		ft_check_sprites(t_max *max);
+void		ft_draw_sprites(t_max *max);
+int			ft_sprite_visible_check(t_max *max, int minangle, int maxangle);
+int			ft_sprite_visible(t_max *max, int direction, int radius);
+int			ft_sprite_visible2(t_max *max, int r, long long distance);
+void		ft_clean_spritescreen(t_max *max);
+void		ft_put_sprite_colour(t_max *max, t_sprite *sprite, t_sp *sp);
+void		ft_put_sprite_glowcolour(t_max *max, t_sprite *sprite, t_sp *sp);
+void		ft_activate_exit(t_max *max);
+void		ft_swap_sprites(t_sprite *a, t_sprite *b);
+void		ft_print_sprite_info(t_sprite *sprite);
+void		ft_check_sprites_debug(t_max *max);
+void		ft_check_sprites_1(t_max *max, t_sprite *sprite, int i);
+void		ft_check_sprites_2(t_max *max, t_sprite *sprite);
+void		ft_check_sprites_exit(t_max *max, t_sprite *sprite);
 
 //ft_doors.c
-void	ft_interact_door(t_max *max);
-void	ft_check_doors(t_max *max);
+void		ft_interact_door(t_max *max);
+void		ft_check_doors(t_max *max);
 
 //ft_settings.c
-void	ft_init_settings(t_max *max);
+void		ft_init_settings(t_max *max);
 
 //ft_keyhook.c
-void	ft_clear_keys(t_max *max);
-void	ft_keyhook(mlx_key_data_t keydata, void *param);
+void		ft_clear_keys(t_max *max);
+void		ft_keyhook(mlx_key_data_t keydata, void *param);
 
 #endif

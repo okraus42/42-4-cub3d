@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2024/04/14 11:22:03 by okraus           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:34:26 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@
 // DEFINITIONS
 
 //	Useful Macros
-# define ABS(a) (((a) > 0) * (a) - ((a) < 0) * (a))
-# define PN(a) (((a) > 0) - ((a) < 0))
-# define MAX(a, b) (((a) > (b)) * (a) + ((a) <= (b)) * (b))
-# define MIN(a, b) (((a) < (b)) * (a) + ((a) >= (b)) * (b))
-# define PERCENTIL(a, b, c, d) ((a) + ((b) - (a)) * (c) / (d))
+// # define ABS(a) (((a) > 0) * (a) - ((a) < 0) * (a))
+// # define PN(a) (((a) > 0) - ((a) < 0))
+// # define MAX(a, b) (((a) > (b)) * (a) + ((a) <= (b)) * (b))
+// # define MIN(a, b) (((a) < (b)) * (a) + ((a) >= (b)) * (b))
+// # define PERCENTIL(a, b, c, d) ((a) + ((b) - (a)) * (c) / (d))
 
 // GET_NEXT_LINE definitions
 
@@ -437,9 +437,12 @@ int				ft_isxdigit(int c);
 char			**ft_readdir(const char *path, const char *extension);
 
 // math stuff
-int				ft_abs(int n);
-int				ft_max(int a, int b);
-int				ft_min(int a, int b);
+long long		ft_abs(long long n);
+double			ft_absd(double d);
+long long		ft_max(long long a, long long b);
+long long		ft_min(long long a, long long b);
+long long		ft_percentil(long long a, long long b,
+					long long c, long long d);
 void			ft_swap(int *a, int *b);
 void			ft_uswap(unsigned int *a, unsigned int *b);
 unsigned int	ft_atoi_base(const char *base, char *str);
